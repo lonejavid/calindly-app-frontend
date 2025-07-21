@@ -45,6 +45,7 @@ const EventCard: FC<PropsType> = ({
       .catch((error) => {
         console.error("Failed to copy link:", error);
         console.log("eddited");
+        console.log("added");
       });
   };
 
