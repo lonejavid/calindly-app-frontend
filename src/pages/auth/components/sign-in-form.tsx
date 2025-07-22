@@ -56,6 +56,7 @@ export function SignInForm({
 
   const onSubmit = (values: SignInFormValues) => {
     console.log("Form values:", values);
+    console.log(props);
     if (isPending) return;
 
     mutate(values, {
