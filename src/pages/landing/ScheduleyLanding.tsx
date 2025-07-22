@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Shield, Mail, Clock, CheckCircle, ArrowRight, Zap, Filter, Users, Star } from 'lucide-react';
+
+import { Calendar, Shield, Mail, Clock, CheckCircle, ArrowRight, Zap, Filter, Users} from 'lucide-react';
 
 const ScheduleyLanding = () => {
   const [isVisible, setIsVisible] = useState(false);
