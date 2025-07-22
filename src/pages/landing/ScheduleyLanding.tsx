@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Calendar, Shield, Mail, Clock, CheckCircle, ArrowRight, Zap, Filter, Users, Menu, X } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
+import { AUTH_ROUTES } from "@/routes/common/routePaths";
+
 
 const ScheduleyLanding = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -9,6 +12,7 @@ const ScheduleyLanding = () => {
   useEffect(() => {
     setIsVisible(true);
   }, []);
+  const navigate = useNavigate();
 
   const features = [
     {
@@ -67,7 +71,7 @@ const ScheduleyLanding = () => {
           <div className="hidden md:flex items-center space-x-8">
             <a href="#features" className="text-gray-300 hover:text-white transition-colors duration-300">Features</a>
             <a href="#benefits" className="text-gray-300 hover:text-white transition-colors duration-300">Benefits</a>
-            <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+            <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"   onClick={() => navigate(AUTH_ROUTES.SIGN_IN)}>
               Get Started
             </button>
           </div>
@@ -87,7 +91,7 @@ const ScheduleyLanding = () => {
             <div className="flex flex-col space-y-4">
               <a href="#features" className="text-gray-300 hover:text-white transition-colors duration-300 py-2" onClick={() => setMobileMenuOpen(false)}>Features</a>
               <a href="#benefits" className="text-gray-300 hover:text-white transition-colors duration-300 py-2" onClick={() => setMobileMenuOpen(false)}>Benefits</a>
-              <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 rounded-full hover:from-purple-600 hover:to-pink-600 transition-all duration-300 text-center">
+              <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 rounded-full hover:from-purple-600 hover:to-pink-600 transition-all duration-300 text-center"  onClick={() => navigate(AUTH_ROUTES.SIGN_IN)}>
                 Get Started
               </button>
             </div>
@@ -120,7 +124,7 @@ const ScheduleyLanding = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center px-4">
-              <button className="group bg-gradient-to-r from-purple-500 to-pink-500 px-6 sm:px-8 py-3 sm:py-4 rounded-full text-base sm:text-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center w-full sm:w-auto justify-center">
+              <button className="group bg-gradient-to-r from-purple-500 to-pink-500 px-6 sm:px-8 py-3 sm:py-4 rounded-full text-base sm:text-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center w-full sm:w-auto justify-center"    onClick={() => navigate(AUTH_ROUTES.SIGN_IN)}>
                 Start Free Trial
                 <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
               </button>
@@ -275,7 +279,7 @@ const ScheduleyLanding = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center">
-              <button className="group bg-gradient-to-r from-purple-500 to-pink-500 px-8 sm:px-10 py-3 sm:py-4 rounded-full text-lg sm:text-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center w-full sm:w-auto justify-center">
+              <button className="group bg-gradient-to-r from-purple-500 to-pink-500 px-8 sm:px-10 py-3 sm:py-4 rounded-full text-lg sm:text-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center w-full sm:w-auto justify-center"   onClick={() => navigate("/start")}>
                 Start Your Free Trial
                 <ArrowRight className="ml-2 sm:ml-3 w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform" />
               </button>
