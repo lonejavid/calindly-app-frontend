@@ -59,9 +59,11 @@ const ScheduleyLanding = () => {
       <nav className={`relative z-50 p-4 sm:p-6 transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-10 opacity-0'}`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-2 sm:space-x-3">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-              <Calendar className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
-            </div>
+             <img 
+                  src="/path-to-your-logo.png" 
+                  alt="Schedley Logo"
+                  className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
+                />
             <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
               Schedley
             </span>
