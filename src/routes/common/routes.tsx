@@ -7,8 +7,9 @@ import Availability from "@/pages/availability";
 import Integrations from "@/pages/integrations";
 import UserEventsPage from "@/pages/external_page/user-events";
 import UserSingleEventPage from "@/pages/external_page/user-single-event";
-
+import ScheduleyLanding from "@/pages/landing/ScheduleyLanding";
 export const authenticationRoutePaths = [
+   { path: "/", element: <ScheduleyLanding /> },
   { path: AUTH_ROUTES.SIGN_IN, element: <SignIn /> },
   { path: AUTH_ROUTES.SIGN_UP, element: <SignUp /> },
 ];

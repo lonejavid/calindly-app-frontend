@@ -3,7 +3,8 @@ export const isAuthRoute = (pathname: string): boolean => {
 };
 
 export const AUTH_ROUTES = {
-  SIGN_IN: "/",
+  LANDING: "/", 
+  SIGN_IN: "/login",
   SIGN_UP: "/sign-up",
 };
 
