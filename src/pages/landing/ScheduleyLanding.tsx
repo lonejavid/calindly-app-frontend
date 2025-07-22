@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
-import { Calendar, Shield, Mail, Clock, CheckCircle, ArrowRight, Zap, Filter, Users} from 'lucide-react';
-
+import { Calendar, Shield, Mail, Clock, CheckCircle, ArrowRight, Zap, Filter, Users } from 'lucide-react';
 const ScheduleyLanding = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [activeFeature, setActiveFeature] = useState(0);
