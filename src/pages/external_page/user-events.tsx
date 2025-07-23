@@ -20,24 +20,19 @@ const UserEventsPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-indigo-950 text-white overflow-hidden relative">
-      {/* Enhanced Animated Background Elements */}
+      {/* Background elements (unchanged) */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        {/* Main gradient orbs */}
         <div className="absolute -top-32 -right-32 w-64 h-64 sm:w-96 sm:h-96 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-pulse"></div>
         <div className="absolute -bottom-32 -left-32 w-64 h-64 sm:w-96 sm:h-96 bg-gradient-to-tr from-blue-400 to-cyan-500 rounded-full mix-blend-multiply filter blur-2xl opacity-25 animate-pulse" style={{animationDelay: '2s'}}></div>
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 sm:w-72 sm:h-72 bg-gradient-to-r from-violet-400 to-purple-500 rounded-full mix-blend-multiply filter blur-2xl opacity-20 animate-pulse" style={{animationDelay: '4s'}}></div>
-        
-        {/* Floating particles */}
         <div className="absolute top-20 left-20 w-2 h-2 bg-white rounded-full opacity-40 animate-ping"></div>
         <div className="absolute top-40 right-32 w-1 h-1 bg-purple-300 rounded-full opacity-60 animate-ping" style={{animationDelay: '1s'}}></div>
         <div className="absolute bottom-32 left-1/3 w-1.5 h-1.5 bg-blue-300 rounded-full opacity-50 animate-ping" style={{animationDelay: '3s'}}></div>
       </div>
 
-      {/* Gradient mesh overlay */}
       <div className="fixed inset-0 bg-gradient-to-br from-transparent via-purple-900/10 to-transparent pointer-events-none"></div>
 
       <PageContainer isLoading={isLoading}>
-        {/* Error Alert */}
         <ErrorAlert isError={isError} error={error} />
 
         {isFetching || isError ? (
@@ -47,125 +42,125 @@ const UserEventsPage = () => {
             </div>
           </div>
         ) : (
-          <div className="relative z-10 py-12 sm:py-20 px-4 sm:px-6">
+          <div className="relative z-10 py-8 md:py-12 lg:py-16 px-4 sm:px-6">
             <div className="max-w-7xl mx-auto">
-              {/* Enhanced Header Section */}
-              <div className="text-center mb-16 sm:mb-20">
-                {/* Top badge with animation */}
-                <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-xl rounded-full mb-8 border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
-                  <Sparkles className="w-5 h-5 mr-3 text-yellow-300 animate-pulse" />
-                  <span className="text-base font-bold text-white tracking-wide">✨ Schedule Your Meeting</span>
-                  <Star className="w-4 h-4 ml-3 text-yellow-300" />
+              {/* Header Section */}
+              <div className="text-center mb-12 md:mb-16 lg:mb-20">
+                {/* Top badge */}
+                <div className="inline-flex items-center px-4 py-2 md:px-6 md:py-3 bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-xl rounded-full mb-6 md:mb-8 border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                  <Sparkles className="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3 text-yellow-300 animate-pulse" />
+                  <span className="text-sm md:text-base font-bold text-white tracking-wide">✨ Schedule Your Meeting</span>
+                  <Star className="w-3 h-3 md:w-4 md:h-4 ml-2 md:ml-3 text-yellow-300" />
                 </div>
 
-                {/* User profile card with enhanced styling */}
-                <div className="bg-gradient-to-br from-white/25 to-white/10 backdrop-blur-2xl rounded-3xl sm:rounded-4xl p-8 sm:p-12 border border-white/40 max-w-lg mx-auto mb-12 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-[1.02]">
-                  <div className="flex items-center justify-center mb-6">
+                {/* User profile card */}
+                <div className="bg-gradient-to-br from-white/25 to-white/10 backdrop-blur-2xl rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-10 border border-white/40 max-w-md mx-auto mb-8 md:mb-10 lg:mb-12 shadow-xl md:shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-[1.02]">
+                  <div className="flex items-center justify-center mb-4 md:mb-6">
                     <div className="relative">
-                      <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-purple-400 via-pink-400 to-violet-500 rounded-full flex items-center justify-center shadow-2xl ring-4 ring-white/20 ring-offset-4 ring-offset-transparent">
-                        <User className="w-10 h-10 sm:w-12 sm:h-12 text-white drop-shadow-lg" />
+                      <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-gradient-to-br from-purple-400 via-pink-400 to-violet-500 rounded-full flex items-center justify-center shadow-xl md:shadow-2xl ring-2 md:ring-4 ring-white/20 ring-offset-2 md:ring-offset-4 ring-offset-transparent">
+                        <User className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-white drop-shadow" />
                       </div>
-                      <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-400 rounded-full border-3 border-white flex items-center justify-center">
-                        <CheckCircle className="w-3 h-3 text-white" />
+                      <div className="absolute -bottom-1 -right-1 w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 bg-green-400 rounded-full border-2 md:border-3 border-white flex items-center justify-center">
+                        <CheckCircle className="w-2 h-2 md:w-3 md:h-3 text-white" />
                       </div>
                     </div>
                   </div>
                   
-                  <h1 className="text-3xl sm:text-4xl font-black mb-4 bg-gradient-to-r from-white via-purple-100 to-white bg-clip-text text-transparent drop-shadow-2xl capitalize tracking-tight">
+                  <h1 className="text-2xl md:text-3xl lg:text-4xl font-black mb-2 md:mb-3 lg:mb-4 bg-gradient-to-r from-white via-purple-100 to-white bg-clip-text text-transparent drop-shadow capitalize tracking-tight">
                     {user?.name || 'Professional'}
                   </h1>
                   
-                  <p className="text-base sm:text-lg text-white/90 leading-relaxed font-semibold max-w-md mx-auto">
-                    🚀 Ready to connect? Choose your preferred meeting type below and let's make great things happen together!
+                  <p className="text-sm md:text-base lg:text-lg text-white/90 leading-relaxed font-medium max-w-md mx-auto">
+                    🚀 Ready to connect? Choose your preferred meeting type below.
                   </p>
                 </div>
 
-                {/* Section heading with enhanced typography */}
-                <div className="space-y-3">
-                  <h2 className="text-2xl sm:text-3xl font-black text-white drop-shadow-xl">
+                {/* Section heading */}
+                <div className="space-y-2 md:space-y-3">
+                  <h2 className="text-xl md:text-2xl lg:text-3xl font-black text-white drop-shadow">
                     🎯 Available Meeting Options
                   </h2>
-                  <p className="text-lg text-white/80 font-medium max-w-2xl mx-auto">
-                    Select the perfect meeting type that matches your needs. Each session is designed to provide maximum value.
+                  <p className="text-sm md:text-base lg:text-lg text-white/80 font-medium max-w-2xl mx-auto">
+                    Select the perfect meeting type that matches your needs.
                   </p>
                 </div>
               </div>
 
-              {/* Enhanced Events Grid */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 max-w-6xl mx-auto mb-16">
+              {/* Events Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-10 max-w-6xl mx-auto mb-12 md:mb-16">
                 {events?.map((event, index) => (
                   <Link
                     key={index}
                     to={`/${username}/${event.slug}`}
                     className="group relative transform hover:scale-[1.03] transition-all duration-500"
                   >
-                    <div className="bg-gradient-to-br from-white/25 to-white/10 backdrop-blur-2xl rounded-3xl p-8 sm:p-10 border border-white/40 hover:border-purple-300/60 transition-all duration-500 hover:shadow-3xl min-h-[240px] flex flex-col justify-between relative overflow-hidden">
+                    <div className="bg-gradient-to-br from-white/25 to-white/10 backdrop-blur-2xl rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-10 border border-white/40 hover:border-purple-300/60 transition-all duration-500 hover:shadow-xl md:hover:shadow-2xl min-h-[200px] md:min-h-[240px] flex flex-col justify-between relative overflow-hidden">
                       {/* Background pattern */}
                       <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                       
                       {/* Content */}
                       <div className="relative z-10">
-                        <div className="flex items-start justify-between mb-6">
-                          <div className="p-4 bg-gradient-to-br from-purple-400/40 to-pink-400/40 rounded-2xl border border-purple-300/50 shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110">
-                            <Calendar className="w-6 h-6 sm:w-7 sm:h-7 text-white drop-shadow-lg" />
+                        <div className="flex items-start justify-between mb-4 md:mb-6">
+                          <div className="p-3 md:p-4 bg-gradient-to-br from-purple-400/40 to-pink-400/40 rounded-xl md:rounded-2xl border border-purple-300/50 shadow-lg group-hover:shadow-xl md:group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110">
+                            <Calendar className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7 text-white drop-shadow" />
                           </div>
-                          <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
-                            <span className="text-sm font-bold text-purple-200">Let's go</span>
-                            <ArrowRight className="w-5 h-5 text-purple-200 animate-bounce" />
+                          <div className="flex items-center space-x-1 md:space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
+                            <span className="text-xs md:text-sm font-bold text-purple-200">Let's go</span>
+                            <ArrowRight className="w-4 h-4 md:w-5 md:h-5 text-purple-200 animate-bounce" />
                           </div>
                         </div>
 
-                        <h3 className="text-xl sm:text-2xl font-black mb-4 text-white group-hover:text-purple-100 transition-colors duration-300 capitalize drop-shadow-lg">
+                        <h3 className="text-lg md:text-xl lg:text-2xl font-black mb-2 md:mb-3 lg:mb-4 text-white group-hover:text-purple-100 transition-colors duration-300 capitalize drop-shadow">
                           {event.title}
                         </h3>
 
-                        <p className="text-base sm:text-lg text-white/85 group-hover:text-white transition-colors duration-300 leading-relaxed line-clamp-3 mb-6 font-medium">
-                          {event.description || "🎉 Professional meeting session designed to help you achieve your goals. Let's discuss your needs and create amazing results together!"}
+                        <p className="text-sm md:text-base lg:text-lg text-white/85 group-hover:text-white transition-colors duration-300 leading-relaxed line-clamp-3 mb-4 md:mb-6 font-medium">
+                          {event.description || "🎉 Professional meeting session designed to help you achieve your goals."}
                         </p>
                       </div>
 
-                      {/* Enhanced Duration Badge */}
+                      {/* Duration Badge */}
                       <div className="flex items-center justify-between relative z-10">
-                        <div className="inline-flex items-center px-5 py-3 bg-gradient-to-r from-blue-400/40 to-cyan-400/40 backdrop-blur-xl rounded-2xl border border-blue-300/50 shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-105">
-                          <Clock className="w-5 h-5 mr-3 text-blue-100 drop-shadow-lg" />
-                          <span className="text-base font-black text-white">
+                        <div className="inline-flex items-center px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-3 bg-gradient-to-r from-blue-400/40 to-cyan-400/40 backdrop-blur-xl rounded-xl md:rounded-2xl border border-blue-300/50 shadow-lg group-hover:shadow-xl md:group-hover:shadow-2xl transition-all duration-300 group-hover:scale-105">
+                          <Clock className="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3 text-blue-100 drop-shadow" />
+                          <span className="text-sm md:text-base font-black text-white">
                             {event.duration} minutes
                           </span>
                         </div>
                         
-                        <div className="text-sm text-white/70 group-hover:text-white font-bold opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                        <div className="text-xs md:text-sm text-white/70 group-hover:text-white font-bold opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                           Book now! 🚀
                         </div>
                       </div>
 
                       {/* Hover glow effect */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-purple-400/10 to-pink-400/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                      <div className="absolute inset-0 bg-gradient-to-r from-purple-400/10 to-pink-400/10 rounded-2xl md:rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                     </div>
                   </Link>
                 ))}
               </div>
 
-              {/* Enhanced Empty State */}
+              {/* Empty State */}
               {events.length === 0 && !isFetching && (
-                <div className="text-center py-20">
-                  <div className="bg-gradient-to-br from-white/25 to-white/10 backdrop-blur-2xl rounded-3xl p-12 sm:p-16 border border-white/40 max-w-lg mx-auto shadow-2xl">
-                    <div className="w-20 h-20 bg-gradient-to-br from-gray-400/30 to-gray-500/30 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
-                      <Calendar className="w-10 h-10 text-white drop-shadow-lg" />
+                <div className="text-center py-12 md:py-16 lg:py-20">
+                  <div className="bg-gradient-to-br from-white/25 to-white/10 backdrop-blur-2xl rounded-2xl md:rounded-3xl p-8 md:p-10 lg:p-12 border border-white/40 max-w-md mx-auto shadow-xl md:shadow-2xl">
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-gray-400/30 to-gray-500/30 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-lg">
+                      <Calendar className="w-8 h-8 md:w-10 md:h-10 text-white drop-shadow" />
                     </div>
-                    <h3 className="text-2xl font-black mb-4 text-white drop-shadow-lg">
+                    <h3 className="text-xl md:text-2xl font-black mb-2 md:mb-3 lg:mb-4 text-white drop-shadow">
                       🚧 No Events Yet
                     </h3>
-                    <p className="text-lg text-white/80 font-semibold">
-                      This user is setting up their calendar. Check back soon for available meetings!
+                    <p className="text-sm md:text-base lg:text-lg text-white/80 font-medium">
+                      This user is setting up their calendar. Check back soon!
                     </p>
                   </div>
                 </div>
               )}
 
-              {/* Enhanced Footer */}
+              {/* Footer */}
               <div className="text-center">
-                <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-white/15 to-white/5 backdrop-blur-xl rounded-full border border-white/25 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
-                  <span className="text-sm text-white/90 font-bold">
+                <div className="inline-flex items-center px-4 py-2 md:px-6 md:py-3 bg-gradient-to-r from-white/15 to-white/5 backdrop-blur-xl rounded-full border border-white/25 shadow-lg hover:shadow-xl md:hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                  <span className="text-xs md:text-sm text-white/90 font-bold">
                     ⚡ Powered by <span className="text-purple-300 font-black tracking-wide">Schedley</span>
                   </span>
                 </div>
