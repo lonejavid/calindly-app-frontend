@@ -90,9 +90,9 @@ const BookingCalendar = ({
           {/* Calendar Section */}
           <div className="w-full flex justify-start max-w-xs md:max-w-full lg:max-w-sm">
             <div className="bg-gradient-to-br from-slate-900/95 via-purple-900/90 to-indigo-900/95 backdrop-blur-3xl rounded-3xl border border-purple-400/50 shadow-2xl ring-1 ring-purple-300/20 p-6">
-              <div className="calendar-container">
+              <div className="calendar-enhanced">
                 <Calendar
-                  className="w-auto md:w-full lg:!w-auto"
+                  className="w-auto md:w-full lg:!w-auto calendar-themed"
                   minValue={minValue}
                   defaultValue={defaultValue}
                   value={selectedDate}
@@ -102,75 +102,80 @@ const BookingCalendar = ({
                 />
               </div>
               
-              <style jsx>{`
-                .calendar-container :global(.react-aria-Calendar) {
-                  color: white !important;
-                }
-                .calendar-container :global(.react-aria-CalendarCell) {
-                  color: white !important;
-                  font-weight: 600 !important;
-                  background: rgba(148, 163, 184, 0.1) !important;
-                  border: 1px solid rgba(139, 92, 246, 0.3) !important;
-                  border-radius: 8px !important;
-                  margin: 2px !important;
-                  transition: all 0.3s ease !important;
-                }
-                .calendar-container :global(.react-aria-CalendarCell:hover) {
-                  background: rgba(139, 92, 246, 0.3) !important;
-                  border-color: rgba(139, 92, 246, 0.6) !important;
-                  transform: scale(1.05) !important;
-                  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4) !important;
-                }
-                .calendar-container :global(.react-aria-CalendarCell[data-selected]) {
-                  background: linear-gradient(135deg, #8b5cf6, #ec4899, #8b5cf6) !important;
-                  border-color: rgba(219, 39, 119, 0.8) !important;
-                  color: white !important;
-                  font-weight: 700 !important;
-                  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6) !important;
-                }
-                .calendar-container :global(.react-aria-CalendarCell[data-unavailable]) {
-                  background: rgba(100, 116, 139, 0.2) !important;
-                  color: rgba(148, 163, 184, 0.5) !important;
-                  border-color: rgba(100, 116, 139, 0.3) !important;
-                }
-                .calendar-container :global(.react-aria-CalendarCell[data-today]) {
-                  background: rgba(34, 197, 94, 0.2) !important;
-                  border-color: rgba(34, 197, 94, 0.6) !important;
-                  color: white !important;
-                  font-weight: 700 !important;
-                }
-                .calendar-container :global(.react-aria-CalendarGridHeader) {
-                  color: rgba(196, 181, 253, 0.9) !important;
-                  font-weight: 600 !important;
-                }
-                .calendar-container :global(.react-aria-CalendarHeaderCell) {
-                  color: rgba(196, 181, 253, 0.9) !important;
-                  font-weight: 600 !important;
-                  text-align: center !important;
-                }
-                .calendar-container :global(.react-aria-Heading) {
-                  color: white !important;
-                  font-weight: 700 !important;
-                  font-size: 1.25rem !important;
-                  text-align: center !important;
-                  margin-bottom: 1rem !important;
-                }
-                .calendar-container :global(.react-aria-Button) {
-                  color: rgba(196, 181, 253, 0.9) !important;
-                  background: rgba(139, 92, 246, 0.2) !important;
-                  border: 1px solid rgba(139, 92, 246, 0.4) !important;
-                  border-radius: 8px !important;
-                  padding: 0.5rem !important;
-                  font-weight: 600 !important;
-                  transition: all 0.3s ease !important;
-                }
-                .calendar-container :global(.react-aria-Button:hover) {
-                  background: rgba(139, 92, 246, 0.4) !important;
-                  border-color: rgba(139, 92, 246, 0.6) !important;
-                  color: white !important;
-                  transform: scale(1.05) !important;
-                }
-              `}</style>
+              <style dangerouslySetInnerHTML={{
+                __html: `
+                  .calendar-enhanced .calendar-themed {
+                    filter: brightness(1.2) contrast(1.1);
+                  }
+                  .calendar-enhanced [role="gridcell"] {
+                    color: white !important;
+                    font-weight: 600 !important;
+                    background: rgba(148, 163, 184, 0.15) !important;
+                    border: 1px solid rgba(139, 92, 246, 0.4) !important;
+                    border-radius: 8px !important;
+                    margin: 1px !important;
+                    transition: all 0.3s ease !important;
+                    min-height: 32px !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                  }
+                  .calendar-enhanced [role="gridcell"]:hover {
+                    background: rgba(139, 92, 246, 0.4) !important;
+                    border-color: rgba(139, 92, 246, 0.7) !important;
+                    transform: scale(1.05) !important;
+                    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.5) !important;
+                    color: white !important;
+                  }
+                  .calendar-enhanced [role="gridcell"][aria-selected="true"] {
+                    background: linear-gradient(135deg, #8b5cf6, #ec4899, #8b5cf6) !important;
+                    border-color: rgba(219, 39, 119, 0.9) !important;
+                    color: white !important;
+                    font-weight: 700 !important;
+                    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.7) !important;
+                  }
+                  .calendar-enhanced [role="gridcell"][aria-disabled="true"] {
+                    background: rgba(100, 116, 139, 0.2) !important;
+                    color: rgba(148, 163, 184, 0.6) !important;
+                    border-color: rgba(100, 116, 139, 0.4) !important;
+                  }
+                  .calendar-enhanced [role="gridcell"][data-today] {
+                    background: rgba(34, 197, 94, 0.3) !important;
+                    border-color: rgba(34, 197, 94, 0.7) !important;
+                    color: white !important;
+                    font-weight: 700 !important;
+                    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.3) !important;
+                  }
+                  .calendar-enhanced [role="columnheader"] {
+                    color: rgba(196, 181, 253, 0.9) !important;
+                    font-weight: 600 !important;
+                    text-align: center !important;
+                    padding: 8px 4px !important;
+                  }
+                  .calendar-enhanced h2 {
+                    color: white !important;
+                    font-weight: 700 !important;
+                    font-size: 1.25rem !important;
+                    text-align: center !important;
+                    margin-bottom: 1rem !important;
+                  }
+                  .calendar-enhanced button {
+                    color: rgba(196, 181, 253, 0.9) !important;
+                    background: rgba(139, 92, 246, 0.2) !important;
+                    border: 1px solid rgba(139, 92, 246, 0.4) !important;
+                    border-radius: 8px !important;
+                    padding: 0.5rem !important;
+                    font-weight: 600 !important;
+                    transition: all 0.3s ease !important;
+                  }
+                  .calendar-enhanced button:hover {
+                    background: rgba(139, 92, 246, 0.4) !important;
+                    border-color: rgba(139, 92, 246, 0.6) !important;
+                    color: white !important;
+                    transform: scale(1.05) !important;
+                  }
+                `
+              }} />
             </div>
           </div>
 
