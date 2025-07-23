@@ -36,17 +36,7 @@ const UserEventsPage = () => {
 
     },
 
-    {
 
-      title: "Workshop Session",
-
-      description: "Hands-on collaborative session to work through challenges and develop solutions together.",
-
-      duration: 90,
-
-      slug: "workshop-session"
-
-    }
 
   ];
 
