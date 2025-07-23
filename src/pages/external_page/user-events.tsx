@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { ArrowRight, Clock, Calendar, User, Sparkles, Star, CheckCircle, Users, BookOpen, Zap, Target, Award } from "lucide-react";
+import { ArrowRight, Clock, Calendar, User, Sparkles, Star, CheckCircle,  BookOpen, Zap, Target, Award } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getAllPublicEventQueryFn } from "@/lib/api";
 import { ErrorAlert } from "@/components/ErrorAlert";
