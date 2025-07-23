@@ -239,7 +239,7 @@
 
 
 import { Link, useParams } from "react-router-dom";
-import { ArrowRight, Clock, Calendar, User, Sparkles, Star, CheckCircle, Users } from "lucide-react";
+import { ArrowRight, Clock, Calendar, User, Sparkles, Star, CheckCircle, Users, BookOpen } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getAllPublicEventQueryFn } from "@/lib/api";
 import { ErrorAlert } from "@/components/ErrorAlert";
@@ -288,7 +288,7 @@ const UserEventsPage = () => {
             <Loader size="lg" color="white" />
           </div>
         ) : (
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             {/* Header Section */}
             <div className="text-center mb-12 md:mb-16 lg:mb-20">
               {/* Top badge */}
@@ -324,7 +324,7 @@ const UserEventsPage = () => {
                   <div className="flex items-center justify-center space-x-4 mt-4 md:mt-6">
                     <div className="flex items-center space-x-1">
                       <Users className="w-3 h-3 md:w-4 md:h-4 text-purple-300" />
-                      <span className="text-xs md:text-sm text-purple-200 font-semibold">{events.length} Event{events.length !== 1 ? 's' : ''}</span>
+                      <span className="text-xs md:text-sm text-purple-200 font-semibold">{events.length} Meeting Type{events.length !== 1 ? 's' : ''} Available</span>
                     </div>
                   </div>
                 )}
@@ -333,72 +333,86 @@ const UserEventsPage = () => {
               {/* Section heading */}
               <div className="space-y-2 md:space-y-3">
                 <h2 className="text-xl md:text-2xl lg:text-3xl font-black text-white drop-shadow-2xl">
-                  🎯 Available Meeting Options
+                  📅 Book Your Meeting
                 </h2>
                 <p className="text-sm md:text-base lg:text-lg text-gray-200 font-bold max-w-2xl mx-auto drop-shadow-xl">
                   {events.length > 0 
-                    ? `Select from ${events.length} available meeting type${events.length !== 1 ? 's' : ''} that match your needs.`
+                    ? `Choose from ${events.length} available session${events.length !== 1 ? 's' : ''} designed to help you succeed.`
                     : "Setting up meeting options for you."
                   }
                 </p>
               </div>
             </div>
 
-            {/* Events Grid - Fixed single grid */}
+            {/* Single Event Card - Enhanced */}
             {events.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-10 max-w-6xl mx-auto mb-12 md:mb-16">
-                {events.map((event, index) => (
-                  <Link
-                    key={event.id || index}
-                    to={`/${username}/${event.slug}`}
-                    className="group relative transform hover:scale-[1.03] transition-all duration-500 cursor-pointer"
-                  >
-                    {/* Card */}
-                    <div className="bg-gradient-to-br from-slate-900/95 via-purple-900/90 to-indigo-900/95 backdrop-blur-2xl rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-10 border border-purple-400/50 hover:border-purple-300/80 transition-all duration-500 hover:shadow-2xl min-h-[280px] md:min-h-[320px] flex flex-col justify-between relative overflow-hidden ring-1 ring-purple-300/20 hover:ring-purple-300/40">
-                      
-                      {/* Subtle inner glow for depth */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl md:rounded-3xl"></div>
-                      
-                      {/* Content */}
-                      <div className="relative z-10 flex-1">
-                        <div className="flex items-start justify-between mb-4 md:mb-6">
-                          <div className="p-3 md:p-4 bg-gradient-to-br from-purple-500/80 to-pink-500/80 rounded-xl md:rounded-2xl border border-purple-300/60 shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110">
-                            <Calendar className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7 text-white drop-shadow-lg" />
-                          </div>
-                          <div className="flex items-center space-x-1 md:space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
-                            <span className="text-xs md:text-sm font-black text-purple-200 drop-shadow-lg">Let's go</span>
-                            <ArrowRight className="w-4 h-4 md:w-5 md:h-5 text-purple-200 animate-bounce drop-shadow-lg" />
-                          </div>
-                        </div>
-
-                        <h3 className="text-lg md:text-xl lg:text-2xl font-black mb-2 md:mb-3 lg:mb-4 text-white group-hover:text-gray-100 transition-colors duration-300 capitalize drop-shadow-2xl line-clamp-2" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>
-                          {event.title}
+              <div className="max-w-2xl mx-auto mb-12 md:mb-16">
+                <div className="bg-gradient-to-br from-slate-900/95 via-purple-900/90 to-indigo-900/95 backdrop-blur-2xl rounded-2xl md:rounded-3xl p-8 md:p-10 lg:p-12 border border-purple-400/50 shadow-2xl ring-1 ring-purple-300/20 relative overflow-hidden">
+                  
+                  {/* Background glow */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-pink-500/5 rounded-2xl md:rounded-3xl"></div>
+                  
+                  {/* Content */}
+                  <div className="relative z-10">
+                    {/* Header with icon */}
+                    <div className="flex items-center mb-6 md:mb-8">
+                      <div className="p-4 md:p-5 bg-gradient-to-br from-purple-500/80 to-pink-500/80 rounded-xl md:rounded-2xl border border-purple-300/60 shadow-xl mr-4 md:mr-6">
+                        <Calendar className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 text-white drop-shadow-lg" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl md:text-2xl lg:text-3xl font-black text-white drop-shadow-2xl mb-1" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>
+                          Available Sessions
                         </h3>
-
-                        <p className="text-sm md:text-base lg:text-lg text-gray-100 group-hover:text-white transition-colors duration-300 leading-relaxed line-clamp-4 mb-4 md:mb-6 font-bold drop-shadow-xl flex-1" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>
-                          {event.description || "🎉 Professional meeting session designed to help you achieve your goals."}
+                        <p className="text-sm md:text-base text-purple-200 font-semibold">
+                          {events.length} meeting option{events.length !== 1 ? 's' : ''} to choose from
                         </p>
                       </div>
-
-                      {/* Duration Badge */}
-                      <div className="flex items-center justify-between relative z-10 mt-auto">
-                        <div className="inline-flex items-center px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-3 bg-gradient-to-r from-slate-800/90 to-indigo-800/90 backdrop-blur-xl rounded-xl md:rounded-2xl border border-blue-400/60 shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-105">
-                          <Clock className="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3 text-blue-300 drop-shadow-lg" />
-                          <span className="text-sm md:text-base font-black text-white drop-shadow-lg">
-                            {event.duration} min{event.duration !== 1 ? 's' : ''}
-                          </span>
-                        </div>
-                        
-                        <div className="text-xs md:text-sm text-gray-200 group-hover:text-white font-black opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 drop-shadow-lg">
-                          Book now! 🚀
-                        </div>
-                      </div>
-
-                      {/* Enhanced hover glow */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-2xl md:rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                     </div>
-                  </Link>
-                ))}
+
+                    {/* Events List */}
+                    <div className="space-y-4 md:space-y-6 mb-8 md:mb-10">
+                      {events.map((event, index) => (
+                        <div key={event.id || index} className="bg-slate-800/50 backdrop-blur-lg rounded-xl md:rounded-2xl p-4 md:p-6 border border-purple-400/30 hover:border-purple-300/60 transition-all duration-300">
+                          <div className="flex items-start justify-between mb-3 md:mb-4">
+                            <div className="flex-1">
+                              <h4 className="text-lg md:text-xl font-black text-white mb-2 capitalize" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>
+                                {event.title}
+                              </h4>
+                              <p className="text-sm md:text-base text-gray-200 leading-relaxed font-medium mb-3" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>
+                                {event.description || "Professional meeting session designed to help you achieve your goals."}
+                              </p>
+                              <div className="flex items-center space-x-4">
+                                <div className="flex items-center space-x-2">
+                                  <Clock className="w-4 h-4 text-blue-300" />
+                                  <span className="text-sm font-semibold text-blue-200">{event.duration} minutes</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Call to Action */}
+                    <div className="text-center">
+                      <Link
+                        to={`/${username}/${events[0]?.slug}`}
+                        className="group inline-flex items-center px-8 py-4 md:px-10 md:py-5 bg-gradient-to-r from-purple-600 via-pink-600 to-violet-600 hover:from-purple-500 hover:via-pink-500 hover:to-violet-500 rounded-xl md:rounded-2xl font-black text-lg md:text-xl text-white shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 border border-purple-300/50 hover:border-purple-200/70"
+                      >
+                        <BookOpen className="w-5 h-5 md:w-6 md:h-6 mr-3 md:mr-4 drop-shadow-lg group-hover:animate-pulse" />
+                        <span className="drop-shadow-lg">Book Your Meeting</span>
+                        <ArrowRight className="w-5 h-5 md:w-6 md:h-6 ml-3 md:ml-4 drop-shadow-lg group-hover:translate-x-1 transition-transform duration-300" />
+                      </Link>
+                      
+                      <p className="text-xs md:text-sm text-gray-300 mt-4 md:mt-6 font-medium">
+                        ⚡ Instant booking • No waiting • Professional service
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Enhanced hover glow */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-400/10 to-pink-400/10 rounded-2xl md:rounded-3xl opacity-100 pointer-events-none"></div>
+                </div>
               </div>
             )}
 
