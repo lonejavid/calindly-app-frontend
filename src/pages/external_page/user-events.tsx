@@ -18,7 +18,7 @@ const UserEventsPage = () => {
 
       description: "Deep dive into your business goals and create actionable plans for growth and success.",
 
-      duration: 45,
+      duration: 30,
 
       slug: "strategy-session"
 
