@@ -239,7 +239,7 @@
 
 
 import { Link, useParams } from "react-router-dom";
-import { ArrowRight, Clock, Calendar, User, Sparkles, Star, CheckCircle, Users, MapPin, Video } from "lucide-react";
+import { ArrowRight, Clock, Calendar, User, Sparkles, Star, CheckCircle, Users } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getAllPublicEventQueryFn } from "@/lib/api";
 import { ErrorAlert } from "@/components/ErrorAlert";
@@ -322,12 +322,6 @@ const UserEventsPage = () => {
                 {/* User stats/info if available */}
                 {user && (
                   <div className="flex items-center justify-center space-x-4 mt-4 md:mt-6">
-                    {user.location && (
-                      <div className="flex items-center space-x-1">
-                        <MapPin className="w-3 h-3 md:w-4 md:h-4 text-purple-300" />
-                        <span className="text-xs md:text-sm text-purple-200 font-semibold">{user.location}</span>
-                      </div>
-                    )}
                     <div className="flex items-center space-x-1">
                       <Users className="w-3 h-3 md:w-4 md:h-4 text-purple-300" />
                       <span className="text-xs md:text-sm text-purple-200 font-semibold">{events.length} Event{events.length !== 1 ? 's' : ''}</span>
@@ -369,11 +363,7 @@ const UserEventsPage = () => {
                       <div className="relative z-10 flex-1">
                         <div className="flex items-start justify-between mb-4 md:mb-6">
                           <div className="p-3 md:p-4 bg-gradient-to-br from-purple-500/80 to-pink-500/80 rounded-xl md:rounded-2xl border border-purple-300/60 shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110">
-                            {event.type === 'video' ? (
-                              <Video className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7 text-white drop-shadow-lg" />
-                            ) : (
-                              <Calendar className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7 text-white drop-shadow-lg" />
-                            )}
+                            <Calendar className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7 text-white drop-shadow-lg" />
                           </div>
                           <div className="flex items-center space-x-1 md:space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
                             <span className="text-xs md:text-sm font-black text-purple-200 drop-shadow-lg">Let's go</span>
@@ -388,20 +378,6 @@ const UserEventsPage = () => {
                         <p className="text-sm md:text-base lg:text-lg text-gray-100 group-hover:text-white transition-colors duration-300 leading-relaxed line-clamp-4 mb-4 md:mb-6 font-bold drop-shadow-xl flex-1" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>
                           {event.description || "🎉 Professional meeting session designed to help you achieve your goals."}
                         </p>
-
-                        {/* Event metadata */}
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          {event.type && (
-                            <span className="inline-flex items-center px-2 py-1 bg-purple-500/20 text-purple-200 text-xs font-semibold rounded-lg border border-purple-400/30">
-                              {event.type === 'video' ? '📹 Video Call' : '📅 Meeting'}
-                            </span>
-                          )}
-                          {event.category && (
-                            <span className="inline-flex items-center px-2 py-1 bg-blue-500/20 text-blue-200 text-xs font-semibold rounded-lg border border-blue-400/30">
-                              {event.category}
-                            </span>
-                          )}
-                        </div>
                       </div>
 
                       {/* Duration Badge */}
