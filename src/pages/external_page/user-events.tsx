@@ -481,6 +481,60 @@ const UserEventsPage = () => {
                 </Link>
               ))}
             </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-10 max-w-6xl mx-auto mb-12 md:mb-16">
+              {events?.map((event, index) => (
+                <Link
+                  key={index}
+                  to={`/${username}/${event.slug}`}
+                  className="group relative transform hover:scale-[1.03] transition-all duration-500 cursor-pointer"
+                >
+                  {/* Card */}
+                  <div className="bg-gradient-to-br from-slate-900/95 via-purple-900/90 to-indigo-900/95 backdrop-blur-2xl rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-10 border border-purple-400/50 hover:border-purple-300/80 transition-all duration-500 hover:shadow-2xl min-h-[200px] md:min-h-[240px] flex flex-col justify-between relative overflow-hidden ring-1 ring-purple-300/20 hover:ring-purple-300/40">
+                    
+                    {/* Subtle inner glow for depth */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl md:rounded-3xl"></div>
+                    
+                    {/* Content */}
+                    <div className="relative z-10">
+                      <div className="flex items-start justify-between mb-4 md:mb-6">
+                        <div className="p-3 md:p-4 bg-gradient-to-br from-purple-500/80 to-pink-500/80 rounded-xl md:rounded-2xl border border-purple-300/60 shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110">
+                          <Calendar className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7 text-white drop-shadow-lg" />
+                        </div>
+                        <div className="flex items-center space-x-1 md:space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
+                          <span className="text-xs md:text-sm font-black text-purple-200 drop-shadow-lg">Let's go</span>
+                          <ArrowRight className="w-4 h-4 md:w-5 md:h-5 text-purple-200 animate-bounce drop-shadow-lg" />
+                        </div>
+                      </div>
+
+                      <h3 className="text-lg md:text-xl lg:text-2xl font-black mb-2 md:mb-3 lg:mb-4 text-white group-hover:text-gray-100 transition-colors duration-300 capitalize drop-shadow-2xl" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>
+                        {event.title}
+                      </h3>
+
+                      <p className="text-sm md:text-base lg:text-lg text-gray-100 group-hover:text-white transition-colors duration-300 leading-relaxed line-clamp-3 mb-4 md:mb-6 font-bold drop-shadow-xl" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>
+                        {event.description || "🎉 Professional meeting session designed to help you achieve your goals."}
+                      </p>
+                    </div>
+
+                    {/* Duration Badge */}
+                    <div className="flex items-center justify-between relative z-10">
+                      <div className="inline-flex items-center px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-3 bg-gradient-to-r from-slate-800/90 to-indigo-800/90 backdrop-blur-xl rounded-xl md:rounded-2xl border border-blue-400/60 shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-105">
+                        <Clock className="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3 text-blue-300 drop-shadow-lg" />
+                        <span className="text-sm md:text-base font-black text-white drop-shadow-lg">
+                          {event.duration} minutes
+                        </span>
+                      </div>
+                      
+                      <div className="text-xs md:text-sm text-gray-200 group-hover:text-white font-black opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 drop-shadow-lg">
+                        Book now! 🚀
+                      </div>
+                    </div>
+
+                    {/* Enhanced hover glow */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-2xl md:rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                  </div>
+                </Link>
+              ))}
+            </div>
 
             {/* Empty State */}
             {events.length === 0 && (
