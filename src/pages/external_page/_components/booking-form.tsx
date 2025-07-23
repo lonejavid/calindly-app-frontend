@@ -40,18 +40,6 @@ const BookingForm = (props: { eventId: string; duration: number,accessSpecifier:
   const publicDomains = ["gmail.com", "yahoo.com", "hotmail.com", "outlook.com"];
   const publicEmailRegex = new RegExp(`@(${publicDomains.join("|")})$`, "i");
 
-  // Zod schema with public domain validation
-  // const bookingFormSchema = z.object({
-  //   guestName: z.string().min(1, "Name is required"),
-  //   guestEmail: z
-  //     .string()
-  //     .email("Invalid email address")
-  //     .refine((email) => !publicEmailRegex.test(email), {
-  //       message:
-  //         "Public domains are not allowed. Please enter your official email address.",
-  //     }),
-  //   additionalInfo: z.string().optional(),
-  // });
     const bookingFormSchema = z.object({
     guestName: z.string().min(1, "Name is required"),
     guestEmail:
