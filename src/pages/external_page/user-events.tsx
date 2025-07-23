@@ -1,148 +1,38 @@
-import React, { useState } from 'react';
-import { ArrowRight, ArrowLeft, Clock, Calendar, User, Sparkles, Star, CheckCircle } from "lucide-react";
+import { Link, useParams } from "react-router-dom";
+import { ArrowRight, Clock, Calendar, User, Sparkles, Star, CheckCircle } from "lucide-react";
+import PageContainer from "./_components/page-container";
+import { useQuery } from "@tanstack/react-query";
+import { getAllPublicEventQueryFn } from "@/lib/api";
+import { ErrorAlert } from "@/components/ErrorAlert";
+import { Loader } from "@/components/loader";
 
-// Single Event Card Component with Navigation
-const SingleEventCard = ({ events }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const currentEvent = events[currentIndex];
+interface Event {
+  title: string;
+  description: string;
+  duration: number;
+  slug: string;
+}
 
-  const nextEvent = () => {
-    setCurrentIndex((prev) => (prev + 1) % events.length);
-  };
+interface UserData {
+  name: string;
+}
 
-  const prevEvent = () => {
-    setCurrentIndex((prev) => (prev - 1 + events.length) % events.length);
-  };
-
-  const handleEventClick = () => {
-    // Navigate to event page - you can add your navigation logic here
-    console.log(`Navigating to event: ${currentEvent.slug}`);
-    // window.location.href = `/${username}/${currentEvent.slug}`;
-  };
-
-  return (
-    <div className="relative">
-      {/* Navigation Arrows */}
-      <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20">
-        <button
-          onClick={prevEvent}
-          className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-r from-slate-900/90 to-purple-900/90 backdrop-blur-xl rounded-full border border-purple-400/50 flex items-center justify-center shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 ring-1 ring-purple-300/30 hover:ring-purple-300/60 group"
-          disabled={events.length <= 1}
-        >
-          <ArrowLeft className="w-5 h-5 md:w-6 md:h-6 text-white group-hover:text-purple-200 transition-colors duration-300 drop-shadow-lg" />
-        </button>
-      </div>
-
-      <div className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20">
-        <button
-          onClick={nextEvent}
-          className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-r from-slate-900/90 to-purple-900/90 backdrop-blur-xl rounded-full border border-purple-400/50 flex items-center justify-center shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 ring-1 ring-purple-300/30 hover:ring-purple-300/60 group animate-pulse"
-          disabled={events.length <= 1}
-        >
-          <ArrowRight className="w-5 h-5 md:w-6 md:h-6 text-white group-hover:text-purple-200 transition-colors duration-300 drop-shadow-lg" />
-        </button>
-      </div>
-
-      {/* Main Event Card */}
-      <div
-        onClick={handleEventClick}
-        className="group relative transform hover:scale-[1.02] transition-all duration-500 cursor-pointer mx-16"
-      >
-        <div className="bg-gradient-to-br from-slate-900/95 via-purple-900/90 to-indigo-900/95 backdrop-blur-2xl rounded-2xl md:rounded-3xl p-8 md:p-10 lg:p-12 border border-purple-400/50 hover:border-purple-300/80 transition-all duration-500 hover:shadow-2xl min-h-[300px] md:min-h-[350px] flex flex-col justify-between relative overflow-hidden ring-1 ring-purple-300/20 hover:ring-purple-300/40">
-          
-          {/* Event Counter */}
-          <div className="absolute top-6 right-6 px-3 py-1 bg-gradient-to-r from-slate-800/90 to-purple-800/90 rounded-full border border-purple-400/50 shadow-lg">
-            <span className="text-xs font-bold text-white drop-shadow-lg">
-              {currentIndex + 1} of {events.length}
-            </span>
-          </div>
-
-          {/* Subtle inner glow for depth */}
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl md:rounded-3xl"></div>
-          
-          {/* Content with excellent contrast */}
-          <div className="relative z-10">
-            <div className="flex items-start justify-between mb-6 md:mb-8">
-              <div className="p-4 md:p-5 bg-gradient-to-br from-purple-500/80 to-pink-500/80 rounded-xl md:rounded-2xl border border-purple-300/60 shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110">
-                <Calendar className="w-6 h-6 md:w-8 md:h-8 text-white drop-shadow-lg" />
-              </div>
-              <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
-                <span className="text-sm md:text-base font-black text-purple-200 drop-shadow-lg">Book Now</span>
-                <ArrowRight className="w-5 h-5 md:w-6 md:h-6 text-purple-200 animate-bounce drop-shadow-lg" />
-              </div>
-            </div>
-
-            {/* Event Title */}
-            <h3 className="text-2xl md:text-3xl lg:text-4xl font-black mb-4 md:mb-6 text-white group-hover:text-gray-100 transition-colors duration-300 capitalize drop-shadow-2xl" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>
-              {currentEvent.title}
-            </h3>
-
-            {/* Event Description */}
-            <p className="text-base md:text-lg lg:text-xl text-gray-100 group-hover:text-white transition-colors duration-300 leading-relaxed mb-6 md:mb-8 font-bold drop-shadow-xl" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>
-              {currentEvent.description || "🎉 Professional meeting session designed to help you achieve your goals."}
-            </p>
-          </div>
-
-          {/* Duration Badge and Navigation Hint */}
-          <div className="flex items-center justify-between relative z-10">
-            <div className="inline-flex items-center px-4 py-3 md:px-6 md:py-3 bg-gradient-to-r from-slate-800/90 to-indigo-800/90 backdrop-blur-xl rounded-xl md:rounded-2xl border border-blue-400/60 shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-105">
-              <Clock className="w-5 h-5 md:w-6 md:h-6 mr-3 text-blue-300 drop-shadow-lg" />
-              <span className="text-base md:text-lg font-black text-white drop-shadow-lg">
-                {currentEvent.duration} minutes
-              </span>
-            </div>
-            
-            <div className="text-sm md:text-base text-gray-200 group-hover:text-white font-black opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 drop-shadow-lg">
-              Click to Schedule! 🚀
-            </div>
-          </div>
-
-          {/* Enhanced hover glow */}
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-2xl md:rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-        </div>
-      </div>
-
-      {/* Event Indicators */}
-      <div className="flex justify-center mt-6 space-x-2">
-        {events.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentIndex(index)}
-            className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all duration-300 ${
-              index === currentIndex 
-                ? 'bg-purple-400 shadow-lg scale-125' 
-                : 'bg-white/30 hover:bg-white/50'
-            }`}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
+interface PublicEventsResponse {
+  events: Event[];
+  user: UserData;
+}
 
 const UserEventsPage = () => {
-  // Mock data for demonstration
-  const user = { name: "Alex Johnson" };
-  const events = [
-    {
-      title: "Strategy Session",
-      description: "Deep dive into your business goals and create actionable plans for growth and success.",
-      duration: 45,
-      slug: "strategy-session"
-    },
-    {
-      title: "Quick Consultation", 
-      description: "Fast and focused discussion to address your immediate questions and concerns.",
-      duration: 15,
-      slug: "quick-consultation"
-    },
-    {
-      title: "Workshop Session",
-      description: "Hands-on collaborative session to work through challenges and develop solutions together.",
-      duration: 90,
-      slug: "workshop-session"
-    }
-  ];
+  const param = useParams();
+  const username = param.username as string;
+
+  const { data, isFetching, isLoading, isError, error } = useQuery<PublicEventsResponse>({
+    queryKey: ["public_events"],
+    queryFn: () => getAllPublicEventQueryFn(username),
+  });
+
+  const events = data?.events || [];
+  const user = data?.user;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-indigo-950 text-white overflow-hidden relative">
@@ -158,84 +48,133 @@ const UserEventsPage = () => {
 
       <div className="fixed inset-0 bg-gradient-to-br from-transparent via-purple-900/10 to-transparent pointer-events-none"></div>
 
-      <div className="relative z-10 py-8 md:py-12 lg:py-16 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto">
-          {/* Header Section - ENHANCED CONTRAST */}
-          <div className="text-center mb-12 md:mb-16 lg:mb-20">
-            {/* Top badge - Dark background for contrast */}
-            <div className="inline-flex items-center px-4 py-2 md:px-6 md:py-3 bg-gradient-to-r from-slate-900/90 to-purple-900/90 backdrop-blur-xl rounded-full mb-6 md:mb-8 border border-purple-400/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 ring-1 ring-purple-300/30">
-              <Sparkles className="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3 text-yellow-400 animate-pulse drop-shadow-lg" />
-              <span className="text-sm md:text-base font-black text-white tracking-wide drop-shadow-lg">✨ Schedule Your Meeting</span>
-              <Star className="w-3 h-3 md:w-4 md:h-4 ml-2 md:ml-3 text-yellow-400 drop-shadow-lg" />
-            </div>
+      <PageContainer isLoading={isLoading}>
+        <ErrorAlert isError={isError} error={error} />
 
-            {/* User profile card - Dark gradient with text shadows */}
-            <div className="bg-gradient-to-br from-slate-900/95 via-purple-900/90 to-indigo-900/95 backdrop-blur-2xl rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-10 border border-purple-400/40 max-w-md mx-auto mb-8 md:mb-10 lg:mb-12 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-[1.02] ring-1 ring-purple-300/20">
-              <div className="flex items-center justify-center mb-4 md:mb-6">
-                <div className="relative">
-                  <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-gradient-to-br from-purple-500 via-pink-500 to-violet-600 rounded-full flex items-center justify-center shadow-2xl ring-4 ring-purple-300/30 ring-offset-2 ring-offset-transparent">
-                    <User className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-white drop-shadow-lg" />
+        {isFetching || isError ? (
+          <div className="flex items-center justify-center min-h-[50vh] relative z-10">
+            <div className="bg-white/20 backdrop-blur-2xl rounded-3xl p-12 border border-white/30 shadow-2xl">
+              <Loader size="lg" color="white" />
+            </div>
+          </div>
+        ) : (
+          <div className="relative z-10 py-8 md:py-12 lg:py-16 px-4 sm:px-6">
+            <div className="max-w-7xl mx-auto">
+              {/* Header Section */}
+              <div className="text-center mb-12 md:mb-16 lg:mb-20">
+                <div className="inline-flex items-center px-4 py-2 md:px-6 md:py-3 bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-xl rounded-full mb-6 md:mb-8 border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                  <Sparkles className="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3 text-yellow-300 animate-pulse" />
+                  <span className="text-sm md:text-base font-bold text-white tracking-wide">✨ Schedule Your Meeting</span>
+                  <Star className="w-3 h-3 md:w-4 md:h-4 ml-2 md:ml-3 text-yellow-300" />
+                </div>
+
+                <div className="bg-gradient-to-br from-white/25 to-white/10 backdrop-blur-2xl rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-10 border border-white/40 max-w-md mx-auto mb-8 md:mb-10 lg:mb-12 shadow-xl md:shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-[1.02]">
+                  <div className="flex items-center justify-center mb-4 md:mb-6">
+                    <div className="relative">
+                      <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-gradient-to-br from-purple-400 via-pink-400 to-violet-500 rounded-full flex items-center justify-center shadow-xl md:shadow-2xl ring-2 md:ring-4 ring-white/20 ring-offset-2 md:ring-offset-4 ring-offset-transparent">
+                        <User className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-white drop-shadow" />
+                      </div>
+                      <div className="absolute -bottom-1 -right-1 w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 bg-green-400 rounded-full border-2 md:border-3 border-white flex items-center justify-center">
+                        <CheckCircle className="w-2 h-2 md:w-3 md:h-3 text-white" />
+                      </div>
+                    </div>
                   </div>
-                  <div className="absolute -bottom-1 -right-1 w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 bg-green-500 rounded-full border-2 md:border-3 border-white flex items-center justify-center shadow-lg">
-                    <CheckCircle className="w-2 h-2 md:w-3 md:h-3 text-white" />
-                  </div>
+                  
+                  <h1 className="text-2xl md:text-3xl lg:text-4xl font-black mb-2 md:mb-3 lg:mb-4 bg-gradient-to-r from-white via-purple-100 to-white bg-clip-text text-transparent drop-shadow capitalize tracking-tight">
+                    {user?.name || 'Professional'}
+                  </h1>
+                  
+                  <p className="text-sm md:text-base lg:text-lg text-white/90 leading-relaxed font-medium max-w-md mx-auto">
+                    🚀 Ready to connect? Choose your preferred meeting type below.
+                  </p>
+                </div>
+
+                <div className="space-y-2 md:space-y-3">
+                  <h2 className="text-xl md:text-2xl lg:text-3xl font-black text-white drop-shadow">
+                    🎯 Available Meeting Options
+                  </h2>
+                  <p className="text-sm md:text-base lg:text-lg text-white/80 font-medium max-w-2xl mx-auto">
+                    Select the perfect meeting type that matches your needs.
+                  </p>
                 </div>
               </div>
-              
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-black mb-2 md:mb-3 lg:mb-4 text-white capitalize tracking-tight drop-shadow-2xl text-shadow-lg">
-                {user?.name || 'Professional'}
-              </h1>
-              
-              <p className="text-sm md:text-base lg:text-lg text-gray-100 leading-relaxed font-bold max-w-md mx-auto drop-shadow-xl">
-                🚀 Ready to connect? Choose your preferred meeting type below.
-              </p>
-            </div>
 
-            {/* Section heading - Enhanced text shadows */}
-            <div className="space-y-2 md:space-y-3">
-              <h2 className="text-xl md:text-2xl lg:text-3xl font-black text-white drop-shadow-2xl">
-                🎯 Available Meeting Options
-              </h2>
-              <p className="text-sm md:text-base lg:text-lg text-gray-200 font-bold max-w-2xl mx-auto drop-shadow-xl">
-                Select the perfect meeting type that matches your needs.
-              </p>
-            </div>
-          </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-10 max-w-6xl mx-auto mb-12 md:mb-16">
+                {events.map((event, index) => (
+                  <Link
+                    key={index}
+                    to={`/${username}/${event.slug}`}
+                    className="group relative transform hover:scale-[1.03] transition-all duration-500"
+                  >
+                    <div className="bg-gradient-to-br from-white/25 to-white/10 backdrop-blur-2xl rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-10 border border-white/40 hover:border-purple-300/60 transition-all duration-500 hover:shadow-xl md:hover:shadow-2xl min-h-[200px] md:min-h-[240px] flex flex-col justify-between relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      
+                      <div className="relative z-10">
+                        <div className="flex items-start justify-between mb-4 md:mb-6">
+                          <div className="p-3 md:p-4 bg-gradient-to-br from-purple-400/40 to-pink-400/40 rounded-xl md:rounded-2xl border border-purple-300/50 shadow-lg group-hover:shadow-xl md:group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110">
+                            <Calendar className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7 text-white drop-shadow" />
+                          </div>
+                          <div className="flex items-center space-x-1 md:space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
+                            <span className="text-xs md:text-sm font-bold text-purple-200">Let's go</span>
+                            <ArrowRight className="w-4 h-4 md:w-5 md:h-5 text-purple-200 animate-bounce" />
+                          </div>
+                        </div>
 
-          {/* Single Event Card with Navigation */}
-          <div className="max-w-4xl mx-auto mb-12 md:mb-16">
-            {events.length > 0 && (
-              <SingleEventCard events={events} />
-            )}
-          </div>
+                        <h3 className="text-lg md:text-xl lg:text-2xl font-black mb-2 md:mb-3 lg:mb-4 text-white group-hover:text-purple-100 transition-colors duration-300 capitalize drop-shadow">
+                          {event.title}
+                        </h3>
 
-          {/* Empty State - Enhanced contrast */}
-          {events.length === 0 && (
-            <div className="text-center py-12 md:py-16 lg:py-20">
-              <div className="bg-gradient-to-br from-slate-900/95 via-purple-900/90 to-indigo-900/95 backdrop-blur-2xl rounded-2xl md:rounded-3xl p-8 md:p-10 lg:p-12 border border-purple-400/50 max-w-md mx-auto shadow-2xl ring-1 ring-purple-300/20">
-                <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-gray-600/80 to-gray-700/80 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-xl">
-                  <Calendar className="w-8 h-8 md:w-10 md:h-10 text-white drop-shadow-lg" />
+                        <p className="text-sm md:text-base lg:text-lg text-white/85 group-hover:text-white transition-colors duration-300 leading-relaxed line-clamp-3 mb-4 md:mb-6 font-medium">
+                          {event.description || "🎉 Professional meeting session designed to help you achieve your goals."}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center justify-between relative z-10">
+                        <div className="inline-flex items-center px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-3 bg-gradient-to-r from-blue-400/40 to-cyan-400/40 backdrop-blur-xl rounded-xl md:rounded-2xl border border-blue-300/50 shadow-lg group-hover:shadow-xl md:group-hover:shadow-2xl transition-all duration-300 group-hover:scale-105">
+                          <Clock className="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3 text-blue-100 drop-shadow" />
+                          <span className="text-sm md:text-base font-black text-white">
+                            {event.duration} minutes
+                          </span>
+                        </div>
+                        
+                        <div className="text-xs md:text-sm text-white/70 group-hover:text-white font-bold opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                          Book now! 🚀
+                        </div>
+                      </div>
+
+                      <div className="absolute inset-0 bg-gradient-to-r from-purple-400/10 to-pink-400/10 rounded-2xl md:rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+
+              {events.length === 0 && !isFetching && (
+                <div className="text-center py-12 md:py-16 lg:py-20">
+                  <div className="bg-gradient-to-br from-white/25 to-white/10 backdrop-blur-2xl rounded-2xl md:rounded-3xl p-8 md:p-10 lg:p-12 border border-white/40 max-w-md mx-auto shadow-xl md:shadow-2xl">
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-gray-400/30 to-gray-500/30 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-lg">
+                      <Calendar className="w-8 h-8 md:w-10 md:h-10 text-white drop-shadow" />
+                    </div>
+                    <h3 className="text-xl md:text-2xl font-black mb-2 md:mb-3 lg:mb-4 text-white drop-shadow">
+                      🚧 No Events Yet
+                    </h3>
+                    <p className="text-sm md:text-base lg:text-lg text-white/80 font-medium">
+                      This user is setting up their calendar. Check back soon!
+                    </p>
+                  </div>
                 </div>
-                <h3 className="text-xl md:text-2xl font-black mb-2 md:mb-3 lg:mb-4 text-white drop-shadow-2xl">
-                  🚧 No Events Yet
-                </h3>
-                <p className="text-sm md:text-base lg:text-lg text-gray-100 font-bold drop-shadow-xl">
-                  This user is setting up their calendar. Check back soon!
-                </p>
+              )}
+
+              <div className="text-center">
+                <div className="inline-flex items-center px-4 py-2 md:px-6 md:py-3 bg-gradient-to-r from-white/15 to-white/5 backdrop-blur-xl rounded-full border border-white/25 shadow-lg hover:shadow-xl md:hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                  <span className="text-xs md:text-sm text-white/90 font-bold">
+                    ⚡ Powered by <span className="text-purple-300 font-black tracking-wide">Schedley</span>
+                  </span>
+                </div>
               </div>
             </div>
-          )}
-
-          {/* Footer - Enhanced contrast */}
-          <div className="text-center">
-            <div className="inline-flex items-center px-4 py-2 md:px-6 md:py-3 bg-gradient-to-r from-slate-900/90 to-purple-900/90 backdrop-blur-xl rounded-full border border-purple-400/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 ring-1 ring-purple-300/30">
-              <span className="text-xs md:text-sm text-white font-black drop-shadow-lg">
-                ⚡ Powered by <span className="text-purple-300 font-black tracking-wide drop-shadow-lg">Schedley</span>
-              </span>
-            </div>
           </div>
-        </div>
-      </div>
+        )}
+      </PageContainer>
     </div>
   );
 };
