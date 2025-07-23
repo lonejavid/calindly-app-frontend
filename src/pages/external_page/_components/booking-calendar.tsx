@@ -7,7 +7,7 @@ import { getPublicAvailabilityByEventIdQueryFn } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import { ErrorAlert } from "@/components/ErrorAlert";
 import { Loader } from "@/components/loader";
-import HourButton from "@/components/HourButton";
+
 import { Clock, Calendar as CalendarIcon, Sparkles, ArrowRight, CheckCircle, Star, Zap } from "lucide-react";
 
 interface BookingCalendarProps {
