@@ -188,7 +188,7 @@ const UserEventsPage = () => {
 
                   <div className="relative z-10">
 
-                    <div className="flex items-start justify-between mb-4 md:mb-6" >
+                    <div className="flex items-start justify-between mb-4 md:mb-6">
 
                       <div className="p-3 md:p-4 bg-gradient-to-br from-purple-500/80 to-pink-500/80 rounded-xl md:rounded-2xl border border-purple-300/60 shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110">
 
