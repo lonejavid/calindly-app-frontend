@@ -1,5 +1,124 @@
+import React, { useState } from 'react';
+import { ArrowRight, ArrowLeft, Clock, Calendar, User, Sparkles, Star, CheckCircle } from "lucide-react";
 
-import { ArrowRight, Clock, Calendar, User, Sparkles, Star, CheckCircle } from "lucide-react";
+// Single Event Card Component with Navigation
+const SingleEventCard = ({ events }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const currentEvent = events[currentIndex];
+
+  const nextEvent = () => {
+    setCurrentIndex((prev) => (prev + 1) % events.length);
+  };
+
+  const prevEvent = () => {
+    setCurrentIndex((prev) => (prev - 1 + events.length) % events.length);
+  };
+
+  const handleEventClick = () => {
+    // Navigate to event page - you can add your navigation logic here
+    console.log(`Navigating to event: ${currentEvent.slug}`);
+    // window.location.href = `/${username}/${currentEvent.slug}`;
+  };
+
+  return (
+    <div className="relative">
+      {/* Navigation Arrows */}
+      <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20">
+        <button
+          onClick={prevEvent}
+          className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-r from-slate-900/90 to-purple-900/90 backdrop-blur-xl rounded-full border border-purple-400/50 flex items-center justify-center shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 ring-1 ring-purple-300/30 hover:ring-purple-300/60 group"
+          disabled={events.length <= 1}
+        >
+          <ArrowLeft className="w-5 h-5 md:w-6 md:h-6 text-white group-hover:text-purple-200 transition-colors duration-300 drop-shadow-lg" />
+        </button>
+      </div>
+
+      <div className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20">
+        <button
+          onClick={nextEvent}
+          className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-r from-slate-900/90 to-purple-900/90 backdrop-blur-xl rounded-full border border-purple-400/50 flex items-center justify-center shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 ring-1 ring-purple-300/30 hover:ring-purple-300/60 group animate-pulse"
+          disabled={events.length <= 1}
+        >
+          <ArrowRight className="w-5 h-5 md:w-6 md:h-6 text-white group-hover:text-purple-200 transition-colors duration-300 drop-shadow-lg" />
+        </button>
+      </div>
+
+      {/* Main Event Card */}
+      <div
+        onClick={handleEventClick}
+        className="group relative transform hover:scale-[1.02] transition-all duration-500 cursor-pointer mx-16"
+      >
+        <div className="bg-gradient-to-br from-slate-900/95 via-purple-900/90 to-indigo-900/95 backdrop-blur-2xl rounded-2xl md:rounded-3xl p-8 md:p-10 lg:p-12 border border-purple-400/50 hover:border-purple-300/80 transition-all duration-500 hover:shadow-2xl min-h-[300px] md:min-h-[350px] flex flex-col justify-between relative overflow-hidden ring-1 ring-purple-300/20 hover:ring-purple-300/40">
+          
+          {/* Event Counter */}
+          <div className="absolute top-6 right-6 px-3 py-1 bg-gradient-to-r from-slate-800/90 to-purple-800/90 rounded-full border border-purple-400/50 shadow-lg">
+            <span className="text-xs font-bold text-white drop-shadow-lg">
+              {currentIndex + 1} of {events.length}
+            </span>
+          </div>
+
+          {/* Subtle inner glow for depth */}
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl md:rounded-3xl"></div>
+          
+          {/* Content with excellent contrast */}
+          <div className="relative z-10">
+            <div className="flex items-start justify-between mb-6 md:mb-8">
+              <div className="p-4 md:p-5 bg-gradient-to-br from-purple-500/80 to-pink-500/80 rounded-xl md:rounded-2xl border border-purple-300/60 shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110">
+                <Calendar className="w-6 h-6 md:w-8 md:h-8 text-white drop-shadow-lg" />
+              </div>
+              <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
+                <span className="text-sm md:text-base font-black text-purple-200 drop-shadow-lg">Book Now</span>
+                <ArrowRight className="w-5 h-5 md:w-6 md:h-6 text-purple-200 animate-bounce drop-shadow-lg" />
+              </div>
+            </div>
+
+            {/* Event Title */}
+            <h3 className="text-2xl md:text-3xl lg:text-4xl font-black mb-4 md:mb-6 text-white group-hover:text-gray-100 transition-colors duration-300 capitalize drop-shadow-2xl" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>
+              {currentEvent.title}
+            </h3>
+
+            {/* Event Description */}
+            <p className="text-base md:text-lg lg:text-xl text-gray-100 group-hover:text-white transition-colors duration-300 leading-relaxed mb-6 md:mb-8 font-bold drop-shadow-xl" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>
+              {currentEvent.description || "🎉 Professional meeting session designed to help you achieve your goals."}
+            </p>
+          </div>
+
+          {/* Duration Badge and Navigation Hint */}
+          <div className="flex items-center justify-between relative z-10">
+            <div className="inline-flex items-center px-4 py-3 md:px-6 md:py-3 bg-gradient-to-r from-slate-800/90 to-indigo-800/90 backdrop-blur-xl rounded-xl md:rounded-2xl border border-blue-400/60 shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-105">
+              <Clock className="w-5 h-5 md:w-6 md:h-6 mr-3 text-blue-300 drop-shadow-lg" />
+              <span className="text-base md:text-lg font-black text-white drop-shadow-lg">
+                {currentEvent.duration} minutes
+              </span>
+            </div>
+            
+            <div className="text-sm md:text-base text-gray-200 group-hover:text-white font-black opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 drop-shadow-lg">
+              Click to Schedule! 🚀
+            </div>
+          </div>
+
+          {/* Enhanced hover glow */}
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-2xl md:rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+        </div>
+      </div>
+
+      {/* Event Indicators */}
+      <div className="flex justify-center mt-6 space-x-2">
+        {events.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentIndex(index)}
+            className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all duration-300 ${
+              index === currentIndex 
+                ? 'bg-purple-400 shadow-lg scale-125' 
+                : 'bg-white/30 hover:bg-white/50'
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const UserEventsPage = () => {
   // Mock data for demonstration
@@ -83,60 +202,11 @@ const UserEventsPage = () => {
             </div>
           </div>
 
-          {/* Events Grid - MAJOR CONTRAST IMPROVEMENTS */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-10 max-w-6xl mx-auto mb-12 md:mb-16">
-            {events?.map((event, index) => (
-              <div
-                key={index}
-                className="group relative transform hover:scale-[1.03] transition-all duration-500 cursor-pointer"
-              >
-                {/* DARK CARD with better contrast */}
-                <div className="bg-gradient-to-br from-slate-900/95 via-purple-900/90 to-indigo-900/95 backdrop-blur-2xl rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-10 border border-purple-400/50 hover:border-purple-300/80 transition-all duration-500 hover:shadow-2xl min-h-[200px] md:min-h-[240px] flex flex-col justify-between relative overflow-hidden ring-1 ring-purple-300/20 hover:ring-purple-300/40">
-                  
-                  {/* Subtle inner glow for depth */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl md:rounded-3xl"></div>
-                  
-                  {/* Content with excellent contrast */}
-                  <div className="relative z-10">
-                    <div className="flex items-start justify-between mb-4 md:mb-6">
-                      <div className="p-3 md:p-4 bg-gradient-to-br from-purple-500/80 to-pink-500/80 rounded-xl md:rounded-2xl border border-purple-300/60 shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110">
-                        <Calendar className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7 text-white drop-shadow-lg" />
-                      </div>
-                      <div className="flex items-center space-x-1 md:space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
-                        <span className="text-xs md:text-sm font-black text-purple-200 drop-shadow-lg">Let's go</span>
-                        <ArrowRight className="w-4 h-4 md:w-5 md:h-5 text-purple-200 animate-bounce drop-shadow-lg" />
-                      </div>
-                    </div>
-
-                    {/* WHITE TEXT with dark text shadow for maximum readability */}
-                    <h3 className="text-lg md:text-xl lg:text-2xl font-black mb-2 md:mb-3 lg:mb-4 text-white group-hover:text-gray-100 transition-colors duration-300 capitalize drop-shadow-2xl" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>
-                      {event.title}
-                    </h3>
-
-                    <p className="text-sm md:text-base lg:text-lg text-gray-100 group-hover:text-white transition-colors duration-300 leading-relaxed line-clamp-3 mb-4 md:mb-6 font-bold drop-shadow-xl" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>
-                      {event.description || "🎉 Professional meeting session designed to help you achieve your goals."}
-                    </p>
-                  </div>
-
-                  {/* Duration Badge with dark background */}
-                  <div className="flex items-center justify-between relative z-10">
-                    <div className="inline-flex items-center px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-3 bg-gradient-to-r from-slate-800/90 to-indigo-800/90 backdrop-blur-xl rounded-xl md:rounded-2xl border border-blue-400/60 shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-105">
-                      <Clock className="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3 text-blue-300 drop-shadow-lg" />
-                      <span className="text-sm md:text-base font-black text-white drop-shadow-lg">
-                        {event.duration} minutes
-                      </span>
-                    </div>
-                    
-                    <div className="text-xs md:text-sm text-gray-200 group-hover:text-white font-black opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 drop-shadow-lg">
-                      Book now! 🚀
-                    </div>
-                  </div>
-
-                  {/* Enhanced hover glow */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-2xl md:rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                </div>
-              </div>
-            ))}
+          {/* Single Event Card with Navigation */}
+          <div className="max-w-4xl mx-auto mb-12 md:mb-16">
+            {events.length > 0 && (
+              <SingleEventCard events={events} />
+            )}
           </div>
 
           {/* Empty State - Enhanced contrast */}
@@ -171,7 +241,6 @@ const UserEventsPage = () => {
 };
 
 export default UserEventsPage;
-
 // import { Link, useParams } from "react-router-dom";
 // import { ArrowRight, Clock } from "lucide-react";
 // import PageContainer from "./_components/page-container";
