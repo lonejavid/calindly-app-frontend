@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ErrorAlert } from "@/components/ErrorAlert";
 import { Loader } from "@/components/loader";
 import HourButton from "@/components/HourButton";
-import { Clock, Calendar as CalendarIcon, Sparkles, ArrowRight } from "lucide-react";
+import { Clock, Calendar as CalendarIcon, Sparkles, ArrowRight, CheckCircle, Star, Zap } from "lucide-react";
 
 interface BookingCalendarProps {
   eventId: string;
@@ -68,183 +68,250 @@ const BookingCalendar = ({
   const selectedTime = decodeSlot(selectedSlot, timezone, hourType);
 
   return (
-    <div className="relative lg:flex-[1_1_50%] w-full flex-shrink-0 transition-all duration-300 ease-out">
-      {/* Beautiful Background with Gradients */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-purple-950 to-indigo-950 rounded-3xl overflow-hidden">
-        {/* Animated Background Elements */}
-        <div className="absolute -top-16 -right-16 w-32 h-32 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-gradient-to-tr from-blue-400 to-cyan-500 rounded-full mix-blend-multiply filter blur-xl opacity-15 animate-pulse" style={{animationDelay: '2s'}}></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-gradient-to-r from-violet-400 to-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse" style={{animationDelay: '4s'}}></div>
+    <div className="relative lg:flex-[1_1_50%] w-full flex-shrink-0 min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-indigo-950 p-4 pr-0">
+      
+      {/* Animated Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-32 -right-32 w-96 h-96 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+        <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-gradient-to-tr from-blue-400 to-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-pulse" style={{animationDelay: '2s'}}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-gradient-to-r from-violet-400 to-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse" style={{animationDelay: '4s'}}></div>
       </div>
 
-      {/* Main Content Container */}
-      <div className="relative z-10 bg-gradient-to-br from-slate-900/95 via-purple-900/90 to-indigo-900/95 backdrop-blur-3xl rounded-3xl border border-purple-400/50 shadow-2xl ring-1 ring-purple-300/20 p-8 m-4">
+      {/* Loader Overlay */}
+      {isFetching && (
+        <div className="fixed inset-0 bg-gradient-to-br from-purple-900/90 via-slate-900/90 to-indigo-900/90 backdrop-blur-3xl z-50 flex items-center justify-center">
+          <div className="text-center bg-gradient-to-br from-slate-800/90 to-purple-900/90 backdrop-blur-2xl rounded-3xl p-12 border border-purple-400/50 shadow-2xl">
+            <div className="w-20 h-20 bg-gradient-to-br from-purple-500 via-pink-500 to-violet-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl animate-spin">
+              <Sparkles className="w-10 h-10 text-white" />
+            </div>
+            <Loader size="lg" color="white" />
+            <p className="text-white font-bold text-lg mt-6 animate-pulse">Crafting your perfect booking experience...</p>
+          </div>
+        </div>
+      )}
+
+      <div className="relative z-10 flex flex-col h-full max-w-7xl mx-auto">
         
-        {/* Loader Overlay */}
-        {isFetching && (
-          <div className="flex bg-gradient-to-br from-purple-900/80 via-slate-900/80 to-indigo-900/80 backdrop-blur-2xl !z-30 absolute inset-4 rounded-2xl items-center justify-center">
-            <div className="text-center">
-              <Loader size="lg" color="white" />
-              <p className="text-white font-semibold mt-4 animate-pulse">Loading your perfect time slots...</p>
+        {/* Stunning Header Section */}
+        <div className="text-center mb-8 pt-8">
+          <div className="relative inline-block mb-6">
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full blur-xl opacity-50 animate-pulse"></div>
+            <div className="relative w-24 h-24 bg-gradient-to-br from-purple-500 via-pink-500 to-violet-600 rounded-full flex items-center justify-center shadow-2xl ring-4 ring-purple-300/30">
+              <CalendarIcon className="w-12 h-12 text-white drop-shadow-2xl" />
             </div>
           </div>
-        )}
+          
+          <h2 className="text-5xl md:text-6xl font-black text-white mb-4 drop-shadow-2xl bg-gradient-to-r from-purple-200 via-pink-200 to-violet-200 bg-clip-text text-transparent">
+            Choose Your Perfect Moment
+          </h2>
+          
+          <p className="text-xl md:text-2xl text-gray-200 font-semibold mb-6 max-w-2xl mx-auto leading-relaxed">
+            Select your ideal date and time for an extraordinary experience
+          </p>
 
-        <div className="flex flex-col h-full mx-auto">
-          {/* Beautiful Header */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 via-pink-500 to-violet-600 rounded-full shadow-xl ring-4 ring-purple-300/30 mb-4">
-              <CalendarIcon className="w-8 h-8 text-white drop-shadow-lg" />
+          <div className="flex items-center justify-center space-x-8">
+            <div className="flex items-center space-x-2">
+              <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse shadow-lg"></div>
+              <span className="text-green-300 font-bold text-sm">Instant Booking</span>
             </div>
-            <h2 className="text-3xl font-black text-white mb-2 drop-shadow-2xl">Select Your Perfect Time</h2>
-            <p className="text-lg text-gray-200 font-medium">Choose a date and time that works best for you</p>
-            <div className="flex items-center justify-center mt-3">
-              <Sparkles className="w-4 h-4 text-yellow-400 mr-2 animate-pulse" />
-              <span className="text-sm text-purple-300 font-semibold">Easy booking in just two steps</span>
-              <Sparkles className="w-4 h-4 text-yellow-400 ml-2 animate-pulse" />
+            <div className="flex items-center space-x-2">
+              <Star className="w-4 h-4 text-yellow-400 animate-pulse" />
+              <span className="text-yellow-300 font-bold text-sm">Premium Experience</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Zap className="w-4 h-4 text-purple-400 animate-pulse" />
+              <span className="text-purple-300 font-bold text-sm">Lightning Fast</span>
             </div>
           </div>
+        </div>
 
-          <div className="w-full flex flex-col md:flex-row lg:flex-[1_1_300px] gap-8">
-            {/* Calendar Section */}
-            <div className="w-full flex justify-center">
-              <div className="bg-slate-800/50 backdrop-blur-lg rounded-2xl p-6 border border-purple-400/30 shadow-xl">
-                <Calendar
-                  className="w-auto md:w-full lg:!w-auto"
-                  minValue={minValue}
-                  defaultValue={defaultValue}
-                  value={selectedDate}
-                  timezone={timezone}
-                  onChange={handleChangeDate}
-                  isDateUnavailable={isDateUnavailable}
-                />
+        {/* Main Content Grid */}
+        <div className="flex-1 grid lg:grid-cols-2 gap-8 lg:gap-12 pb-8">
+          
+          {/* Calendar Section - Left Side */}
+          <div className="flex flex-col">
+            <div className="bg-gradient-to-br from-slate-900/95 via-purple-900/90 to-indigo-900/95 backdrop-blur-3xl rounded-3xl border border-purple-400/50 shadow-2xl ring-1 ring-purple-300/20 p-8 h-full">
+              
+              <div className="flex items-center justify-center mb-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
+                    <CalendarIcon className="w-4 h-4 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-black text-white">Pick Your Date</h3>
+                </div>
+              </div>
+
+              <div className="flex justify-center items-center h-full">
+                <div className="bg-slate-800/50 backdrop-blur-lg rounded-2xl p-6 border border-purple-400/30 shadow-xl">
+                  <Calendar
+                    className="w-full max-w-none"
+                    minValue={minValue}
+                    defaultValue={defaultValue}
+                    value={selectedDate}
+                    timezone={timezone}
+                    onChange={handleChangeDate}
+                    isDateUnavailable={isDateUnavailable}
+                  />
+                </div>
+              </div>
+
+              {/* Date Selection Status */}
+              <div className="mt-6 text-center">
+                {selectedDate ? (
+                  <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600/80 to-emerald-600/80 backdrop-blur-lg rounded-full border border-green-300/50 shadow-lg">
+                    <CheckCircle className="w-5 h-5 mr-3 text-green-200" />
+                    <span className="text-white font-bold">
+                      {format(selectedDate.toDate(timezone), "EEEE, MMMM d, yyyy")} Selected
+                    </span>
+                  </div>
+                ) : (
+                  <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-600/60 to-gray-700/60 backdrop-blur-lg rounded-full border border-gray-400/30">
+                    <CalendarIcon className="w-5 h-5 mr-3 text-gray-300" />
+                    <span className="text-gray-200 font-semibold">Select a date to continue</span>
+                  </div>
+                )}
               </div>
             </div>
+          </div>
 
-            {/* Time Slots Section */}
-            {selectedDate && availability ? (
-              <div className="w-full flex-shrink-0 max-w-xs md:max-w-[40%] overflow-hidden">
-                <div className="bg-slate-800/50 backdrop-blur-lg rounded-2xl border border-purple-400/30 shadow-xl overflow-hidden">
-                  
+          {/* Time Slots Section - Right Side */}
+          <div className="flex flex-col">
+            <div className="bg-gradient-to-br from-slate-900/95 via-purple-900/90 to-indigo-900/95 backdrop-blur-3xl rounded-3xl border border-purple-400/50 shadow-2xl ring-1 ring-purple-300/20 h-full overflow-hidden">
+              
+              {selectedDate && availability ? (
+                <>
                   {/* Time Slots Header */}
-                  <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 p-6 border-b border-purple-400/30">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                      <div className="flex items-center">
-                        <Clock className="w-5 h-5 text-purple-300 mr-3" />
-                        <h3 className="font-bold text-xl text-white">
-                          {format(selectedDate.toDate(timezone), "EEEE, MMMM d")}
-                        </h3>
+                  <div className="bg-gradient-to-r from-purple-600/30 via-pink-600/30 to-violet-600/30 backdrop-blur-lg p-8 border-b border-purple-400/30">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-gradient-to-br from-pink-500 to-violet-500 rounded-full flex items-center justify-center shadow-lg">
+                          <Clock className="w-4 h-4 text-white" />
+                        </div>
+                        <h3 className="text-2xl font-black text-white">Available Times</h3>
                       </div>
 
-                      {/* Hour Format Toggle */}
-                      <div className="flex h-10 w-full max-w-[120px] items-center bg-slate-700/50 border border-purple-400/40 rounded-lg overflow-hidden shadow-inner">
-                        <HourButton
-                          label="12h"
-                          isActive={hourType === "12h"}
+                      {/* Hour Format Selector */}
+                      <div className="flex h-12 w-32 items-center bg-slate-700/50 border-2 border-purple-400/40 rounded-xl overflow-hidden shadow-inner">
+                        <button
                           onClick={() => setHourType("12h")}
-                        />
-                        <HourButton
-                          label="24h"
-                          isActive={hourType === "24h"}
+                          className={`flex-1 h-full text-sm font-bold transition-all duration-300 ${
+                            hourType === "12h"
+                              ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg"
+                              : "text-purple-200 hover:text-white hover:bg-purple-600/30"
+                          }`}
+                        >
+                          12h
+                        </button>
+                        <button
                           onClick={() => setHourType("24h")}
-                        />
+                          className={`flex-1 h-full text-sm font-bold transition-all duration-300 ${
+                            hourType === "24h"
+                              ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg"
+                              : "text-purple-200 hover:text-white hover:bg-purple-600/30"
+                          }`}
+                        >
+                          24h
+                        </button>
                       </div>
                     </div>
+
+                    <p className="text-purple-200 font-semibold">
+                      {format(selectedDate.toDate(timezone), "EEEE, MMMM d")} • {timeSlots.length} slots available
+                    </p>
                   </div>
 
-                  {/* Time Slots List */}
-                  <div className="flex-[1_1_100px] p-4 overflow-x-hidden overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-purple-400/50 h-[400px]">
+                  {/* Time Slots Grid */}
+                  <div className="flex-1 p-8 overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-purple-400/50">
                     {timeSlots.length > 0 ? (
-                      <div className="space-y-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {timeSlots.map((slot, i) => {
                           const formattedSlot = formatSlot(slot, timezone, hourType);
                           const isSelected = selectedTime === formattedSlot;
                           
                           return (
-                            <div key={i} className="relative">
-                              {/* Selected State - Next Button Overlay */}
-                              <div
-                                className={`absolute inset-0 z-20 grid grid-cols-2 gap-2 transform transition-all duration-500 ease-in-out ${
-                                  isSelected
-                                    ? "translate-x-0 opacity-100"
-                                    : "translate-x-full opacity-0"
-                                }`}
-                              >
-                                <button
-                                  type="button"
-                                  className="h-12 text-white rounded-xl bg-gradient-to-r from-slate-600 to-slate-700 font-bold text-sm tracking-wide shadow-lg border border-slate-500/50 cursor-default"
-                                  disabled
-                                >
-                                  {formattedSlot}
-                                </button>
-                                <button
-                                  type="button"
-                                  className="h-12 bg-gradient-to-r from-purple-600 via-pink-600 to-violet-600 hover:from-purple-500 hover:via-pink-500 hover:to-violet-500 text-white rounded-xl font-bold text-sm tracking-wide shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center group border border-purple-300/50"
-                                  onClick={handleNext}
-                                >
-                                  Next
-                                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform duration-200" />
-                                </button>
-                              </div>
+                            <div key={i} className="relative group">
+                              {/* Selected State */}
+                              {isSelected && (
+                                <div className="absolute inset-0 z-20 grid grid-cols-1 gap-2">
+                                  <div className="relative overflow-hidden rounded-2xl">
+                                    <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-violet-600 animate-pulse"></div>
+                                    <div className="relative bg-gradient-to-r from-purple-600/90 via-pink-600/90 to-violet-600/90 backdrop-blur-lg p-4 text-center border-2 border-purple-300/50 shadow-2xl">
+                                      <div className="text-white font-black text-lg mb-2">{formattedSlot}</div>
+                                      <button
+                                        onClick={handleNext}
+                                        className="w-full bg-white/20 hover:bg-white/30 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center group border border-white/30 shadow-lg"
+                                      >
+                                        <span>Book This Time</span>
+                                        <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
 
-                              {/* Default Time Slot Button */}
-                              <button
-                                type="button"
-                                className={`w-full h-12 rounded-xl font-bold text-sm tracking-wide transition-all duration-500 ease-in-out border-2 transform hover:scale-102 shadow-lg ${
-                                  isSelected
-                                    ? "opacity-0 pointer-events-none"
-                                    : "opacity-100 border-purple-400/60 text-purple-300 bg-gradient-to-r from-slate-800/50 to-purple-900/30 hover:border-purple-300 hover:bg-gradient-to-r hover:from-slate-700/50 hover:to-purple-800/40 hover:text-purple-200 hover:shadow-xl"
+                              {/* Default Time Slot */}
+                              <div
+                                className={`relative overflow-hidden rounded-2xl transition-all duration-500 cursor-pointer transform hover:scale-105 ${
+                                  isSelected ? "opacity-0 pointer-events-none" : "opacity-100"
                                 }`}
                                 onClick={() => handleSelectSlot(slot)}
                               >
-                                {formattedSlot}
-                              </button>
+                                <div className="absolute inset-0 bg-gradient-to-br from-slate-800/80 via-purple-800/40 to-indigo-800/60"></div>
+                                <div className="absolute inset-0 bg-gradient-to-r from-purple-600/0 via-pink-600/0 to-violet-600/0 group-hover:from-purple-600/20 group-hover:via-pink-600/20 group-hover:to-violet-600/20 transition-all duration-300"></div>
+                                
+                                <div className="relative p-6 text-center border-2 border-purple-400/30 group-hover:border-purple-300/60 transition-all duration-300 shadow-xl">
+                                  <div className="text-purple-100 group-hover:text-white font-black text-xl mb-2 transition-colors duration-300">
+                                    {formattedSlot}
+                                  </div>
+                                  <div className="text-purple-300 group-hover:text-purple-200 font-semibold text-sm transition-colors duration-300">
+                                    Click to select
+                                  </div>
+                                  
+                                  {/* Hover Effect Elements */}
+                                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <Sparkles className="w-4 h-4 text-yellow-400 animate-pulse" />
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                           );
                         })}
                       </div>
                     ) : (
-                      <div className="flex flex-col items-center justify-center h-full text-center py-12">
-                        <div className="w-16 h-16 bg-gradient-to-br from-gray-600/50 to-gray-700/50 rounded-full flex items-center justify-center mb-4 shadow-xl">
-                          <Clock className="w-8 h-8 text-gray-300" />
+                      <div className="flex flex-col items-center justify-center h-full text-center py-16">
+                        <div className="w-24 h-24 bg-gradient-to-br from-gray-600/30 to-gray-700/30 rounded-full flex items-center justify-center mb-6 shadow-xl">
+                          <Clock className="w-12 h-12 text-gray-400" />
                         </div>
-                        <h3 className="text-lg font-bold text-gray-300 mb-2">No Times Available</h3>
-                        <p className="text-sm text-gray-400">Please select a different date</p>
+                        <h3 className="text-2xl font-bold text-gray-300 mb-3">No Available Times</h3>
+                        <p className="text-gray-400 text-lg">Please try selecting a different date</p>
                       </div>
                     )}
                   </div>
-                </div>
-              </div>
-            ) : selectedDate ? (
-              <div className="w-full flex-shrink-0 max-w-xs md:max-w-[40%]">
-                <div className="bg-slate-800/50 backdrop-blur-lg rounded-2xl border border-purple-400/30 shadow-xl p-8">
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-gradient-to-br from-purple-500/50 to-pink-500/50 rounded-full flex items-center justify-center mx-auto mb-4 shadow-xl">
-                      <Clock className="w-8 h-8 text-purple-300 animate-pulse" />
+                </>
+              ) : (
+                /* No Date Selected State */
+                <div className="flex flex-col items-center justify-center h-full text-center p-16">
+                  <div className="relative mb-8">
+                    <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-full blur-xl animate-pulse"></div>
+                    <div className="relative w-32 h-32 bg-gradient-to-br from-slate-700/50 to-purple-800/30 rounded-full flex items-center justify-center shadow-2xl border border-purple-400/30">
+                      <Clock className="w-16 h-16 text-purple-300 animate-pulse" />
                     </div>
-                    <h3 className="text-lg font-bold text-white mb-2">Loading Time Slots</h3>
-                    <p className="text-sm text-gray-300">Finding available times for your selected date...</p>
+                  </div>
+                  
+                  <h3 className="text-3xl font-black text-white mb-4">Select a Date First</h3>
+                  <p className="text-xl text-purple-200 mb-8 max-w-md">
+                    Choose your preferred date from the calendar to see all available time slots
+                  </p>
+                  
+                  <div className="flex items-center space-x-2 text-purple-300">
+                    <ArrowRight className="w-5 h-5 rotate-180" />
+                    <span className="font-semibold">Pick a date to get started</span>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <div className="w-full flex-shrink-0 max-w-xs md:max-w-[40%]">
-                <div className="bg-slate-800/30 backdrop-blur-lg rounded-2xl border border-purple-400/20 shadow-xl p-8">
-                  <div className="text-center opacity-60">
-                    <div className="w-16 h-16 bg-gradient-to-br from-gray-600/30 to-gray-700/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <CalendarIcon className="w-8 h-8 text-gray-400" />
-                    </div>
-                    <h3 className="text-lg font-bold text-gray-300 mb-2">Select a Date</h3>
-                    <p className="text-sm text-gray-400">Choose a date to see available time slots</p>
-                  </div>
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
-
-        {/* Subtle Enhancement Glow */}
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-400/5 to-pink-400/5 rounded-3xl pointer-events-none"></div>
       </div>
 
       {/* Error Alert */}
