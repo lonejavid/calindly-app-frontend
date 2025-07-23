@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 import { ArrowRight, Clock, Calendar, User, Sparkles, Star, CheckCircle } from "lucide-react";
 
