@@ -480,8 +480,7 @@ const UserEventsPage = () => {
                   </div>
                 </Link>
               ))}
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-10 max-w-6xl mx-auto mb-12 md:mb-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-10 max-w-6xl mx-auto mb-12 md:mb-16">
               {events?.map((event, index) => (
                 <Link
                   key={index}
@@ -535,6 +534,9 @@ const UserEventsPage = () => {
                 </Link>
               ))}
             </div>
+            
+            </div>
+          
 
             {/* Empty State */}
             {events.length === 0 && (
