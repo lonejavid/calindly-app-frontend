@@ -113,11 +113,10 @@ const BookingCalendar = ({
                 <h3 className="mt-0 mb-[10px] font-normal text-base leading-[38px] text-white font-semibold">
                   {format(selectedDate.toDate(timezone), "EEEE d")}
                 </h3> */}
-                <div className="pl-6">
-                    <h3 className="text-lg font-semibold text-white mb-2">
-                      format(selectedDate.toDate(timezone), "EEEE d")
-                    </h3>
-                  </div>
+              <h3 className="text-lg font-semibold text-white mb-2 ml-6">
+                {format(selectedDate.toDate(timezone), "EEEE d")}
+              </h3>
+
 
 
                 <div className="flex h-9 w-full max-w-[107px] items-center bg-slate-800/50 backdrop-blur-lg border border-purple-400/40 rounded-lg overflow-hidden shadow-inner">
