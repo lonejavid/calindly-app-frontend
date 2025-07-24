@@ -1,29 +1,47 @@
-import  { useState } from "react";
+import React, { useState } from "react";
 import { Check, ExternalLink, Calendar, User, Mail, MessageSquare } from "lucide-react";
 
-const BookingForm = (props = { eventId: "demo-event", duration: 30, accessSpecifier: "restricted" }) => {
-  const { eventId, duration, accessSpecifier } = props;
-  const [meetLink, setMeetLink] = useState("");
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [isPending, setIsPending] = useState(false);
-  const [selectedDate] = useState("2024-01-15");
-  const [selectedSlot] = useState("2024-01-15T10:00:00Z");
+interface BookingFormProps {
+  eventId: string;
+  duration: number;
+  accessSpecifier: string;
+}
 
-  const [formData, setFormData] = useState({
+interface FormData {
+  guestName: string;
+  guestEmail: string;
+  additionalInfo: string;
+}
+
+interface FormErrors {
+  guestName?: string;
+  guestEmail?: string;
+  additionalInfo?: string;
+}
+
+const BookingForm = (props: BookingFormProps = { eventId: "demo-event", duration: 30, accessSpecifier: "restricted" }) => {
+  const { eventId, duration, accessSpecifier } = props;
+  const [meetLink, setMeetLink] = useState<string>("");
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const [isPending, setIsPending] = useState<boolean>(false);
+  const [selectedDate] = useState<string>("2024-01-15");
+  const [selectedSlot] = useState<string>("2024-01-15T10:00:00Z");
+
+  const [formData, setFormData] = useState<FormData>({
     guestName: "",
     guestEmail: "",
     additionalInfo: ""
   });
 
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<FormErrors>({});
 
   // Public domains to block - Original Logic Preserved
   const publicDomains = ["gmail.com", "yahoo.com", "hotmail.com", "outlook.com"];
   const publicEmailRegex = new RegExp(`@(${publicDomains.join("|")})$`, "i");
 
   // Form validation - Original Logic Preserved
-  const validateForm = () => {
-    const newErrors = {};
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
     
     // Name validation
     if (!formData.guestName.trim()) {
@@ -44,7 +62,7 @@ const BookingForm = (props = { eventId: "demo-event", duration: 30, accessSpecif
   };
 
   // Form submission - Original Logic Preserved
-  const onSubmit = async (e) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     if (!validateForm()) return;
@@ -70,30 +88,32 @@ const BookingForm = (props = { eventId: "demo-event", duration: 30, accessSpecif
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // Simulate successful response
+      // Simulate successful response - payload would be used in real API call
+      console.log('Booking payload:', payload);
       const mockMeetLink = "https://meet.google.com/abc-defg-hij";
       setMeetLink(mockMeetLink);
       setIsSuccess(true);
       
-    } catch (error) {
+    } catch (error: unknown) {
       // Simulate error handling
-      console.error("Failed to schedule event:", error.message || "Unknown error");
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      console.error("Failed to schedule event:", errorMessage);
     } finally {
       setIsPending(false);
     }
   };
 
-  const handleInputChange = (field, value) => {
+  const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     // Clear error when user starts typing
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: "" }));
+      setErrors(prev => ({ ...prev, [field]: undefined }));
     }
   };
 
-  const handleBlur = (field) => {
+  const handleBlur = (field: keyof FormData) => {
     // Validate on blur - Original behavior preserved
-    const tempErrors = { ...errors };
+    const tempErrors: FormErrors = { ...errors };
     
     if (field === 'guestName' && !formData.guestName.trim()) {
       tempErrors.guestName = "Name is required";
@@ -115,8 +135,8 @@ const BookingForm = (props = { eventId: "demo-event", duration: 30, accessSpecif
   };
 
   // Custom Loader Component
-  const Loader = ({ color = "white" }) => (
-    <div className={`w-5 h-5 border-2 border-${color}/30 border-t-${color} rounded-full animate-spin`}></div>
+  const Loader = ({ color = "white" }: { color?: string }) => (
+    <div className={`w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin`}></div>
   );
 
   return (
