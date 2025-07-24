@@ -136,7 +136,7 @@ const BookingForm = (props: BookingFormProps = { eventId: "demo-event", duration
   };
 
   // Custom Loader Component
-  const Loader = ({ color = "white" }: { color?: string }) => (
+  const Loader = ({ }: { color?: string }) => (
     <div className={`w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin`}></div>
   );
 
