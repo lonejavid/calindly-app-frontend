@@ -90,7 +90,9 @@ const BookingCalendar = ({
           
           {/* Calendar Section */}
           <div className="w-full flex justify-start max-w-xs md:max-w-full lg:max-w-sm">
-            <div className="bg-gradient-to-br from-slate-900/95 via-purple-900/90 to-indigo-900/95 backdrop-blur-3xl rounded-3xl border border-purple-400/50 shadow-2xl ring-1 ring-purple-300/20 p-6">
+            {/* <div className="bg-gradient-to-br from-slate-900/95 via-purple-900/90 to-indigo-900/95 backdrop-blur-3xl rounded-3xl border border-purple-400/50 shadow-2xl ring-1 ring-purple-300/20 p-6"> */}
+            <div className="bg-gradient-to-br from-purple-200 via-purple-300 to-indigo-200 backdrop-blur-3xl rounded-3xl border border-purple-400/40 shadow-2xl ring-1 ring-purple-300/10 p-6">
+
               <Calendar
                 className="w-auto md:w-full lg:!w-auto"
                 minValue={minValue}
