@@ -98,6 +98,7 @@ const BookingForm = (props: BookingFormProps = { eventId: "demo-event", duration
       // Simulate error handling
       const errorMessage = error instanceof Error ? error.message : "Unknown error";
       console.error("Failed to schedule event:", errorMessage);
+      console.log("event");
     } finally {
       setIsPending(false);
     }
