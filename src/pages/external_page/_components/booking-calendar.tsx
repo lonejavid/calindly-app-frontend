@@ -67,8 +67,9 @@ const BookingCalendar = ({
   const selectedTime = decodeSlot(selectedSlot, timezone, hourType);
 
   return (
-    <div className="relative lg:flex-[1_1_50%] w-full flex-shrink-0 transition-all duration-220 ease-out p-4 pr-0 bg-gradient-to-br from-slate-950 via-purple-950 to-indigo-950 min-h-screen">
-      
+    // <div className="relative lg:flex-[1_1_50%] w-full flex-shrink-0 transition-all duration-220 ease-out p-4 pr-0 bg-gradient-to-br from-slate-950 via-purple-950 to-indigo-950 min-h-screen">
+      <div className="relative lg:flex-[1_1_50%] w-full flex-shrink-0 transition-all duration-220 ease-out p-4 pr-0 bg-gradient-to-br from-purple-400 via-purple-500 to-indigo-400 min-h-screen">
+
       {/* Background elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-32 -right-32 w-64 h-64 sm:w-96 sm:h-96 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-pulse"></div>
