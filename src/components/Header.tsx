@@ -109,7 +109,7 @@ const Header = () => {
     navigate(AUTH_ROUTES.SIGN_IN);
   };
 
-  const onDeleteAccount = () => {
+  const onDeleteAccount = async() => {
     // Add confirmation dialog logic here
     const confirmed = window.confirm(
       "Are you sure you want to delete your account? This action cannot be undone."
@@ -119,7 +119,7 @@ const Header = () => {
       // Add delete account API call here
       console.log("Deleting account...");
       
-      API.delete("/auth/delete-account");
+     await  API.delete("/auth/delete-account");
       onLogout();
     }
   };
