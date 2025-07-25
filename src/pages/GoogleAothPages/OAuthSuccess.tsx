@@ -1,9 +1,11 @@
-/// src/pages/OAuthSuccess.jsx
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useStore } from "@/store/store"; // ✅ import your Zustand store
 
 const OAuthSuccess = () => {
   const navigate = useNavigate();
+  const setUser = useStore((state) => state.setUser);
+  const setAccessToken = useStore((state) => state.setAccessToken);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
@@ -11,23 +13,29 @@ const OAuthSuccess = () => {
     const userJson = queryParams.get("user");
 
     if (accessToken && userJson) {
-      const user = JSON.parse(decodeURIComponent(userJson));
+      try {
+        const user = JSON.parse(decodeURIComponent(userJson));
 
-      // Save to localStorage or context
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("user", JSON.stringify(user));
-      console.log("Setting up the things to be done");
-      console.log("accessToken",accessToken);
-      console.log("USer",JSON.stringify(user));
+        // Save to Zustand store
+        setUser(user);
+        setAccessToken(accessToken);
 
-      // Redirect to dashboard or any protected route
-    //navigate("/app/event_types");
+        // Optional: Save to localStorage for persistence
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("user", JSON.stringify(user));
 
+        // Debugging
+        console.log("✅ Stored in Zustand:", { accessToken, user });
 
+        // Navigate to dashboard
+        navigate("/app/event_types");
+      } catch (err) {
+        console.error("❌ Failed to parse or store data", err);
+      }
     } else {
-      console.error("Missing token or user data");
+      console.error("❌ Missing token or user data");
     }
-  }, [navigate]);
+  }, [navigate, setUser, setAccessToken]);
 
   return (
     <div className="text-center text-white mt-20 text-xl">
