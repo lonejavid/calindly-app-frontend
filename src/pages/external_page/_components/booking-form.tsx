@@ -65,7 +65,7 @@ const BookingForm = ({ eventId, duration, accessSpecifier = "restricted" }: Book
       startTime: startTime.toISOString(),
       endTime: endTime.toISOString(),
     };
-
+console.log("my payload is here ",payload);
     mutate(payload, {
       onSuccess: (response) => {
         setMeetLink(response.data.meetLink);
