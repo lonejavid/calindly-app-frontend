@@ -32,7 +32,7 @@ const EventType = () => {
         </div>
       ) : (
         <div className="w-full">
-          <UserSection username={username} />
+        
           <EventListSection events={events} username={username} />
         </div>
       )}

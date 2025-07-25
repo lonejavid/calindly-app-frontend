@@ -25,5 +25,5 @@ export const protectedRoutePaths = [
 export const publicRoutePaths = [
   { path: PUBLIC_ROUTES.USER_EVENTS, element: <UserEventsPage /> },
   { path: PUBLIC_ROUTES.USER_SINGLE_EVENT, element: <UserSingleEventPage /> },
-    { path: PUBLIC_ROUTES.OAUTH_SUCCESS, element: <OAuthSuccess /> },
+  { path: PUBLIC_ROUTES.OAUTH_SUCCESS, element: <OAuthSuccess /> },
 ];
