@@ -16,9 +16,10 @@ const OAuthSuccess = () => {
       // Save to localStorage or context
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("user", JSON.stringify(user));
+      console.log("Setting up the things to be done");
 
       // Redirect to dashboard or any protected route
-     navigate("/app/event_types");
+    //navigate("/app/event_types");
 
 
     } else {
