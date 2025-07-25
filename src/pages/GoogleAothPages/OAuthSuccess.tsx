@@ -18,7 +18,7 @@ const OAuthSuccess = () => {
       localStorage.setItem("user", JSON.stringify(user));
 
       // Redirect to dashboard or any protected route
-    //  navigate("/app/event_types");
+     navigate("/app/event_types");
 
 
     } else {
