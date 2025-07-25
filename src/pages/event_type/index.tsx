@@ -1,5 +1,5 @@
-// import UserSection from "./_components/user-section";
-// import EventListSection from "./_components/event-list-section";
+//import UserSection from "./_components/user-section";
+import EventListSection from "./_components/event-list-section";
 import PageTitle from "@/components/PageTitle";
 import { geteventListQueryFn } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
@@ -14,7 +14,7 @@ const EventType = () => {
   });
 
   const events = data?.data.events || [];
-  //const username = data?.data.username ?? "";
+  const username = data?.data.username ?? "";
 
   return (
     <div className="flex flex-col !gap-8">
@@ -32,8 +32,8 @@ const EventType = () => {
         </div>
       ) : (
         <div className="w-full">
-          {/* <UserSection username={username} />
-          <EventListSection events={events} username={username} /> */}
+          {/* <UserSection username={username} /> */}
+          <EventListSection events={events} username={username} />
         </div>
       )}
     </div>
