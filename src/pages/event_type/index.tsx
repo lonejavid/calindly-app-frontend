@@ -1,6 +1,6 @@
 import UserSection from "./_components/user-section";
 import EventListSection from "./_components/event-list-section";
-import PageTitle from "@/components/PageTitle";
+//import PageTitle from "@/components/PageTitle";
 import { geteventListQueryFn } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import { Loader } from "@/components/loader";
@@ -18,7 +18,7 @@ const EventType = () => {
 
   return (
     <div className="flex flex-col !gap-8">
-      <PageTitle title="Event types" />
+      {/* <PageTitle title="Event types" /> */}
 
       <ErrorAlert isError={isError} error={error} />
 
