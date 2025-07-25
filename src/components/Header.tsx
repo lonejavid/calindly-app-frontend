@@ -98,7 +98,7 @@ import { Separator } from "./ui/separator";
 import { useStore } from "@/store/store";
 import { AUTH_ROUTES } from "@/routes/common/routePaths";
 import { SidebarTrigger } from "./ui/sidebar";
-
+import { API} from "../lib/axios-client";
 const Header = () => {
   const navigate = useNavigate();
   const { user, setAccessToken, setUser } = useStore();
@@ -119,6 +119,7 @@ const Header = () => {
       // Add delete account API call here
       console.log("Deleting account...");
       
+      API.delete("/auth/delete-account");
       onLogout();
     }
   };
