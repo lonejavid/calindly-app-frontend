@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Calendar, Shield, Lock, Eye, UserCheck, Mail } from 'lucide-react';
 
 export default function PrivacyPolicy() {
