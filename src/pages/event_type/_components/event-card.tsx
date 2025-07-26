@@ -147,12 +147,16 @@
 
 // export default EventCard;
 // Simple utility function to combine class names
+import { Copy, Settings, Edit3, Trash2, Power } from "lucide-react";
+import { FC, useState, useRef, useEffect } from "react";
+
+// Simple utility function to combine class names
 const cn = (...classes: (string | boolean | undefined)[]) => {
   return classes.filter(Boolean).join(' ');
 };
 
 // Simple loader component
-const Loader: FC<{ size?: 'sm' | 'md'; color?: string }> = ({ size = 'md' }) => (
+const Loader: FC<{ size?: 'sm' | 'md'; color?: string }> = ({ size = 'md'}) => (
   <div className={`inline-block animate-spin rounded-full border-2 border-solid border-current border-r-transparent ${size === 'sm' ? 'h-4 w-4' : 'h-6 w-6'}`}>
     <span className="sr-only">Loading...</span>
   </div>
@@ -220,8 +224,7 @@ const showToast = (message: string, type: 'success' | 'error' = 'success') => {
   setTimeout(() => {
     document.body.removeChild(toast);
   }, 3000);
-};import { Copy,  Edit3, Trash2, Power, MoreVertical } from "lucide-react";
-import { FC, useState, useRef, useEffect } from "react";
+};
 
 interface PropsType {
   id: string;
@@ -293,7 +296,7 @@ const EventCard: FC<PropsType> = ({
           `!p-0 !ring-0 w-full max-w-[400px]
         box-border min-h-[220px] border border-[#CCCCCC)] bg-white rounded-[4px]
         shadow-[0_1px_6px_0_rgb(0_0_0_/_10%)] hover:shadow-[0_4px_12px_0_rgb(0_0_0_/_15%)]
-        transition-all duration-300 group`,
+        transition-all duration-300 group relative`,
           isPrivate && "bg-transparent opacity-75"
         )}
       >
@@ -308,80 +311,94 @@ const EventCard: FC<PropsType> = ({
             )}
           ></div>
 
-          {/* Settings dropdown in top right */}
-          <div className="absolute top-3 right-3 z-10" ref={dropdownRef}>
-            <Button
-              variant="ghost"
-              size="sm"
+          {/* Settings dropdown in top right - HIGHLY VISIBLE */}
+          <div className="absolute top-2 right-2 z-20" ref={dropdownRef}>
+            <button
               className={cn(
-                "w-8 h-8 p-0 rounded-full hover:bg-gray-100 opacity-0 group-hover:opacity-100 transition-all duration-200",
-                isDropdownOpen && "opacity-100 bg-gray-100"
+                "w-10 h-10 rounded-full bg-white border-2 border-gray-300 shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-200 hover:border-purple-400 hover:scale-110",
+                isDropdownOpen && "border-purple-500 shadow-xl scale-110 bg-purple-50"
               )}
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
-              <MoreVertical className="w-4 h-4 text-gray-600" />
-            </Button>
+              <Settings className="w-5 h-5 text-gray-700 hover:text-purple-600" />
+            </button>
 
             {/* Dropdown Menu */}
             {isDropdownOpen && (
-              <div className="absolute right-0 top-full mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-20">
+              <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-xl shadow-2xl border border-gray-200 py-3 z-30 animate-in fade-in duration-200">
                 {/* Edit Event */}
                 <button
                   onClick={() => handleDropdownAction(onEdit || (() => {}))}
-                  className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition-colors duration-150"
+                  className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 flex items-center gap-3 transition-all duration-150"
                   disabled={!onEdit}
                 >
-                  <Edit3 className="w-4 h-4 text-blue-500" />
-                  <span>Edit Event</span>
+                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                    <Edit3 className="w-4 h-4 text-blue-600" />
+                  </div>
+                  <span className="font-medium">Edit Event</span>
                 </button>
 
                 {/* Clone Event */}
                 <button
                   onClick={() => handleDropdownAction(onClone || (() => {}))}
-                  className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition-colors duration-150"
+                  className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 flex items-center gap-3 transition-all duration-150"
                   disabled={!onClone}
                 >
-                  <Copy className="w-4 h-4 text-green-500" />
-                  <span>Clone Event</span>
+                  <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                    <Copy className="w-4 h-4 text-green-600" />
+                  </div>
+                  <span className="font-medium">Clone Event</span>
                 </button>
 
                 {/* Divider */}
-                <div className="border-t border-gray-100 my-1"></div>
+                <div className="border-t border-gray-100 my-2 mx-3"></div>
 
                 {/* Toggle On/Off */}
                 <button
                   onClick={() => handleDropdownAction(onToggle)}
-                  className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition-colors duration-150"
+                  className={cn(
+                    "w-full px-4 py-3 text-left text-sm text-gray-700 flex items-center gap-3 transition-all duration-150",
+                    isPrivate 
+                      ? "hover:bg-green-50 hover:text-green-700" 
+                      : "hover:bg-orange-50 hover:text-orange-700"
+                  )}
                   disabled={isPending}
                 >
-                  <Power className={cn(
-                    "w-4 h-4",
-                    isPrivate ? "text-green-500" : "text-orange-500"
-                  )} />
-                  <span className="flex items-center gap-2">
+                  <div className={cn(
+                    "w-8 h-8 rounded-full flex items-center justify-center",
+                    isPrivate ? "bg-green-100" : "bg-orange-100"
+                  )}>
+                    <Power className={cn(
+                      "w-4 h-4",
+                      isPrivate ? "text-green-600" : "text-orange-600"
+                    )} />
+                  </div>
+                  <span className="font-medium flex items-center gap-2">
                     Turn {isPrivate ? "On" : "Off"}
                     {isPending && <Loader size="sm" color="gray" />}
                   </span>
                 </button>
 
                 {/* Divider */}
-                <div className="border-t border-gray-100 my-1"></div>
+                <div className="border-t border-gray-100 my-2 mx-3"></div>
 
                 {/* Delete Event */}
                 <button
                   onClick={() => handleDropdownAction(onDelete)}
-                  className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-3 transition-colors duration-150"
+                  className="w-full px-4 py-3 text-left text-sm text-red-600 hover:bg-red-50 hover:text-red-700 flex items-center gap-3 transition-all duration-150"
                   disabled={isPending}
                 >
-                  <Trash2 className="w-4 h-4 text-red-500" />
-                  <span>Delete Event</span>
+                  <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
+                    <Trash2 className="w-4 h-4 text-red-600" />
+                  </div>
+                  <span className="font-medium">Delete Event</span>
                 </button>
               </div>
             )}
           </div>
 
           {/* Event details */}
-          <div className="w-full flex flex-col p-[18px_16px]">
+          <div className="w-full flex flex-col p-[18px_16px] pr-14">
             <h2
               className={cn(
                 `text-lg font-semibold text-gray-800 mb-1`,
