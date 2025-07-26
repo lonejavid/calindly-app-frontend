@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Calendar, Shield, Mail, Clock, CheckCircle, ArrowRight, Zap, Filter, Users, Menu, X } from 'lucide-react';
+import { Calendar,Shield,Linkedin, Mail, Clock, CheckCircle, ArrowRight, Zap, Filter, Users, Menu, X } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
 import { AUTH_ROUTES } from "@/routes/common/routePaths";
 
@@ -55,28 +55,42 @@ const ScheduleyLanding = () => {
         <div className="absolute top-1/2 left-1/2 w-30 h-30 sm:w-60 sm:h-60 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse animation-delay-4000"></div>
       </div>
 
-      {/* Navigation - Mobile Optimized */}
+
       <nav className={`relative z-50 p-4 sm:p-6 transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-10 opacity-0'}`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-2 sm:space-x-3">
-             <img 
-                  src="/path-to-your-logo.png" 
-                  alt="Schedley Logo"
-                  className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
-                />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                <Calendar className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
+              </div>
             <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
               Schedley
             </span>
           </div>
           
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          {/* <div className="hidden md:flex items-center space-x-8">
             <a href="#features" className="text-gray-300 hover:text-white transition-colors duration-300">Features</a>
             <a href="#benefits" className="text-gray-300 hover:text-white transition-colors duration-300">Benefits</a>
             <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"   onClick={() => navigate(AUTH_ROUTES.SIGN_IN)}>
               Get Started
             </button>
-          </div>
+            <Linkedin className="w-6 h-6" />
+          </div> */}
+          <div className="hidden md:flex items-center space-x-8">
+  <a href="#features" className="text-gray-300 hover:text-white transition-colors duration-300">Features</a>
+  <a href="#benefits" className="text-gray-300 hover:text-white transition-colors duration-300">Benefits</a>
+  <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg" onClick={() => navigate(AUTH_ROUTES.SIGN_IN)}>
+    Get Started
+  </button>
+  <a 
+    href="https://www.linkedin.com/jobs/view/software-engineer-at-schedley-com-4271146349/?originalSubdomain=in" 
+    target="_blank" 
+    rel="noopener noreferrer"
+    className="text-gray-300 hover:text-white transition-all duration-300 transform hover:scale-110 p-2 rounded-full hover:bg-white/10"
+  >
+    <Linkedin className="w-6 h-6" />
+  </a>
+</div>
 
           {/* Mobile Menu Button */}
           <button
