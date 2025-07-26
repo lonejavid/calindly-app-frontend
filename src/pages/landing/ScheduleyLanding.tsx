@@ -60,7 +60,7 @@ const ScheduleyLanding = () => {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-2 sm:space-x-3">
              <img 
-                  src="/path-to-your-logo.png" 
+                  src="/logo.jpeg" 
                   alt="Schedley Logo"
                   className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
                 />
