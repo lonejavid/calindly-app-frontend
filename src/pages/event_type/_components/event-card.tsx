@@ -18,6 +18,7 @@ interface PropsType {
   username: string;
   isPending: boolean;
   onToggle: () => void;
+    onDelete: () => void;
 }
 
 const EventCard: FC<PropsType> = ({
