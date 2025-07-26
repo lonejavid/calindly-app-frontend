@@ -9,8 +9,12 @@ import UserEventsPage from "@/pages/external_page/user-events";
 import UserSingleEventPage from "@/pages/external_page/user-single-event";
 import ScheduleyLanding from "@/pages/landing/ScheduleyLanding";
 import OAuthSuccess from "@/pages/GoogleAothPages/OAuthSuccess";
+import TermsOfService from "@/pages/Policy/TermsOfService";
+import PrivacyPolicy from "@/pages/Policy/PrivacyPolicy";
 export const authenticationRoutePaths = [
    { path: "/", element: <ScheduleyLanding /> },
+   {path:"/terms",element:<TermsOfService/>},
+   {path:"/privacy",element:<PrivacyPolicy/>},
   { path: AUTH_ROUTES.SIGN_IN, element: <SignIn /> },
   { path: AUTH_ROUTES.SIGN_UP, element: <SignUp /> },
 ];
