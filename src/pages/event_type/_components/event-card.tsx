@@ -653,18 +653,10 @@ const EditEventSlider: FC<{
   ];
 
   return (
-    <>
-      {/* Backdrop */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity"
-          onClick={onClose}
-        />
-      )}
-      
+    <>      
       {/* Slider */}
       <div className={cn(
-        "fixed top-0 right-0 h-full w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out",
+        "fixed top-0 right-0 h-full w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out border-l border-gray-200",
         isOpen ? "translate-x-0" : "translate-x-full"
       )}>
         {/* Header */}
@@ -926,8 +918,7 @@ const EditEventSlider: FC<{
   );
 };
 
-// DEFINE THE PROPS INTERFACE - THIS IS CRUCIAL
-export interface EventCardProps {
+interface PropsType {
   id: string;
   title: string;
   slug: string;
@@ -941,7 +932,7 @@ export interface EventCardProps {
   onClone?: () => void;
 }
 
-const EventCard: FC<EventCardProps> = ({
+const EventCard: FC<PropsType> = ({
   title,
   duration,
   slug,
@@ -1189,4 +1180,92 @@ const EventCard: FC<EventCardProps> = ({
   );
 };
 
-export default EventCard;
+// Demo component to show the EventCard in action
+const Demo = () => {
+  const [events, setEvents] = useState([
+    {
+      id: '1',
+      title: 'Team Standup Meeting',
+      slug: 'team-standup',
+      duration: 30,
+      isPrivate: false,
+      username: 'johnsmith',
+      isPending: false
+    },
+    {
+      id: '2',
+      title: 'Client Consultation',
+      slug: 'client-consultation',
+      duration: 60,
+      isPrivate: true,
+      username: 'johnsmith',
+      isPending: false
+    }
+  ]);
+
+  const handleToggle = (id: string) => {
+    setEvents(prev => prev.map(event => 
+      event.id === id ? { ...event, isPrivate: !event.isPrivate, isPending: true } : event
+    ));
+    
+    // Simulate API call
+    setTimeout(() => {
+      setEvents(prev => prev.map(event => 
+        event.id === id ? { ...event, isPending: false } : event
+      ));
+    }, 1500);
+  };
+
+  const handleDelete = (id: string) => {
+    if (confirm('Are you sure you want to delete this event?')) {
+      setEvents(prev => prev.filter(event => event.id !== id));
+      showToast('Event deleted successfully!');
+    }
+  };
+
+  const handleEdit = (id: string) => {
+    console.log('Edit event:', id);
+  };
+
+  const handleClone = (id: string) => {
+    const eventToClone = events.find(e => e.id === id);
+    if (eventToClone) {
+      const newEvent = {
+        ...eventToClone,
+        id: Date.now().toString(),
+        title: `${eventToClone.title} (Copy)`,
+        slug: `${eventToClone.slug}-copy`
+      };
+      setEvents(prev => [...prev, newEvent]);
+      showToast('Event cloned successfully!');
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-8">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">My Events</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {events.map(event => (
+            <EventCard
+              key={event.id}
+              id={event.id}
+              title={event.title}
+              slug={event.slug}
+              duration={event.duration}
+              isPrivate={event.isPrivate}
+              username={event.username}
+              isPending={event.isPending}
+              onToggle={() => handleToggle(event.id)}
+              onDelete={() => handleDelete(event.id)}
+              onEdit={() => handleEdit(event.id)}
+              onClone={() => handleClone(event.id)}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Demo;
