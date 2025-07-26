@@ -185,7 +185,7 @@ export default function PrivacyPolicy() {
       {/* Footer */}
       <footer className="py-8 px-4 sm:px-6 border-t border-white/10 mt-12">
         <div className="max-w-7xl mx-auto text-center">
-          <p className="text-gray-400">© 2024 Schedley. All rights reserved.</p>
+          <p className="text-gray-400">© 2025 Schedley. All rights reserved.</p>
         </div>
       </footer>
     </div>
