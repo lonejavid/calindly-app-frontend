@@ -803,7 +803,7 @@ const EditEventSlider: FC<{
                   value={formData.maxInviteesPerEvent.toString()}
                   onChange={(e) => handleInputChange('maxInviteesPerEvent', parseInt(e.target.value) || 1)}
                   placeholder="1"
-                 
+                  min="1"
                 />
                 <p className="text-xs text-gray-500 mt-1">
                   Maximum number of people who can book this event
