@@ -317,40 +317,30 @@ const ScheduleyLanding = () => {
         </div>
       </section>
 
-      {/* Footer - Mobile Optimized */}
-      {/* <footer className="py-12 sm:py-16 px-4 sm:px-6 border-t border-white/10">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-            <div className="flex items-center space-x-2 sm:space-x-3">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-                <Calendar className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
-              </div>
-              <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
-                Schedley
-              </span>
-            </div>
-            
-            <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-8 text-gray-400 text-sm sm:text-base text-center">
-              <span>www.schedley.com</span>
-              <span className="hidden sm:block">•</span>
-              <a href="mailto:notifications@schedley.com" className="hover:text-white transition-colors duration-300 break-all">
-                notifications@schedley.com
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer> */}
       <footer className="py-12 sm:py-16 px-4 sm:px-6 border-t border-white/10">
   <div className="max-w-7xl mx-auto">
     <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-      <div className="flex items-center space-x-2 sm:space-x-3">
+      {/* <div className="flex items-center space-x-2 sm:space-x-3">
         <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
           <Calendar className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
         </div>
         <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
           Schedley
         </span>
-      </div>
+      </div> */}
+      <div className="flex items-center space-x-3 sm:space-x-4">
+  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg overflow-hidden flex items-center justify-center bg-white shadow-lg">
+    <img
+      src={mylogo}
+      alt="Schedley Logo"
+      className="w-full h-full object-contain"
+    />
+  </div>
+  <span className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
+    Schedley
+  </span>
+</div>
+
       
       <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-8 text-gray-400 text-sm sm:text-base text-center">
         <span>www.schedley.com</span>
