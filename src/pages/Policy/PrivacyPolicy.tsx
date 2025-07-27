@@ -165,8 +165,8 @@ export default function PrivacyPolicy() {
                 </p>
                 <div className="mt-4 p-4 bg-white/5 rounded-lg border border-white/10">
                   <p className="font-medium text-white">Schedley Privacy Team</p>
-                  <p>Email: privacy@schedley.com</p>
-                  <p>Address: [Your Business Address]</p>
+                  <p>Email: notification@schedley.com</p>
+                 
                 </div>
               </section>
 

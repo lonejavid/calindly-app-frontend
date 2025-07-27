@@ -247,8 +247,7 @@ export default function TermsOfService() {
                 </p>
                 <div className="p-4 bg-white/5 rounded-lg border border-white/10">
                   <p className="font-medium text-white">Schedley Legal Team</p>
-                  <p>Email: legal@schedley.com</p>
-                  <p>Address: [Your Business Address]</p>
+                  <p>Email: notification@schedley.com</p>
                 </div>
               </section>
             </div>
