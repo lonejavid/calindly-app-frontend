@@ -3,7 +3,7 @@ import { Calendar,Shield,Linkedin, Mail, Clock, CheckCircle, ArrowRight, Zap, Fi
 import { useNavigate } from "react-router-dom";
 import { AUTH_ROUTES } from "@/routes/common/routePaths";
 
-
+import mylogo from "../../../mylogo.png";
 const ScheduleyLanding = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [activeFeature, setActiveFeature] = useState(0);
@@ -58,39 +58,44 @@ const ScheduleyLanding = () => {
 
       <nav className={`relative z-50 p-4 sm:p-6 transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-10 opacity-0'}`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-2 sm:space-x-3">
+          {/* <div className="flex items-center space-x-2 sm:space-x-3">
             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
                 <Calendar className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
               </div>
             <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
               Schedley
             </span>
-          </div>
-          
-          {/* Desktop Navigation */}
-          {/* <div className="hidden md:flex items-center space-x-8">
-            <a href="#features" className="text-gray-300 hover:text-white transition-colors duration-300">Features</a>
-            <a href="#benefits" className="text-gray-300 hover:text-white transition-colors duration-300">Benefits</a>
-            <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"   onClick={() => navigate(AUTH_ROUTES.SIGN_IN)}>
-              Get Started
-            </button>
-            <Linkedin className="w-6 h-6" />
           </div> */}
-          <div className="hidden md:flex items-center space-x-8">
-  <a href="#features" className="text-gray-300 hover:text-white transition-colors duration-300">Features</a>
-  <a href="#benefits" className="text-gray-300 hover:text-white transition-colors duration-300">Benefits</a>
-  <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg" onClick={() => navigate(AUTH_ROUTES.SIGN_IN)}>
-    Get Started
-  </button>
-  <a 
-    href="https://www.linkedin.com/jobs/view/software-engineer-at-schedley-com-4271146349/?originalSubdomain=in" 
-    target="_blank" 
-    rel="noopener noreferrer"
-    className="text-gray-300 hover:text-white transition-all duration-300 transform hover:scale-110 p-2 rounded-full hover:bg-white/10"
-  >
-    <Linkedin className="w-6 h-6" />
-  </a>
-</div>
+        <div className="flex items-center space-x-2 sm:space-x-3">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg overflow-hidden flex items-center justify-center bg-white">
+            <img
+              src={mylogo} // ← Replace this with your actual path
+              alt="Schedley Logo"
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
+            Schedley
+          </span>
+        </div>
+
+          
+                
+                          <div className="hidden md:flex items-center space-x-8">
+                  <a href="#features" className="text-gray-300 hover:text-white transition-colors duration-300">Features</a>
+                  <a href="#benefits" className="text-gray-300 hover:text-white transition-colors duration-300">Benefits</a>
+                  <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg" onClick={() => navigate(AUTH_ROUTES.SIGN_IN)}>
+                    Get Started
+                  </button>
+                  <a 
+                    href="https://www.linkedin.com/jobs/view/software-engineer-at-schedley-com-4271146349/?originalSubdomain=in" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-gray-300 hover:text-white transition-all duration-300 transform hover:scale-110 p-2 rounded-full hover:bg-white/10"
+                  >
+                    <Linkedin className="w-6 h-6" />
+                  </a>
+                </div>
 
           {/* Mobile Menu Button */}
           <button
