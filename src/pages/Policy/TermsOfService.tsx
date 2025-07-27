@@ -255,12 +255,19 @@ export default function TermsOfService() {
               </section>
 
               {/* Governing Law */}
-              <section>
+              {/* <section>
                 <h2 className="text-2xl font-semibold text-white mb-4">Governing Law</h2>
                 <p className="leading-relaxed">
                   These Terms shall be governed by and construed in accordance with the laws of [Your Jurisdiction], without regard to its conflict of law provisions. Any disputes shall be resolved in the courts of [Your Jurisdiction].
                 </p>
-              </section>
+              </section> */}
+              <section>
+  <h2 className="text-2xl font-semibold text-white mb-4">Governing Law</h2>
+  <p className="leading-relaxed text-white">
+    These Terms shall be governed by and interpreted under general legal principles applicable to online services. In the absence of a specific jurisdiction, any disputes will be handled in accordance with fair and reasonable standards until a formal legal framework is established.
+  </p>
+</section>
+
 
               {/* Contact Information */}
               <section>
