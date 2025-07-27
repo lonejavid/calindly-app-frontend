@@ -160,7 +160,7 @@ export default function TermsOfService() {
               </section>
 
               {/* Payment Terms */}
-              <section>
+              {/* <section>
                 <h2 className="text-2xl font-semibold text-white mb-4">Payment and Billing</h2>
                 <div className="space-y-4">
                   <div>
@@ -179,7 +179,33 @@ export default function TermsOfService() {
                     </ul>
                   </div>
                 </div>
-              </section>
+              </section> */}
+              <section>
+  <h2 className="text-2xl font-semibold text-white mb-4">Payment and Billing</h2>
+  <div className="space-y-4">
+    <div>
+      <h3 className="text-xl font-medium text-white mb-2">Free Trial</h3>
+      <p className="leading-relaxed text-white">
+        Currently, Schedley offers a 30-day free trial with full access to its features. This allows users to explore the platform and its benefits without any initial payment.
+      </p>
+    </div>
+    <div>
+      <h3 className="text-xl font-medium text-white mb-2">Post-Trial Subscription</h3>
+      <p className="leading-relaxed text-white">
+        After the trial period ends, users can choose a suitable subscription plan based on their needs. We will introduce clear and fair pricing plans on our website.
+      </p>
+    </div>
+    <div>
+      <h3 className="text-xl font-medium text-white mb-2">Billing and Cancellation</h3>
+      <ul className="list-disc list-inside space-y-1 ml-4 text-white">
+        <li>No billing occurs during the free trial period.</li>
+        <li>Once a plan is selected after trial, billing will begin based on the selected plan.</li>
+        <li>Users can cancel anytime, and service will remain active until the end of the billing cycle.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
 
               {/* Limitation of Liability */}
               <section>
