@@ -346,7 +346,7 @@ const ScheduleyLanding = () => {
         <span>www.schedley.com</span>
         <span className="hidden sm:block">•</span>
         <a href="mailto:notifications@schedley.com" className="hover:text-white transition-colors duration-300 break-all">
-          notifications@schedley.com
+          notification@schedley.com
         </a>
         <span className="hidden sm:block">•</span>
         <div className="flex items-center space-x-4">
