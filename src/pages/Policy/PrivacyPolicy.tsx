@@ -1,20 +1,32 @@
 
-import { Calendar, Shield, Lock, Eye, UserCheck, Mail } from 'lucide-react';
-
+import { Shield, Lock, Eye, UserCheck, Mail } from 'lucide-react';
+import mylogo from "../../../mylogo.png";
 export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Header */}
       <nav className="relative z-50 p-4 sm:p-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-2 sm:space-x-3">
+          {/* <div className="flex items-center space-x-2 sm:space-x-3">
             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
               <Calendar className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
             </div>
             <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
               Schedley
             </span>
-          </div>
+          </div> */}
+             <div className="flex items-center space-x-3 sm:space-x-4">
+  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg overflow-hidden flex items-center justify-center bg-white shadow-lg">
+    <img
+      src={mylogo}
+      alt="Schedley Logo"
+      className="w-full h-full object-contain"
+    />
+  </div>
+  <span className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
+    Schedley
+  </span>
+</div>
           <a 
             href="/" 
             className="text-gray-300 hover:text-white transition-colors duration-300"
