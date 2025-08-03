@@ -16,7 +16,7 @@ export const PROTECTED_ROUTES = {
 };
 
 export const PUBLIC_ROUTES = {
-  USER_EVENTS: "/:username",
+  // USER_EVENTS: "/:username",
   USER_SINGLE_EVENT: "/:username/:slug",
   OAUTH_SUCCESS: "/oauth-success",
 };
