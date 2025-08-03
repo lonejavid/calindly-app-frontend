@@ -31,6 +31,9 @@ export interface UserType {
   imageUrl: string | null;
 }
 export interface EventType {
+  questions: string;
+  blockedDomains: string;
+  timeSlotInterval: number;
   id: string;
   title: string;
   description: string;

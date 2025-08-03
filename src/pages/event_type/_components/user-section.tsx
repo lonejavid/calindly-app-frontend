@@ -22,6 +22,7 @@ const UserSection = (props: { username: string }) => {
         </div>
         <div className="flex flex-col">
           <div className="flex">
+            
             <span
               className="block max-w-[340px] capitalize whitespace-nowrap 
             overflow-hidden truncate line-clamp-1 text-sm font-normal"
@@ -31,7 +32,7 @@ const UserSection = (props: { username: string }) => {
           </div>
           <div className="flex">
             <a target="_blank" href={my_link} className="text-[#004eba]">
-              <h1> test it here</h1>
+              <h1> test it here eeeeee</h1>
               <span
                 className="block max-w-[340px] whitespace-nowrap 
             overflow-hidden truncate line-clamp-1 text-sm font-normal"

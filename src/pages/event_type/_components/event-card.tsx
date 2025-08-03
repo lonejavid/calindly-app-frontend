@@ -148,7 +148,7 @@ const EditEventSlider: FC<{
     description: string;
     location: string;
   };
-  onSave: (data: any) => void;
+  onSave: (data: unknown) => void;
 }> = ({ isOpen, onClose, eventData, onSave }) => {
   const [formData, setFormData] = useState({
     title: eventData.title,
@@ -168,7 +168,7 @@ const EditEventSlider: FC<{
 
   const [activeSection, setActiveSection] = useState('basic');
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = (field: string, value: unknown) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -529,7 +529,7 @@ const EventCard: FC<PropsType> = ({
     if (onEdit) onEdit();
   };
 
-  const handleSaveEvent = (formData: any) => {
+  const handleSaveEvent = (formData: unknown) => {
     console.log('Saving event data:', formData);
     // Here you would typically send the data to your backend
   };
