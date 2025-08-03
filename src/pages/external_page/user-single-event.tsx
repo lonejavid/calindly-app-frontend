@@ -65,7 +65,7 @@ const UserSingleEventPage = () => {
               {next ? (
                 <Fragment>
                  
-                  <BookingForm event={event} />
+                 <BookingForm event={event ?? undefined} />
 
                 </Fragment>
               ) : (
