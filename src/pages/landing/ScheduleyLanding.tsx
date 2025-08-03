@@ -328,7 +328,7 @@ const ScheduleyLanding = () => {
           Schedley
         </span>
       </div> */}
-      <div className="flex items-center space-x-3 sm:space-x-4">
+ <div className="flex items-center space-x-3 sm:space-x-4">
   <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg overflow-hidden flex items-center justify-center bg-white shadow-lg">
     <img
       src={mylogo}
