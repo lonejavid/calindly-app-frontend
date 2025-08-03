@@ -29,6 +29,7 @@ const UserSingleEventPage = () => {
   });
 
   const event = data?.event;
+  console.log("event deataislare ",event);
 
   return (
     <PageContainer
@@ -63,8 +64,9 @@ const UserSingleEventPage = () => {
             <div className="min-w-sm max-w-3xl flex-shrink-0 flex-1">
               {next ? (
                 <Fragment>
-                  {/* {Booking Form} */}
-                  <BookingForm eventId={event.id} duration={event.duration} />
+                 
+                  <BookingForm event={event} />
+
                 </Fragment>
               ) : (
                 <Fragment>
