@@ -167,8 +167,10 @@ const UserSection = (props: { username: string }) => {
       {/* Enhanced Create Event Button Area */}
       <div className="flex items-center p-2">
         <div className="relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 rounded-lg blur-sm opacity-10"></div>
-          <NewEventDialog />
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 rounded-lg blur-sm opacity-10 pointer-events-none"></div>
+          <div className="relative z-10">
+            <NewEventDialog />
+          </div>
         </div>
       </div>
     </div>
