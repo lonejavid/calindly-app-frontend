@@ -20,7 +20,7 @@ const EmptyState = () => {
       </p>
 
       <div className="mt-5">
-        <NewEventDialog btnVariant="default" />
+        <NewEventDialog  />
       </div>
     </div>
   );
