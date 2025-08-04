@@ -17,7 +17,7 @@ import {
   SidebarRail,
   useSidebar,
 } from "./ui/sidebar";
-import {mylogo} from '../../mylogo.png'
+import mylogo from "../../../mylogo.png";
 //import { Separator } from "./ui/separator";
 import { Link, useLocation } from "react-router-dom";
 import { PROTECTED_ROUTES } from "@/routes/common/routePaths";
