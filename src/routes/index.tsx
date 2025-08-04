@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import {
   authenticationRoutePaths,
   protectedRoutePaths,
@@ -45,7 +45,8 @@ function AppRoutes() {
         </Route>
 
         {/* Catch-all for undefined routes */}
-        <Route path="*" element={<>page not     kjhghjklkjhgvcxcfg found</>} />
+        {/* <Route path="*" element={<>page not     kjhghjklkjhgvcxcfg found</>} /> */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
