@@ -45,7 +45,7 @@ function AppRoutes() {
         </Route>
 
         {/* Catch-all for undefined routes */}
-        <Route path="*" element={<>404</>} />
+        <Route path="*" element={<>page not found</>} />
       </Routes>
     </BrowserRouter>
   );
