@@ -1,7 +1,7 @@
 import {
   CalendarRange,
   ClockIcon,
-  Command,
+
   LayoutGrid,
   LinkIcon,
   LucideIcon,
@@ -17,6 +17,7 @@ import {
   SidebarRail,
   useSidebar,
 } from "./ui/sidebar";
+import {mylogo} from '../../mylogo.png'
 //import { Separator } from "./ui/separator";
 import { Link, useLocation } from "react-router-dom";
 import { PROTECTED_ROUTES } from "@/routes/common/routePaths";
@@ -79,11 +80,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground"
           >
             {/* <Command className="size-4" /> */}
+               <img 
+              src={mylogo} 
+              alt="Schedley Logo" 
+              className="w-full h-full object-contain"
+            />
           </div>
           {state !== "collapsed" && (
             <div className="grid flex-1 text-left text-2xl leading-tight ml-px">
               {/* <h2 className="truncate font-medium">Schedley.com</h2> */}
-              <h2 className="truncate font-medium" style={{ color: 'blue' }}>Schedley.com</h2>
+              <h2 className="truncate font-medium" style={{ color: 'blue' }}>Schedley</h2>
             </div>
           )}
 
