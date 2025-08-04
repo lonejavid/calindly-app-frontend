@@ -5,7 +5,7 @@ import EventType from "@/pages/event_type";
 import Meetings from "@/pages/meeting";
 import Availability from "@/pages/availability";
 import Integrations from "@/pages/integrations";
-import UserEventsPage from "@/pages/external_page/user-events";
+// import UserEventsPage from "@/pages/external_page/user-events";
 import UserSingleEventPage from "@/pages/external_page/user-single-event";
 import ScheduleyLanding from "@/pages/landing/ScheduleyLanding";
 import OAuthSuccess from "@/pages/GoogleAothPages/OAuthSuccess";
@@ -27,7 +27,7 @@ export const protectedRoutePaths = [
 ];
 
 export const publicRoutePaths = [
-  { path: PUBLIC_ROUTES.USER_EVENTS, element: <UserEventsPage /> },
+  // { path: PUBLIC_ROUTES.USER_EVENTS, element: <UserEventsPage /> },
   { path: PUBLIC_ROUTES.USER_SINGLE_EVENT, element: <UserSingleEventPage /> },
   { path: PUBLIC_ROUTES.OAUTH_SUCCESS, element: <OAuthSuccess /> },
 ];
