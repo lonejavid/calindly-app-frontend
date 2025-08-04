@@ -281,7 +281,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarRail className="!bg-slate-200/60" />
 
       {/* Custom Styles */}
-      <style jsx>{`
+      <style >{`
         @keyframes slideIn {
           from {
             opacity: 0;
