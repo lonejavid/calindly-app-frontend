@@ -361,7 +361,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useBookingState } from "@/hooks/use-booking-state";
 import { Fragment, useState, useMemo } from "react";
-import { CheckIcon, ExternalLink, User, Calendar, Clock, Globe } from "lucide-react";
+import { CheckIcon, ExternalLink, User, Calendar,  Globe } from "lucide-react";
 import { scheduleMeetingMutationFn } from "@/lib/api";
 import { toast } from "sonner";
 import { Loader } from "@/components/loader";
@@ -410,7 +410,7 @@ const BookingForm = (props: { event: Event }) => {
     endTime: string;
     guestName: string;
   } | null>(null);
-
+console.log(meetLink);
   const { selectedDate, isSuccess, selectedSlot, handleSuccess } =
     useBookingState();
 
