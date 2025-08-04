@@ -78,11 +78,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             className="flex aspect-square size-6 items-center 
           justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground"
           >
-            <Command className="size-4" />
+            {/* <Command className="size-4" /> */}
           </div>
           {state !== "collapsed" && (
             <div className="grid flex-1 text-left text-2xl leading-tight ml-px">
-              <h2 className="truncate font-medium">Schedley.com</h2>
+              {/* <h2 className="truncate font-medium">Schedley.com</h2> */}
+              <h2 className="truncate font-medium" style={{ color: 'blue' }}>Schedley.com</h2>
             </div>
           )}
 
