@@ -216,6 +216,7 @@ const BookingForm = (props: { event: Event }) => {
     };
 
     if (isPending) return;
+    console.log("payload sennt is ",payload);
 
     mutate(payload, {
       onSuccess: (response) => {
