@@ -16,7 +16,7 @@ const Meetings = () => {
     queryKey: ["userMeetings", period],
     queryFn: () => getUserMeetingsQueryFn(period),
   });
-
+console.log("user Meetings are here ",data);
   const meetings = data?.meetings || [];
 
   return (
