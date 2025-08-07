@@ -2193,7 +2193,7 @@ const EventCreationSidePanel = ({ isOpen, onClose }: EventCreationSidePanelProps
         </div>
 
         {/* Progress Indicator */}
-        <div className="px-6 py-4 bg-white border-b border-gray-200">
+        {/* <div className="px-6 py-4 bg-white border-b border-gray-200">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-semibold text-gray-700">Setup Progress</span>
             <span className="text-sm font-bold text-blue-600">
@@ -2209,7 +2209,36 @@ const EventCreationSidePanel = ({ isOpen, onClose }: EventCreationSidePanelProps
           <p className="text-xs text-gray-500 mt-1">
             Complete all sections to create your event
           </p>
-        </div>
+        </div> */}
+        <div className="px-6 py-4 bg-white border-b border-gray-200">
+  <div className="flex items-center justify-between mb-2">
+    <span className="text-sm font-semibold text-gray-700">Setup Progress</span>
+    <span className="text-sm font-bold text-blue-600">
+      {completedSections}/{totalSections}
+    </span>
+  </div>
+  <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+    <div
+      className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500 ease-out"
+      style={{ width: `${progressPercentage}%` }}
+    />
+  </div>
+  
+  {/* New informational message */}
+  <div className="mt-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
+    <div className="flex items-start">
+      <Info className="w-4 h-4 text-blue-500 mt-0.5 mr-2 flex-shrink-0" />
+      <p className="text-xs text-blue-700">
+        Some sections (Duration, Invitee Form, Confirmation) are pre-filled with default values. 
+        Please review and adjust them as needed or keep the defaults.
+      </p>
+    </div>
+  </div>
+  
+  <p className="text-xs text-gray-500 mt-2">
+    Complete all sections to create your event
+  </p>
+</div>
 
         <div className="border-b border-gray-200 bg-white">
           <div className="px-4 py-3">
