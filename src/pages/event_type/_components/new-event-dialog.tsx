@@ -1326,7 +1326,33 @@ const EventCreationSidePanel = ({ isOpen, onClose }: EventCreationSidePanelProps
   //       return false;
   //   }
   // };
-  const isSectionCompleted = (sectionId: string): boolean => {
+//   const isSectionCompleted = (sectionId: string): boolean => {
+//   switch (sectionId) {
+//     case 'basic-info':
+//       return !!(formData.title.trim() && formData.description.trim());
+//     case 'location':
+//       return !!(formData.locationType && appConnected);
+//     case 'duration':
+//       return formData.duration > 0;
+//     case 'buffers':
+//       // Changed from always true to check if buffers have been modified from defaults
+//       return bufferBefore !== 0 || bufferAfter !== 0 || maxBookingsPerDay !== null;
+//     case 'booking-options':
+//       // Changed from always true to check if options have been modified from defaults
+//       return !allowGuests || timeZoneDisplay !== 'auto-detect' || timeSlotInterval !== '30';
+//     case 'invitee-form':
+//       return questions.some(q => q.question.trim() !== '');
+//     case 'notifications':
+//       // Changed from always true to check if notifications have been modified from defaults
+//       return !emailConfirmation || !emailReminder || !calendarInvitation;
+//     case 'confirmation':
+//       return !!confirmationMessage.trim() && 
+//              (!redirectToUrl || (redirectToUrl && redirectUrl.trim() !== ''));
+//     default:
+//       return false;
+//   }
+// };
+const isSectionCompleted = (sectionId: string): boolean => {
   switch (sectionId) {
     case 'basic-info':
       return !!(formData.title.trim() && formData.description.trim());
@@ -1335,16 +1361,13 @@ const EventCreationSidePanel = ({ isOpen, onClose }: EventCreationSidePanelProps
     case 'duration':
       return formData.duration > 0;
     case 'buffers':
-      // Changed from always true to check if buffers have been modified from defaults
-      return bufferBefore !== 0 || bufferAfter !== 0 || maxBookingsPerDay !== null;
+      return true; // Considered complete since it has sensible defaults
     case 'booking-options':
-      // Changed from always true to check if options have been modified from defaults
-      return !allowGuests || timeZoneDisplay !== 'auto-detect' || timeSlotInterval !== '30';
+      return true; // Considered complete since it has sensible defaults
     case 'invitee-form':
-      return questions.some(q => q.question.trim() !== '');
+      return questions.length > 0 && questions.every(q => q.question.trim() !== '');
     case 'notifications':
-      // Changed from always true to check if notifications have been modified from defaults
-      return !emailConfirmation || !emailReminder || !calendarInvitation;
+      return true; // Considered complete since it has sensible defaults
     case 'confirmation':
       return !!confirmationMessage.trim() && 
              (!redirectToUrl || (redirectToUrl && redirectUrl.trim() !== ''));
@@ -2209,8 +2232,14 @@ const EventCreationSidePanel = ({ isOpen, onClose }: EventCreationSidePanelProps
           <p className="text-xs text-gray-500 mt-1">
             Complete all sections to create your event
           </p>
+
+
         </div> */}
-        <div className="px-6 py-4 bg-white border-b border-gray-200">
+
+
+
+
+        {/* <div className="px-6 py-4 bg-white border-b border-gray-200">
   <div className="flex items-center justify-between mb-2">
     <span className="text-sm font-semibold text-gray-700">Setup Progress</span>
     <span className="text-sm font-bold text-blue-600">
@@ -2224,7 +2253,7 @@ const EventCreationSidePanel = ({ isOpen, onClose }: EventCreationSidePanelProps
     />
   </div>
   
-  {/* New informational message */}
+
   <div className="mt-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
     <div className="flex items-start">
       <Info className="w-4 h-4 text-blue-500 mt-0.5 mr-2 flex-shrink-0" />
@@ -2238,6 +2267,35 @@ const EventCreationSidePanel = ({ isOpen, onClose }: EventCreationSidePanelProps
   <p className="text-xs text-gray-500 mt-2">
     Complete all sections to create your event
   </p>
+</div> */}
+
+<div className="px-6 py-4 bg-white border-b border-gray-200">
+  <div className="flex items-center justify-between mb-2">
+    <span className="text-sm font-semibold text-gray-700">Setup Progress</span>
+    <span className="text-sm font-bold text-blue-600">
+      {completedSections}/{totalSections}
+    </span>
+  </div>
+  <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+    <div
+      className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500 ease-out"
+      style={{ width: `${progressPercentage}%` }}
+    />
+  </div>
+  
+  {/* Simplified informational message - only shows when progress is 0 */}
+  {completedSections === 0 && (
+    <p className="text-xs text-blue-600 mt-2">
+      Please fill all sections to create your event
+    </p>
+  )}
+  {completedSections > 0 && (
+    <p className="text-xs text-gray-500 mt-2">
+      {completedSections === totalSections ? 
+        "All sections completed!" : 
+        "Complete all sections to create your event"}
+    </p>
+  )}
 </div>
 
         <div className="border-b border-gray-200 bg-white">
