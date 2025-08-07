@@ -1260,17 +1260,15 @@ const EventCreationSidePanel = ({ isOpen, onClose }: EventCreationSidePanelProps
   const [bufferBefore, setBufferBefore] = useState<number>(0);
   const [bufferAfter, setBufferAfter] = useState<number>(0);
   const [maxBookingsPerDay, setMaxBookingsPerDay] = useState<number | null>(null);
-  const [allowGuests, setAllowGuests] = useState<boolean>(true);
+  const [allowGuests, setAllowGuests] = useState<boolean>(false);
   const [timeZoneDisplay, setTimeZoneDisplay] = useState<string>('auto-detect');
   const [timeSlotInterval, setTimeSlotInterval] = useState<string>('30');
-  const [emailConfirmation, setEmailConfirmation] = useState<boolean>(true);
+  const [emailConfirmation, setEmailConfirmation] = useState<boolean>(false);
   const [emailReminder, setEmailReminder] = useState<boolean>(true);
   const [calendarInvitation, setCalendarInvitation] = useState<boolean>(true);
   const [redirectToUrl, setRedirectToUrl] = useState<boolean>(false);
   const [redirectUrl, setRedirectUrl] = useState<string>('');
-  const [confirmationMessage, setConfirmationMessage] = useState<string>(
-    'Thank you for booking! We look forward to meeting with you.'
-  );
+  const [confirmationMessage, setConfirmationMessage] = useState<Question[]>([]);
   const [blockedDomains, setBlockedDomains] = useState<string[]>([]);
   const [customDomain, setCustomDomain] = useState<string>('');
   const [questions, setQuestions] = useState<Question[]>([
@@ -1361,13 +1359,17 @@ const isSectionCompleted = (sectionId: string): boolean => {
     case 'duration':
       return formData.duration > 0;
     case 'buffers':
-      return true; // Considered complete since it has sensible defaults
+      // Only complete if user has interacted with any buffer setting
+      return bufferBefore !== 0 || bufferAfter !== 0 || maxBookingsPerDay !== null;
     case 'booking-options':
-      return true; // Considered complete since it has sensible defaults
+      // Only complete if user has changed any option from defaults
+      return !allowGuests || timeZoneDisplay !== 'auto-detect' || timeSlotInterval !== '30';
     case 'invitee-form':
+      // Only complete if there's at least one valid question
       return questions.length > 0 && questions.every(q => q.question.trim() !== '');
     case 'notifications':
-      return true; // Considered complete since it has sensible defaults
+      // Only complete if user has changed any notification setting
+      return !emailConfirmation || !emailReminder || !calendarInvitation;
     case 'confirmation':
       return !!confirmationMessage.trim() && 
              (!redirectToUrl || (redirectToUrl && redirectUrl.trim() !== ''));
@@ -2283,17 +2285,15 @@ const isSectionCompleted = (sectionId: string): boolean => {
     />
   </div>
   
-  {/* Simplified informational message - only shows when progress is 0 */}
-  {completedSections === 0 && (
+  {completedSections === 0 ? (
     <p className="text-xs text-blue-600 mt-2">
       Please fill all sections to create your event
     </p>
-  )}
-  {completedSections > 0 && (
+  ) : (
     <p className="text-xs text-gray-500 mt-2">
-      {completedSections === totalSections ? 
-        "All sections completed!" : 
-        "Complete all sections to create your event"}
+      {completedSections === totalSections 
+        ? "All sections completed!" 
+        : "Complete all sections to create your event"}
     </p>
   )}
 </div>
