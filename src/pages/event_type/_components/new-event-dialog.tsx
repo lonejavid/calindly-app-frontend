@@ -1304,28 +1304,54 @@ const EventCreationSidePanel = ({ isOpen, onClose }: EventCreationSidePanelProps
   ];
 
   // Function to check if a section is completed
+  // const isSectionCompleted = (sectionId: string): boolean => {
+  //   switch (sectionId) {
+  //     case 'basic-info':
+  //       return !!(formData.title.trim() && formData.description.trim());
+  //     case 'location':
+  //       return !!(formData.locationType && appConnected);
+  //     case 'duration':
+  //       return formData.duration > 0;
+  //     case 'buffers':
+  //       return true; // Always considered complete as it has default values
+  //     case 'booking-options':
+  //       return true; // Always considered complete as it has default values
+  //     case 'invitee-form':
+  //       return questions.some(q => q.question.trim() !== '');
+  //     case 'notifications':
+  //       return true; // Always considered complete as it has default values
+  //     case 'confirmation':
+  //       return !!confirmationMessage.trim();
+  //     default:
+  //       return false;
+  //   }
+  // };
   const isSectionCompleted = (sectionId: string): boolean => {
-    switch (sectionId) {
-      case 'basic-info':
-        return !!(formData.title.trim() && formData.description.trim());
-      case 'location':
-        return !!(formData.locationType && appConnected);
-      case 'duration':
-        return formData.duration > 0;
-      case 'buffers':
-        return true; // Always considered complete as it has default values
-      case 'booking-options':
-        return true; // Always considered complete as it has default values
-      case 'invitee-form':
-        return questions.some(q => q.question.trim() !== '');
-      case 'notifications':
-        return true; // Always considered complete as it has default values
-      case 'confirmation':
-        return !!confirmationMessage.trim();
-      default:
-        return false;
-    }
-  };
+  switch (sectionId) {
+    case 'basic-info':
+      return !!(formData.title.trim() && formData.description.trim());
+    case 'location':
+      return !!(formData.locationType && appConnected);
+    case 'duration':
+      return formData.duration > 0;
+    case 'buffers':
+      // Changed from always true to check if buffers have been modified from defaults
+      return bufferBefore !== 0 || bufferAfter !== 0 || maxBookingsPerDay !== null;
+    case 'booking-options':
+      // Changed from always true to check if options have been modified from defaults
+      return !allowGuests || timeZoneDisplay !== 'auto-detect' || timeSlotInterval !== '30';
+    case 'invitee-form':
+      return questions.some(q => q.question.trim() !== '');
+    case 'notifications':
+      // Changed from always true to check if notifications have been modified from defaults
+      return !emailConfirmation || !emailReminder || !calendarInvitation;
+    case 'confirmation':
+      return !!confirmationMessage.trim() && 
+             (!redirectToUrl || (redirectToUrl && redirectUrl.trim() !== ''));
+    default:
+      return false;
+  }
+};
 
   // Calculate progress
   const completedSections = sections.filter(section => isSectionCompleted(section.id)).length;
