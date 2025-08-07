@@ -302,11 +302,7 @@ const BookingForm = (props: { event: Event }) => {
     window.location.href = "mailto:";
   };
 
-  const handleRedirect = () => {
-    if (event.redirectUrl) {
-      window.open(event.redirectUrl, '_blank');
-    }
-  };
+
 
   const formatBookingTime = () => {
     if (!bookingDetails) return "";
@@ -511,14 +507,14 @@ const BookingForm = (props: { event: Event }) => {
             </div>
 
             {/* Redirect Button - Only show if redirectUrl exists */}
-            {event.redirectUrl && (
+            {/* {event.redirectUrl && (
               <Button 
                 onClick={handleRedirect}
                 className="w-full mt-4 h-10 sm:h-12 text-sm sm:text-base"
               >
                 Continue
               </Button>
-            )}
+            )} */}
           </div>
         ) : (
           <Fragment>
