@@ -253,44 +253,7 @@ const UserSingleEventPage = () => {
               />
 
               {/* Booking Window Information */}
-              <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <h4 className="text-sm font-semibold text-blue-900 mb-2">
-                  Booking Availability
-                </h4>
-                <div className="text-xs text-blue-700 space-y-1">
-                  <p>
-                    <span className="font-medium">Earliest booking:</span>{' '}
-                    {minDate
-                      ? minDate.toLocaleDateString(undefined, {
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric'
-                        })
-                      : 'Available immediately'}
-                  </p>
-                  <p>
-                    <span className="font-medium">Latest booking:</span>{' '}
-                    {maxDate
-                      ? maxDate.toLocaleDateString(undefined, {
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric'
-                        })
-                      : 'No end date'}
-                  </p>
-                  {event.minimumNotice > 0 && (
-                    <p>
-                      <span className="font-medium">Notice required:</span>{' '}
-                      {event.minimumNotice} {event.noticeType}
-                    </p>
-                  )}
-                  {event.bookingWindowType === 'fixed' && (
-                    <p className="text-blue-800 font-medium">
-                      Fixed booking window
-                    </p>
-                  )}
-                </div>
-              </div>
+        
             </>
           )}
         </div>
