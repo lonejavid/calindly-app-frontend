@@ -845,7 +845,9 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
   //     </div>
   //   </div>
   // );
-  case 'availability':
+
+
+case 'availability':
   return (
     <div className="space-y-4">
       {/* Header */}
@@ -938,6 +940,10 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
               className="mt-0.5 w-3 h-3 text-cyan-600"
             />
             <div className="flex-1 min-w-0">
+              <div className="mb-1">
+                <span className="text-sm font-medium text-gray-900">**Fixed duration**</span>
+                <p className="text-xs text-gray-600">Invitees can schedule</p>
+              </div>
               <div className="flex items-center space-x-2 mb-1">
                 <input
                   type="number"
@@ -961,40 +967,61 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
                   <option value="weeks">weeks</option>
                   <option value="months">months</option>
                 </select>
-                <span className="text-sm text-gray-600">ahead</span>
+                <span className="text-xs text-gray-600">into the future</span>
               </div>
+              <p className="text-xs text-gray-600">
+                with at least <span className="font-medium text-gray-900">**{formatNoticeDisplay()}**</span> notice
+              </p>
             </div>
           </label>
 
           {/* Date Range */}
-          <label className="flex items-center space-x-2 cursor-pointer p-2 rounded hover:bg-gray-50">
+          <label className="flex items-start space-x-2 cursor-pointer p-2 rounded hover:bg-gray-50">
             <input
               type="radio"
               name="bookingWindow"
               value="date-range"
               checked={bookingWindowType === 'date-range'}
               onChange={(e) => setBookingWindowType(e.target.value as 'fixed' | 'date-range' | 'indefinite')}
-              className="w-3 h-3 text-cyan-600"
+              className="mt-0.5 w-3 h-3 text-cyan-600"
             />
             <div>
-              <span className="text-sm font-medium text-gray-900">Date range</span>
+              <span className="text-sm font-medium text-gray-900">**Date-range**</span>
+              <p className="text-xs text-gray-600">Invitees can schedule within a date range</p>
               <p className="text-xs text-gray-500">(Coming soon)</p>
             </div>
           </label>
 
           {/* Indefinite */}
-          <label className="flex items-center space-x-2 cursor-pointer p-2 rounded hover:bg-gray-50">
+          <label className="flex items-start space-x-2 cursor-pointer p-2 rounded hover:bg-gray-50">
             <input
               type="radio"
               name="bookingWindow"
               value="indefinite"
               checked={bookingWindowType === 'indefinite'}
               onChange={(e) => setBookingWindowType(e.target.value as 'fixed' | 'date-range' | 'indefinite')}
-              className="w-3 h-3 text-cyan-600"
+              className="mt-0.5 w-3 h-3 text-cyan-600"
             />
-            <span className="text-sm font-medium text-gray-900">No limit</span>
+            <div>
+              <span className="text-sm font-medium text-gray-900">**No limit**</span>
+              <p className="text-xs text-gray-600">Invitees can schedule indefinitely into the future</p>
+            </div>
           </label>
         </div>
+
+        {/* Date Range option additional info */}
+        {bookingWindowType === 'date-range' && (
+          <div className="mt-2 ml-5 p-2 bg-blue-50 rounded text-xs text-blue-700">
+            <p>with at least <span className="font-medium text-blue-900">**{formatNoticeDisplay()}**</span> notice</p>
+          </div>
+        )}
+
+        {/* Indefinite option additional info */}
+        {bookingWindowType === 'indefinite' && (
+          <div className="mt-2 ml-5 p-2 bg-green-50 rounded text-xs text-green-700">
+            <p>with at least <span className="font-medium text-green-900">**{formatNoticeDisplay()}**</span> notice</p>
+          </div>
+        )}
 
         {errors.dateRangeLimit && (
           <p className="text-xs text-red-600 mt-2">{errors.dateRangeLimit}</p>
@@ -1051,317 +1078,218 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
       </div>
     </div>
   );
+
+
+
+
+
   // case 'availability':
   // return (
-  //   <div className="space-y-6">
-  //     {/* Header Section */}
-  //     <div className="bg-gradient-to-r from-cyan-50 to-blue-50 p-4 rounded-xl border border-cyan-100">
-  //       <div className="flex items-center space-x-2 mb-2">
-  //         <CalendarDays className="w-5 h-5 text-cyan-600" />
+  //   <div className="space-y-4">
+  //     {/* Header */}
+  //     <div className="bg-gradient-to-r from-cyan-50 to-blue-50 p-3 rounded-lg border border-cyan-100">
+  //       <div className="flex items-center space-x-2 mb-1">
+  //         <CalendarDays className="w-4 h-4 text-cyan-600" />
   //         <h3 className="font-semibold text-cyan-900">Booking Availability</h3>
   //       </div>
-  //       <p className="text-sm text-cyan-700">
-  //         Control when and how people can book meetings with you
-  //       </p>
+  //       <p className="text-xs text-cyan-700">Control when people can book meetings</p>
   //     </div>
 
-  //     {/* Minimum Notice Section */}
-  //     <div className="bg-white p-6 rounded-xl border-2 border-gray-100 shadow-sm">
-  //       <div className="flex items-start space-x-3 mb-4">
-  //         <div className="p-2 bg-cyan-100 rounded-lg">
-  //           <Clock className="w-5 h-5 text-cyan-600" />
-  //         </div>
-  //         <div>
-  //           <h4 className="font-semibold text-gray-900">Minimum Notice Period</h4>
-  //           <p className="text-sm text-gray-600 mt-1">
-  //             Require advance notice to prevent last-minute bookings
-  //           </p>
-  //         </div>
+  //     {/* Minimum Notice */}
+  //     <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+  //       <div className="flex items-center space-x-2 mb-3">
+  //         <Clock className="w-4 h-4 text-cyan-600" />
+  //         <h4 className="font-medium text-gray-900">Minimum Notice</h4>
+  //       </div>
+        
+  //       <div className="flex items-center space-x-2 mb-3">
+  //         <input
+  //           type="number"
+  //           value={minimumNotice}
+  //           onChange={(e) => {
+  //             const value = parseInt(e.target.value) || 1;
+  //             setMinimumNotice(Math.max(1, value));
+  //           }}
+  //           className="w-16 px-2 py-1.5 border border-gray-300 rounded text-center text-sm focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500"
+  //           min="1"
+  //         />
+  //         <select
+  //           value={noticeType}
+  //           onChange={(e) => setNoticeType(e.target.value as 'minutes' | 'hours' | 'days')}
+  //           className="px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500"
+  //         >
+  //           <option value="minutes">min</option>
+  //           <option value="hours">hrs</option>
+  //           <option value="days">days</option>
+  //         </select>
+  //         <span className="text-sm text-gray-600">before meeting</span>
   //       </div>
 
-  //       <div className="space-y-4 pl-11">
-  //         <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-  //           <div className="flex items-center gap-2">
-  //             <input
-  //               type="number"
-  //               value={minimumNotice}
-  //               onChange={(e) => {
-  //                 const value = parseInt(e.target.value) || 1;
-  //                 setMinimumNotice(Math.max(1, value));
-  //               }}
-  //               className="w-20 px-3 py-2 border-2 border-gray-200 rounded-lg text-center font-medium bg-white focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
-  //               min="1"
-  //             />
-  //             <select
-  //               value={noticeType}
-  //               onChange={(e) => setNoticeType(e.target.value as 'minutes' | 'hours' | 'days')}
-  //               className="px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 bg-white cursor-pointer font-medium"
-  //             >
-  //               <option value="minutes">Minutes</option>
-  //               <option value="hours">Hours</option>
-  //               <option value="days">Days</option>
-  //             </select>
-  //           </div>
-  //           <span className="text-sm text-gray-600">
-  //             before the meeting time
-  //           </span>
-  //         </div>
+  //       {errors.minimumNotice && (
+  //         <p className="text-xs text-red-600 mb-2">{errors.minimumNotice}</p>
+  //       )}
 
-  //         {errors.minimumNotice && (
-  //           <p className="text-sm text-red-600">{errors.minimumNotice}</p>
-  //         )}
-
-  //         <div className="mt-4">
-  //           <p className="text-sm font-medium text-gray-700 mb-2">
-  //             Quick settings:
-  //           </p>
-  //           <div className="flex flex-wrap gap-2">
-  //             {[15, 30, 60].map((mins) => (
-  //               <button
-  //                 key={`min-${mins}`}
-  //                 type="button"
-  //                 onClick={() => {
-  //                   setMinimumNotice(mins);
-  //                   setNoticeType('minutes');
-  //                 }}
-  //                 className={`px-3 py-1 text-sm rounded-lg transition-colors ${
-  //                   minimumNotice === mins && noticeType === 'minutes'
-  //                     ? 'bg-cyan-600 text-white'
-  //                     : 'bg-gray-100 hover:bg-gray-200'
-  //                 }`}
-  //               >
-  //                 {mins} mins
-  //               </button>
-  //             ))}
-  //             {[1, 2, 3].map((hours) => (
-  //               <button
-  //                 key={`hour-${hours}`}
-  //                 type="button"
-  //                 onClick={() => {
-  //                   setMinimumNotice(hours);
-  //                   setNoticeType('hours');
-  //                 }}
-  //                 className={`px-3 py-1 text-sm rounded-lg transition-colors ${
-  //                   minimumNotice === hours && noticeType === 'hours'
-  //                     ? 'bg-cyan-600 text-white'
-  //                     : 'bg-gray-100 hover:bg-gray-200'
-  //                 }`}
-  //               >
-  //                 {hours} hour{hours !== 1 ? 's' : ''}
-  //               </button>
-  //             ))}
-  //             {[1, 2, 3].map((days) => (
-  //               <button
-  //                 key={`day-${days}`}
-  //                 type="button"
-  //                 onClick={() => {
-  //                   setMinimumNotice(days);
-  //                   setNoticeType('days');
-  //                 }}
-  //                 className={`px-3 py-1 text-sm rounded-lg transition-colors ${
-  //                   minimumNotice === days && noticeType === 'days'
-  //                     ? 'bg-cyan-600 text-white'
-  //                     : 'bg-gray-100 hover:bg-gray-200'
-  //                 }`}
-  //               >
-  //                 {days} day{days !== 1 ? 's' : ''}
-  //               </button>
-  //             ))}
-  //           </div>
-  //         </div>
+  //       {/* Quick presets */}
+  //       <div className="flex flex-wrap gap-1">
+  //         {[
+  //           { value: 30, type: 'minutes', label: '30m' },
+  //           { value: 1, type: 'hours', label: '1h' },
+  //           { value: 4, type: 'hours', label: '4h' },
+  //           { value: 1, type: 'days', label: '1d' },
+  //           { value: 2, type: 'days', label: '2d' }
+  //         ].map((preset) => (
+  //           <button
+  //             key={`${preset.value}-${preset.type}`}
+  //             type="button"
+  //             onClick={() => {
+  //               setMinimumNotice(preset.value);
+  //               setNoticeType(preset.type as 'minutes' | 'hours' | 'days');
+  //             }}
+  //             className={`px-2 py-1 text-xs rounded transition-colors ${
+  //               minimumNotice === preset.value && noticeType === preset.type
+  //                 ? 'bg-cyan-600 text-white'
+  //                 : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+  //             }`}
+  //           >
+  //             {preset.label}
+  //           </button>
+  //         ))}
   //       </div>
   //     </div>
 
-  //     {/* Booking Window Section */}
-  //     <div className="bg-white p-6 rounded-xl border-2 border-gray-100 shadow-sm">
-  //       <div className="flex items-start space-x-3 mb-4">
-  //         <div className="p-2 bg-cyan-100 rounded-lg">
-  //           <Calendar className="w-5 h-5 text-cyan-600" />
-  //         </div>
-  //         <div>
-  //           <h4 className="font-semibold text-gray-900">Booking Window</h4>
-  //           <p className="text-sm text-gray-600 mt-1">
-  //             Control how far in advance people can book
-  //           </p>
-  //         </div>
+  //     {/* Booking Window */}
+  //     <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+  //       <div className="flex items-center space-x-2 mb-3">
+  //         <Calendar className="w-4 h-4 text-cyan-600" />
+  //         <h4 className="font-medium text-gray-900">Booking Window</h4>
   //       </div>
 
-  //       <div className="space-y-4 pl-11">
-  //         <div className="space-y-3">
-  //           {/* Fixed Duration Option */}
-  //           <label className="flex items-start space-x-3 cursor-pointer group">
-  //             <input
-  //               type="radio"
-  //               name="bookingWindow"
-  //               value="fixed"
-  //               checked={bookingWindowType === 'fixed'}
-  //               onChange={(e) => setBookingWindowType(e.target.value as 'fixed' | 'date-range' | 'indefinite')}
-  //               className="mt-1 w-4 h-4 text-cyan-600 focus:ring-cyan-500"
-  //             />
-  //             <div className="flex-1">
-  //               <span className="font-medium text-gray-900 group-hover:text-cyan-700">
-  //                 Fixed duration
-  //               </span>
-  //               <div className="flex flex-col sm:flex-row sm:items-center gap-3 mt-2">
-  //                 <input
-  //                   type="number"
-  //                   value={dateRangeLimit}
-  //                   onChange={(e) => {
-  //                     const value = parseInt(e.target.value) || 1;
-  //                     setDateRangeLimit(Math.max(1, value));
-  //                   }}
-  //                   className="w-20 px-3 py-2 border-2 border-gray-200 rounded-lg text-center font-medium bg-white focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 disabled:bg-gray-100"
-  //                   min="1"
-  //                   disabled={bookingWindowType !== 'fixed'}
-  //                 />
-  //                 <select
-  //                   value={dateRangeType}
-  //                   onChange={(e) => setDateRangeType(e.target.value as 'calendar days' | 'business days' | 'weeks' | 'months')}
-  //                   disabled={bookingWindowType !== 'fixed'}
-  //                   className="px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 bg-white cursor-pointer font-medium disabled:bg-gray-100"
-  //                 >
-  //                   <option value="calendar days">Calendar days</option>
-  //                   <option value="business days">Business days</option>
-  //                   <option value="weeks">Weeks</option>
-  //                   <option value="months">Months</option>
-  //                 </select>
-  //                 <span className="text-sm text-gray-600">
-  //                   into the future
-  //                 </span>
-  //               </div>
-  //             </div>
-  //           </label>
-
-  //           {/* Date Range Option */}
-  //           <label className="flex items-start space-x-3 cursor-pointer group">
-  //             <input
-  //               type="radio"
-  //               name="bookingWindow"
-  //               value="date-range"
-  //               checked={bookingWindowType === 'date-range'}
-  //               onChange={(e) => setBookingWindowType(e.target.value as 'fixed' | 'date-range' | 'indefinite')}
-  //               className="mt-1 w-4 h-4 text-cyan-600 focus:ring-cyan-500"
-  //             />
-  //             <div className="flex-1">
-  //               <span className="font-medium text-gray-900 group-hover:text-cyan-700">
-  //                 Specific date range
-  //               </span>
-  //               <p className="text-sm text-gray-600 mt-1">
-  //                 (Coming soon) Select exact start and end dates
-  //               </p>
-  //             </div>
-  //           </label>
-
-  //           {/* Indefinite Option */}
-  //           <label className="flex items-start space-x-3 cursor-pointer group">
-  //             <input
-  //               type="radio"
-  //               name="bookingWindow"
-  //               value="indefinite"
-  //               checked={bookingWindowType === 'indefinite'}
-  //               onChange={(e) => setBookingWindowType(e.target.value as 'fixed' | 'date-range' | 'indefinite')}
-  //               className="mt-1 w-4 h-4 text-cyan-600 focus:ring-cyan-500"
-  //             />
-  //             <div className="flex-1">
-  //               <span className="font-medium text-gray-900 group-hover:text-cyan-700">
-  //                 No limit (indefinite)
-  //               </span>
-  //               <p className="text-sm text-gray-600 mt-1">
-  //                 Allow booking as far into the future as you want
-  //               </p>
-  //             </div>
-  //           </label>
-  //         </div>
-
-  //         {errors.dateRangeLimit && (
-  //           <p className="text-sm text-red-600">{errors.dateRangeLimit}</p>
-  //         )}
-
-  //         {/* Quick Settings for Fixed Duration */}
-  //         {bookingWindowType === 'fixed' && (
-  //           <div className="mt-4">
-  //             <p className="text-sm font-medium text-gray-700 mb-2">
-  //               Common durations:
-  //             </p>
-  //             <div className="flex flex-wrap gap-2">
-  //               {[7, 14, 30, 60, 90].map((days) => (
-  //                 <button
-  //                   key={`days-${days}`}
-  //                   type="button"
-  //                   onClick={() => {
-  //                     setDateRangeLimit(days);
-  //                     setDateRangeType('calendar days');
-  //                   }}
-  //                   className={`px-3 py-1 text-sm rounded-lg transition-colors ${
-  //                     dateRangeLimit === days && dateRangeType === 'calendar days'
-  //                       ? 'bg-cyan-600 text-white'
-  //                       : 'bg-gray-100 hover:bg-gray-200'
-  //                   }`}
-  //                 >
-  //                   {days} days
-  //                 </button>
-  //               ))}
-  //               {[1, 3, 6, 12].map((months) => (
-  //                 <button
-  //                   key={`months-${months}`}
-  //                   type="button"
-  //                   onClick={() => {
-  //                     setDateRangeLimit(months);
-  //                     setDateRangeType('months');
-  //                   }}
-  //                   className={`px-3 py-1 text-sm rounded-lg transition-colors ${
-  //                     dateRangeLimit === months && dateRangeType === 'months'
-  //                       ? 'bg-cyan-600 text-white'
-  //                       : 'bg-gray-100 hover:bg-gray-200'
-  //                   }`}
-  //                 >
-  //                   {months} month{months !== 1 ? 's' : ''}
-  //                 </button>
-  //               ))}
+  //       <div className="space-y-2">
+  //         {/* Fixed Duration */}
+  //         <label className="flex items-start space-x-2 cursor-pointer p-2 rounded hover:bg-gray-50">
+  //           <input
+  //             type="radio"
+  //             name="bookingWindow"
+  //             value="fixed"
+  //             checked={bookingWindowType === 'fixed'}
+  //             onChange={(e) => setBookingWindowType(e.target.value as 'fixed' | 'date-range' | 'indefinite')}
+  //             className="mt-0.5 w-3 h-3 text-cyan-600"
+  //           />
+  //           <div className="flex-1 min-w-0">
+  //             <div className="flex items-center space-x-2 mb-1">
+  //               <input
+  //                 type="number"
+  //                 value={dateRangeLimit}
+  //                 onChange={(e) => {
+  //                   const value = parseInt(e.target.value) || 1;
+  //                   setDateRangeLimit(Math.max(1, value));
+  //                 }}
+  //                 className="w-16 px-2 py-1 border border-gray-300 rounded text-center text-sm focus:ring-1 focus:ring-cyan-500 disabled:bg-gray-100"
+  //                 min="1"
+  //                 disabled={bookingWindowType !== 'fixed'}
+  //               />
+  //               <select
+  //                 value={dateRangeType}
+  //                 onChange={(e) => setDateRangeType(e.target.value as 'calendar days' | 'business days' | 'weeks' | 'months')}
+  //                 disabled={bookingWindowType !== 'fixed'}
+  //                 className="px-2 py-1 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-cyan-500 disabled:bg-gray-100"
+  //               >
+  //                 <option value="calendar days">days</option>
+  //                 <option value="business days">biz days</option>
+  //                 <option value="weeks">weeks</option>
+  //                 <option value="months">months</option>
+  //               </select>
+  //               <span className="text-sm text-gray-600">ahead</span>
   //             </div>
   //           </div>
-  //         )}
+  //         </label>
+
+  //         {/* Date Range */}
+  //         <label className="flex items-center space-x-2 cursor-pointer p-2 rounded hover:bg-gray-50">
+  //           <input
+  //             type="radio"
+  //             name="bookingWindow"
+  //             value="date-range"
+  //             checked={bookingWindowType === 'date-range'}
+  //             onChange={(e) => setBookingWindowType(e.target.value as 'fixed' | 'date-range' | 'indefinite')}
+  //             className="w-3 h-3 text-cyan-600"
+  //           />
+  //           <div>
+  //             <span className="text-sm font-medium text-gray-900">Date range</span>
+  //             <p className="text-xs text-gray-500">(Coming soon)</p>
+  //           </div>
+  //         </label>
+
+  //         {/* Indefinite */}
+  //         <label className="flex items-center space-x-2 cursor-pointer p-2 rounded hover:bg-gray-50">
+  //           <input
+  //             type="radio"
+  //             name="bookingWindow"
+  //             value="indefinite"
+  //             checked={bookingWindowType === 'indefinite'}
+  //             onChange={(e) => setBookingWindowType(e.target.value as 'fixed' | 'date-range' | 'indefinite')}
+  //             className="w-3 h-3 text-cyan-600"
+  //           />
+  //           <span className="text-sm font-medium text-gray-900">No limit</span>
+  //         </label>
   //       </div>
+
+  //       {errors.dateRangeLimit && (
+  //         <p className="text-xs text-red-600 mt-2">{errors.dateRangeLimit}</p>
+  //       )}
+
+  //       {/* Quick presets for fixed */}
+  //       {bookingWindowType === 'fixed' && (
+  //         <div className="mt-3 pt-3 border-t border-gray-100">
+  //           <p className="text-xs text-gray-600 mb-2">Quick settings:</p>
+  //           <div className="flex flex-wrap gap-1">
+  //             {[
+  //               { value: 30, type: 'calendar days', label: '30d' },
+  //               { value: 60, type: 'calendar days', label: '60d' },
+  //               { value: 3, type: 'months', label: '3m' },
+  //               { value: 6, type: 'months', label: '6m' }
+  //             ].map((preset) => (
+  //               <button
+  //                 key={`range-${preset.value}-${preset.type}`}
+  //                 type="button"
+  //                 onClick={() => {
+  //                   setDateRangeLimit(preset.value);
+  //                   setDateRangeType(preset.type as 'calendar days' | 'business days' | 'weeks' | 'months');
+  //                 }}
+  //                 className={`px-2 py-1 text-xs rounded transition-colors ${
+  //                   dateRangeLimit === preset.value && dateRangeType === preset.type
+  //                     ? 'bg-cyan-600 text-white'
+  //                     : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+  //                 }`}
+  //               >
+  //                 {preset.label}
+  //               </button>
+  //             ))}
+  //           </div>
+  //         </div>
+  //       )}
   //     </div>
 
-  //     {/* Example Preview */}
-  //     <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-xl p-6">
-  //       <div className="flex items-start space-x-3">
-  //         <div className="bg-amber-500 rounded-full p-1.5">
-  //           <Sparkles className="w-4 h-4 text-white" />
-  //         </div>
-  //         <div>
-  //           <h4 className="font-semibold text-amber-900 mb-3">How this works</h4>
-  //           <div className="space-y-2 text-amber-800 text-sm">
-  //             <p>
-  //               <span className="font-medium">Right now:</span> {new Date().toLocaleString([], {
-  //                 weekday: 'long',
-  //                 month: 'short',
-  //                 day: 'numeric',
-  //                 hour: '2-digit',
-  //                 minute: '2-digit'
-  //               })}
-  //             </p>
-  //             <p>
-  //               <span className="font-medium">Earliest booking:</span> {
-  //                 noticeType === 'minutes' ? `After ${minimumNotice} minute${minimumNotice !== 1 ? 's' : ''}` :
-  //                 noticeType === 'hours' ? `After ${minimumNotice} hour${minimumNotice !== 1 ? 's' : ''}` :
-  //                 `After ${minimumNotice} day${minimumNotice !== 1 ? 's' : ''}`
-  //               }
-  //             </p>
-  //             <p>
-  //               <span className="font-medium">Booking window:</span> {
-  //                 bookingWindowType === 'indefinite' ? 'No end date' :
-  //                 bookingWindowType === 'date-range' ? 'Specific date range (coming soon)' :
-  //                 `${dateRangeLimit} ${dateRangeType} into the future`
-  //               }
-  //             </p>
-  //           </div>
+  //     {/* Current Settings Summary */}
+  //     <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-3">
+  //       <div className="flex items-start space-x-2">
+  //         <CheckCircle className="w-4 h-4 text-green-600 mt-0.5" />
+  //         <div className="text-sm text-green-800">
+  //           <p className="font-medium mb-1">Current settings:</p>
+  //           <ul className="space-y-1 text-xs">
+  //             <li>• Min notice: {formatNoticeDisplay()}</li>
+  //             <li>• Window: {bookingWindowType === 'indefinite' 
+  //               ? 'No limit' 
+  //               : bookingWindowType === 'date-range' 
+  //               ? 'Date range (coming soon)'
+  //               : `${dateRangeLimit} ${dateRangeType}`}</li>
+  //           </ul>
   //         </div>
   //       </div>
   //     </div>
   //   </div>
   // );
+ 
       case 'location':
         return (
           <div className="space-y-6">
