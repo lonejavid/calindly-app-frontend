@@ -499,12 +499,11 @@ const UserSingleEventPage = () => {
     if (!event) return { minDate: null, maxDate: null };
 
     const now = new Date();
-    let minDate = now;
+    let minDate = new Date(now);
     let maxDate: Date | null = null;
 
     // Apply minimum notice period
     if (event.minimumNotice && event.noticeType) {
-      minDate = new Date(now);
       if (event.noticeType === 'hours') {
         minDate.setHours(minDate.getHours() + event.minimumNotice);
       } else {
@@ -520,9 +519,10 @@ const UserSingleEventPage = () => {
         minDate = new Date(Math.max(minDate.getTime(), startDate.getTime()));
       }
 
-      // Set maximum date based on booking end date
+      // CRITICAL: Set maximum date based on booking end date
       if (event.bookingEndDate) {
         maxDate = new Date(event.bookingEndDate);
+        // Ensure we don't go beyond the end date regardless of other settings
       }
       // Only apply dateRangeLimit if there's no explicit bookingEndDate
       else if (event.dateRangeLimit && event.dateRangeType) {
@@ -561,7 +561,29 @@ const UserSingleEventPage = () => {
     return { minDate, maxDate };
   };
 
+  // Helper function to format date for calendar
+  const formatDateForCalendar = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const { minDate, maxDate } = getAvailableDateRange();
+
+  // Debug logging
+  console.log('Event data:', {
+    bookingStartDate: event?.bookingStartDate,
+    bookingEndDate: event?.bookingEndDate,
+    bookingWindowType: event?.bookingWindowType,
+    minimumNotice: event?.minimumNotice,
+    noticeType: event?.noticeType
+  });
+  console.log('Calculated date range:', { minDate, maxDate });
+  console.log('Parsed dates for calendar:', {
+    minValue: minDate ? parseDate(minDate.toISOString().split('T')[0]) : today(timezone),
+    maxValue: maxDate ? parseDate(maxDate.toISOString().split('T')[0]) : undefined
+  });
 
   if (isLoading) {
     return (
@@ -611,12 +633,12 @@ const UserSingleEventPage = () => {
                 eventId={event.id}
                 minValue={
                   minDate
-                    ? parseDate(minDate.toISOString().split('T')[0])
+                    ? parseDate(formatDateForCalendar(minDate))
                     : today(timezone)
                 }
                 maxValue={
                   maxDate
-                    ? parseDate(maxDate.toISOString().split('T')[0])
+                    ? parseDate(formatDateForCalendar(maxDate))
                     : undefined
                 }
                 isDateUnavailable={(date) => {
