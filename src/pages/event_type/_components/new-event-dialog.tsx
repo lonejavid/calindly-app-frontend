@@ -544,552 +544,613 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
             )}
           </div>
         );
-        //  case 'availability':
-        // return (
-        //   <div className="space-y-6">
-        //     <div className="bg-gradient-to-r from-cyan-50 to-blue-50 p-4 rounded-xl border border-cyan-100">
-        //       <div className="flex items-center space-x-2 mb-2">
-        //         <CalendarDays className="w-5 h-5 text-cyan-600" />
-        //         <h3 className="font-semibold text-cyan-900">Booking Availability</h3>
-        //       </div>
-        //       <p className="text-sm text-cyan-700">Control when people can book meetings with you</p>
-        //     </div>
+             <span className="mr-2">•</span>
+        // case 'availability':
+  // return (
+  //   <div className="space-y-6">
+  //     <div className="bg-gradient-to-r from-cyan-50 to-blue-50 p-4 rounded-xl border border-cyan-100">
+  //       <div className="flex items-center space-x-2 mb-2">
+  //         <CalendarDays className="w-5 h-5 text-cyan-600" />
+  //         <h3 className="font-semibold text-cyan-900">Booking Availability</h3>
+  //       </div>
+  //       <p className="text-sm text-cyan-700">Control when people can book meetings with you</p>
+  //     </div>
+      
+  //     {/* Minimum Notice Period */}
+  //     <div className="bg-white p-6 rounded-xl border-2 border-gray-100 shadow-sm">
+  //       <h4 className="font-semibold mb-4 text-gray-900 flex items-center">
+  //         <Clock className="w-5 h-5 mr-2 text-cyan-600" />
+  //         Minimum Notice Period
+  //       </h4>
+  //       <p className="text-sm text-gray-600 mb-6">
+  //         How much advance notice do you need before someone can book a meeting? This prevents last-minute bookings that don't give you enough time to prepare.
+  //       </p>
+        
+  //       <div className="space-y-4">
+  //         <div className="flex items-center space-x-3">
+  //           <span className="text-sm font-medium text-gray-700 whitespace-nowrap">
+  //             Invitees can schedule with at least
+  //           </span>
             
-        //     {/* Minimum Notice Period */}
-        //     <div className="bg-white p-5 rounded-xl border-2 border-gray-100 shadow-sm">
-        //       <h4 className="font-semibold mb-4 text-gray-900 flex items-center">
-        //         <Clock className="w-5 h-5 mr-2 text-cyan-600" />
-        //         Minimum Notice Period
-        //       </h4>
-        //       <p className="text-sm text-gray-600 mb-4">
-        //         How much advance notice do you need before someone can book a meeting? This prevents last-minute bookings that don't give you enough time to prepare.
-        //       </p>
+  //           <div className="flex items-center space-x-2">
+  //             <div className="relative">
+  //               <input
+  //                 type="number"
+  //                 value={minimumNotice}
+  //                 onChange={(e) => {
+  //                   const value = parseInt(e.target.value) || 1;
+  //                   setMinimumNotice(Math.max(1, value));
+  //                 }}
+  //                 className="w-16 px-3 py-2 border-2 border-gray-200 rounded-lg text-center font-semibold bg-white focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+  //                 min="1"
+  //               />
+  //             </div>
               
-        //       <div className="flex items-center space-x-3 mb-4">
-        //         <div className="flex items-center space-x-2">
-        //           <button
-        //             type="button"
-        //             onClick={() => setMinimumNotice(Math.max(1, minimumNotice - 1))}
-        //             className="p-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg hover:from-cyan-600 hover:to-blue-600 transition-all duration-200 shadow-md hover:shadow-lg"
-        //           >
-        //             <Minus className="w-4 h-4" />
-        //           </button>
-        //           <input
-        //             type="number"
-        //             value={minimumNotice}
-        //             onChange={(e) => {
-        //               const value = parseInt(e.target.value) || 1;
-        //               setMinimumNotice(Math.max(1, value));
-        //             }}
-        //             className="w-20 px-3 py-2 border-2 border-gray-200 rounded-lg text-center font-semibold bg-gradient-to-r from-gray-50 to-white"
-        //             min="1"
-        //           />
-        //           <button
-        //             type="button"
-        //             onClick={() => setMinimumNotice(minimumNotice + 1)}
-        //             className="p-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg hover:from-cyan-600 hover:to-blue-600 transition-all duration-200 shadow-md hover:shadow-lg"
-        //           >
-        //             <Plus className="w-4 h-4" />
-        //           </button>
-        //         </div>
-                
-        //         <select
-        //           value={noticeType}
-        //           onChange={(e) => setNoticeType(e.target.value as 'minutes' | 'hours' | 'days')}
-        //           className="px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-200 bg-white shadow-sm"
-        //         >
-        //           <option value="minutes">Minutes</option>
-        //           <option value="hours">Hours</option>
-        //           <option value="days">Days</option>
-        //         </select>
-        //       </div>
-              
-        //       {errors.minimumNotice && <p className="mb-3 text-sm text-red-600">{errors.minimumNotice}</p>}
-              
-        //       <div className="bg-gradient-to-r from-cyan-50 to-blue-50 border border-cyan-200 rounded-lg p-4">
-        //         <div className="flex items-center space-x-2">
-        //           <Info className="w-4 h-4 text-cyan-600" />
-        //           <p className="text-sm text-cyan-800">
-        //             <span className="font-semibold">Current setting:</span> People must book at least{' '}
-        //             <span className="font-bold text-cyan-900">{formatNoticeDisplay()}</span> before the meeting time.
-        //           </p>
-        //         </div>
-        //       </div>
-              
-        //       {/* Quick preset buttons */}
-        //       <div className="mt-4">
-        //         <p className="text-sm font-medium text-gray-700 mb-2">Quick presets:</p>
-        //         <div className="flex flex-wrap gap-2">
-        //           <button
-        //             type="button"
-        //             onClick={() => { setMinimumNotice(30); setNoticeType('minutes'); }}
-        //             className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
-        //           >
-        //             30 minutes
-        //           </button>
-        //           <button
-        //             type="button"
-        //             onClick={() => { setMinimumNotice(2); setNoticeType('hours'); }}
-        //             className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
-        //           >
-        //             2 hours
-        //           </button>
-        //           <button
-        //             type="button"
-        //             onClick={() => { setMinimumNotice(4); setNoticeType('hours'); }}
-        //             className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
-        //           >
-        //             4 hours
-        //           </button>
-        //           <button
-        //             type="button"
-        //             onClick={() => { setMinimumNotice(1); setNoticeType('days'); }}
-        //             className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
-        //           >
-        //             1 day
-        //           </button>
-        //           <button
-        //             type="button"
-        //             onClick={() => { setMinimumNotice(2); setNoticeType('days'); }}
-        //             className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
-        //           >
-        //             2 days
-        //           </button>
-        //         </div>
-        //       </div>
-        //     </div>
+  //             <div className="relative">
+  //               <select
+  //                 value={noticeType}
+  //                 onChange={(e) => setNoticeType(e.target.value as 'minutes' | 'hours' | 'days')}
+  //                 className="appearance-none px-4 py-2 pr-8 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 bg-white cursor-pointer font-medium"
+  //               >
+  //                 <option value="minutes">minutes</option>
+  //                 <option value="hours">hours</option>
+  //                 <option value="days">days</option>
+  //               </select>
+  //               <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+  //             </div>
+  //           </div>
             
-        //     {/* Date Range Limit */}
-        //     <div className="bg-white p-5 rounded-xl border-2 border-gray-100 shadow-sm">
-        //       <h4 className="font-semibold mb-4 text-gray-900 flex items-center">
-        //         <Calendar className="w-5 h-5 mr-2 text-cyan-600" />
-        //         Booking Window
-        //       </h4>
-        //       <p className="text-sm text-gray-600 mb-4">
-        //         How far into the future can people book meetings? This prevents people from booking too far ahead.
-        //       </p>
-              
-        //       <div className="flex items-center space-x-3 mb-4">
-        //         <span className="text-sm font-medium text-gray-700">People can book up to</span>
-        //         <div className="flex items-center space-x-2">
-        //           <button
-        //             type="button"
-        //             onClick={() => setDateRangeLimit(Math.max(1, dateRangeLimit - 1))}
-        //             className="p-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg hover:from-cyan-600 hover:to-blue-600 transition-all duration-200 shadow-md hover:shadow-lg"
-        //           >
-        //             <Minus className="w-4 h-4" />
-        //           </button>
-        //           <input
-        //             type="number"
-        //             value={dateRangeLimit}
-        //             onChange={(e) => {
-        //               const value = parseInt(e.target.value) || 1;
-        //               setDateRangeLimit(Math.max(1, value));
-        //             }}
-        //             className="w-20 px-3 py-2 border-2 border-gray-200 rounded-lg text-center font-semibold bg-gradient-to-r from-gray-50 to-white"
-        //             min="1"
-        //           />
-        //           <button
-        //             type="button"
-        //             onClick={() => setDateRangeLimit(dateRangeLimit + 1)}
-        //             className="p-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg hover:from-cyan-600 hover:to-blue-600 transition-all duration-200 shadow-md hover:shadow-lg"
-        //           >
-        //             <Plus className="w-4 h-4" />
-        //           </button>
-        //         </div>
-        //         <span className="text-sm font-medium text-gray-700">days in advance</span>
-        //       </div>
-              
-        //       {errors.dateRangeLimit && <p className="mb-3 text-sm text-red-600">{errors.dateRangeLimit}</p>}
-              
-        //       <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-4">
-        //         <div className="flex items-center space-x-2">
-        //           <CheckCircle className="w-4 h-4 text-green-600" />
-        //           <p className="text-sm text-green-800">
-        //             Booking window: <span className="font-bold">{dateRangeLimit} days</span> into the future
-        //           </p>
-        //         </div>
-        //       </div>
-              
-        //       {/* Quick preset buttons for date range */}
-        //       <div className="mt-4">
-        //         <p className="text-sm font-medium text-gray-700 mb-2">Common settings:</p>
-        //         <div className="flex flex-wrap gap-2">
-        //           <button
-        //             type="button"
-        //             onClick={() => setDateRangeLimit(30)}
-        //             className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
-        //           >
-        //             30 days
-        //           </button>
-        //           <button
-        //             type="button"
-        //             onClick={() => setDateRangeLimit(60)}
-        //             className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
-        //           >
-        //             60 days
-        //           </button>
-        //           <button
-        //             type="button"
-        //             onClick={() => setDateRangeLimit(90)}
-        //             className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
-        //           >
-        //             90 days
-        //           </button>
-        //           <button
-        //             type="button"
-        //             onClick={() => setDateRangeLimit(180)}
-        //             className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
-        //           >
-        //             6 months
-        //           </button>
-        //           <button
-        //             type="button"
-        //             onClick={() => setDateRangeLimit(365)}
-        //             className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
-        //           >
-        //             1 year
-        //           </button>
-        //         </div>
-        //       </div>
-        //     </div>
+  //           <span className="text-sm font-medium text-gray-700">notice</span>
+  //         </div>
+          
+  //         {errors.minimumNotice && <p className="text-sm text-red-600">{errors.minimumNotice}</p>}
+          
+  //         <div className="bg-gradient-to-r from-cyan-50 to-blue-50 border border-cyan-200 rounded-lg p-4">
+  //           <div className="flex items-center space-x-2">
+  //             <Info className="w-4 h-4 text-cyan-600" />
+  //             <p className="text-sm text-cyan-800">
+  //               <span className="font-semibold">Current setting:</span> People must book at least{' '}
+  //               <span className="font-bold text-cyan-900">
+  //                 {minimumNotice === 1 ? `1 ${noticeType.slice(0, -1)}` : `${minimumNotice} ${noticeType}`}
+  //               </span> before the meeting time.
+  //             </p>
+  //           </div>
+  //         </div>
+          
+  //         {/* Quick preset buttons */}
+  //         <div>
+  //           <p className="text-sm font-medium text-gray-700 mb-2">Quick presets:</p>
+  //           <div className="flex flex-wrap gap-2">
+  //             <button
+  //               type="button"
+  //               onClick={() => { setMinimumNotice(30); setNoticeType('minutes'); }}
+  //               className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border border-gray-200"
+  //             >
+  //               30 minutes
+  //             </button>
+  //             <button
+  //               type="button"
+  //               onClick={() => { setMinimumNotice(2); setNoticeType('hours'); }}
+  //               className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border border-gray-200"
+  //             >
+  //               2 hours
+  //             </button>
+  //             <button
+  //               type="button"
+  //               onClick={() => { setMinimumNotice(4); setNoticeType('hours'); }}
+  //               className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border border-gray-200"
+  //             >
+  //               4 hours
+  //             </button>
+  //             <button
+  //               type="button"
+  //               onClick={() => { setMinimumNotice(1); setNoticeType('days'); }}
+  //               className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border border-gray-200"
+  //             >
+  //               1 day
+  //             </button>
+  //             <button
+  //               type="button"
+  //               onClick={() => { setMinimumNotice(2); setNoticeType('days'); }}
+  //               className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border border-gray-200"
+  //             >
+  //               2 days
+  //             </button>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     </div>
+      
+  //     {/* Date Range Limit */}
+  //     <div className="bg-white p-6 rounded-xl border-2 border-gray-100 shadow-sm">
+  //       <h4 className="font-semibold mb-4 text-gray-900 flex items-center">
+  //         <Calendar className="w-5 h-5 mr-2 text-cyan-600" />
+  //         Booking Window
+  //       </h4>
+  //       <p className="text-sm text-gray-600 mb-6">
+  //         How far into the future can people book meetings? This prevents people from booking too far ahead.
+  //       </p>
+        
+  //       <div className="space-y-4">
+  //         {/* Radio button options */}
+  //         <div className="space-y-3">
+  //           <label className="flex items-center space-x-3 cursor-pointer">
+  //             <input
+  //               type="radio"
+  //               name="bookingWindow"
+  //               value="fixed"
+  //               checked={bookingWindowType === 'fixed'}
+  //               onChange={(e) => setBookingWindowType(e.target.value as 'fixed' | 'date-range' | 'indefinite')}
+  //               className="w-4 h-4 text-cyan-600"
+  //             />
+  //             <div className="flex items-center space-x-2">
+  //               <input
+  //                 type="number"
+  //                 value={dateRangeLimit}
+  //                 onChange={(e) => {
+  //                   const value = parseInt(e.target.value) || 1;
+  //                   setDateRangeLimit(Math.max(1, value));
+  //                 }}
+  //                 className="w-16 px-3 py-2 border-2 border-gray-200 rounded-lg text-center font-semibold bg-white focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+  //                 min="1"
+  //                 disabled={bookingWindowType !== 'fixed'}
+  //               />
+  //               <div className="relative">
+  //                 <select
+  //                   value={dateRangeType}
+  //                   onChange={(e) => setDateRangeType(e.target.value as 'calendar days' | 'business days' | 'weeks' | 'months')}
+  //                   disabled={bookingWindowType !== 'fixed'}
+  //                   className="appearance-none px-4 py-2 pr-8 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 bg-white cursor-pointer font-medium disabled:bg-gray-50 disabled:text-gray-500"
+  //                 >
+  //                   <option value="calendar days">calendar days</option>
+  //                   <option value="business days">business days</option>
+  //                   <option value="weeks">weeks</option>
+  //                   <option value="months">months</option>
+  //                 </select>
+  //                 <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+  //               </div>
+  //               <span className="text-sm font-medium text-gray-700">into the future</span>
+  //             </div>
+  //           </label>
             
-        //     {/* Example scenario */}
-        //     <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-xl p-5">
-        //       <div className="flex items-start space-x-3">
-        //         <div className="bg-amber-500 rounded-full p-1 mt-0.5">
-        //           <Sparkles className="w-4 h-4 text-white" />
-        //         </div>
-        //         <div className="text-sm">
-        //           <p className="font-semibold text-amber-900 mb-2">Example:</p>
-        //           <p className="text-amber-800 mb-2">
-        //             With your current settings, if someone visits your booking page on{' '}
-        //             <span className="font-semibold">Monday at 2:00 PM</span>:
-        //           </p>
-        //           <ul className="text-amber-800 space-y-1 ml-4">
-        //             <li className="flex items-start">
-        //               <span className="mr-2">•</span>
-        //               <span>
-        //                 <strong>Earliest they can book:</strong>{' '}
-        //                 {noticeType === 'minutes' 
-        //                   ? `Monday at ${new Date(Date.now() + minimumNotice * 60000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`
-        //                   : noticeType === 'hours'
-        //                   ? minimumNotice >= 24 
-        //                     ? `${Math.ceil(minimumNotice / 24)} day${Math.ceil(minimumNotice / 24) > 1 ? 's' : ''} later`
-        //                     : `Monday at ${new Date(Date.now() + minimumNotice * 3600000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`
-        //                   : `${minimumNotice} day${minimumNotice > 1 ? 's' : ''} later`
-        //                 }
-        //               </span>
-        //             </li>
-        //             <li className="flex items-start">
-        //               <span className="mr-2">•</span>
-        //               <span>
-        //                 <strong>Latest they can book:</strong> {dateRangeLimit} days from Monday
-        //               </span>
-        //             </li>
-        //           </ul>
-        //         </div>
-        //       </div>
-        //     </div>
-        //   </div>
-        // );
-
-
-        case 'availability':
+  //           <label className="flex items-center space-x-3 cursor-pointer">
+  //             <input
+  //               type="radio"
+  //               name="bookingWindow"
+  //               value="date-range"
+  //               checked={bookingWindowType === 'date-range'}
+  //               onChange={(e) => setBookingWindowType(e.target.value as 'fixed' | 'date-range' | 'indefinite')}
+  //               className="w-4 h-4 text-cyan-600"
+  //             />
+  //             <span className="text-sm font-medium text-gray-700">Within a date range</span>
+  //           </label>
+            
+  //           <label className="flex items-center space-x-3 cursor-pointer">
+  //             <input
+  //               type="radio"
+  //               name="bookingWindow"
+  //               value="indefinite"
+  //               checked={bookingWindowType === 'indefinite'}
+  //               onChange={(e) => setBookingWindowType(e.target.value as 'fixed' | 'date-range' | 'indefinite')}
+  //               className="w-4 h-4 text-cyan-600"
+  //             />
+  //             <span className="text-sm font-medium text-gray-700">Indefinitely into the future</span>
+  //           </label>
+  //         </div>
+          
+  //         {errors.dateRangeLimit && <p className="text-sm text-red-600">{errors.dateRangeLimit}</p>}
+          
+  //         <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-4">
+  //           <div className="flex items-center space-x-2">
+  //             <CheckCircle className="w-4 h-4 text-green-600" />
+  //             <p className="text-sm text-green-800">
+  //               <span className="font-semibold">Booking window:</span> {bookingWindowType === 'indefinite' 
+  //                 ? 'indefinitely into the future' 
+  //                 : `${dateRangeLimit} ${dateRangeType} into the future`}
+  //             </p>
+  //           </div>
+  //         </div>
+          
+  //         {/* Quick preset buttons for fixed date range */}
+  //         {bookingWindowType === 'fixed' && (
+  //           <div>
+  //             <p className="text-sm font-medium text-gray-700 mb-2">Common settings:</p>
+  //             <div className="flex flex-wrap gap-2">
+  //               <button
+  //                 type="button"
+  //                 onClick={() => { setDateRangeLimit(30); setDateRangeType('calendar days'); }}
+  //                 className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border border-gray-200"
+  //               >
+  //                 30 days
+  //               </button>
+  //               <button
+  //                 type="button"
+  //                 onClick={() => { setDateRangeLimit(60); setDateRangeType('calendar days'); }}
+  //                 className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border border-gray-200"
+  //               >
+  //                 60 days
+  //               </button>
+  //               <button
+  //                 type="button"
+  //                 onClick={() => { setDateRangeLimit(90); setDateRangeType('calendar days'); }}
+  //                 className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border border-gray-200"
+  //               >
+  //                 90 days
+  //               </button>
+  //               <button
+  //                 type="button"
+  //                 onClick={() => { setDateRangeLimit(6); setDateRangeType('months'); }}
+  //                 className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border border-gray-200"
+  //               >
+  //                 6 months
+  //               </button>
+  //               <button
+  //                 type="button"
+  //                 onClick={() => { setDateRangeLimit(12); setDateRangeType('months'); }}
+  //                 className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border border-gray-200"
+  //               >
+  //                 1 year
+  //               </button>
+  //             </div>
+  //           </div>
+  //         )}
+  //       </div>
+  //     </div>
+      
+  //     {/* Example scenario */}
+  //     <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-xl p-6">
+  //       <div className="flex items-start space-x-3">
+  //         <div className="bg-amber-500 rounded-full p-1 mt-0.5">
+  //           <Sparkles className="w-4 h-4 text-white" />
+  //         </div>
+  //         <div className="text-sm">
+  //           <p className="font-semibold text-amber-900 mb-2">Example:</p>
+  //           <p className="text-amber-800 mb-2">
+  //             If someone visits your booking page right now:
+  //           </p>
+  //           <ul className="text-amber-800 space-y-1 ml-4">
+  //             <li className="flex items-start">
+  //               <span className="mr-2">•</span>
+  //               <span>
+  //                 <strong>Earliest they can book:</strong> {(() => {
+  //                   const now = new Date();
+  //                   if (noticeType === 'minutes') {
+  //                     const futureTime = new Date(now.getTime() + minimumNotice * 60 * 1000);
+  //                     return `Today at ${futureTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+  //                   } else if (noticeType === 'hours') {
+  //                     if (minimumNotice >= 24) {
+  //                       const days = Math.ceil(minimumNotice / 24);
+  //                       return `${days} day${days > 1 ? 's' : ''} from now`;
+  //                     } else {
+  //                       const futureTime = new Date(now.getTime() + minimumNotice * 60 * 60 * 1000);
+  //                       return `Today at ${futureTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+  //                     }
+  //                   } else {
+  //                     return `${minimumNotice} day${minimumNotice > 1 ? 's' : ''} from now`;
+  //                   }
+  //                 })()}
+  //               </span>
+  //             </li>
+  //             <li className="flex items-start">
+  //               <span className="mr-2">•</span>
+  //               <span>
+  //                 <strong>Latest they can book:</strong> {bookingWindowType === 'indefinite' 
+  //                   ? 'indefinitely into the future' 
+  //                   : `${dateRangeLimit} ${dateRangeType} from now`}
+  //               </span>
+  //             </li>
+  //           </ul>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   </div>
+  // );
+  case 'availability':
   return (
     <div className="space-y-6">
+      {/* Header Section */}
       <div className="bg-gradient-to-r from-cyan-50 to-blue-50 p-4 rounded-xl border border-cyan-100">
         <div className="flex items-center space-x-2 mb-2">
           <CalendarDays className="w-5 h-5 text-cyan-600" />
           <h3 className="font-semibold text-cyan-900">Booking Availability</h3>
         </div>
-        <p className="text-sm text-cyan-700">Control when people can book meetings with you</p>
-      </div>
-      
-      {/* Minimum Notice Period */}
-      <div className="bg-white p-6 rounded-xl border-2 border-gray-100 shadow-sm">
-        <h4 className="font-semibold mb-4 text-gray-900 flex items-center">
-          <Clock className="w-5 h-5 mr-2 text-cyan-600" />
-          Minimum Notice Period
-        </h4>
-        <p className="text-sm text-gray-600 mb-6">
-          How much advance notice do you need before someone can book a meeting? This prevents last-minute bookings that don't give you enough time to prepare.
+        <p className="text-sm text-cyan-700">
+          Control when and how people can book meetings with you
         </p>
-        
-        <div className="space-y-4">
-          <div className="flex items-center space-x-3">
-            <span className="text-sm font-medium text-gray-700 whitespace-nowrap">
-              Invitees can schedule with at least
-            </span>
-            
-            <div className="flex items-center space-x-2">
-              <div className="relative">
-                <input
-                  type="number"
-                  value={minimumNotice}
-                  onChange={(e) => {
-                    const value = parseInt(e.target.value) || 1;
-                    setMinimumNotice(Math.max(1, value));
-                  }}
-                  className="w-16 px-3 py-2 border-2 border-gray-200 rounded-lg text-center font-semibold bg-white focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
-                  min="1"
-                />
-              </div>
-              
-              <div className="relative">
-                <select
-                  value={noticeType}
-                  onChange={(e) => setNoticeType(e.target.value as 'minutes' | 'hours' | 'days')}
-                  className="appearance-none px-4 py-2 pr-8 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 bg-white cursor-pointer font-medium"
-                >
-                  <option value="minutes">minutes</option>
-                  <option value="hours">hours</option>
-                  <option value="days">days</option>
-                </select>
-                <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
-              </div>
-            </div>
-            
-            <span className="text-sm font-medium text-gray-700">notice</span>
+      </div>
+
+      {/* Minimum Notice Section */}
+      <div className="bg-white p-6 rounded-xl border-2 border-gray-100 shadow-sm">
+        <div className="flex items-start space-x-3 mb-4">
+          <div className="p-2 bg-cyan-100 rounded-lg">
+            <Clock className="w-5 h-5 text-cyan-600" />
           </div>
-          
-          {errors.minimumNotice && <p className="text-sm text-red-600">{errors.minimumNotice}</p>}
-          
-          <div className="bg-gradient-to-r from-cyan-50 to-blue-50 border border-cyan-200 rounded-lg p-4">
-            <div className="flex items-center space-x-2">
-              <Info className="w-4 h-4 text-cyan-600" />
-              <p className="text-sm text-cyan-800">
-                <span className="font-semibold">Current setting:</span> People must book at least{' '}
-                <span className="font-bold text-cyan-900">
-                  {minimumNotice === 1 ? `1 ${noticeType.slice(0, -1)}` : `${minimumNotice} ${noticeType}`}
-                </span> before the meeting time.
-              </p>
-            </div>
-          </div>
-          
-          {/* Quick preset buttons */}
           <div>
-            <p className="text-sm font-medium text-gray-700 mb-2">Quick presets:</p>
+            <h4 className="font-semibold text-gray-900">Minimum Notice Period</h4>
+            <p className="text-sm text-gray-600 mt-1">
+              Require advance notice to prevent last-minute bookings
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-4 pl-11">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                value={minimumNotice}
+                onChange={(e) => {
+                  const value = parseInt(e.target.value) || 1;
+                  setMinimumNotice(Math.max(1, value));
+                }}
+                className="w-20 px-3 py-2 border-2 border-gray-200 rounded-lg text-center font-medium bg-white focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+                min="1"
+              />
+              <select
+                value={noticeType}
+                onChange={(e) => setNoticeType(e.target.value as 'minutes' | 'hours' | 'days')}
+                className="px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 bg-white cursor-pointer font-medium"
+              >
+                <option value="minutes">Minutes</option>
+                <option value="hours">Hours</option>
+                <option value="days">Days</option>
+              </select>
+            </div>
+            <span className="text-sm text-gray-600">
+              before the meeting time
+            </span>
+          </div>
+
+          {errors.minimumNotice && (
+            <p className="text-sm text-red-600">{errors.minimumNotice}</p>
+          )}
+
+          <div className="mt-4">
+            <p className="text-sm font-medium text-gray-700 mb-2">
+              Quick settings:
+            </p>
             <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={() => { setMinimumNotice(30); setNoticeType('minutes'); }}
-                className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border border-gray-200"
-              >
-                30 minutes
-              </button>
-              <button
-                type="button"
-                onClick={() => { setMinimumNotice(2); setNoticeType('hours'); }}
-                className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border border-gray-200"
-              >
-                2 hours
-              </button>
-              <button
-                type="button"
-                onClick={() => { setMinimumNotice(4); setNoticeType('hours'); }}
-                className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border border-gray-200"
-              >
-                4 hours
-              </button>
-              <button
-                type="button"
-                onClick={() => { setMinimumNotice(1); setNoticeType('days'); }}
-                className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border border-gray-200"
-              >
-                1 day
-              </button>
-              <button
-                type="button"
-                onClick={() => { setMinimumNotice(2); setNoticeType('days'); }}
-                className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border border-gray-200"
-              >
-                2 days
-              </button>
+              {[15, 30, 60].map((mins) => (
+                <button
+                  key={`min-${mins}`}
+                  type="button"
+                  onClick={() => {
+                    setMinimumNotice(mins);
+                    setNoticeType('minutes');
+                  }}
+                  className={`px-3 py-1 text-sm rounded-lg transition-colors ${
+                    minimumNotice === mins && noticeType === 'minutes'
+                      ? 'bg-cyan-600 text-white'
+                      : 'bg-gray-100 hover:bg-gray-200'
+                  }`}
+                >
+                  {mins} mins
+                </button>
+              ))}
+              {[1, 2, 3].map((hours) => (
+                <button
+                  key={`hour-${hours}`}
+                  type="button"
+                  onClick={() => {
+                    setMinimumNotice(hours);
+                    setNoticeType('hours');
+                  }}
+                  className={`px-3 py-1 text-sm rounded-lg transition-colors ${
+                    minimumNotice === hours && noticeType === 'hours'
+                      ? 'bg-cyan-600 text-white'
+                      : 'bg-gray-100 hover:bg-gray-200'
+                  }`}
+                >
+                  {hours} hour{hours !== 1 ? 's' : ''}
+                </button>
+              ))}
+              {[1, 2, 3].map((days) => (
+                <button
+                  key={`day-${days}`}
+                  type="button"
+                  onClick={() => {
+                    setMinimumNotice(days);
+                    setNoticeType('days');
+                  }}
+                  className={`px-3 py-1 text-sm rounded-lg transition-colors ${
+                    minimumNotice === days && noticeType === 'days'
+                      ? 'bg-cyan-600 text-white'
+                      : 'bg-gray-100 hover:bg-gray-200'
+                  }`}
+                >
+                  {days} day{days !== 1 ? 's' : ''}
+                </button>
+              ))}
             </div>
           </div>
         </div>
       </div>
-      
-      {/* Date Range Limit */}
+
+      {/* Booking Window Section */}
       <div className="bg-white p-6 rounded-xl border-2 border-gray-100 shadow-sm">
-        <h4 className="font-semibold mb-4 text-gray-900 flex items-center">
-          <Calendar className="w-5 h-5 mr-2 text-cyan-600" />
-          Booking Window
-        </h4>
-        <p className="text-sm text-gray-600 mb-6">
-          How far into the future can people book meetings? This prevents people from booking too far ahead.
-        </p>
-        
-        <div className="space-y-4">
-          {/* Radio button options */}
+        <div className="flex items-start space-x-3 mb-4">
+          <div className="p-2 bg-cyan-100 rounded-lg">
+            <Calendar className="w-5 h-5 text-cyan-600" />
+          </div>
+          <div>
+            <h4 className="font-semibold text-gray-900">Booking Window</h4>
+            <p className="text-sm text-gray-600 mt-1">
+              Control how far in advance people can book
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-4 pl-11">
           <div className="space-y-3">
-            <label className="flex items-center space-x-3 cursor-pointer">
+            {/* Fixed Duration Option */}
+            <label className="flex items-start space-x-3 cursor-pointer group">
               <input
                 type="radio"
                 name="bookingWindow"
                 value="fixed"
                 checked={bookingWindowType === 'fixed'}
                 onChange={(e) => setBookingWindowType(e.target.value as 'fixed' | 'date-range' | 'indefinite')}
-                className="w-4 h-4 text-cyan-600"
+                className="mt-1 w-4 h-4 text-cyan-600 focus:ring-cyan-500"
               />
-              <div className="flex items-center space-x-2">
-                <input
-                  type="number"
-                  value={dateRangeLimit}
-                  onChange={(e) => {
-                    const value = parseInt(e.target.value) || 1;
-                    setDateRangeLimit(Math.max(1, value));
-                  }}
-                  className="w-16 px-3 py-2 border-2 border-gray-200 rounded-lg text-center font-semibold bg-white focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
-                  min="1"
-                  disabled={bookingWindowType !== 'fixed'}
-                />
-                <div className="relative">
+              <div className="flex-1">
+                <span className="font-medium text-gray-900 group-hover:text-cyan-700">
+                  Fixed duration
+                </span>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 mt-2">
+                  <input
+                    type="number"
+                    value={dateRangeLimit}
+                    onChange={(e) => {
+                      const value = parseInt(e.target.value) || 1;
+                      setDateRangeLimit(Math.max(1, value));
+                    }}
+                    className="w-20 px-3 py-2 border-2 border-gray-200 rounded-lg text-center font-medium bg-white focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 disabled:bg-gray-100"
+                    min="1"
+                    disabled={bookingWindowType !== 'fixed'}
+                  />
                   <select
                     value={dateRangeType}
                     onChange={(e) => setDateRangeType(e.target.value as 'calendar days' | 'business days' | 'weeks' | 'months')}
                     disabled={bookingWindowType !== 'fixed'}
-                    className="appearance-none px-4 py-2 pr-8 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 bg-white cursor-pointer font-medium disabled:bg-gray-50 disabled:text-gray-500"
+                    className="px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 bg-white cursor-pointer font-medium disabled:bg-gray-100"
                   >
-                    <option value="calendar days">calendar days</option>
-                    <option value="business days">business days</option>
-                    <option value="weeks">weeks</option>
-                    <option value="months">months</option>
+                    <option value="calendar days">Calendar days</option>
+                    <option value="business days">Business days</option>
+                    <option value="weeks">Weeks</option>
+                    <option value="months">Months</option>
                   </select>
-                  <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                  <span className="text-sm text-gray-600">
+                    into the future
+                  </span>
                 </div>
-                <span className="text-sm font-medium text-gray-700">into the future</span>
               </div>
             </label>
-            
-            <label className="flex items-center space-x-3 cursor-pointer">
+
+            {/* Date Range Option */}
+            <label className="flex items-start space-x-3 cursor-pointer group">
               <input
                 type="radio"
                 name="bookingWindow"
                 value="date-range"
                 checked={bookingWindowType === 'date-range'}
                 onChange={(e) => setBookingWindowType(e.target.value as 'fixed' | 'date-range' | 'indefinite')}
-                className="w-4 h-4 text-cyan-600"
+                className="mt-1 w-4 h-4 text-cyan-600 focus:ring-cyan-500"
               />
-              <span className="text-sm font-medium text-gray-700">Within a date range</span>
+              <div className="flex-1">
+                <span className="font-medium text-gray-900 group-hover:text-cyan-700">
+                  Specific date range
+                </span>
+                <p className="text-sm text-gray-600 mt-1">
+                  (Coming soon) Select exact start and end dates
+                </p>
+              </div>
             </label>
-            
-            <label className="flex items-center space-x-3 cursor-pointer">
+
+            {/* Indefinite Option */}
+            <label className="flex items-start space-x-3 cursor-pointer group">
               <input
                 type="radio"
                 name="bookingWindow"
                 value="indefinite"
                 checked={bookingWindowType === 'indefinite'}
                 onChange={(e) => setBookingWindowType(e.target.value as 'fixed' | 'date-range' | 'indefinite')}
-                className="w-4 h-4 text-cyan-600"
+                className="mt-1 w-4 h-4 text-cyan-600 focus:ring-cyan-500"
               />
-              <span className="text-sm font-medium text-gray-700">Indefinitely into the future</span>
+              <div className="flex-1">
+                <span className="font-medium text-gray-900 group-hover:text-cyan-700">
+                  No limit (indefinite)
+                </span>
+                <p className="text-sm text-gray-600 mt-1">
+                  Allow booking as far into the future as you want
+                </p>
+              </div>
             </label>
           </div>
-          
-          {errors.dateRangeLimit && <p className="text-sm text-red-600">{errors.dateRangeLimit}</p>}
-          
-          <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-4">
-            <div className="flex items-center space-x-2">
-              <CheckCircle className="w-4 h-4 text-green-600" />
-              <p className="text-sm text-green-800">
-                <span className="font-semibold">Booking window:</span> {bookingWindowType === 'indefinite' 
-                  ? 'indefinitely into the future' 
-                  : `${dateRangeLimit} ${dateRangeType} into the future`}
-              </p>
-            </div>
-          </div>
-          
-          {/* Quick preset buttons for fixed date range */}
+
+          {errors.dateRangeLimit && (
+            <p className="text-sm text-red-600">{errors.dateRangeLimit}</p>
+          )}
+
+          {/* Quick Settings for Fixed Duration */}
           {bookingWindowType === 'fixed' && (
-            <div>
-              <p className="text-sm font-medium text-gray-700 mb-2">Common settings:</p>
+            <div className="mt-4">
+              <p className="text-sm font-medium text-gray-700 mb-2">
+                Common durations:
+              </p>
               <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={() => { setDateRangeLimit(30); setDateRangeType('calendar days'); }}
-                  className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border border-gray-200"
-                >
-                  30 days
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setDateRangeLimit(60); setDateRangeType('calendar days'); }}
-                  className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border border-gray-200"
-                >
-                  60 days
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setDateRangeLimit(90); setDateRangeType('calendar days'); }}
-                  className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border border-gray-200"
-                >
-                  90 days
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setDateRangeLimit(6); setDateRangeType('months'); }}
-                  className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border border-gray-200"
-                >
-                  6 months
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setDateRangeLimit(12); setDateRangeType('months'); }}
-                  className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border border-gray-200"
-                >
-                  1 year
-                </button>
+                {[7, 14, 30, 60, 90].map((days) => (
+                  <button
+                    key={`days-${days}`}
+                    type="button"
+                    onClick={() => {
+                      setDateRangeLimit(days);
+                      setDateRangeType('calendar days');
+                    }}
+                    className={`px-3 py-1 text-sm rounded-lg transition-colors ${
+                      dateRangeLimit === days && dateRangeType === 'calendar days'
+                        ? 'bg-cyan-600 text-white'
+                        : 'bg-gray-100 hover:bg-gray-200'
+                    }`}
+                  >
+                    {days} days
+                  </button>
+                ))}
+                {[1, 3, 6, 12].map((months) => (
+                  <button
+                    key={`months-${months}`}
+                    type="button"
+                    onClick={() => {
+                      setDateRangeLimit(months);
+                      setDateRangeType('months');
+                    }}
+                    className={`px-3 py-1 text-sm rounded-lg transition-colors ${
+                      dateRangeLimit === months && dateRangeType === 'months'
+                        ? 'bg-cyan-600 text-white'
+                        : 'bg-gray-100 hover:bg-gray-200'
+                    }`}
+                  >
+                    {months} month{months !== 1 ? 's' : ''}
+                  </button>
+                ))}
               </div>
             </div>
           )}
         </div>
       </div>
-      
-      {/* Example scenario */}
+
+      {/* Example Preview */}
       <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-xl p-6">
         <div className="flex items-start space-x-3">
-          <div className="bg-amber-500 rounded-full p-1 mt-0.5">
+          <div className="bg-amber-500 rounded-full p-1.5">
             <Sparkles className="w-4 h-4 text-white" />
           </div>
-          <div className="text-sm">
-            <p className="font-semibold text-amber-900 mb-2">Example:</p>
-            <p className="text-amber-800 mb-2">
-              If someone visits your booking page right now:
-            </p>
-            <ul className="text-amber-800 space-y-1 ml-4">
-              <li className="flex items-start">
-                <span className="mr-2">•</span>
-                <span>
-                  <strong>Earliest they can book:</strong> {(() => {
-                    const now = new Date();
-                    if (noticeType === 'minutes') {
-                      const futureTime = new Date(now.getTime() + minimumNotice * 60 * 1000);
-                      return `Today at ${futureTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-                    } else if (noticeType === 'hours') {
-                      if (minimumNotice >= 24) {
-                        const days = Math.ceil(minimumNotice / 24);
-                        return `${days} day${days > 1 ? 's' : ''} from now`;
-                      } else {
-                        const futureTime = new Date(now.getTime() + minimumNotice * 60 * 60 * 1000);
-                        return `Today at ${futureTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-                      }
-                    } else {
-                      return `${minimumNotice} day${minimumNotice > 1 ? 's' : ''} from now`;
-                    }
-                  })()}
-                </span>
-              </li>
-              <li className="flex items-start">
-                <span className="mr-2">•</span>
-                <span>
-                  <strong>Latest they can book:</strong> {bookingWindowType === 'indefinite' 
-                    ? 'indefinitely into the future' 
-                    : `${dateRangeLimit} ${dateRangeType} from now`}
-                </span>
-              </li>
-            </ul>
+          <div>
+            <h4 className="font-semibold text-amber-900 mb-3">How this works</h4>
+            <div className="space-y-2 text-amber-800 text-sm">
+              <p>
+                <span className="font-medium">Right now:</span> {new Date().toLocaleString([], {
+                  weekday: 'long',
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </p>
+              <p>
+                <span className="font-medium">Earliest booking:</span> {
+                  noticeType === 'minutes' ? `After ${minimumNotice} minute${minimumNotice !== 1 ? 's' : ''}` :
+                  noticeType === 'hours' ? `After ${minimumNotice} hour${minimumNotice !== 1 ? 's' : ''}` :
+                  `After ${minimumNotice} day${minimumNotice !== 1 ? 's' : ''}`
+                }
+              </p>
+              <p>
+                <span className="font-medium">Booking window:</span> {
+                  bookingWindowType === 'indefinite' ? 'No end date' :
+                  bookingWindowType === 'date-range' ? 'Specific date range (coming soon)' :
+                  `${dateRangeLimit} ${dateRangeType} into the future`
+                }
+              </p>
+            </div>
           </div>
         </div>
       </div>
