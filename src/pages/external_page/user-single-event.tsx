@@ -563,10 +563,17 @@ const UserSingleEventPage = () => {
 
   // Helper function to format date for calendar
   const formatDateForCalendar = (date: Date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    try {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const formatted = `${year}-${month}-${day}`;
+      console.log('Formatting date:', date, 'to:', formatted);
+      return formatted;
+    } catch (error) {
+      console.error('Error formatting date:', error, date);
+      return null;
+    }
   };
 
   const { minDate, maxDate } = getAvailableDateRange();
@@ -577,7 +584,10 @@ const UserSingleEventPage = () => {
     bookingEndDate: event?.bookingEndDate,
     bookingWindowType: event?.bookingWindowType,
     minimumNotice: event?.minimumNotice,
-    noticeType: event?.noticeType
+    noticeType: event?.noticeType,
+    bookingEndDateType: typeof event?.bookingEndDate,
+    bookingEndDateValue: event?.bookingEndDate?.toString(),
+    isValidEndDate: event?.bookingEndDate instanceof Date
   });
   console.log('Calculated date range:', { minDate, maxDate });
   console.log('Parsed dates for calendar:', {
@@ -637,7 +647,7 @@ const UserSingleEventPage = () => {
                     : today(timezone)
                 }
                 maxValue={
-                  maxDate
+                  maxDate && formatDateForCalendar(maxDate)
                     ? parseDate(formatDateForCalendar(maxDate))
                     : undefined
                 }
