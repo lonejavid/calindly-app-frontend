@@ -96,6 +96,7 @@ export interface UserAvailabilityResponseType {
 type MeetingStatus = "SCHEDULED" | "CANCELLED" | "COMPLETED";
 
 export interface MeetingType {
+  questionAnswers: boolean;
   id: string;
   guestName: string;
   guestEmail: string;
