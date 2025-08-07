@@ -91,11 +91,16 @@
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { parseDate, today } from '@internationalized/date';
-import { PageContainer, Loader, ErrorAlert } from '@/components';
-import { EventDetails, BookingCalendar, BookingForm } from '@/features/booking';
-import { cn } from '@/lib/utils';
-import { useBookingState } from '@/stores/useBookingStore';
+ import { ErrorAlert } from "@/components/ErrorAlert";
 
+import BookingForm from "./_components/booking-form";
+ import BookingCalendar from "./_components/booking-calendar";
+import EventDetails from "./_components/event-details";
+import { cn } from '@/lib/utils';
+import { Loader } from "@/components/loader";
+import { useBookingState } from "@/hooks/use-booking-state";
+import PageContainer from "./_components/page-container";
+import { getSinglePublicEventBySlugQueryFn } from "@/lib/api";
 interface BookingWindow {
   startDate: Date | null;
   endDate: Date | null;
