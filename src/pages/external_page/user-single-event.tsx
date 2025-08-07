@@ -642,14 +642,32 @@ const UserSingleEventPage = () => {
               <BookingCalendar
                 eventId={event.id}
                 minValue={
-                  minDate
-                    ? parseDate(formatDateForCalendar(minDate))
-                    : today(timezone)
+                  minDate ? (() => {
+                    try {
+                      const formatted = formatDateForCalendar(minDate);
+                      console.log('Attempting to parse minDate:', formatted);
+                      const parsed = parseDate(formatted);
+                      console.log('Parsed minDate result:', parsed);
+                      return parsed || today(timezone);
+                    } catch (error) {
+                      console.error('Error parsing minDate:', error);
+                      return today(timezone);
+                    }
+                  })() : today(timezone)
                 }
                 maxValue={
-                  maxDate && formatDateForCalendar(maxDate)
-                    ? parseDate(formatDateForCalendar(maxDate))
-                    : undefined
+                  maxDate ? (() => {
+                    try {
+                      const formatted = formatDateForCalendar(maxDate);
+                      console.log('Attempting to parse maxDate:', formatted);
+                      const parsed = parseDate(formatted);
+                      console.log('Parsed maxDate result:', parsed);
+                      return parsed;
+                    } catch (error) {
+                      console.error('Error parsing maxDate:', error);
+                      return undefined;
+                    }
+                  })() : undefined
                 }
                 isDateUnavailable={(date) => {
                   const dateObj = new Date(date.toString());
