@@ -176,7 +176,7 @@ const CareersPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Here you would typically send the form data to your backend
-    console.log('Application submitted:', { ...formData, jobTitle: selectedJob?.title });
+
     alert("Application Submitted Successfully.");
       navigate("/");
     
