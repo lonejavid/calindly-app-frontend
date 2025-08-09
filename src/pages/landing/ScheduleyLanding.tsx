@@ -84,9 +84,13 @@ const ScheduleyLanding = () => {
   </span>
 </div>
 
-          
-                
                           <div className="hidden md:flex items-center space-x-8">
+                                <button 
+            onClick={() => navigate('/privacy')} 
+            className="hover:text-white transition-colors duration-300"
+          >
+            Privacy Policy
+          </button>
                   <a href="#features" className="text-gray-300 hover:text-white transition-colors duration-300">Features</a>
                   <a href="#benefits" className="text-gray-300 hover:text-white transition-colors duration-300">Benefits</a>
                    <a href="careers" className="text-gray-300 hover:text-white transition-colors duration-300">careers</a>
