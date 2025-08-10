@@ -93,7 +93,7 @@ const ScheduleyLanding = () => {
           >
             Carrers
           </button>
-                  <a href="#features" className="text-gray-300 hover:text-white transition-colors duration-300">Features</a>
+                  <a href="features" className="text-gray-300 hover:text-white transition-colors duration-300">Features</a>
                   <a href="benefits" className="text-gray-300 hover:text-white transition-colors duration-300">Benefits</a>
                   <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg" onClick={() => navigate(AUTH_ROUTES.SIGN_IN)}>
                     Get Started
