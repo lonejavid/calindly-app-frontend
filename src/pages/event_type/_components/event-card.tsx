@@ -489,7 +489,7 @@ const EventCard: FC<PropsType> = ({
   onClone,
   
 }) => {
-   console.log("Received event prop in EventCard:", event); 
+  //  console.log("Received event prop in EventCard:", event); 
   const [isCopied, setIsCopied] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isEditSliderOpen, setIsEditSliderOpen] = useState(false);
@@ -536,7 +536,7 @@ const EventCard: FC<PropsType> = ({
 
   const handleSaveEvent = (formData: unknown) => {
     console.log('Saving event data:', formData);
-    // Here you would typically send the data to your backend
+   
   };
 
   return (

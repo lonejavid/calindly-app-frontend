@@ -8,7 +8,6 @@ import { useState } from "react";
 const EventListSection = (props: { events: EventType[]; username: string }) => {
   
   const { events, username } = props;
-  console.log("my events are",events);
   const [pendingEventId, setPendingEventId] = useState<string | null>(null);
 
   const queryClient = useQueryClient();
