@@ -489,6 +489,7 @@ const EventCard: FC<PropsType> = ({
   onClone,
   
 }) => {
+   console.log("Received event prop in EventCard:", event); 
   const [isCopied, setIsCopied] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isEditSliderOpen, setIsEditSliderOpen] = useState(false);
