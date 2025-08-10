@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 
 const EventListSection = (props: { events: EventType[]; username: string }) => {
-   console.log("Events array:", events);
+  
   const { events, username } = props;
   const [pendingEventId, setPendingEventId] = useState<string | null>(null);
 
