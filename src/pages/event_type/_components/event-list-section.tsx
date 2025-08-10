@@ -76,7 +76,7 @@ const EventListSection = (props: { events: EventType[]; username: string }) => {
             onDelete={() => handleDelete(event.id)}
              event={event} 
           />
-          console.log("Events array:", JSON.stringify(events, null, 2));
+        
         ))}
       </div>
     </div>
