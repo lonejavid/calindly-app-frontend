@@ -651,7 +651,7 @@ const BookingForm = (props: { event: Event }) => {
                 {/* Show message when email is blocked */}
                 {isEmailBlocked && (
                   <p className="text-sm text-red-600 text-center">
-                    Please use a different email address to proceed with booking.
+            
                   </p>
                 )}
               </form>
