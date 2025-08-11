@@ -506,15 +506,7 @@ const BookingForm = (props: { event: Event }) => {
               </div>
             </div>
 
-            {/* Redirect Button - Only show if redirectUrl exists */}
-            {/* {event.redirectUrl && (
-              <Button 
-                onClick={handleRedirect}
-                className="w-full mt-4 h-10 sm:h-12 text-sm sm:text-base"
-              >
-                Continue
-              </Button>
-            )} */}
+         
           </div>
         ) : (
           <Fragment>
@@ -564,7 +556,7 @@ const BookingForm = (props: { event: Event }) => {
                       <FormMessage className="text-xs sm:text-sm" />
                       {isEmailBlocked && (
                         <p className="text-xs sm:text-sm text-red-600 mt-1">
-                          This email domain is not allowed for this event.
+                       
                         </p>
                       )}
                     </FormItem>
