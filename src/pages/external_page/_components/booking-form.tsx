@@ -138,7 +138,7 @@ const BookingForm = (props: { event: Event }) => {
         .refine(
           (email) => !isEmailDomainBlocked(email),
           {
-            message: `Email domains ${displayDomains.join(", ")} are not allowed for this event.`,
+            message: `This doesn't seem to be your work email.`,
           }
         );
     } else {
