@@ -701,7 +701,7 @@ const ScheduleyLanding = () => {
               </p>
               <div className="flex space-x-4">
                 <a 
-                  href="https://www.linkedin.com/jobs/view/software-engineer-at-schedley-com-4271146349/?originalSubdomain=in" 
+                  href="https://www.linkedin.com/company/schedley-com" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
