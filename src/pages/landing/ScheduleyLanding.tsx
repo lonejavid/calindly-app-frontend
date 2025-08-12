@@ -186,7 +186,7 @@ const ScheduleyLanding = () => {
               Get Started Free
             </button>
             <a 
-              href="https://www.linkedin.com/jobs/view/software-engineer-at-schedley-com-4271146349/?originalSubdomain=in" 
+              href="https://www.linkedin.com/company/schedley-com" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-gray-300 hover:text-white transition-all duration-300 transform hover:scale-110 p-3 rounded-full hover:bg-white/10"
@@ -220,7 +220,7 @@ const ScheduleyLanding = () => {
               <a href="#features" className="text-gray-300 hover:text-white transition-colors duration-300 py-2" onClick={() => setMobileMenuOpen(false)}>Features</a>
               <a href="#benefits" className="text-gray-300 hover:text-white transition-colors duration-300 py-2" onClick={() => setMobileMenuOpen(false)}>Benefits</a>
               <a 
-                href="https://www.linkedin.com/jobs/view/software-engineer-at-schedley-com-4271146349/?originalSubdomain=in" 
+                href="https://www.linkedin.com/company/schedley-com" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-gray-300 hover:text-white transition-colors duration-300 py-2 flex items-center"
