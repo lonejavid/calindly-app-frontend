@@ -663,7 +663,6 @@ case 'availability':
                   className="px-2 py-1 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-cyan-500 disabled:bg-gray-100"
                 >
                   <option value="calendar days">days</option>
-                  <option value="business days">biz days</option>
                   <option value="weeks">weeks</option>
                   <option value="months">months</option>
                 </select>
