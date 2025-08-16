@@ -1,6 +1,6 @@
-// components/TimezoneSelector.tsx
+'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Check, ChevronsUpDown, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -25,7 +25,11 @@ interface TimezoneSelectorProps {
   className?: string;
 }
 
-export const TimezoneSelector = ({ value, onValueChange, className }: TimezoneSelectorProps) => {
+export const TimezoneSelector: React.FC<TimezoneSelectorProps> = ({ 
+  value, 
+  onValueChange, 
+  className 
+}) => {
   const [open, setOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
 
@@ -49,82 +53,56 @@ export const TimezoneSelector = ({ value, onValueChange, className }: TimezoneSe
       )
     : TIMEZONE_OPTIONS;
 
+  const handleTimezoneSelect = (timezoneValue: string) => {
+    onValueChange(timezoneValue);
+    setOpen(false);
+    setSearchValue('');
+  };
+
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className={cn("justify-between min-w-[300px] h-auto p-3", className)}
-        >
-          <div className="flex items-start gap-2 text-left">
-            <Globe className="h-4 w-4 mt-0.5 shrink-0" />
-            <div className="flex flex-col gap-1">
-              <span className="font-medium">
-                {selectedTimezone?.label || 'Select timezone...'}
-              </span>
-              {currentTime && (
-                <span className="text-xs text-muted-foreground">
-                  Current time: {currentTime}
+    <div className="w-full">
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className={cn("justify-between min-w-[300px] h-auto p-3 w-full", className)}
+          >
+            <div className="flex items-start gap-2 text-left">
+              <Globe className="h-4 w-4 mt-0.5 shrink-0" />
+              <div className="flex flex-col gap-1">
+                <span className="font-medium">
+                  {selectedTimezone?.label || 'Select timezone...'}
                 </span>
-              )}
+                {currentTime && (
+                  <span className="text-xs text-muted-foreground">
+                    Current time: {currentTime}
+                  </span>
+                )}
+              </div>
             </div>
-          </div>
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[400px] p-0">
-        <Command>
-          <CommandInput 
-            placeholder="Search timezone..." 
-            value={searchValue}
-            onValueChange={setSearchValue}
-          />
-          <CommandList className="max-h-[300px]">
-            <CommandEmpty>No timezone found.</CommandEmpty>
-            {searchValue ? (
-              // Show flat list when searching
-              <CommandGroup>
-                {filteredTimezones.map((timezone) => (
-                  <CommandItem
-                    key={timezone.value}
-                    value={timezone.value}
-                    onSelect={() => {
-                      onValueChange(timezone.value);
-                      setOpen(false);
-                      setSearchValue('');
-                    }}
-                    className="flex items-center justify-between py-2"
-                  >
-                    <div className="flex items-center gap-2">
-                      <Check
-                        className={cn(
-                          "h-4 w-4",
-                          value === timezone.value ? "opacity-100" : "opacity-0"
-                        )}
-                      />
-                      <span className="text-sm">{timezone.label}</span>
-                    </div>
-                    <span className="text-xs text-muted-foreground ml-2">
-                      {getCurrentTimeInTimezone(timezone.value)}
-                    </span>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            ) : (
-              // Show grouped list when not searching
-              Object.entries(groupedTimezones).map(([groupName, timezones]) => (
-                <CommandGroup key={groupName} heading={groupName.replace('_', ' & ')}>
-                  {timezones.map((timezone) => (
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[400px] p-0" align="start">
+          <Command>
+            <CommandInput 
+              placeholder="Search timezone..." 
+              value={searchValue}
+              onValueChange={setSearchValue}
+            />
+            <CommandList className="max-h-[300px]">
+              <CommandEmpty>No timezone found.</CommandEmpty>
+              {searchValue ? (
+                // Show flat list when searching
+                <CommandGroup>
+                  {filteredTimezones.map((timezone) => (
                     <CommandItem
                       key={timezone.value}
                       value={timezone.value}
-                      onSelect={() => {
-                        onValueChange(timezone.value);
-                        setOpen(false);
-                      }}
-                      className="flex items-center justify-between py-2"
+                      onSelect={() => handleTimezoneSelect(timezone.value)}
+                      className="flex items-center justify-between py-2 cursor-pointer"
                     >
                       <div className="flex items-center gap-2">
                         <Check
@@ -141,11 +119,43 @@ export const TimezoneSelector = ({ value, onValueChange, className }: TimezoneSe
                     </CommandItem>
                   ))}
                 </CommandGroup>
-              ))
-            )}
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
+              ) : (
+                // Show grouped list when not searching
+                <>
+                  {Object.entries(groupedTimezones).map(([groupName, timezones]) => (
+                    <CommandGroup key={groupName} heading={groupName.replace('_', ' & ')}>
+                      {timezones.map((timezone) => (
+                        <CommandItem
+                          key={timezone.value}
+                          value={timezone.value}
+                          onSelect={() => handleTimezoneSelect(timezone.value)}
+                          className="flex items-center justify-between py-2 cursor-pointer"
+                        >
+                          <div className="flex items-center gap-2">
+                            <Check
+                              className={cn(
+                                "h-4 w-4",
+                                value === timezone.value ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            <span className="text-sm">{timezone.label}</span>
+                          </div>
+                          <span className="text-xs text-muted-foreground ml-2">
+                            {getCurrentTimeInTimezone(timezone.value)}
+                          </span>
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  ))}
+                </>
+              )}
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+    </div>
   );
 };
+
+// Default export for easier importing
+export default TimezoneSelector;
