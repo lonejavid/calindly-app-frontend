@@ -201,6 +201,9 @@
 // };
 
 // export default WeeklyHoursRow;
+
+
+
 import { z } from "zod";
 import { toast } from "sonner";
 import { useCallback, useEffect, useState } from "react";
@@ -268,7 +271,9 @@ const TIMEZONE_OPTIONS = [
 // Helper function to detect user timezone
 const detectUserTimezone = (): string => {
   try {
-    return Intl.DateTimeFormat().resolvedOptions().timeZone;
+   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    console.log("Detected Timezone:", tz);
+    return tz;
   } catch {
     return 'UTC';
   }
