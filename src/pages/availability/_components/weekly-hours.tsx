@@ -201,7 +201,6 @@
 // };
 
 // export default WeeklyHoursRow;
-
 import { z } from "zod";
 import { toast } from "sonner";
 import { useCallback, useEffect, useState } from "react";
@@ -224,14 +223,6 @@ import { DayAvailabilityType } from "@/types/api.type";
 import { updateUserAvailabilityMutationFn } from "@/lib/api";
 import { Loader } from "@/components/loader";
 import { Check, ChevronsUpDown, Globe } from "lucide-react";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
@@ -283,6 +274,73 @@ const detectUserTimezone = (): string => {
   }
 };
 
+// Custom Command Components (replacing the missing ones)
+const CustomCommand = ({ children, className }: { children: React.ReactNode; className?: string }) => (
+  <div className={cn("flex flex-col bg-popover text-popover-foreground rounded-md border", className)}>
+    {children}
+  </div>
+);
+
+const CustomCommandInput = ({ placeholder, value, onValueChange }: { 
+  placeholder: string; 
+  value?: string; 
+  onValueChange?: (value: string) => void 
+}) => (
+  <div className="p-2 border-b">
+    <input
+      type="text"
+      placeholder={placeholder}
+      value={value}
+      onChange={(e) => onValueChange?.(e.target.value)}
+      className="w-full bg-transparent outline-none placeholder:text-muted-foreground"
+    />
+  </div>
+);
+
+const CustomCommandList = ({ children, className }: { children: React.ReactNode; className?: string }) => (
+  <div className={cn("overflow-y-auto overflow-x-hidden max-h-[300px]", className)}>
+    {children}
+  </div>
+);
+
+const CustomCommandEmpty = ({ children }: { children: React.ReactNode }) => (
+  <div className="py-6 text-center text-sm text-muted-foreground">
+    {children}
+  </div>
+);
+
+const CustomCommandGroup = ({ heading, children }: { heading: string; children: React.ReactNode }) => (
+  <div className="overflow-hidden">
+    <div className="py-1.5 px-2 text-xs font-medium text-muted-foreground uppercase">
+      {heading}
+    </div>
+    <div className="[&>[cmdk-item]]:px-2 [&>[cmdk-item]]:py-1.5 [&>[cmdk-item]]:text-sm">
+      {children}
+    </div>
+  </div>
+);
+
+const CustomCommandItem = ({ 
+  children, 
+  onSelect, 
+  isSelected 
+}: { 
+  children: React.ReactNode; 
+  onSelect: () => void; 
+  isSelected: boolean 
+}) => (
+  <div
+    onClick={onSelect}
+    className={cn(
+      "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none",
+      isSelected ? "bg-accent text-accent-foreground" : "hover:bg-accent hover:text-accent-foreground"
+    )}
+  >
+    <Check className={cn("mr-2 h-4 w-4", isSelected ? "opacity-100" : "opacity-0")} />
+    {children}
+  </div>
+);
+
 const WeeklyHoursRow = ({
   days,
   timeGap,
@@ -291,6 +349,7 @@ const WeeklyHoursRow = ({
   timeGap: number;
 }) => {
   const [userTimezone, setUserTimezone] = useState(detectUserTimezone());
+  const [searchValue, setSearchValue] = useState("");
   const { mutate, isPending } = useMutation({
     mutationFn: updateUserAvailabilityMutationFn,
   });
@@ -397,8 +456,14 @@ const WeeklyHoursRow = ({
     [form]
   );
 
-  // Group timezones for the dropdown
-  const groupedTimezones = TIMEZONE_OPTIONS.reduce((acc, timezone) => {
+  // Filter timezones based on search
+  const filteredTimezones = TIMEZONE_OPTIONS.filter(tz => 
+    tz.label.toLowerCase().includes(searchValue.toLowerCase()) ||
+    tz.value.toLowerCase().includes(searchValue.toLowerCase())
+  );
+
+  // Group filtered timezones for the dropdown
+  const groupedTimezones = filteredTimezones.reduce((acc, timezone) => {
     if (!acc[timezone.group]) {
       acc[timezone.group] = [];
     }
@@ -445,36 +510,36 @@ const WeeklyHoursRow = ({
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-[400px] p-0">
-                        <Command>
-                          <CommandInput placeholder="Search timezone..." />
-                          <CommandList className="max-h-[300px]">
-                            <CommandEmpty>No timezone found.</CommandEmpty>
-                            {Object.entries(groupedTimezones).map(([groupName, timezones]) => (
-                              <CommandGroup key={groupName} heading={groupName.replace('_', ' & ')}>
-                                {timezones.map((timezone) => (
-                                  <CommandItem
-                                    value={timezone.value}
-                                    key={timezone.value}
-                                    onSelect={() => {
-                                      form.setValue("timezone", timezone.value);
-                                      setUserTimezone(timezone.value);
-                                    }}
-                                  >
-                                    <Check
-                                      className={cn(
-                                        "mr-2 h-4 w-4",
-                                        timezone.value === field.value
-                                          ? "opacity-100"
-                                          : "opacity-0"
-                                      )}
-                                    />
-                                    {timezone.label}
-                                  </CommandItem>
-                                ))}
-                              </CommandGroup>
-                            ))}
-                          </CommandList>
-                        </Command>
+                        <CustomCommand>
+                          <CustomCommandInput 
+                            placeholder="Search timezone..." 
+                            value={searchValue}
+                            onValueChange={setSearchValue}
+                          />
+                          <CustomCommandList>
+                            {Object.keys(groupedTimezones).length === 0 ? (
+                              <CustomCommandEmpty>No timezone found.</CustomCommandEmpty>
+                            ) : (
+                              Object.entries(groupedTimezones).map(([groupName, timezones]) => (
+                                <CustomCommandGroup key={groupName} heading={groupName.replace('_', ' & ')}>
+                                  {timezones.map((timezone) => (
+                                    <CustomCommandItem
+                                      key={timezone.value}
+                                      onSelect={() => {
+                                        form.setValue("timezone", timezone.value);
+                                        setUserTimezone(timezone.value);
+                                        setSearchValue("");
+                                      }}
+                                      isSelected={timezone.value === field.value}
+                                    >
+                                      {timezone.label}
+                                    </CustomCommandItem>
+                                  ))}
+                                </CustomCommandGroup>
+                              ))
+                            )}
+                          </CustomCommandList>
+                        </CustomCommand>
                       </PopoverContent>
                     </Popover>
                   </FormControl>
