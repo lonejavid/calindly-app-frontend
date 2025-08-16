@@ -286,7 +286,7 @@ const ScheduleyLanding = () => {
               <Shield className="w-4 h-4 ml-3 text-emerald-400" />
             </div>
             
-            {/* <h5 className="text-5xl sm:text-7xl lg:text-8xl font-black mb-6 sm:mb-8 leading-tight tracking-tight">
+            <h5 className="text-5xl sm:text-7xl lg:text-8xl font-black mb-6 sm:mb-8 leading-tight tracking-tight">
               <span className="bg-gradient-to-r from-white via-purple-100 to-white bg-clip-text text-transparent block">
                 The World's First
               </span>
@@ -299,12 +299,8 @@ const ScheduleyLanding = () => {
               <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent block">
                 Platform
               </span>
-            </h5> */}
-            <h5 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6 sm:mb-8 leading-snug tracking-tight text-gray-100">
-              <span className="block text-white">The World's First</span>
-              <span className="block text-purple-400">Intelligent Scheduling</span>
-              <span className="block text-emerald-400">& Client Acquisition Platform</span>
             </h5>
+       
             <p className="text-xl sm:text-2xl lg:text-3xl text-gray-300 mb-8 sm:mb-12 max-w-5xl mx-auto leading-relaxed font-medium">
               We don’t just manage your schedule - <strong className="text-white">we help you book high-value meetings.</strong><br />
               <strong className="text-purple-300">AI-powered spam protection</strong> + <strong className="text-emerald-300">dedicated client acquisition team</strong> = <strong className="text-yellow-300">guaranteed results</strong>
