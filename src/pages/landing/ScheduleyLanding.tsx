@@ -305,13 +305,6 @@ const ScheduleyLanding = () => {
               <span className="block text-purple-400">Intelligent Scheduling</span>
               <span className="block text-emerald-400">& Client Acquisition Platform</span>
             </h5>
-            <p className="mt-4 text-lg sm:text-xl text-gray-300 max-w-2xl">
-              A professional solution designed to simplify scheduling, 
-              enhance productivity, and help businesses acquire clients with ease. 
-              Built with innovation, efficiency, and growth in mind.
-            </p>
-
-            
             <p className="text-xl sm:text-2xl lg:text-3xl text-gray-300 mb-8 sm:mb-12 max-w-5xl mx-auto leading-relaxed font-medium">
               We don’t just manage your schedule - <strong className="text-white">we help you book high-value meetings.</strong><br />
               <strong className="text-purple-300">AI-powered spam protection</strong> + <strong className="text-emerald-300">dedicated client acquisition team</strong> = <strong className="text-yellow-300">guaranteed results</strong>
