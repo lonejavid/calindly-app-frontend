@@ -675,7 +675,7 @@ case 'availability':
           </label>
 
           {/* Date Range */}
-          <label className="flex items-start space-x-2 cursor-pointer p-2 rounded hover:bg-gray-50">
+          {/* <label className="flex items-start space-x-2 cursor-pointer p-2 rounded hover:bg-gray-50">
             <input
               type="radio"
               name="bookingWindow"
@@ -683,13 +683,13 @@ case 'availability':
               checked={bookingWindowType === 'date-range'}
               onChange={(e) => setBookingWindowType(e.target.value as 'fixed' | 'date-range' | 'indefinite')}
               className="mt-0.5 w-3 h-3 text-cyan-600"
-            />
+            /> */}
             {/* <div>
               <span className="text-sm font-medium text-gray-900">**Date-range**</span>
               <p className="text-xs text-gray-600">Invitees can schedule within a date range</p>
               <p className="text-xs text-gray-500">(Coming soon)</p>
             </div> */}
-          </label>
+          {/* </label> */}
 
           {/* Indefinite */}
           <label className="flex items-start space-x-2 cursor-pointer p-2 rounded hover:bg-gray-50">
