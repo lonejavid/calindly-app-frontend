@@ -906,6 +906,7 @@ const ScheduleyLanding = () => {
               <span>© 2024 Schedley.com - All rights reserved</span>
               <span className="hidden sm:block">•</span>
               <span>Intelligent Scheduling & Client Acquisition Platform</span>
+               <span className="hidden sm:block">•</span>
                  <span>notification@schedley.com</span>
             </div>
             
