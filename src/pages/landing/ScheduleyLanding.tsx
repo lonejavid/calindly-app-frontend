@@ -567,7 +567,7 @@ const ScheduleyLanding = () => {
             </div>
             
             <h2 className="text-4xl sm:text-6xl font-black mb-8 bg-gradient-to-r from-white to-emerald-200 bg-clip-text text-transparent">
-              Get Your First High-Ticket Client in 7 Days
+              Get Your First Ticket Client in 7 Days
             </h2>
             
             <p className="text-2xl sm:text-3xl font-bold text-emerald-300 mb-8">
