@@ -47,6 +47,7 @@ const UserSingleEventPage = () => {
   });
 
   const event = data?.event;
+  console.log("Actual event is that needed to beconverted ",event);
 
   const getAvailableDateRange = () => {
     if (!event) return { minDate: null, maxDate: null };
