@@ -423,17 +423,7 @@ const WeeklyHoursRow = ({
   return (
     <div className="bg-gradient-to-br from-white via-gray-50/50 to-white dark:from-gray-900 dark:via-gray-800/30 dark:to-gray-900 rounded-2xl border border-gray-200/60 dark:border-gray-700/60 shadow-xl backdrop-blur-sm overflow-hidden">
       {/* Enhanced Header */}
-      <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 p-8 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/90 via-purple-600/90 to-indigo-600/90"></div>
-        <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-20 -mt-20"></div>
-        <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full -ml-16 -mb-16"></div>
-        <div className="relative z-10 flex items-start justify-between">
-          <div>
-            <h2 className="text-3xl font-bold mb-2">Weekly Availability</h2>
-            <p className="text-blue-100 text-lg">Set your schedule and timezone preferences</p>
-          </div>
-        </div>
-      </div>
+  
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
