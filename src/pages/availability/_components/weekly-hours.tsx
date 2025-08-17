@@ -1792,9 +1792,7 @@ const WeeklyHoursRow = ({
         <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full -ml-16 -mb-16"></div>
         <div className="relative z-10 flex items-start justify-between">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-              <Calendar className="h-8 w-8" />
-            </div>
+          
            
           </div>
   
