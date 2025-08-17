@@ -253,7 +253,6 @@
 
 
 
-
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { parseDate, today } from '@internationalized/date';
@@ -289,27 +288,29 @@ const detectUserTimezone = (): string => {
 
 // Helper function to convert UTC date to local timezone
 const convertUTCDateToLocal = (utcDate: Date | string | null, timezone: string): Date | null => {
-  if (!utcDate) return null;
+  if (!utcDate) {
+    console.log('⚠️ No date provided for conversion');
+    return null;
+  }
   
   try {
     // Ensure we have a Date object
     const dateObj = typeof utcDate === 'string' ? new Date(utcDate) : utcDate;
     
     if (isNaN(dateObj.getTime())) {
-      console.error('Invalid date provided:', utcDate);
+      console.error('❌ Invalid date provided:', utcDate);
       return null;
     }
 
-    // Create a new date in the target timezone
-    // Note: The Date object will still be in UTC internally, but represents the local time
-    const utcTime = dateObj.getTime();
-    const localDate = new Date(utcTime);
-    
+    // Log the conversion process
     console.log(`🌍 Converting date: ${dateObj.toISOString()} UTC → Local time in ${timezone}`);
     
-    return localDate;
+    // The date object already represents the correct time, just return it
+    // The browser will automatically display it in the user's timezone
+    return dateObj;
+    
   } catch (error) {
-    console.error('Error converting UTC date to local:', error);
+    console.error('❌ Error converting UTC date to local:', error);
     return null;
   }
 };
@@ -363,28 +364,82 @@ const UserSingleEventPage = () => {
     queryKey: ['public_single_event', username, slug],
     queryFn: () => getSinglePublicEventBySlugQueryFn({ username, slug }),
     select: (response) => {
-      console.log('🔍 Raw event data from API (UTC times):', response.event);
+      console.log('🔍 FULL API RESPONSE:', response);
+      console.log('🔍 Raw event data from API:', response.event);
+      console.log('🔍 Event keys:', Object.keys(response.event || {}));
+      
+      // Check for different possible field names
+      console.log('🔍 Checking booking date fields:');
+      console.log('  - bookingStartDate:', response.event?.bookingStartDate);
+      console.log('  - booking_start_date:', response.event?.booking_start_date);
+      console.log('  - startDate:', response.event?.startDate);
+      console.log('  - start_date:', response.event?.start_date);
+      console.log('  - bookingEndDate:', response.event?.bookingEndDate);
+      console.log('  - booking_end_date:', response.event?.booking_end_date);
+      console.log('  - endDate:', response.event?.endDate);
+      console.log('  - end_date:', response.event?.end_date);
+      console.log('  - bookingWindowType:', response.event?.bookingWindowType);
+      console.log('  - booking_window_type:', response.event?.booking_window_type);
+      
+      if (!response.event) {
+        console.error('❌ No event data received from API');
+        return response;
+      }
+
+      // Try to identify the correct field names and convert them
+      const eventData = response.event;
       
       const convertedEvent = {
-        ...response.event,
-        // Convert UTC dates to local timezone
-        bookingStartDate: response.event.bookingStartDate 
-          ? convertUTCDateToLocal(response.event.bookingStartDate, userTimezone)
-          : null,
-        bookingEndDate: response.event.bookingEndDate 
-          ? convertUTCDateToLocal(response.event.bookingEndDate, userTimezone)
-          : null,
-        // If there are other date/time fields, convert them here as well
-        createdAt: response.event.createdAt 
-          ? convertUTCDateToLocal(response.event.createdAt, userTimezone)
-          : null,
-        updatedAt: response.event.updatedAt 
-          ? convertUTCDateToLocal(response.event.updatedAt, userTimezone)
-          : null,
+        ...eventData,
+        // Try different possible field names for booking start date
+        bookingStartDate: eventData.bookingStartDate 
+          ? convertUTCDateToLocal(eventData.bookingStartDate, userTimezone)
+          : eventData.booking_start_date 
+            ? convertUTCDateToLocal(eventData.booking_start_date, userTimezone)
+            : eventData.startDate
+              ? convertUTCDateToLocal(eventData.startDate, userTimezone)
+              : eventData.start_date
+                ? convertUTCDateToLocal(eventData.start_date, userTimezone)
+                : null,
+        
+        // Try different possible field names for booking end date
+        bookingEndDate: eventData.bookingEndDate 
+          ? convertUTCDateToLocal(eventData.bookingEndDate, userTimezone)
+          : eventData.booking_end_date 
+            ? convertUTCDateToLocal(eventData.booking_end_date, userTimezone)
+            : eventData.endDate
+              ? convertUTCDateToLocal(eventData.endDate, userTimezone)
+              : eventData.end_date
+                ? convertUTCDateToLocal(eventData.end_date, userTimezone)
+                : null,
+        
+        // Handle other possible field name variations
+        bookingWindowType: eventData.bookingWindowType || eventData.booking_window_type || undefined,
+        minimumNotice: eventData.minimumNotice || eventData.minimum_notice || undefined,
+        noticeType: eventData.noticeType || eventData.notice_type || undefined,
+        dateRangeLimit: eventData.dateRangeLimit || eventData.date_range_limit || undefined,
+        dateRangeType: eventData.dateRangeType || eventData.date_range_type || undefined,
+        
+        // Convert other date fields if they exist
+        createdAt: eventData.createdAt 
+          ? convertUTCDateToLocal(eventData.createdAt, userTimezone)
+          : eventData.created_at
+            ? convertUTCDateToLocal(eventData.created_at, userTimezone)
+            : null,
+        updatedAt: eventData.updatedAt 
+          ? convertUTCDateToLocal(eventData.updatedAt, userTimezone)
+          : eventData.updated_at
+            ? convertUTCDateToLocal(eventData.updated_at, userTimezone)
+            : null,
       };
 
       console.log('✨ Converted event data (Local times):', convertedEvent);
       console.log('🌍 Using timezone:', userTimezone);
+      console.log('🔍 Final booking dates:', {
+        bookingStartDate: convertedEvent.bookingStartDate,
+        bookingEndDate: convertedEvent.bookingEndDate,
+        bookingWindowType: convertedEvent.bookingWindowType
+      });
       
       return {
         ...response,
