@@ -262,6 +262,16 @@ import { useBookingState } from "@/hooks/use-booking-state";
 import PageContainer from "./_components/page-container";
 import { getSinglePublicEventBySlugQueryFn } from "@/lib/api";
 
+interface BookingWindow {
+  startDate: Date | null;
+  endDate: Date | null;
+  minimumNotice: number;
+  noticeType: 'hours' | 'days';
+  windowType: 'rolling' | 'fixed' | 'indefinite';
+  dateRangeLimit?: number;
+  dateRangeType?: 'calendar days' | 'weeks' | 'months';
+}
+
 const UserSingleEventPage = () => {
   const params = useParams();
   const username = params.username as string;
@@ -286,6 +296,7 @@ const UserSingleEventPage = () => {
   });
 
   const event = data?.event;
+  console.log("Actual event is that needed to")
 
   const getAvailableDateRange = () => {
     if (!event) return { minDate: null, maxDate: null };
@@ -298,23 +309,28 @@ const UserSingleEventPage = () => {
     if (event.minimumNotice && event.noticeType) {
       if (event.noticeType === 'hours') {
         minDate.setHours(minDate.getHours() + event.minimumNotice);
+      } else if (event.noticeType === 'days') {
+        minDate.setDate(minDate.getDate() + event.minimumNotice);
       } else if (event.noticeType === 'minutes') {
         minDate.setMinutes(minDate.getMinutes() + event.minimumNotice);
-      } else {
-        minDate.setDate(minDate.getDate() + event.minimumNotice);
       }
     }
 
     // Apply booking window constraints
     if (event.bookingWindowType === 'fixed') {
+      // Set minimum date based on booking start date
       if (event.bookingStartDate) {
         const startDate = new Date(event.bookingStartDate);
         minDate = new Date(Math.max(minDate.getTime(), startDate.getTime()));
       }
 
+      // CRITICAL: Set maximum date based on booking end date
       if (event.bookingEndDate) {
         maxDate = new Date(event.bookingEndDate);
-      } else if (event.dateRangeLimit && event.dateRangeType) {
+        // Ensure we don't go beyond the end date regardless of other settings
+      }
+      // Only apply dateRangeLimit if there's no explicit bookingEndDate
+      else if (event.dateRangeLimit && event.dateRangeType) {
         maxDate = new Date(minDate);
         switch (event.dateRangeType) {
           case 'calendar days':
@@ -328,7 +344,9 @@ const UserSingleEventPage = () => {
             break;
         }
       }
-    } else if (event.bookingWindowType === 'rolling' || event.bookingWindowType === 'indefinite') {
+    }
+    // Handle rolling or indefinite booking windows
+    else if (event.bookingWindowType === 'rolling' || event.bookingWindowType === 'indefinite') {
       if (event.dateRangeLimit && event.dateRangeType) {
         maxDate = new Date(minDate);
         switch (event.dateRangeType) {
@@ -348,19 +366,48 @@ const UserSingleEventPage = () => {
     return { minDate, maxDate };
   };
 
+  // Helper function to format date for calendar (ensures consistent format)
   const formatDateForCalendar = (date: Date) => {
     try {
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`;
+      // Create a new date in local timezone to avoid timezone issues
+      const localDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+      const year = localDate.getUTCFullYear();
+      const month = String(localDate.getUTCMonth() + 1).padStart(2, '0');
+      const day = String(localDate.getUTCDate()).padStart(2, '0');
+      const formatted = `${year}-${month}-${day}`;
+      console.log('Formatting date:', date, 'to:', formatted);
+      return formatted;
     } catch (error) {
       console.error('Error formatting date:', error, date);
       return null;
     }
   };
 
+  // Helper function to normalize dates to start of day for comparison
+  const normalizeDate = (date: Date): Date => {
+    const normalized = new Date(date);
+    normalized.setHours(0, 0, 0, 0);
+    return normalized;
+  };
+
   const { minDate, maxDate } = getAvailableDateRange();
+
+  // Debug logging
+  console.log('Event data:', {
+    bookingStartDate: event?.bookingStartDate,
+    bookingEndDate: event?.bookingEndDate,
+    bookingWindowType: event?.bookingWindowType,
+    minimumNotice: event?.minimumNotice,
+    noticeType: event?.noticeType,
+    bookingEndDateType: typeof event?.bookingEndDate,
+    bookingEndDateValue: event?.bookingEndDate?.toString(),
+    isValidEndDate: event?.bookingEndDate instanceof Date
+  });
+  console.log('Calculated date range:', { minDate, maxDate });
+  console.log('Parsed dates for calendar:', {
+    minValue: minDate ? parseDate(minDate.toISOString().split('T')[0]) : today(timezone),
+    maxValue: maxDate ? parseDate(maxDate.toISOString().split('T')[0]) : undefined
+  });
 
   if (isLoading) {
     return (
@@ -405,45 +452,76 @@ const UserSingleEventPage = () => {
           {next ? (
             <BookingForm event={event} />
           ) : (
-            <BookingCalendar
-              eventId={event.id}
-              minValue={
-                minDate ? (() => {
+            <>
+              <BookingCalendar
+                eventId={event.id}
+                minValue={
+                  minDate ? (() => {
+                    try {
+                      const formatted = formatDateForCalendar(minDate);
+                      console.log('Attempting to parse minDate:', formatted);
+                      const parsed = parseDate(formatted);
+                      console.log('Parsed minDate result:', parsed);
+                      return parsed || today(timezone);
+                    } catch (error) {
+                      console.error('Error parsing minDate:', error);
+                      return today(timezone);
+                    }
+                  })() : today(timezone)
+                }
+                maxValue={
+                  maxDate ? (() => {
+                    try {
+                      const formatted = formatDateForCalendar(maxDate);
+                      console.log('Attempting to parse maxDate:', formatted);
+                      const parsed = parseDate(formatted);
+                      console.log('Parsed maxDate result:', parsed);
+                      return parsed;
+                    } catch (error) {
+                      console.error('Error parsing maxDate:', error);
+                      return undefined;
+                    }
+                  })() : undefined
+                }
+                isDateUnavailable={(date) => {
                   try {
-                    const formatted = formatDateForCalendar(minDate);
-                    return parseDate(formatted) || today(timezone);
+                    // Convert the calendar date to a proper Date object
+                    const dateStr = date.toString();
+                    const dateObj = new Date(dateStr);
+                    
+                    // Normalize to start of day for consistent comparison
+                    const normalizedDate = normalizeDate(dateObj);
+                    
+                    // Normalize min and max dates
+                    const compareMinDate = minDate ? normalizeDate(minDate) : null;
+                    const compareMaxDate = maxDate ? normalizeDate(maxDate) : null;
+                    
+                    console.log('Date availability check:', {
+                      dateStr,
+                      normalizedDate: normalizedDate.toDateString(),
+                      compareMinDate: compareMinDate?.toDateString(),
+                      compareMaxDate: compareMaxDate?.toDateString(),
+                      isBefore: compareMinDate && normalizedDate < compareMinDate,
+                      isAfter: compareMaxDate && normalizedDate > compareMaxDate
+                    });
+                    
+                    // Return true if date should be unavailable (disabled)
+                    const isUnavailable = (
+                      (compareMinDate && normalizedDate < compareMinDate) ||
+                      (compareMaxDate && normalizedDate > compareMaxDate)
+                    );
+                    
+                    console.log('Date', normalizedDate.toDateString(), 'is', isUnavailable ? 'unavailable' : 'available');
+                    
+                    return isUnavailable;
                   } catch (error) {
-                    return today(timezone);
+                    console.error('Error in isDateUnavailable:', error, date);
+                    // If there's an error, make the date unavailable to be safe
+                    return true;
                   }
-                })() : today(timezone)
-              }
-              maxValue={
-                maxDate ? (() => {
-                  try {
-                    const formatted = formatDateForCalendar(maxDate);
-                    return parseDate(formatted);
-                  } catch (error) {
-                    return undefined;
-                  }
-                })() : undefined
-              }
-              isDateUnavailable={(date) => {
-                const dateObj = new Date(date.year, date.month - 1, date.day);
-                dateObj.setHours(0, 0, 0, 0);
-                
-                const compareMinDate = minDate ? new Date(minDate) : null;
-                const compareMaxDate = maxDate ? new Date(maxDate) : null;
-                
-                if (compareMinDate) compareMinDate.setHours(0, 0, 0, 0);
-                if (compareMaxDate) compareMaxDate.setHours(0, 0, 0, 0);
-
-                // Check if date is before minDate or after maxDate
-                const isBeforeMin = compareMinDate && dateObj < compareMinDate;
-                const isAfterMax = compareMaxDate && dateObj > compareMaxDate;
-                
-                return isBeforeMin || isAfterMax;
-              }}
-            />
+                }}
+              />
+            </>
           )}
         </div>
       </div>
