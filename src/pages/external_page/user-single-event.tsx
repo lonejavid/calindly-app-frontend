@@ -521,7 +521,7 @@ const UserSingleEventPage = () => {
                   }
                 }}
               /> */}
-              // Replace your existing BookingCalendar component call with this:
+            
 
 <BookingCalendar
   eventId={event.id}
