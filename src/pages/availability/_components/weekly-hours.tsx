@@ -1791,14 +1791,14 @@ const WeeklyHoursRow = ({
         <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-20 -mt-20"></div>
         <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full -ml-16 -mb-16"></div>
         <div className="relative z-10 flex items-start justify-between">
-          {/* <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4">
             <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
               <Calendar className="h-8 w-8" />
             </div>
            
           </div>
-          <Sparkles className="h-6 w-6 opacity-80 animate-pulse" />
-        </div> */}
+  
+        </div>
       </div>
 
       <Form {...form}>
