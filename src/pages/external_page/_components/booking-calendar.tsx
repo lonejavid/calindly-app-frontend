@@ -181,9 +181,6 @@
 
 // export default BookingCalendar;
 
-
-
-
 import { format } from "date-fns";
 import { Calendar } from "@/components/calendar";
 import { CalendarDate, DateValue } from "@internationalized/date";
@@ -199,7 +196,9 @@ import { useMemo } from "react";
 interface BookingCalendarProps {
   eventId: string;
   minValue?: DateValue;
+  maxValue?: DateValue; // Added maxValue prop
   defaultValue?: DateValue;
+  isDateUnavailable?: (date: DateValue) => boolean; // Added custom isDateUnavailable prop
 }
 
 // Helper function to convert UTC time slot to user's local timezone
@@ -236,7 +235,9 @@ const getDayInTimezone = (date: DateValue, timezone: string): string => {
 const BookingCalendar = ({
   eventId,
   minValue,
+  maxValue, // Receive maxValue prop
   defaultValue,
+  isDateUnavailable: customIsDateUnavailable, // Receive custom isDateUnavailable function
 }: BookingCalendarProps) => {
   const {
     hourType,
@@ -289,13 +290,24 @@ const BookingCalendar = ({
       )?.slots || []
     : [];
 
+  // Combined isDateUnavailable function that handles both availability and date range restrictions
   const isDateUnavailable = (date: DateValue) => {
-    // Get the day of the week in user's timezone
+    // First check if there's a custom isDateUnavailable function (for date range restrictions)
+    if (customIsDateUnavailable && customIsDateUnavailable(date)) {
+      console.log('Date unavailable due to custom restriction:', date.toString());
+      return true;
+    }
+
+    // Then check day availability (weekday restrictions)
     const dayOfWeek = getDayInTimezone(date, userTimezone);
-    
-    // Check if the day is available
     const dayAvailability = convertedAvailability.find((day) => day.day === dayOfWeek);
-    return !dayAvailability?.isAvailable;
+    const isDayUnavailable = !dayAvailability?.isAvailable;
+    
+    if (isDayUnavailable) {
+      console.log('Date unavailable due to day availability:', date.toString(), dayOfWeek);
+    }
+    
+    return isDayUnavailable;
   };
 
   const handleChangeDate = (newDate: DateValue) => {
@@ -306,6 +318,12 @@ const BookingCalendar = ({
 
   // Use user's timezone for decoding the selected slot
   const selectedTime = decodeSlot(selectedSlot, userTimezone, hourType);
+
+  console.log('BookingCalendar props:', {
+    minValue: minValue?.toString(),
+    maxValue: maxValue?.toString(),
+    hasCustomIsDateUnavailable: !!customIsDateUnavailable
+  });
 
   return (
     <div className="relative lg:flex-[1_1_50%] w-full flex-shrink-0 transition-all duration-220 ease-out p-4 pr-0">
@@ -323,17 +341,25 @@ const BookingCalendar = ({
         <div className="text-sm text-gray-600 mb-3">
           Times shown in your timezone: {userTimezone}
         </div>
+
+        {/* Debug info */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="text-xs text-gray-500 mb-2">
+            Min: {minValue?.toString() || 'none'} | Max: {maxValue?.toString() || 'none'}
+          </div>
+        )}
         
         <div className="w-full flex flex-col md:flex-row lg:flex-[1_1_300px]">
           <div className="w-full flex justify-start max-w-xs md:max-w-full lg:max-w-sm">
             <Calendar
               className="w-auto md:w-full lg:!w-auto"
-              minValue={minValue}
+              minValue={minValue} // Pass minValue to Calendar
+              maxValue={maxValue} // Pass maxValue to Calendar - THIS IS KEY!
               defaultValue={defaultValue}
               value={selectedDate}
               timezone={userTimezone} // Use user's timezone for calendar
               onChange={handleChangeDate}
-              isDateUnavailable={isDateUnavailable}
+              isDateUnavailable={isDateUnavailable} // Use our combined function
             />
           </div>
           {selectedDate && convertedAvailability ? (
@@ -361,56 +387,62 @@ const BookingCalendar = ({
                 className="flex-[1_1_100px] pr-[8px] overflow-x-hidden overflow-y-auto scrollbar-thin
              scrollbar-track-transparent scroll--bar h-[400px]"
               >
-                {timeSlots.map((slot, i) => {
-                  const formattedSlot = formatSlot(slot, userTimezone, hourType);
-                  return (
-                    <div role="list" key={i}>
-                      <div
-                        role="listitem"
-                        className="m-[10px_10px_10px_0] relative text-[15px]"
-                      >
-                        {/* Selected Time and Next Button */}
+                {timeSlots.length > 0 ? (
+                  timeSlots.map((slot, i) => {
+                    const formattedSlot = formatSlot(slot, userTimezone, hourType);
+                    return (
+                      <div role="list" key={i}>
                         <div
-                          className={`absolute inset-0 z-20 flex items-center gap-1.5 justify-between
-                             transform transition-all duration-400 ease-in-out ${
-                               selectedTime === formattedSlot
-                                 ? "translate-x-0 opacity-100"
-                                 : "translate-x-full opacity-0"
-                             }`}
+                          role="listitem"
+                          className="m-[10px_10px_10px_0] relative text-[15px]"
                         >
+                          {/* Selected Time and Next Button */}
+                          <div
+                            className={`absolute inset-0 z-20 flex items-center gap-1.5 justify-between
+                               transform transition-all duration-400 ease-in-out ${
+                                 selectedTime === formattedSlot
+                                   ? "translate-x-0 opacity-100"
+                                   : "translate-x-full opacity-0"
+                               }`}
+                          >
+                            <button
+                              type="button"
+                              className="w-full h-[52px] text-white rounded-[4px] bg-black/60 font-semibold disabled:opacity-100 disabled:pointer-events-none tracking-wide"
+                              disabled
+                            >
+                              {formattedSlot}
+                            </button>
+                            <button
+                              type="button"
+                              className="w-full cursor-pointer h-[52px] bg-[rgb(0,105,255)] text-white rounded-[4px] hover:bg-[rgba(0,105,255,0.8)] font-semibold tracking-wide"
+                              onClick={handleNext}
+                            >
+                              Next
+                            </button>
+                          </div>
+
                           <button
                             type="button"
-                            className="w-full h-[52px] text-white rounded-[4px] bg-black/60 font-semibold disabled:opacity-100 disabled:pointer-events-none tracking-wide"
-                            disabled
+                            className={`w-full h-[52px] cursor-pointer border border-[rgba(0,105,255,0.5)] text-[rgb(0,105,255)] rounded-[4px] font-semibold hover:border-2 hover:border-[rgb(0,105,255)] tracking-wide transition-all duration-400 ease-in-out
+                           ${
+                             selectedTime === formattedSlot
+                               ? "opacity-0"
+                               : "opacity-100"
+                           }
+                             `}
+                            onClick={() => handleSelectSlot(slot)}
                           >
                             {formattedSlot}
                           </button>
-                          <button
-                            type="button"
-                            className="w-full cursor-pointer h-[52px] bg-[rgb(0,105,255)] text-white rounded-[4px] hover:bg-[rgba(0,105,255,0.8)] font-semibold tracking-wide"
-                            onClick={handleNext}
-                          >
-                            Next
-                          </button>
                         </div>
-
-                        <button
-                          type="button"
-                          className={`w-full h-[52px] cursor-pointer border border-[rgba(0,105,255,0.5)] text-[rgb(0,105,255)] rounded-[4px] font-semibold hover:border-2 hover:border-[rgb(0,105,255)] tracking-wide transition-all duration-400 ease-in-out
-                         ${
-                           selectedTime === formattedSlot
-                             ? "opacity-0"
-                             : "opacity-100"
-                         }
-                           `}
-                          onClick={() => handleSelectSlot(slot)}
-                        >
-                          {formattedSlot}
-                        </button>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })
+                ) : (
+                  <div className="text-center py-8 text-gray-500">
+                    No available time slots for this date
+                  </div>
+                )}
               </div>
             </div>
           ) : null}
@@ -422,5 +454,3 @@ const BookingCalendar = ({
     </div>
   );
 };
-
-export default BookingCalendar;
