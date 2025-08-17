@@ -453,74 +453,7 @@ const UserSingleEventPage = () => {
             <BookingForm event={event} />
           ) : (
             <>
-              <BookingCalendar
-                eventId={event.id}
-                minValue={
-                  minDate ? (() => {
-                    try {
-                      const formatted = formatDateForCalendar(minDate);
-                      console.log('Attempting to parse minDate:', formatted);
-                      const parsed = parseDate(formatted);
-                      console.log('Parsed minDate result:', parsed);
-                      return parsed || today(timezone);
-                    } catch (error) {
-                      console.error('Error parsing minDate:', error);
-                      return today(timezone);
-                    }
-                  })() : today(timezone)
-                }
-                maxValue={
-                  maxDate ? (() => {
-                    try {
-                      const formatted = formatDateForCalendar(maxDate);
-                      console.log('Attempting to parse maxDate:', formatted);
-                      const parsed = parseDate(formatted);
-                      console.log('Parsed maxDate result:', parsed);
-                      return parsed;
-                    } catch (error) {
-                      console.error('Error parsing maxDate:', error);
-                      return undefined;
-                    }
-                  })() : undefined
-                }
-                isDateUnavailable={(date) => {
-                  try {
-                    // Convert the calendar date to a proper Date object
-                    const dateStr = date.toString();
-                    const dateObj = new Date(dateStr);
-                    
-                    // Normalize to start of day for consistent comparison
-                    const normalizedDate = normalizeDate(dateObj);
-                    
-                    // Normalize min and max dates
-                    const compareMinDate = minDate ? normalizeDate(minDate) : null;
-                    const compareMaxDate = maxDate ? normalizeDate(maxDate) : null;
-                    
-                    console.log('Date availability check:', {
-                      dateStr,
-                      normalizedDate: normalizedDate.toDateString(),
-                      compareMinDate: compareMinDate?.toDateString(),
-                      compareMaxDate: compareMaxDate?.toDateString(),
-                      isBefore: compareMinDate && normalizedDate < compareMinDate,
-                      isAfter: compareMaxDate && normalizedDate > compareMaxDate
-                    });
-                    
-                    // Return true if date should be unavailable (disabled)
-                    const isUnavailable = (
-                      (compareMinDate && normalizedDate < compareMinDate) ||
-                      (compareMaxDate && normalizedDate > compareMaxDate)
-                    );
-                    
-                    console.log('Date', normalizedDate.toDateString(), 'is', isUnavailable ? 'unavailable' : 'available');
-                    
-                    return isUnavailable;
-                  } catch (error) {
-                    console.error('Error in isDateUnavailable:', error, date);
-                    // If there's an error, make the date unavailable to be safe
-                    return true;
-                  }
-                }}
-              />
+              
             </>
           )}
         </div>
