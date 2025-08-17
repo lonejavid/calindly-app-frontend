@@ -723,8 +723,6 @@
 
 // export default WeeklyHoursRow;
 
-
-
 import { z } from "zod";
 import { toast } from "sonner";
 import { useCallback, useEffect, useState } from "react";
@@ -1136,272 +1134,237 @@ const WeeklyHoursRow = ({
   const selectedTimezoneInfo = TIMEZONE_OPTIONS.find(tz => tz.value === form.watch("timezone"));
 
   return (
-    <div className="max-w-7xl mx-auto bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 rounded-3xl shadow-2xl overflow-hidden">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <div className="relative bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 p-8 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iYSIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVHJhbnNmb3JtPSJyb3RhdGUoNDUpIj48cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiMwMDAiIGZpbGwtb3BhY2l0eT0iLjA1Ii8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2EpIi8+PC9zdmc+')] opacity-20"></div>
-        <div className="relative z-10 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-6">
-            <Calendar className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-4xl font-bold mb-3">Weekly Availability</h1>
-          <p className="text-violet-100 text-lg max-w-2xl mx-auto">
+      <div className="bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-600 text-white">
+        <div className="max-w-6xl mx-auto px-6 py-12 text-center">
+          <h1 className="text-4xl font-bold mb-4">Weekly Availability</h1>
+          <p className="text-purple-100 text-lg max-w-2xl mx-auto">
             Configure your weekly schedule and timezone preferences to help others book meetings with you
           </p>
         </div>
       </div>
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          {/* Two Column Layout */}
-          <div className="grid lg:grid-cols-2 gap-8 p-8">
-            
-            {/* Left Column - Timezone & Settings */}
-            <div className="space-y-6">
-              {/* Timezone Section */}
-              <div className="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-200/60 dark:border-gray-700/60 p-6 shadow-lg">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
-                    <Globe className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            {/* Two Column Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              
+              {/* Left Column - Timezone Settings */}
+              <div className="space-y-6">
+                {/* Timezone Section */}
+                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                  <div className="flex items-start gap-4 mb-6">
+                    <div className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-xl">
+                      <Globe className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <div className="flex-1">
+                      <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
+                        Timezone Settings
+                      </h2>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Select your local timezone for accurate scheduling
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200">
-                      Timezone Settings
-                    </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      Select your local timezone for accurate scheduling
-                    </p>
-                  </div>
-                </div>
-                
-                <FormField
-                  name="timezone"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant="outline"
-                              role="combobox"
-                              className={cn(
-                                "justify-between w-full h-14 px-4 rounded-xl border-2 border-gray-200 dark:border-gray-700",
-                                "hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all duration-200",
-                                "bg-gray-50 dark:bg-gray-800",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              <div className="flex items-center gap-3 text-left flex-1">
-                                {selectedTimezoneInfo ? (
-                                  <>
-                                    <span className="text-2xl">{selectedTimezoneInfo.country}</span>
-                                    <div className="flex flex-col">
-                                      <span className="font-semibold text-gray-800 dark:text-gray-200">
-                                        {selectedTimezoneInfo.label}
-                                      </span>
-                                      <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">
-                                        {selectedTimezoneInfo.value}
-                                      </span>
-                                    </div>
-                                  </>
-                                ) : (
-                                  <>
-                                    <Globe className="h-5 w-5 text-gray-400" />
-                                    <span className="font-medium text-gray-600 dark:text-gray-400">
-                                      Select your timezone...
-                                    </span>
-                                  </>
+                  
+                  <FormField
+                    name="timezone"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="outline"
+                                role="combobox"
+                                className={cn(
+                                  "justify-between w-full h-12 px-4 rounded-lg border border-gray-300 dark:border-gray-600",
+                                  "hover:border-blue-400 dark:hover:border-blue-500 transition-colors",
+                                  "bg-gray-50 dark:bg-gray-700/50 text-left",
+                                  !field.value && "text-gray-500 dark:text-gray-400"
                                 )}
-                              </div>
-                              <div className="flex items-center gap-2">
-                                {selectedTimezoneInfo && (
-                                  <div className="px-3 py-1.5 bg-green-100 dark:bg-green-900/30 rounded-lg text-sm font-mono text-green-700 dark:text-green-400">
-                                    {getCurrentTimeInTimezone(selectedTimezoneInfo.value)}
-                                  </div>
-                                )}
-                                <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
-                              </div>
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-[600px] p-0" align="start">
-                            <CustomCommand>
-                              <CustomCommandInput 
-                                placeholder="Search timezones by city or country..." 
-                                value={searchValue}
-                                onValueChange={setSearchValue}
-                              />
-                              <CustomCommandList>
-                                {Object.keys(groupedTimezones).length === 0 ? (
-                                  <CustomCommandEmpty>
-                                    No timezone found matching "{searchValue}"
-                                  </CustomCommandEmpty>
-                                ) : (
-                                  Object.entries(groupedTimezones).map(([groupName, timezones]) => (
-                                    <CustomCommandGroup key={groupName} heading={groupName}>
-                                      {timezones.map((timezone) => (
-                                        <CustomCommandItem
-                                          key={timezone.value}
-                                          onSelect={() => {
-                                            form.setValue("timezone", timezone.value);
-                                            setSelectedTimezone(timezone.value);
-                                            setSearchValue("");
-                                          }}
-                                          isSelected={timezone.value === field.value}
-                                          timezone={timezone.value}
-                                          country={timezone.country}
-                                        >
-                                          {timezone.label}
-                                        </CustomCommandItem>
-                                      ))}
-                                    </CustomCommandGroup>
-                                  ))
-                                )}
-                              </CustomCommandList>
-                            </CustomCommand>
-                          </PopoverContent>
-                        </Popover>
-                      </FormControl>
-                      <FormMessage className="text-red-500 font-medium mt-2" />
-                    </FormItem>
-                  )}
-                />
-                
-                {/* Current Time Display */}
-                {selectedTimezoneInfo && (
-                  <div className="mt-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-4 rounded-xl border border-blue-200/40 dark:border-blue-700/40">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <MapPin className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                        <div>
-                          <p className="font-semibold text-blue-800 dark:text-blue-200">
-                            Current Local Time
-                          </p>
-                          <p className="text-sm text-blue-600 dark:text-blue-400">
-                            {selectedTimezoneInfo.label}
-                          </p>
+                              >
+                                <div className="flex items-center gap-3 flex-1">
+                                  {selectedTimezoneInfo ? (
+                                    <>
+                                      <span className="text-lg">{selectedTimezoneInfo.country}</span>
+                                      <div className="text-left">
+                                        <div className="font-medium text-gray-900 dark:text-white">
+                                          {selectedTimezoneInfo.label}
+                                        </div>
+                                        <div className="text-xs text-gray-500 dark:text-gray-400 font-mono">
+                                          {selectedTimezoneInfo.value}
+                                        </div>
+                                      </div>
+                                    </>
+                                  ) : (
+                                    <span>Select your timezone</span>
+                                  )}
+                                </div>
+                                <ChevronsUpDown className="h-4 w-4 opacity-50" />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-[500px] p-0" align="start">
+                              <CustomCommand>
+                                <CustomCommandInput 
+                                  placeholder="Search timezones..." 
+                                  value={searchValue}
+                                  onValueChange={setSearchValue}
+                                />
+                                <CustomCommandList>
+                                  {Object.keys(groupedTimezones).length === 0 ? (
+                                    <CustomCommandEmpty>
+                                      No timezone found matching "{searchValue}"
+                                    </CustomCommandEmpty>
+                                  ) : (
+                                    Object.entries(groupedTimezones).map(([groupName, timezones]) => (
+                                      <CustomCommandGroup key={groupName} heading={groupName}>
+                                        {timezones.map((timezone) => (
+                                          <CustomCommandItem
+                                            key={timezone.value}
+                                            onSelect={() => {
+                                              form.setValue("timezone", timezone.value);
+                                              setSelectedTimezone(timezone.value);
+                                              setSearchValue("");
+                                            }}
+                                            isSelected={timezone.value === field.value}
+                                            timezone={timezone.value}
+                                            country={timezone.country}
+                                          >
+                                            {timezone.label}
+                                          </CustomCommandItem>
+                                        ))}
+                                      </CustomCommandGroup>
+                                    ))
+                                  )}
+                                </CustomCommandList>
+                              </CustomCommand>
+                            </PopoverContent>
+                          </Popover>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  {/* Current Time Display */}
+                  {selectedTimezoneInfo && (
+                    <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <MapPin className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                          <span className="text-sm text-blue-900 dark:text-blue-100">Current time</span>
                         </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-2xl font-bold text-blue-800 dark:text-blue-200 font-mono">
+                        <div className="text-lg font-mono font-bold text-blue-900 dark:text-blue-100">
                           {getCurrentTimeInTimezone(selectedTimezoneInfo.value)}
-                        </div>
-                        <div className="text-sm text-blue-600 dark:text-blue-400">
-                          {new Date().toLocaleDateString('en-US', { 
-                            timeZone: selectedTimezoneInfo.value,
-                            weekday: 'long',
-                            month: 'short',
-                            day: 'numeric'
-                          })}
                         </div>
                       </div>
                     </div>
+                  )}
+                </div>
+
+                {/* Meeting Buffer Section */}
+                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                  <div className="flex items-start gap-4 mb-6">
+                    <div className="p-3 bg-purple-50 dark:bg-purple-900/30 rounded-xl">
+                      <Timer className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                    </div>
+                    <div className="flex-1">
+                      <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
+                        Meeting Buffer
+                      </h2>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Time between consecutive appointments
+                      </p>
+                    </div>
                   </div>
-                )}
+
+                  <FormField
+                    name="timeGap"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <div className="space-y-4">
+                            <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                              <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                Buffer Duration
+                              </Label>
+                              <div className="flex items-center gap-2">
+                                <Input
+                                  {...field}
+                                  type="number"
+                                  className="w-16 h-8 text-center text-lg font-bold border-purple-200 dark:border-purple-600"
+                                  value={field.value || ""}
+                                  min="1"
+                                  onChange={(e) => {
+                                    const value = e.target.value.trim();
+                                    if (value === "") {
+                                      field.onChange(null);
+                                    } else {
+                                      const parsedValue = parseInt(value, 10);
+                                      if (!isNaN(parsedValue) && parsedValue > 0) {
+                                        field.onChange(parsedValue);
+                                      }
+                                    }
+                                  }}
+                                />
+                                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                                  minutes
+                                </span>
+                              </div>
+                            </div>
+                            
+                            {/* Quick Select Buttons */}
+                            <div className="grid grid-cols-5 gap-2">
+                              {[15, 30, 45, 60, 120].map((minutes) => (
+                                <button
+                                  key={minutes}
+                                  type="button"
+                                  onClick={() => form.setValue("timeGap", minutes)}
+                                  className={cn(
+                                    "py-2 px-3 rounded-lg text-sm font-medium transition-colors border",
+                                    field.value === minutes
+                                      ? "bg-purple-100 text-purple-700 border-purple-300 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-600"
+                                      : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+                                  )}
+                                >
+                                  {minutes}m
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
 
-              {/* Time Gap Section */}
-              <div className="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-200/60 dark:border-gray-700/60 p-6 shadow-lg">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-xl">
-                    <Timer className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+              {/* Right Column - Weekly Schedule */}
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                <div className="flex items-start gap-4 mb-6">
+                  <div className="p-3 bg-green-50 dark:bg-green-900/30 rounded-xl">
+                    <Calendar className="h-6 w-6 text-green-600 dark:text-green-400" />
                   </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200">
-                      Meeting Buffer
-                    </h3>
+                  <div className="flex-1">
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
+                      Weekly Schedule
+                    </h2>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      Time between consecutive appointments
+                      Set your availability for each day of the week
                     </p>
                   </div>
                 </div>
 
-                <FormField
-                  name="timeGap"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <div className="space-y-4">
-                          <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl">
-                            <div className="flex items-center gap-3">
-                              <Clock className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-                              <span className="font-semibold text-gray-700 dark:text-gray-300">
-                                Buffer Duration
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Input
-                                {...field}
-                                type="number"
-                                className="w-20 h-10 text-center font-bold text-lg rounded-lg border-2 border-purple-200 dark:border-purple-600 focus:border-purple-400 dark:focus:border-purple-500 bg-white dark:bg-gray-800"
-                                value={field.value || ""}
-                                min="1"
-                                onChange={(e) => {
-                                  const value = e.target.value.trim();
-                                  if (value === "") {
-                                    field.onChange(null);
-                                  } else {
-                                    const parsedValue = parseInt(value, 10);
-                                    if (!isNaN(parsedValue) && parsedValue > 0) {
-                                      field.onChange(parsedValue);
-                                    }
-                                  }
-                                }}
-                              />
-                              <span className="text-lg font-semibold text-gray-600 dark:text-gray-400">
-                                min
-                              </span>
-                            </div>
-                          </div>
-                          
-                          {/* Quick Select Buttons */}
-                          <div className="grid grid-cols-5 gap-2">
-                            {[15, 30, 45, 60, 120].map((minutes) => (
-                              <button
-                                key={minutes}
-                                type="button"
-                                onClick={() => form.setValue("timeGap", minutes)}
-                                className={cn(
-                                  "p-3 rounded-xl text-sm font-semibold transition-all duration-200 border-2",
-                                  field.value === minutes
-                                    ? "bg-purple-500 text-white border-purple-500 shadow-lg transform scale-105"
-                                    : "bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-600 hover:bg-purple-50 dark:hover:bg-purple-900/20 hover:border-purple-300 dark:hover:border-purple-600"
-                                )}
-                              >
-                                {minutes}m
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      </FormControl>
-                      <FormMessage className="text-red-500 font-medium mt-2" />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
-
-            {/* Right Column - Weekly Schedule */}
-            <div className="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-200/60 dark:border-gray-700/60 p-6 shadow-lg">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-xl">
-                  <Calendar className="h-6 w-6 text-green-600 dark:text-green-400" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200">
-                    Weekly Schedule
-                  </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Set your availability for each day of the week
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-3 max-h-[600px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 pr-2">
-                {form.watch("days").map((day, index) => (
-                  <div key={day.day} className="transform transition-all duration-200 hover:scale-[1.01]">
+                <div className="space-y-4 max-h-[500px] overflow-y-auto">
+                  {form.watch("days").map((day, index) => (
                     <DayAvailability
+                      key={day.day}
                       day={day.day}
                       startTime={day.startTime}
                       endTime={day.endTime}
@@ -1412,68 +1375,50 @@ const WeeklyHoursRow = ({
                       onRemove={onRemove}
                       onTimeSelect={handleTimeSelect}
                     />
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
 
-              {/* Schedule Summary */}
-              <div className="mt-6 p-4 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-xl border border-green-200/40 dark:border-green-700/40">
-                <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">
-                  Schedule Summary
-                </h4>
-                <div className="text-sm text-green-700 dark:text-green-300">
-                  <p>
-                    <span className="font-medium">
+                {/* Schedule Summary */}
+                <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-700/50">
+                  <p className="text-sm text-green-800 dark:text-green-200">
+                    <span className="font-semibold">
                       {form.watch("days").filter(d => d.isAvailable).length} days
                     </span>{" "}
-                    available this week
+                    available • All times in {selectedTimezoneInfo?.value || 'your timezone'}
                   </p>
-                  {selectedTimezoneInfo && (
-                    <p className="mt-1">
-                      All times shown in{" "}
-                      <span className="font-medium font-mono">
-                        {selectedTimezoneInfo.value}
-                      </span>
-                    </p>
-                  )}
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Submit Button */}
-          <div className="px-8 pb-8">
-            <Button 
-              disabled={isPending} 
-              type="submit" 
-              className={cn(
-                "w-full h-14 text-lg font-bold rounded-2xl transition-all duration-300",
-                "bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 hover:from-violet-700 hover:via-purple-700 hover:to-indigo-700",
-                "shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98]",
-                "disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-              )}
-            >
-              {isPending ? (
-                <div className="flex items-center gap-3">
-                  <Loader color="white" />
-                  <span>Saving Your Schedule...</span>
-                </div>
-              ) : (
-                <div className="flex items-center gap-3">
-                  <Sparkles className="h-6 w-6" />
-                  <span>Save Availability Settings</span>
-                </div>
-              )}
-            </Button>
-            
-            <div className="mt-4 text-center">
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Your schedule will be saved with timezone: <span className="font-mono font-medium">{form.watch("timezone")}</span>
-              </p>
+            {/* Submit Button */}
+            <div className="flex justify-end">
+              <Button 
+                disabled={isPending} 
+                type="submit" 
+                size="lg"
+                className={cn(
+                  "px-8 py-3 text-base font-semibold rounded-xl",
+                  "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700",
+                  "shadow-lg hover:shadow-xl transition-all duration-200",
+                  "disabled:opacity-50"
+                )}
+              >
+                {isPending ? (
+                  <div className="flex items-center gap-2">
+                    <Loader color="white" />
+                    <span>Saving...</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="h-5 w-5" />
+                    <span>Save Availability</span>
+                  </div>
+                )}
+              </Button>
             </div>
-          </div>
-        </form>
-      </Form>
+          </form>
+        </Form>
+      </div>
     </div>
   );
 };
