@@ -180,7 +180,6 @@
 // };
 
 // export default BookingCalendar;
-
 import { format } from "date-fns";
 import { Calendar } from "@/components/calendar";
 import { CalendarDate, DateValue } from "@internationalized/date";
@@ -196,22 +195,18 @@ import { useMemo } from "react";
 interface BookingCalendarProps {
   eventId: string;
   minValue?: DateValue;
-  maxValue?: DateValue; // Added maxValue prop
+  maxValue?: DateValue;
   defaultValue?: DateValue;
-  isDateUnavailable?: (date: DateValue) => boolean; // Added custom isDateUnavailable prop
+  isDateUnavailable?: (date: DateValue) => boolean;
 }
 
 // Helper function to convert UTC time slot to user's local timezone
 const convertUTCSlotToLocal = (utcSlot: string, userTimezone: string): string => {
   try {
-    // Parse the UTC time slot (assuming format like "07:00", "08:00", etc.)
     const [hours, minutes] = utcSlot.split(':').map(Number);
-    
-    // Create a date object with today's date and the UTC time
     const utcDate = new Date();
     utcDate.setUTCHours(hours, minutes, 0, 0);
     
-    // Convert to user's timezone
     const localTime = new Intl.DateTimeFormat('en-US', {
       timeZone: userTimezone,
       hour: '2-digit',
@@ -222,7 +217,7 @@ const convertUTCSlotToLocal = (utcSlot: string, userTimezone: string): string =>
     return localTime;
   } catch (error) {
     console.error('Error converting UTC slot to local:', error);
-    return utcSlot; // Return original if conversion fails
+    return utcSlot;
   }
 };
 
@@ -235,9 +230,9 @@ const getDayInTimezone = (date: DateValue, timezone: string): string => {
 const BookingCalendar = ({
   eventId,
   minValue,
-  maxValue, // Receive maxValue prop
+  maxValue,
   defaultValue,
-  isDateUnavailable: customIsDateUnavailable, // Receive custom isDateUnavailable function
+  isDateUnavailable: customIsDateUnavailable,
 }: BookingCalendarProps) => {
   const {
     hourType,
@@ -255,7 +250,7 @@ const BookingCalendar = ({
       return Intl.DateTimeFormat().resolvedOptions().timeZone;
     } catch (error) {
       console.error('Error getting user timezone:', error);
-      return 'UTC'; // Fallback to UTC
+      return 'UTC';
     }
   }, []);
 
@@ -282,23 +277,22 @@ const BookingCalendar = ({
   console.log("Converted availability to user timezone:", convertedAvailability);
   console.log("User's detected timezone:", userTimezone);
 
-  // Get time slots for the selected date using converted availability
+  // Get time slots for the selected date
   const timeSlots = selectedDate
     ? convertedAvailability?.find(
-        (day) =>
-          day.day === getDayInTimezone(selectedDate, userTimezone)
+        (day) => day.day === getDayInTimezone(selectedDate, userTimezone)
       )?.slots || []
     : [];
 
-  // Combined isDateUnavailable function that handles both availability and date range restrictions
+  // Combined isDateUnavailable function
   const isDateUnavailable = (date: DateValue) => {
-    // First check if there's a custom isDateUnavailable function (for date range restrictions)
+    // First check custom restrictions (date range)
     if (customIsDateUnavailable && customIsDateUnavailable(date)) {
       console.log('Date unavailable due to custom restriction:', date.toString());
       return true;
     }
 
-    // Then check day availability (weekday restrictions)
+    // Then check day availability
     const dayOfWeek = getDayInTimezone(date, userTimezone);
     const dayAvailability = convertedAvailability.find((day) => day.day === dayOfWeek);
     const isDayUnavailable = !dayAvailability?.isAvailable;
@@ -316,7 +310,6 @@ const BookingCalendar = ({
     handleSelectDate(calendarDate);
   };
 
-  // Use user's timezone for decoding the selected slot
   const selectedTime = decodeSlot(selectedSlot, userTimezone, hourType);
 
   console.log('BookingCalendar props:', {
@@ -327,7 +320,6 @@ const BookingCalendar = ({
 
   return (
     <div className="relative lg:flex-[1_1_50%] w-full flex-shrink-0 transition-all duration-220 ease-out p-4 pr-0">
-      {/* Loader Overlay */}
       {isFetching && (
         <div className="flex bg-white/60 !z-30 absolute w-[95%] h-full items-center justify-center">
           <Loader size="lg" color="black" />
@@ -337,29 +329,21 @@ const BookingCalendar = ({
       <div className="flex flex-col h-full mx-auto pt-[25px]">
         <h2 className="text-xl mb-5 font-bold">Select a Date &amp; Time</h2>
         
-        {/* Display user's timezone info */}
         <div className="text-sm text-gray-600 mb-3">
           Times shown in your timezone: {userTimezone}
         </div>
 
-        {/* Debug info */}
-        {process.env.NODE_ENV === 'development' && (
-          <div className="text-xs text-gray-500 mb-2">
-            Min: {minValue?.toString() || 'none'} | Max: {maxValue?.toString() || 'none'}
-          </div>
-        )}
-        
         <div className="w-full flex flex-col md:flex-row lg:flex-[1_1_300px]">
           <div className="w-full flex justify-start max-w-xs md:max-w-full lg:max-w-sm">
             <Calendar
               className="w-auto md:w-full lg:!w-auto"
-              minValue={minValue} // Pass minValue to Calendar
-              maxValue={maxValue} // Pass maxValue to Calendar - THIS IS KEY!
+              minValue={minValue}
+              maxValue={maxValue}
               defaultValue={defaultValue}
               value={selectedDate}
-              timezone={userTimezone} // Use user's timezone for calendar
+              timezone={userTimezone}
               onChange={handleChangeDate}
-              isDateUnavailable={isDateUnavailable} // Use our combined function
+              isDateUnavailable={isDateUnavailable}
             />
           </div>
           {selectedDate && convertedAvailability ? (
@@ -383,10 +367,7 @@ const BookingCalendar = ({
                 </div>
               </div>
 
-              <div
-                className="flex-[1_1_100px] pr-[8px] overflow-x-hidden overflow-y-auto scrollbar-thin
-             scrollbar-track-transparent scroll--bar h-[400px]"
-              >
+              <div className="flex-[1_1_100px] pr-[8px] overflow-x-hidden overflow-y-auto scrollbar-thin scrollbar-track-transparent scroll--bar h-[400px]">
                 {timeSlots.length > 0 ? (
                   timeSlots.map((slot, i) => {
                     const formattedSlot = formatSlot(slot, userTimezone, hourType);
@@ -396,14 +377,12 @@ const BookingCalendar = ({
                           role="listitem"
                           className="m-[10px_10px_10px_0] relative text-[15px]"
                         >
-                          {/* Selected Time and Next Button */}
                           <div
-                            className={`absolute inset-0 z-20 flex items-center gap-1.5 justify-between
-                               transform transition-all duration-400 ease-in-out ${
-                                 selectedTime === formattedSlot
-                                   ? "translate-x-0 opacity-100"
-                                   : "translate-x-full opacity-0"
-                               }`}
+                            className={`absolute inset-0 z-20 flex items-center gap-1.5 justify-between transform transition-all duration-400 ease-in-out ${
+                              selectedTime === formattedSlot
+                                ? "translate-x-0 opacity-100"
+                                : "translate-x-full opacity-0"
+                            }`}
                           >
                             <button
                               type="button"
@@ -423,13 +402,11 @@ const BookingCalendar = ({
 
                           <button
                             type="button"
-                            className={`w-full h-[52px] cursor-pointer border border-[rgba(0,105,255,0.5)] text-[rgb(0,105,255)] rounded-[4px] font-semibold hover:border-2 hover:border-[rgb(0,105,255)] tracking-wide transition-all duration-400 ease-in-out
-                           ${
-                             selectedTime === formattedSlot
-                               ? "opacity-0"
-                               : "opacity-100"
-                           }
-                             `}
+                            className={`w-full h-[52px] cursor-pointer border border-[rgba(0,105,255,0.5)] text-[rgb(0,105,255)] rounded-[4px] font-semibold hover:border-2 hover:border-[rgb(0,105,255)] tracking-wide transition-all duration-400 ease-in-out ${
+                              selectedTime === formattedSlot
+                                ? "opacity-0"
+                                : "opacity-100"
+                            }`}
                             onClick={() => handleSelectSlot(slot)}
                           >
                             {formattedSlot}
@@ -449,8 +426,9 @@ const BookingCalendar = ({
         </div>
       </div>
 
-      {/* Error Alert */}
       <ErrorAlert isError={isError} error={error} />
     </div>
   );
 };
+
+export default BookingCalendar;
