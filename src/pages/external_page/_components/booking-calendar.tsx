@@ -37,6 +37,7 @@ const BookingCalendar = ({
   });
 
   const availability = data?.data || [];
+  console.log("check this avialivity option what it is ",availability);
 
   // Get time slots for the selected date
   const timeSlots = selectedDate
