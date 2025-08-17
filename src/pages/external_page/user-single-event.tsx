@@ -170,7 +170,7 @@ const UserSingleEventPage = () => {
       )}
     >
       <div className="w-full flex flex-col lg:flex-row items-stretch justify-stretch p-0 px-1 gap-4">
-        <EventDetails
+        {/* <EventDetails
           eventTitle={event.title}
           description={event.description}
           user={event.user}
@@ -186,7 +186,7 @@ const UserSingleEventPage = () => {
             dateRangeLimit: event.dateRangeLimit,
             dateRangeType: event.dateRangeType,
           }}
-        />
+        /> */}
 
         <div className="min-w-sm max-w-3xl flex-shrink-0 flex-1">
           {next ? (
