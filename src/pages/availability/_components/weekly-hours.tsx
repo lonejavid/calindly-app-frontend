@@ -1795,7 +1795,7 @@ const WeeklyHoursRow = ({
             <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
               <Calendar className="h-8 w-8" />
             </div>
-            <div>
+            {/* <div>
               <h2 className="text-3xl font-bold mb-2">Weekly Availability</h2>
               <p className="text-blue-100 text-base font-medium">Configure your schedule and timezone preferences</p>
               {selectedTimezone && (
@@ -1804,7 +1804,7 @@ const WeeklyHoursRow = ({
                   <span className="font-mono">{getCurrentTimeInTimezone(selectedTimezone.value)}</span>
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
           <Sparkles className="h-6 w-6 opacity-80 animate-pulse" />
         </div>
