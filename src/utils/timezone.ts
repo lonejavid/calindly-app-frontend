@@ -7,9 +7,9 @@ export const getAllTimeZones = (): string[] => {
     return (Intl as any).supportedValuesOf('timeZone');
   }
   
-  // Fallback for environments that don't support Intl.supportedValuesOf
+
   try {
-    // This is a common list of timezones as fallback
+  
     return [
       'UTC',
       'America/New_York',
