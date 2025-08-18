@@ -567,7 +567,7 @@ const ScheduleyLanding = () => {
             </div>
             
             <h2 className="text-4xl sm:text-6xl font-black mb-8 bg-gradient-to-r from-white to-emerald-200 bg-clip-text text-transparent">
-              Get Your First Ticket Client in 7 Days
+              Get Your First Ticket Client in First Week
             </h2>
             
             <p className="text-2xl sm:text-3xl font-bold text-emerald-300 mb-8">
@@ -805,7 +805,7 @@ const ScheduleyLanding = () => {
               
               <p className="text-xl sm:text-2xl text-gray-400 mb-12 max-w-4xl mx-auto leading-relaxed">
                 Join the businesses who chose <strong className="text-white">guaranteed results</strong> over empty promises. 
-                Get your <strong className="text-emerald-300">first high-ticket client in 7 days</strong> or pay nothing.
+                Get your <strong className="text-emerald-300">first client in 7 days</strong> or pay nothing.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12">
