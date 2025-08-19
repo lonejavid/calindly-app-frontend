@@ -1,3 +1,6 @@
+
+
+
 // import { z } from "zod";
 // import { toast } from "sonner";
 // import { useCallback, useEffect, useState } from "react";
@@ -273,12 +276,13 @@
 //   timeGap: number;
 //   userTimezone?: string; // Make it optional with existing data
 // }) => {
-//   // Initialize with existing timezone or fallback to browser detection, then require user selection
+//   // FIXED: Initialize with existing timezone from backend, fallback to browser detection if none exists
 //   const [selectedTimezone, setSelectedTimezone] = useState<string>(
 //     existingUserTimezone || detectUserTimezone()
 //   );
 //   const [searchValue, setSearchValue] = useState("");
 //   const [currentTime, setCurrentTime] = useState(new Date());
+//   // ADDED: State to control popover open/close
 //   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   
 //   const { mutate, isPending } = useMutation({
@@ -339,18 +343,28 @@
 //     resolver: zodResolver(availabilitySchema),
 //     mode: "onChange",
 //     defaultValues: {
-//       timeGap: 30,
+//       timeGap: timeGap || 30, // FIXED: Use timeGap from props or default to 30
 //       timezone: selectedTimezone,
-//       days: [],
+//       days: days || [], // FIXED: Use days from props or empty array
 //     },
 //   });
 
+//   // FIXED: Auto-populate form when component loads and when props change
 //   useEffect(() => {
-//     form.setValue("days", days);
-//     form.setValue("timeGap", timeGap);
-//     form.setValue("timezone", selectedTimezone);
-//     form.trigger("days");
-//   }, [days, form, timeGap, selectedTimezone]);
+//     if (days && days.length > 0) {
+//       form.setValue("days", days);
+//     }
+//     if (timeGap) {
+//       form.setValue("timeGap", timeGap);
+//     }
+//     if (existingUserTimezone) {
+//       form.setValue("timezone", existingUserTimezone);
+//       setSelectedTimezone(existingUserTimezone);
+//     }
+    
+//     // Trigger validation after setting values
+//     form.trigger();
+//   }, [days, form, timeGap, existingUserTimezone]);
 
 //   const onSubmit = (values: WeeklyHoursFormData) => {
 //     if (isPending) return;
@@ -362,7 +376,7 @@
 //       timezone: values.timezone, // User selected timezone
 //       days: values.days, // Original times without conversion
 //     };
-//     console.log("This is the information to be daved along with the time zone",dataToSend);
+//     console.log("This is the information to be saved along with the time zone", dataToSend);
 //     mutate(dataToSend, {
 //       onSuccess: (response) => {
 //         toast.success(response.message || "Availability updated successfully");
@@ -423,9 +437,6 @@
 
 //   return (
 //     <div className="bg-gradient-to-br from-white via-gray-50/50 to-white dark:from-gray-900 dark:via-gray-800/30 dark:to-gray-900 rounded-2xl border border-gray-200/60 dark:border-gray-700/60 shadow-xl backdrop-blur-sm overflow-hidden">
-//       {/* Enhanced Header */}
-  
-
 //       <Form {...form}>
 //         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 //           {/* Timezone Selector */}
@@ -446,7 +457,7 @@
 //                     </div>
                     
 //                     <FormControl>
-//                       <Popover>
+//                       <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
 //                         <PopoverTrigger asChild>
 //                           <Button
 //                             variant="outline"
@@ -512,6 +523,7 @@
 //                                           form.setValue("timezone", timezone.value);
 //                                           setSelectedTimezone(timezone.value);
 //                                           setSearchValue("");
+//                                           // FIXED: Close the popover after selection
 //                                           setIsPopoverOpen(false);
 //                                         }}
 //                                         isSelected={timezone.value === field.value}
@@ -715,9 +727,6 @@
 
 // export default WeeklyHoursRow;
 
-
-
-
 import { z } from "zod";
 import { toast } from "sonner";
 import { useCallback, useEffect, useState } from "react";
@@ -853,7 +862,7 @@ const TIMEZONE_OPTIONS = [
   { value: 'UTC', label: 'Coordinated Universal Time (UTC)', group: 'UTC', country: '🌍' },
 ];
 
-// Helper function to get current time in a timezone
+// Helper function to get current time in a timezone - UPDATED FOR 12-HOUR FORMAT ONLY
 const getCurrentTimeInTimezone = (timezone: string): string => {
   try {
     const now = new Date();
@@ -861,11 +870,32 @@ const getCurrentTimeInTimezone = (timezone: string): string => {
       timeZone: timezone,
       hour: '2-digit',
       minute: '2-digit',
-      hour12: true,
+      hour12: true, // FORCE 12-hour format
       timeZoneName: 'short'
     }).format(now);
   } catch (error) {
     return 'N/A';
+  }
+};
+
+// Helper function to format time in 12-hour format
+const formatTimeTo12Hour = (time24: string): string => {
+  if (!time24) return '';
+  
+  try {
+    // Create a date object with the time
+    const [hours, minutes] = time24.split(':');
+    const date = new Date();
+    date.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+    
+    // Format to 12-hour format
+    return new Intl.DateTimeFormat('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    }).format(date);
+  } catch (error) {
+    return time24; // Return original if formatting fails
   }
 };
 
