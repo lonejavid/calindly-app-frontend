@@ -177,57 +177,27 @@ const BookingCalendar = ({
     handleSelectDate(calendarDate);
   };
 
-  // const handleSlotSelection = (slot: string) => {
-  //   try {
-  //     console.log('Selecting slot:', slot);
-      
-  //      const parsedTime = parseTimeSlot(slot);
-  //      if (!parsedTime) {
-  //     console.error("Invalid slot string:", slot);
-  //     return;
-  //   }
-
-  //   const { hours, minutes } = parsedTime;
-  //   const date = new Date();
-  //   date.setHours(hours, minutes, 0, 0);
-
-  //   // Pass a valid Date instead of raw string
-  //   handleSelectSlot(date.toISOString());
-  //     // handleSelectSlot(slot);
-  //   } catch (error) {
-  //     console.error('Error selecting slot:', error, slot);
-  //   }
-  // };
   const handleSlotSelection = (slot: string) => {
-  try {
-    console.log("Selecting slot:", slot);
-
-    const parsedTime = parseTimeSlot(slot);
-    if (!parsedTime) {
+    try {
+      console.log('Selecting slot:', slot);
+      
+       const parsedTime = parseTimeSlot(slot);
+       if (!parsedTime) {
       console.error("Invalid slot string:", slot);
       return;
     }
 
-    if (!selectedDate) {
-      console.error("No date selected for slot:", slot);
-      return;
-    }
-
     const { hours, minutes } = parsedTime;
+    const date = new Date();
+    date.setHours(hours, minutes, 0, 0);
 
-    // Build a valid JS Date from selectedDate + slot time
-    const jsDate = selectedDate.toDate(userTimezone); // CalendarDate -> Date
-    jsDate.setHours(hours, minutes, 0, 0);
-
-    console.log("Passing ISO slot:", jsDate.toISOString());
-
-    // ✅ Pass ISO string (valid date-time)
-    handleSelectSlot(jsDate.toISOString());
-  } catch (error) {
-    console.error("Error selecting slot:", error, slot);
-  }
-};
-
+    // Pass a valid Date instead of raw string
+    handleSelectSlot(date.toISOString());
+      // handleSelectSlot(slot);
+    } catch (error) {
+      console.error('Error selecting slot:', error, slot);
+    }
+  };
 
   const selectedTime = selectedSlot ? (() => {
     try {
