@@ -311,8 +311,7 @@
 // };
 
 // export default BookingCalendar;
-import { format, parseISO } from "date-fns";
-import { zonedTimeToUtc, utcToZonedTime } from "date-fns-tz";
+import { format } from "date-fns";
 import { Calendar } from "@/components/calendar";
 import { CalendarDate, DateValue } from "@internationalized/date";
 import { useBookingState } from "@/hooks/use-booking-state";
@@ -331,40 +330,6 @@ interface BookingCalendarProps {
   defaultValue?: DateValue;
   isDateUnavailable?: (date: DateValue) => boolean;
 }
-
-// Helper function to parse time slots that could be in either 12-hour or 24-hour format
-const parseTimeSlot = (timeSlot: string): { hours: number; minutes: number } | null => {
-  try {
-    // Check if it's 12-hour format (contains AM/PM)
-    if (timeSlot.includes('AM') || timeSlot.includes('PM')) {
-      const isAM = timeSlot.includes('AM');
-      const timePart = timeSlot.replace(/\s*(AM|PM)/i, '').trim();
-      const [hoursStr, minutesStr] = timePart.split(':');
-      
-      let hours = parseInt(hoursStr, 10);
-      const minutes = parseInt(minutesStr || '0', 10);
-      
-      // Convert to 24-hour format
-      if (!isAM && hours !== 12) {
-        hours += 12;
-      } else if (isAM && hours === 12) {
-        hours = 0;
-      }
-      
-      return { hours, minutes };
-    } else {
-      // Assume 24-hour format
-      const [hoursStr, minutesStr] = timeSlot.split(':');
-      const hours = parseInt(hoursStr, 10);
-      const minutes = parseInt(minutesStr || '0', 10);
-      
-      return { hours, minutes };
-    }
-  } catch (error) {
-    console.error('Error parsing time slot:', error, timeSlot);
-    return null;
-  }
-};
 
 // Comprehensive list of supported timezones from backend
 const SUPPORTED_TIMEZONES = [
@@ -431,7 +396,41 @@ const validateTimezone = (timezone: string): string => {
   return 'UTC';
 };
 
-// Convert time from backend timezone to user's local timezone
+// Helper function to parse time slots that could be in either 12-hour or 24-hour format
+const parseTimeSlot = (timeSlot: string): { hours: number; minutes: number } | null => {
+  try {
+    // Check if it's 12-hour format (contains AM/PM)
+    if (timeSlot.includes('AM') || timeSlot.includes('PM')) {
+      const isAM = timeSlot.includes('AM');
+      const timePart = timeSlot.replace(/\s*(AM|PM)/i, '').trim();
+      const [hoursStr, minutesStr] = timePart.split(':');
+      
+      let hours = parseInt(hoursStr, 10);
+      const minutes = parseInt(minutesStr || '0', 10);
+      
+      // Convert to 24-hour format
+      if (!isAM && hours !== 12) {
+        hours += 12;
+      } else if (isAM && hours === 12) {
+        hours = 0;
+      }
+      
+      return { hours, minutes };
+    } else {
+      // Assume 24-hour format
+      const [hoursStr, minutesStr] = timeSlot.split(':');
+      const hours = parseInt(hoursStr, 10);
+      const minutes = parseInt(minutesStr || '0', 10);
+      
+      return { hours, minutes };
+    }
+  } catch (error) {
+    console.error('Error parsing time slot:', error, timeSlot);
+    return null;
+  }
+};
+
+// Convert time from backend timezone to user's local timezone using native Date methods
 const convertTimeSlotToUserTimezone = (
   timeSlot: string,
   date: Date,
@@ -455,13 +454,23 @@ const convertTimeSlotToUserTimezone = (
       return format(tempDate, 'h:mm a');
     }
     
-    // Create a date object with the parsed time in the backend timezone
-    const backendDate = new Date(date);
-    backendDate.setHours(hours, minutes, 0, 0);
+    // Create a date string in the backend timezone and parse it
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const timeString = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`;
     
-    // Convert from backend timezone to UTC, then to user timezone
-    const utcDate = zonedTimeToUtc(backendDate, validBackendTz);
-    const userDate = utcToZonedTime(utcDate, validUserTz);
+    // Create date in backend timezone using toLocaleString
+    const backendDateString = `${year}-${month}-${day}T${timeString}`;
+    const backendDate = new Date(backendDateString);
+    
+    // Get the offset difference between timezones
+    const backendOffset = getTimezoneOffset(validBackendTz);
+    const userOffset = getTimezoneOffset(validUserTz);
+    const offsetDifference = (backendOffset - userOffset) * 60000; // Convert to milliseconds
+    
+    // Apply the offset difference
+    const userDate = new Date(backendDate.getTime() - offsetDifference);
     
     // Format in user's preferred format (12-hour)
     return format(userDate, 'h:mm a');
@@ -472,8 +481,32 @@ const convertTimeSlotToUserTimezone = (
       userTimezone
     });
     
-    // Fallback: return original time slot
+    // Fallback: return original time slot formatted
+    try {
+      const parsedTime = parseTimeSlot(timeSlot);
+      if (parsedTime) {
+        const tempDate = new Date();
+        tempDate.setHours(parsedTime.hours, parsedTime.minutes, 0, 0);
+        return format(tempDate, 'h:mm a');
+      }
+    } catch (fallbackError) {
+      console.error('Fallback formatting also failed:', fallbackError);
+    }
+    
     return timeSlot;
+  }
+};
+
+// Get timezone offset in minutes (simplified version)
+const getTimezoneOffset = (timezone: string): number => {
+  try {
+    const now = new Date();
+    const utc = new Date(now.toLocaleString('en-US', {timeZone: 'UTC'}));
+    const tz = new Date(now.toLocaleString('en-US', {timeZone: timezone}));
+    return (utc.getTime() - tz.getTime()) / (1000 * 60);
+  } catch (error) {
+    console.error('Error getting timezone offset:', error);
+    return 0;
   }
 };
 
@@ -501,7 +534,7 @@ const getOriginalTimeSlotData = (
     const validBackendTz = validateTimezone(backendTimezone);
     const validUserTz = validateTimezone(userTimezone);
     
-    // Create a date object with the parsed time in the backend timezone
+    // Create a date object with the parsed time
     const backendDate = new Date(date);
     backendDate.setHours(hours, minutes, 0, 0);
     
@@ -513,9 +546,12 @@ const getOriginalTimeSlotData = (
       convertedTime = backendDate;
       userDisplayTime = format(backendDate, 'h:mm a');
     } else {
-      // Convert from backend timezone to UTC, then to user timezone
-      const utcDate = zonedTimeToUtc(backendDate, validBackendTz);
-      convertedTime = utcToZonedTime(utcDate, validUserTz);
+      // Apply timezone conversion
+      const backendOffset = getTimezoneOffset(validBackendTz);
+      const userOffset = getTimezoneOffset(validUserTz);
+      const offsetDifference = (backendOffset - userOffset) * 60000;
+      
+      convertedTime = new Date(backendDate.getTime() - offsetDifference);
       userDisplayTime = format(convertedTime, 'h:mm a');
     }
     
@@ -586,7 +622,7 @@ const BookingCalendar = ({
     if (!availability.length || !userTimezone) return availability;
 
     return availability.map(dayAvailability => {
-      // Extract timezone from the availability data (assuming it's provided by backend)
+      // Extract timezone from the availability data - based on screenshot, it shows 'Europe/Vienna'
       const backendTimezone = validateTimezone(dayAvailability.timezone || 'UTC');
       
       console.log(`Processing day: ${dayAvailability.day}, Backend TZ: ${backendTimezone}, User TZ: ${userTimezone}`);
@@ -595,28 +631,11 @@ const BookingCalendar = ({
         ...dayAvailability,
         backendTimezone, // Store validated timezone
         slots: dayAvailability.slots?.map(slot => {
-          // If selectedDate is available, use it for accurate date conversion
-          if (selectedDate) {
-            const selectedDateJs = selectedDate.toDate(userTimezone);
-            const convertedSlot = convertTimeSlotToUserTimezone(
-              slot,
-              selectedDateJs,
-              backendTimezone,
-              userTimezone
-            );
-            
-            return {
-              original: slot,
-              converted: convertedSlot,
-              backendTimezone: backendTimezone
-            };
-          }
-          
-          // Fallback for when no date is selected yet - use current date
-          const currentDate = new Date();
+          // Use selectedDate or current date for conversion
+          const dateToUse = selectedDate ? selectedDate.toDate(userTimezone) : new Date();
           const convertedSlot = convertTimeSlotToUserTimezone(
             slot,
-            currentDate,
+            dateToUse,
             backendTimezone,
             userTimezone
           );
@@ -700,6 +719,8 @@ const BookingCalendar = ({
       handleSelectSlot(JSON.stringify(slotInfo));
     } catch (error) {
       console.error('Error selecting slot:', error, slotData);
+      // Fallback to simple slot selection
+      handleSelectSlot(slotData.original || slotData.converted);
     }
   };
 
@@ -709,6 +730,7 @@ const BookingCalendar = ({
       return slotInfo.displayTime || slotInfo.original;
     } catch (error) {
       console.error('Error parsing selected slot:', error, selectedSlot);
+      // Fallback for old format
       return selectedSlot;
     }
   })() : null;
