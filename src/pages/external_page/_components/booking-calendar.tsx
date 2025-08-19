@@ -123,7 +123,7 @@ const BookingCalendar = ({
   });
 
   const availability = data?.data || [];
-  console.log("Original availability from backend:", availability);
+  console.log("Original availability  from backend:", availability);
 
   // Convert slots to user's local timezone if needed
   const convertedAvailability = useMemo(() => {
