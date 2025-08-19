@@ -39,11 +39,42 @@ export const useBookingState = () => {
     setSelectedDate(date);
   };
 
-  const handleSelectSlot = (slot: string | null) => {
-    if (!selectedDate || !slot) {
-      setSelectedSlot(null);
+  // const handleSelectSlot = (slot: string | null) => {
+  //   if (!selectedDate || !slot) {
+  //     setSelectedSlot(null);
+  //     return;
+  //   }
+
+  const handleSlotSelection = (slot: string) => {
+  try {
+    console.log("Selecting slot:", slot);
+
+    if (!selectedDate) {
+      console.error("No date selected for slot:", slot);
       return;
     }
+
+    const parsedTime = parseTimeSlot(slot);
+    if (!parsedTime) {
+      console.error("Invalid slot string:", slot);
+      return;
+    }
+
+    const { hours, minutes } = parsedTime;
+
+    // Create a proper JS Date for the selected day + slot time
+    const jsDate = selectedDate.toDate(userTimezone);
+    jsDate.setHours(hours, minutes, 0, 0);
+
+    const isoString = jsDate.toISOString();
+    console.log("Passing to handleSelectSlot:", isoString);
+
+    handleSelectSlot(isoString); // ✅ valid ISO string
+  } catch (error) {
+    console.error("Error selecting slot:", error, slot);
+  }
+};
+
     // Parse the slot time (e.g., "09:00") and set it on the selected date
     const parsedSlotTime = parse(slot, "HH:mm", new Date());
     const slotDate = selectedDate.toDate(getLocalTimeZone());
