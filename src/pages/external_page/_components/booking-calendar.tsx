@@ -483,32 +483,33 @@ const parseTimeSlot = (timeSlot: string): { hours: number; minutes: number } | n
   }
 };
 
-// Helper function to convert time slot to user's local timezone
-const convertSlotToLocal = (slot: string, userTimezone: string): string => {
+// Helper function to safely format time slots
+const safeFormatSlot = (slot: string, timezone: string, hourType: string): string => {
   try {
-    const parsedTime = parseTimeSlot(slot);
-    if (!parsedTime) {
-      console.error('Could not parse time slot:', slot);
-      return slot;
-    }
-    
-    const { hours, minutes } = parsedTime;
-    
-    // Create a date object with the time
-    const utcDate = new Date();
-    utcDate.setUTCHours(hours, minutes, 0, 0);
-    
-    const localTime = new Intl.DateTimeFormat('en-US', {
-      timeZone: userTimezone,
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false
-    }).format(utcDate);
-    
-    return localTime;
+    // If the slot is already in the desired format, try to use formatSlot
+    const formatted = formatSlot(slot, timezone, hourType);
+    return formatted;
   } catch (error) {
-    console.error('Error converting slot to local timezone:', error, slot);
-    return slot;
+    console.error('Error in formatSlot, falling back to original slot:', error, slot);
+    
+    // Fallback: if formatSlot fails, try to parse and format manually
+    try {
+      const parsedTime = parseTimeSlot(slot);
+      if (!parsedTime) return slot;
+      
+      const { hours, minutes } = parsedTime;
+      const date = new Date();
+      date.setHours(hours, minutes, 0, 0);
+      
+      if (hourType === '12h') {
+        return format(date, 'h:mm a');
+      } else {
+        return format(date, 'HH:mm');
+      }
+    } catch (fallbackError) {
+      console.error('Fallback formatting also failed:', fallbackError);
+      return slot; // Return original slot as last resort
+    }
   }
 };
 
@@ -605,7 +606,7 @@ const BookingCalendar = ({
     handleSelectDate(calendarDate);
   };
 
-  const selectedTime = decodeSlot(selectedSlot, userTimezone, hourType);
+  const selectedTime = selectedSlot ? safeFormatSlot(selectedSlot, userTimezone, hourType) : null;
 
   return (
     <div className="relative lg:flex-[1_1_50%] w-full flex-shrink-0 transition-all duration-220 ease-out p-4 pr-0">
@@ -659,7 +660,9 @@ const BookingCalendar = ({
               <div className="flex-[1_1_100px] pr-[8px] overflow-x-hidden overflow-y-auto scrollbar-thin scrollbar-track-transparent scroll--bar h-[400px]">
                 {timeSlots.length > 0 ? (
                   timeSlots.map((slot, i) => {
-                    const formattedSlot = formatSlot(slot, userTimezone, hourType);
+                    console.log('Processing slot:', slot);
+                    const formattedSlot = safeFormatSlot(slot, userTimezone, hourType);
+                    console.log('Formatted slot:', formattedSlot);
                     return (
                       <div role="list" key={i}>
                         <div
