@@ -159,6 +159,7 @@ import { Separator } from "@/components/ui/separator";
 import { XIcon } from "lucide-react";
 import TimeSelector from "@/components/TimeSelector";
 import { cn } from "@/lib/utils";
+import { convertTo24Hour, convertTo12Hour } from "@/lib/availability";
 
 interface DayAvailabilityProps {
   day: string;
@@ -185,6 +186,11 @@ const DayAvailability = ({
   onRemove,
   onTimeSelect,
 }: DayAvailabilityProps) => {
+  // Handle time selection and convert to 24-hour format for storage
+  const handleTimeSelect = (field: "startTime" | "endTime", time12: string) => {
+    const time24 = convertTo24Hour(time12);
+    onTimeSelect(day, field, time24);
+  };
 
   return (
     <div className="flex items-center gap-10 p-3 pb-5 px-0 min-h-[40px] relative">
@@ -219,7 +225,7 @@ const DayAvailability = ({
                       <FormControl>
                         <TimeSelector
                           name={`days.${index}.startTime`}
-                          defaultValue={field.value}
+                          defaultValue={convertTo12Hour(field.value)}
                           timeGap={form.watch("timeGap")}
                           format="12h"
                           register={form.register}
@@ -230,7 +236,7 @@ const DayAvailability = ({
                               "!border-destructive !ring-0 focus-visible:!ring-0"
                           )}
                           onSelect={(time) =>
-                            onTimeSelect(day, "startTime", time)
+                            handleTimeSelect("startTime", time)
                           }
                         />
                       </FormControl>
@@ -246,7 +252,7 @@ const DayAvailability = ({
                       <FormControl>
                         <TimeSelector
                           name={`days.${index}.endTime`}
-                          defaultValue={field.value}
+                          defaultValue={convertTo12Hour(field.value)}
                           timeGap={form.watch("timeGap")}
                           format="12h"
                           register={form.register}
@@ -257,7 +263,7 @@ const DayAvailability = ({
                               "!border-destructive !ring-0 focus-visible:!ring-0"
                           )}
                           onSelect={(time) =>
-                            onTimeSelect(day, "endTime", time)
+                            handleTimeSelect("endTime", time)
                           }
                         />
                       </FormControl>
