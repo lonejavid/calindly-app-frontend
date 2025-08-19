@@ -445,7 +445,7 @@ const WeeklyHoursRow = ({
   const selectedTimezoneInfo = TIMEZONE_OPTIONS.find(tz => tz.value === form.watch("timezone"));
 
   return (
-    <div className="bg-gradient-to-br from-green via-gray-50/50 to-white dark:from-gray-900 dark:via-gray-800/30 dark:to-gray-900 rounded-2xl border border-gray-200/60 dark:border-gray-700/60 shadow-xl backdrop-blur-sm overflow-hidden">
+    <div className="bg-gradient-to-br from-white via-gray-50/50 to-white dark:from-gray-900 dark:via-gray-800/30 dark:to-gray-900 rounded-2xl border border-gray-200/60 dark:border-gray-700/60 shadow-xl backdrop-blur-sm overflow-hidden">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           {/* Timezone Selector */}
