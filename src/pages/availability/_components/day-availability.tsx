@@ -159,7 +159,6 @@ import { Separator } from "@/components/ui/separator";
 import { XIcon } from "lucide-react";
 import TimeSelector from "@/components/TimeSelector";
 import { cn } from "@/lib/utils";
-import { convertTo24Hour, convertTo12Hour } from "@/lib/availability";
 
 interface DayAvailabilityProps {
   day: string;
@@ -177,6 +176,38 @@ interface DayAvailabilityProps {
   ) => void;
 }
 
+// Helper function to convert 24-hour to 12-hour format for display
+const convertTo12Hour = (time24: string): string => {
+  if (!time24 || !time24.includes(':')) {
+    return time24;
+  }
+  
+  const [hours, minutes] = time24.split(':');
+  const hour = parseInt(hours, 10);
+  const ampm = hour >= 12 ? 'PM' : 'AM';
+  const hour12 = hour % 12 || 12;
+  return `${hour12}:${minutes} ${ampm}`;
+};
+
+// Helper function to convert 12-hour to 24-hour format for storage
+const convertTo24Hour = (time12: string): string => {
+  if (!time12 || !time12.includes(' ')) {
+    return time12;
+  }
+  
+  const [time, ampm] = time12.split(' ');
+  const [hours, minutes] = time.split(':');
+  let hour = parseInt(hours, 10);
+  
+  if (ampm === 'PM' && hour !== 12) {
+    hour += 12;
+  } else if (ampm === 'AM' && hour === 12) {
+    hour = 0;
+  }
+  
+  return `${hour.toString().padStart(2, '0')}:${minutes}`;
+};
+
 const DayAvailability = ({
   day,
   isAvailable,
@@ -186,6 +217,7 @@ const DayAvailability = ({
   onRemove,
   onTimeSelect,
 }: DayAvailabilityProps) => {
+  
   // Handle time selection and convert to 24-hour format for storage
   const handleTimeSelect = (field: "startTime" | "endTime", time12: string) => {
     const time24 = convertTo24Hour(time12);
