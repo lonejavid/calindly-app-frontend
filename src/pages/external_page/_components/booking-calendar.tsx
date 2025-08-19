@@ -202,25 +202,26 @@ const BookingCalendar = ({
   try {
     console.log("Selecting slot:", slot);
 
-    // Parse into hours/minutes
     const parsedTime = parseTimeSlot(slot);
     if (!parsedTime) {
       console.error("Invalid slot string:", slot);
       return;
     }
 
-    const { hours, minutes } = parsedTime;
-
-    // Create a Date object based on the currently selectedDate
     if (!selectedDate) {
       console.error("No date selected for slot:", slot);
       return;
     }
 
-    const jsDate = selectedDate.toDate(userTimezone); // Convert DateValue -> JS Date
+    const { hours, minutes } = parsedTime;
+
+    // Build a valid JS Date from selectedDate + slot time
+    const jsDate = selectedDate.toDate(userTimezone); // CalendarDate -> Date
     jsDate.setHours(hours, minutes, 0, 0);
 
-    // Now pass ISO string to the hook
+    console.log("Passing ISO slot:", jsDate.toISOString());
+
+    // ✅ Pass ISO string (valid date-time)
     handleSelectSlot(jsDate.toISOString());
   } catch (error) {
     console.error("Error selecting slot:", error, slot);
