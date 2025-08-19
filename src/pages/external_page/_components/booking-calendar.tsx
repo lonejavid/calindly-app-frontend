@@ -55,10 +55,10 @@ const parseTimeSlot = (timeSlot: string): { hours: number; minutes: number } | n
 };
 
 // Helper function to safely format time slots
-const safeFormatSlot = (slot: string, timezone: string, 12h: string): string => {
+const safeFormatSlot = (slot: string, timezone: string, hourType: string): string => {
   try {
     // If the slot is already in the desired format, try to use formatSlot
-    const formatted = formatSlot(slot, timezone, 12h);
+    const formatted = formatSlot(slot, timezone, hourType);
     return formatted;
   } catch (error) {
     console.error('Error in formatSlot, falling back to original slot:', error, slot);
@@ -72,7 +72,7 @@ const safeFormatSlot = (slot: string, timezone: string, 12h: string): string => 
       const date = new Date();
       date.setHours(hours, minutes, 0, 0);
       
-      if (12h === '12h') {
+      if (hourType === '12h') {
         return format(date, 'h:mm a');
       } else {
         return format(date, 'HH:mm');
@@ -98,13 +98,13 @@ const BookingCalendar = ({
   isDateUnavailable: customIsDateUnavailable,
 }: BookingCalendarProps) => {
   const {
-    12h,
+
     selectedDate,
     selectedSlot,
     handleSelectDate,
     handleSelectSlot,
     handleNext,
-    setHourType,
+   
   } = useBookingState();
 
   // Get user's browser timezone
@@ -188,7 +188,7 @@ const BookingCalendar = ({
 
   const selectedTime = selectedSlot ? (() => {
     try {
-      return safeFormatSlot(selectedSlot, userTimezone, 12h);
+      return safeFormatSlot(selectedSlot, userTimezone, '12h');
     } catch (error) {
       console.error('Error formatting selected slot:', error, selectedSlot);
       return selectedSlot; // Fallback to original slot value
@@ -237,7 +237,7 @@ const BookingCalendar = ({
                 {timeSlots.length > 0 ? (
                   timeSlots.map((slot, i) => {
                     console.log('Processing slot:', slot);
-                    const formattedSlot = safeFormatSlot(slot, userTimezone, 12h);
+                    const formattedSlot = safeFormatSlot(slot, userTimezone, '12h');
                     console.log('Formatted slot:', formattedSlot);
                     return (
                       <div role="list" key={i}>
