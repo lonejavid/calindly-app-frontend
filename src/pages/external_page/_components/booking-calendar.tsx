@@ -177,27 +177,56 @@ const BookingCalendar = ({
     handleSelectDate(calendarDate);
   };
 
-  const handleSlotSelection = (slot: string) => {
-    try {
-      console.log('Selecting slot:', slot);
+  // const handleSlotSelection = (slot: string) => {
+  //   try {
+  //     console.log('Selecting slot:', slot);
       
-       const parsedTime = parseTimeSlot(slot);
-       if (!parsedTime) {
+  //      const parsedTime = parseTimeSlot(slot);
+  //      if (!parsedTime) {
+  //     console.error("Invalid slot string:", slot);
+  //     return;
+  //   }
+
+  //   const { hours, minutes } = parsedTime;
+  //   const date = new Date();
+  //   date.setHours(hours, minutes, 0, 0);
+
+  //   // Pass a valid Date instead of raw string
+  //   handleSelectSlot(date.toISOString());
+  //     // handleSelectSlot(slot);
+  //   } catch (error) {
+  //     console.error('Error selecting slot:', error, slot);
+  //   }
+  // };
+  const handleSlotSelection = (slot: string) => {
+  try {
+    console.log("Selecting slot:", slot);
+
+    // Parse into hours/minutes
+    const parsedTime = parseTimeSlot(slot);
+    if (!parsedTime) {
       console.error("Invalid slot string:", slot);
       return;
     }
 
     const { hours, minutes } = parsedTime;
-    const date = new Date();
-    date.setHours(hours, minutes, 0, 0);
 
-    // Pass a valid Date instead of raw string
-    handleSelectSlot(date.toISOString());
-      // handleSelectSlot(slot);
-    } catch (error) {
-      console.error('Error selecting slot:', error, slot);
+    // Create a Date object based on the currently selectedDate
+    if (!selectedDate) {
+      console.error("No date selected for slot:", slot);
+      return;
     }
-  };
+
+    const jsDate = selectedDate.toDate(userTimezone); // Convert DateValue -> JS Date
+    jsDate.setHours(hours, minutes, 0, 0);
+
+    // Now pass ISO string to the hook
+    handleSelectSlot(jsDate.toISOString());
+  } catch (error) {
+    console.error("Error selecting slot:", error, slot);
+  }
+};
+
 
   const selectedTime = selectedSlot ? (() => {
     try {
