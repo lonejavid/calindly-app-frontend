@@ -850,7 +850,93 @@
 
 
 
-import { format } from "date-fns";
+// FINAL SIMPLE SOLUTION: Direct backend timezone to user timezone conversion
+const convertTimeSlotToUserTimezoneV2 = (
+  timeSlot: string,
+  date: Date,
+  backendTimezone: string,
+  userTimezone: string
+): { convertedTime: string; originalTime: string; debugInfo: any } => {
+  try {
+    const parsedTime = parseTimeSlot(timeSlot);
+    if (!parsedTime) {
+      return {
+        convertedTime: timeSlot,
+        originalTime: timeSlot,
+        debugInfo: { error: 'Could not parse time slot' }
+      };
+    }
+
+    const { hours, minutes } = parsedTime;
+    
+    // Validate and normalize timezones
+    const validBackendTz = validateTimezone(backendTimezone);
+    const validUserTz = validateTimezone(userTimezone);
+    
+    // If timezones are the same, no conversion needed
+    if (validBackendTz === validUserTz) {
+      const tempDate = new Date();
+      tempDate.setHours(hours, minutes, 0, 0);
+      const formatted = format(tempDate, 'h:mm a');
+      return {
+        convertedTime: formatted,
+        originalTime: timeSlot,
+        debugInfo: { sameTimezone: true }
+      };
+    }
+    
+    // THE ACTUALLY SIMPLE WAY:
+    // Get timezone offset difference and apply it directly
+    
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const day = date.getDate();
+    
+    // Step 1: Get the timezone offset difference using current time
+    const now = new Date();
+    const backendNow = new Date(now.toLocaleString('en-US', { timeZone: validBackendTz }));
+    const userNow = new Date(now.toLocaleString('en-US', { timeZone: validUserTz }));
+    const offsetDiffMs = userNow.getTime() - backendNow.getTime();
+    
+    // Step 2: Create the target time in local terms, then apply offset
+    const localTargetTime = new Date(year, month, day, hours, minutes, 0, 0);
+    const convertedTime = new Date(localTargetTime.getTime() + offsetDiffMs);
+    
+    const formattedTime = format(convertedTime, 'h:mm a');
+    
+    const debugInfo = {
+      originalTime: timeSlot,
+      parsedHours: hours,
+      parsedMinutes: minutes,
+      backendTimezone: validBackendTz,
+      userTimezone: validUserTz,
+      backendNow: backendNow.toISOString(),
+      userNow: userNow.toISOString(),
+      offsetDiffMs,
+      offsetDiffHours: offsetDiffMs / (1000 * 60 * 60),
+      localTargetTime: localTargetTime.toISOString(),
+      convertedTime: convertedTime.toISOString(),
+      formattedTime,
+      method: 'simple_offset_calculation'
+    };
+    
+    return {
+      convertedTime: formattedTime,
+      originalTime: timeSlot,
+      debugInfo
+    };
+    
+  } catch (error) {
+    console.error('Error converting timezone V2:', error);
+    
+    // Ultimate fallback
+    return {
+      convertedTime: timeSlot,
+      originalTime: timeSlot,
+      debugInfo: { error: error.message }
+    };
+  }
+};import { format } from "date-fns";
 import { Calendar } from "@/components/calendar";
 import { CalendarDate, DateValue } from "@internationalized/date";
 import { useBookingState } from "@/hooks/use-booking-state";
@@ -1098,7 +1184,7 @@ const convertTimeSlotToUserTimezone = (
   }
 };
 
-// IMPROVED: More accurate timezone conversion
+// SIMPLEST AND CORRECT: Direct conversion from backend timezone to user timezone
 const convertTimeSlotToUserTimezoneV2 = (
   timeSlot: string,
   date: Date,
@@ -1133,27 +1219,58 @@ const convertTimeSlotToUserTimezoneV2 = (
       };
     }
     
-    // Create the datetime for the specified date and time
+    // THE CORRECT WAY: 
+    // 1. Create a date representing when it's {hours}:{minutes} in the backend timezone
+    // 2. Convert that exact moment to user timezone
+    
     const year = date.getFullYear();
     const month = date.getMonth();
     const day = date.getDate();
     
-    // Method 1: Using Intl.DateTimeFormat to handle timezone conversion properly
-    // Create a date object representing the time in backend timezone
-    const targetDate = new Date(year, month, day, hours, minutes, 0, 0);
+    // Create a date-time that represents the time in backend timezone
+    // We use a reference date to create this time
+    const referenceDateTime = new Date(year, month, day, 12, 0, 0); // noon reference
     
-    // Get current time in both timezones to calculate offset
-    const now = new Date();
+    // Format this reference time as it would appear in backend timezone
+    const backendReference = referenceDateTime.toLocaleString('sv-SE', {
+      timeZone: validBackendTz,
+      year: 'numeric',
+      month: '2-digit',  
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
     
-    // Create dates representing the same moment in different timezones
-    const backendNow = new Date(now.toLocaleString('sv-SE', { timeZone: validBackendTz }));
-    const userNow = new Date(now.toLocaleString('sv-SE', { timeZone: validUserTz }));
+    // Now create our target time by replacing the time part
+    const [datePart] = backendReference.split(' ');
+    const targetDateTimeString = `${datePart} ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`;
     
-    // Calculate offset difference in milliseconds
-    const offsetDifference = userNow.getTime() - backendNow.getTime();
+    // Parse this as if it's in the backend timezone (which it is)
+    const backendDateTime = new Date(targetDateTimeString);
     
-    // Apply offset to target time
-    const convertedDate = new Date(targetDate.getTime() + offsetDifference);
+    // Calculate timezone offset difference to get the actual UTC time
+    // that corresponds to our target time in backend timezone
+    const backendOffsetMs = (backendDateTime.getTimezoneOffset() * 60000);
+    const utcTime = backendDateTime.getTime() + backendOffsetMs;
+    
+    // Get what timezone offset the backend timezone has
+    const backendCurrentTime = new Date();
+    const backendInUTC = new Date(backendCurrentTime.toLocaleString('en-US', {timeZone: 'UTC'}));
+    const backendInBackendTz = new Date(backendCurrentTime.toLocaleString('en-US', {timeZone: validBackendTz}));
+    const backendTzOffset = backendInBackendTz.getTime() - backendInUTC.getTime();
+    
+    // Apply backend timezone offset to get the actual UTC moment
+    const actualUTCMoment = backendDateTime.getTime() - backendTzOffset;
+    
+    // Convert this UTC moment to user timezone
+    const userDateTime = new Date(actualUTCMoment);
+    const convertedTime = userDateTime.toLocaleString('en-US', {
+      timeZone: validUserTz,
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
     
     const debugInfo = {
       originalTime: timeSlot,
@@ -1161,21 +1278,48 @@ const convertTimeSlotToUserTimezoneV2 = (
       parsedMinutes: minutes,
       backendTimezone: validBackendTz,
       userTimezone: validUserTz,
-      targetDate: targetDate.toISOString(),
-      backendNow: backendNow.toISOString(),
-      userNow: userNow.toISOString(),
-      offsetDifference: offsetDifference / (1000 * 60), // in minutes
-      convertedDate: convertedDate.toISOString()
+      backendReference,
+      targetDateTimeString,
+      backendDateTime: backendDateTime.toISOString(),
+      backendTzOffset: backendTzOffset / (1000 * 60), // in minutes
+      actualUTCMoment: new Date(actualUTCMoment).toISOString(),
+      convertedTime,
+      method: 'proper_timezone_conversion'
     };
     
     return {
-      convertedTime: format(convertedDate, 'h:mm a'),
+      convertedTime,
       originalTime: timeSlot,
       debugInfo
     };
     
   } catch (error) {
     console.error('Error converting timezone V2:', error);
+    // Fallback to simple method
+    try {
+      const parsedTime = parseTimeSlot(timeSlot);
+      if (parsedTime) {
+        const { hours, minutes } = parsedTime;
+        const now = new Date();
+        
+        // Simple fallback: get time difference and apply it
+        const backendNow = new Date(now.toLocaleString('en-US', { timeZone: backendTimezone }));
+        const userNow = new Date(now.toLocaleString('en-US', { timeZone: userTimezone }));
+        const diff = userNow.getTime() - backendNow.getTime();
+        
+        const targetTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), hours, minutes);
+        const converted = new Date(targetTime.getTime() + diff);
+        
+        return {
+          convertedTime: format(converted, 'h:mm a'),
+          originalTime: timeSlot,
+          debugInfo: { error: error.message, fallbackUsed: true, diff: diff / (1000 * 60) }
+        };
+      }
+    } catch (fallbackError) {
+      console.error('Fallback conversion also failed:', fallbackError);
+    }
+    
     return {
       convertedTime: timeSlot,
       originalTime: timeSlot,
