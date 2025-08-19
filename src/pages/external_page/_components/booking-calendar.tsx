@@ -962,11 +962,7 @@ const BookingCalendar = ({
                     isActive={hourType === "12h"}
                     onClick={() => setHourType("12h")}
                   />
-                  <HourButton
-                    label="24h"
-                    isActive={hourType === "24h"}
-                    onClick={() => setHourType("24h")}
-                  />
+               
                 </div>
               </div>
 
