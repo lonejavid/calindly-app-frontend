@@ -28,6 +28,7 @@ const UserSingleEventPage = () => {
   const username = params.username as string;
   const slug = params.slug as string;
   const { next, timezone, selectedDate } = useBookingState();
+  console.log("the value of next is",next);
 
   const { data, isFetching, isLoading, isError, error } = useQuery({
     queryKey: ['public_single_event', username, slug],
