@@ -709,16 +709,17 @@ const BookingCalendar = ({
     }
   };
 
-  const selectedTime = selectedSlot ? (() => {
-    try {
-      console.log("error is here",selectedSlot);
-      const slotInfo = JSON.parse(selectedSlot);
-      return slotInfo.displayTime || slotInfo.original;
-    } catch (error) {
-      console.error('Error parsing selected slot:', error, selectedSlot);
-      return selectedSlot;
-    }
-  })() : null;
+  // const selectedTime = selectedSlot ? (() => {
+  //   try {
+  //     console.log("error is here",selectedSlot);
+  //     const slotInfo = JSON.parse(selectedSlot);
+  //     return slotInfo.displayTime || slotInfo.original;
+  //   } catch (error) {
+  //     console.error('Error parsing selected slot:', error, selectedSlot);
+  //     return selectedSlot;
+  //   }
+  // })() : null;
+  const selectedTime = selectedSlot ? decodeURIComponent(selectedSlot) : null;
 
   // Get user's timezone display name
   const getUserTimezoneDisplay = () => {
