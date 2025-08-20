@@ -701,7 +701,7 @@ const BookingCalendar = ({
         displayTime: timeSlotData.userDisplayTime
       };
 
-      console.log('Slot info being stored:', slotInfo);
+      console.log('Slot info being stored: lets sese', JSON.stringify(slotInfo));
       handleSelectSlot(JSON.stringify(slotInfo));
     } catch (error) {
       console.error('Error selecting slot:', error, slotData);
