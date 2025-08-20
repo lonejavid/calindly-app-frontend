@@ -2,6 +2,7 @@ import { parseAsBoolean, useQueryState } from "nuqs";
 import { CalendarDate, getLocalTimeZone } from "@internationalized/date";
 
 export const useBookingState = () => {
+  console.log("this is a simple tect ");
   const [selectedDate, setSelectedDate] = useQueryState<CalendarDate>("date", {
     parse: (value) =>
       new CalendarDate(
