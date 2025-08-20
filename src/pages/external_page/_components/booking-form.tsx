@@ -659,7 +659,7 @@
 
 
 import { z } from "zod";
-import { addMinutes, parseISO, format, parse, setHours, setMinutes } from "date-fns";
+import { addMinutes, parseISO, format } from "date-fns";
 import { useMutation } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -766,54 +766,6 @@ const BookingForm = (props: { event: Event }) => {
       const domainToCheck = normalizedDomain.startsWith('@') ? normalizedDomain : '@' + normalizedDomain;
       return emailDomain === domainToCheck;
     });
-  };
-
-  // Helper function to parse time slot and create proper date
-  const createDateTimeFromSlot = (dateObj: any, timeSlot: string): Date => {
-    if (!dateObj || !timeSlot) {
-      throw new Error("Invalid date or time slot");
-    }
-
-    // Create base date from CalendarDate object
-    const baseDate = new Date(dateObj.year, dateObj.month - 1, dateObj.day);
-    
-    // Parse the time slot (e.g., "3:00 pm", "10:30 am")
-    const timeString = timeSlot.trim().toLowerCase();
-    
-    // Extract hour and minute
-    let hour = 0;
-    let minute = 0;
-    
-    // Handle different time formats
-    if (timeString.includes(':')) {
-      const [timePart, period] = timeString.split(/\s+/);
-      const [hourStr, minuteStr] = timePart.split(':');
-      
-      hour = parseInt(hourStr, 10);
-      minute = parseInt(minuteStr, 10);
-      
-      // Convert to 24-hour format
-      if (period === 'pm' && hour !== 12) {
-        hour += 12;
-      } else if (period === 'am' && hour === 12) {
-        hour = 0;
-      }
-    } else {
-      // Handle formats like "3 pm", "10 am"
-      const [hourStr, period] = timeString.split(/\s+/);
-      hour = parseInt(hourStr, 10);
-      
-      if (period === 'pm' && hour !== 12) {
-        hour += 12;
-      } else if (period === 'am' && hour === 12) {
-        hour = 0;
-      }
-    }
-    
-    // Set hours and minutes
-    const finalDate = setMinutes(setHours(baseDate, hour), minute);
-    
-    return finalDate;
   };
 
   // Create dynamic Zod schema and form type
@@ -948,12 +900,12 @@ const BookingForm = (props: { event: Event }) => {
     }
 
     try {
-      // Create proper datetime from selected date and time slot
-      const startTime = createDateTimeFromSlot(selectedDate, selectedSlot);
+      // selectedSlot now contains an ISO string, so parse it directly
+      const startTime = parseISO(selectedSlot);
       const endTime = addMinutes(startTime, event.duration);
 
-      console.log("Created start time:", startTime);
-      console.log("Created end time:", endTime);
+      console.log("Start time:", startTime);
+      console.log("End time:", endTime);
 
       // Extract question answers with proper formatting for different types
       const questionAnswers = event.questions?.map((question) => {
@@ -1011,7 +963,7 @@ const BookingForm = (props: { event: Event }) => {
         },
       });
     } catch (error) {
-      console.error("Error creating datetime:", error);
+      console.error("Error parsing datetime:", error);
       toast.error("Invalid date or time selection. Please try again.");
     }
   };
