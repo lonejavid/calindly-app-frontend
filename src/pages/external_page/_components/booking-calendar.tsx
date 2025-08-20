@@ -343,11 +343,9 @@ const BookingCalendar = ({
     selectedSlot,
     handleSelectDate,
     handleSelectSlot,
-  
+    handleNext,
   } = useBookingState();
-function handleNext(){
-  console.log("hello");
-}
+
   // Get user's browser timezone
   const userTimezone = useMemo(() => {
     try {
