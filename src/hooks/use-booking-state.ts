@@ -71,7 +71,8 @@ const handleSelectSlot = (slot: string | null | {original: string}) => {
   
   console.log("till here control reached with slot", timeString);
   
-  const parsedSlotTime = parse(timeString, "HH:mm", new Date());
+  // Use 12-hour format with AM/PM - STRICTLY for 12-hour format
+  const parsedSlotTime = parse(timeString, "hh:mm a", new Date());
   const slotDate = selectedDate.toDate(getLocalTimeZone());
   
   slotDate.setHours(
