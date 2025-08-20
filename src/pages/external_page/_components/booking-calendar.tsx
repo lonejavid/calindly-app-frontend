@@ -557,7 +557,7 @@ const BookingCalendar = ({
                               className="w-full cursor-pointer h-[52px] bg-[rgb(0,105,255)] text-white rounded-[4px] hover:bg-[rgba(0,105,255,0.8)] font-semibold tracking-wide"
                               onClick={handleNext}
                             >
-                              Next
+                              Next...
                             </button>
                           </div>
 
