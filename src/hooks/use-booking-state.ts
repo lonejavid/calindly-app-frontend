@@ -54,10 +54,11 @@ export const useBookingState = () => {
       0,
       0
     );
-    // Convert to UTC, format, and encode
+    // Convert to UTC, format, and encodehandleSelectSlot
     const slotDateInUTC = toZonedTime(slotDate, timezone);
     //console.log(slotDateInUTC.toISOString(), ".toISOString()");
     const encodedSlot = encodeURIComponent(slotDateInUTC.toISOString());
+    console.log("slot things",encodedSlot);
     setSelectedSlot(encodedSlot);
   };
 
