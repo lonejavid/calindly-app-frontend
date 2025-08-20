@@ -90,156 +90,6 @@
 //   };
 // };
 
-// import { parseAsBoolean, useQueryState } from "nuqs";
-// import { CalendarDate, getLocalTimeZone } from "@internationalized/date";
-
-// export const useBookingState = () => {
-//   const [selectedDate, setSelectedDate] = useQueryState<CalendarDate>("date", {
-//     parse: (value) =>
-//       new CalendarDate(
-//         parseInt(value.split("-")[0]),
-//         parseInt(value.split("-")[1]),
-//         parseInt(value.split("-")[2])
-//       ),
-//     serialize: (value) => `${value.year}-${value.month}-${value.day}`,
-//   });
-
-//   const [selectedSlot, setSelectedSlot] = useQueryState("slot");
-
-//   const [next, setNext] = useQueryState(
-//     "next",
-//     parseAsBoolean.withDefault(false)
-//   );
-
-//   const [timezone, setTimezone] = useQueryState("timezone", {
-//     defaultValue: getLocalTimeZone(), // Default to user's system timezone
-//   });
-
-//   const [isSuccess, setIsSuccess] = useQueryState(
-//     "success",
-//     parseAsBoolean.withDefault(false)
-//   );
-
-//   const handleSelectDate = (date: CalendarDate) => {
-//     setSelectedDate(date);
-//   };
-
-//   const handleSelectSlot = (slot: string | null) => {
-//     if (!selectedDate || !slot) {
-//       setSelectedSlot(null);
-//       return;
-//     }
-
-//     try {
-//       console.log("Control reached with slot:", slot);
-      
-//       // Parse different time formats
-//       let hours = 0;
-//       let minutes = 0;
-      
-//       // Handle "3:00 pm", "4:30 pm" format
-//       if (slot.includes('pm') || slot.includes('am')) {
-//         const timeMatch = slot.match(/(\d{1,2}):(\d{2})\s*(am|pm)/i);
-//         if (timeMatch) {
-//           hours = parseInt(timeMatch[1]);
-//           minutes = parseInt(timeMatch[2]);
-//           const period = timeMatch[3].toLowerCase();
-          
-//           // Convert to 24-hour format
-//           if (period === 'pm' && hours !== 12) {
-//             hours += 12;
-//           } else if (period === 'am' && hours === 12) {
-//             hours = 0;
-//           }
-//         }
-//       } 
-//       // Handle "15:00", "09:30" format (24-hour)
-//       else if (slot.includes(':')) {
-//         const timeMatch = slot.match(/(\d{1,2}):(\d{2})/);
-//         if (timeMatch) {
-//           hours = parseInt(timeMatch[1]);
-//           minutes = parseInt(timeMatch[2]);
-//         }
-//       }
-      
-//       console.log("Parsed time:", { hours, minutes });
-      
-//       // Validate parsed time
-//       if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
-//         console.error("Invalid time values:", { hours, minutes });
-//         setSelectedSlot(null);
-//         return;
-//       }
-      
-//       // Create a proper Date object from CalendarDate
-//       const slotDate = new Date(
-//         selectedDate.year,
-//         selectedDate.month - 1, // JavaScript months are 0-indexed
-//         selectedDate.day,
-//         hours,
-//         minutes,
-//         0,
-//         0
-//       );
-
-//       console.log("Slot date created:", slotDate);
-      
-//       // Validate the created date
-//       if (isNaN(slotDate.getTime())) {
-//         console.error("Invalid date created");
-//         setSelectedSlot(null);
-//         return;
-//       }
-      
-//       // Format as ISO string in local time (no UTC conversion)
-//       const year = slotDate.getFullYear();
-//       const month = String(slotDate.getMonth() + 1).padStart(2, '0');
-//       const day = String(slotDate.getDate()).padStart(2, '0');
-//       const hoursStr = String(slotDate.getHours()).padStart(2, '0');
-//       const minutesStr = String(slotDate.getMinutes()).padStart(2, '0');
-      
-//       const localISOString = `${year}-${month}-${day}T${hoursStr}:${minutesStr}:00`;
-//       console.log("Local ISO string:", localISOString);
-      
-//       // Encode for URL
-//       const encodedSlot = encodeURIComponent(localISOString);
-//       console.log("Encoded slot:", encodedSlot);
-      
-//       setSelectedSlot(encodedSlot);
-//     } catch (error) {
-//       console.error("Error in handleSelectSlot:", error);
-//       setSelectedSlot(null);
-//     }
-//   };
-
-//   const handleNext = () => {
-//     setNext(true);
-//   };
-
-//   const handleBack = () => {
-//     setNext(false);
-//   };
-
-//   const handleSuccess = (value: boolean) => {
-//     setIsSuccess(value || true);
-//   };
-//   console.log("main next value",next);
-
-//   return {
-//     selectedDate,
-//     selectedSlot,
-//     next: next,
-//     timezone,
-//     isSuccess,
-//     handleSelectDate,
-//     handleSelectSlot,
-//     handleNext,
-//     handleBack,
-//     handleSuccess,
-//     setTimezone,
-//   };
-// };
-
 import { parseAsBoolean, useQueryState } from "nuqs";
 import { CalendarDate, getLocalTimeZone } from "@internationalized/date";
 
@@ -271,30 +121,23 @@ export const useBookingState = () => {
   );
 
   const handleSelectDate = (date: CalendarDate) => {
-    console.log('handleSelectDate called with:', date);
     setSelectedDate(date);
   };
 
   const handleSelectSlot = (slot: string | null) => {
-    console.log('handleSelectSlot called with:', slot);
-    
-    if (!slot) {
-      setSelectedSlot(null);
-      return;
-    }
-
-    if (!selectedDate) {
-      console.error("No date selected");
+    if (!selectedDate || !slot) {
       setSelectedSlot(null);
       return;
     }
 
     try {
-      // Parse the time and create a proper datetime string
+      console.log("Control reached with slot:", slot);
+      
+      // Parse different time formats
       let hours = 0;
       let minutes = 0;
       
-      // Handle "2:30 pm", "3:00 am" format
+      // Handle "3:00 pm", "4:30 pm" format
       if (slot.includes('pm') || slot.includes('am')) {
         const timeMatch = slot.match(/(\d{1,2}):(\d{2})\s*(am|pm)/i);
         if (timeMatch) {
@@ -348,16 +191,21 @@ export const useBookingState = () => {
         return;
       }
       
-      // Format as ISO string for storage
-      const isoString = slotDate.toISOString();
-      console.log("ISO string for storage:", isoString);
+      // Format as ISO string in local time (no UTC conversion)
+      const year = slotDate.getFullYear();
+      const month = String(slotDate.getMonth() + 1).padStart(2, '0');
+      const day = String(slotDate.getDate()).padStart(2, '0');
+      const hoursStr = String(slotDate.getHours()).padStart(2, '0');
+      const minutesStr = String(slotDate.getMinutes()).padStart(2, '0');
+      
+      const localISOString = `${year}-${month}-${day}T${hoursStr}:${minutesStr}:00`;
+      console.log("Local ISO string:", localISOString);
       
       // Encode for URL
-      const encodedSlot = encodeURIComponent(isoString);
-      console.log("Encoded slot for URL:", encodedSlot);
+      const encodedSlot = encodeURIComponent(localISOString);
+      console.log("Encoded slot:", encodedSlot);
       
       setSelectedSlot(encodedSlot);
-      
     } catch (error) {
       console.error("Error in handleSelectSlot:", error);
       setSelectedSlot(null);
@@ -365,7 +213,6 @@ export const useBookingState = () => {
   };
 
   const handleNext = () => {
-    console.log('handleNext called, current selectedSlot:', selectedSlot);
     setNext(true);
   };
 
@@ -376,8 +223,7 @@ export const useBookingState = () => {
   const handleSuccess = (value: boolean) => {
     setIsSuccess(value || true);
   };
-
-  console.log("Current state - next:", next, "selectedSlot:", selectedSlot, "selectedDate:", selectedDate);
+  console.log("main next value",next);
 
   return {
     selectedDate,
