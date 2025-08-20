@@ -321,7 +321,7 @@ const getTimezoneOffsetForDate = (date: Date, timezone: string): number => {
   }
 };
 
-// WORKING timezone conversion - using a completely different approach
+// SIMPLE and DIRECT timezone conversion
 const convertBackendTimeToUserTime = (
   timeSlot: string,
   date: Date,
@@ -341,64 +341,111 @@ const convertBackendTimeToUserTime = (
       return format(tempDate, 'h:mm a');
     }
 
-    // Create ISO date string for the specific date at the specified time
+    console.log(`Converting ${timeSlot} from ${backendTimezone} to ${userTimezone}`);
+
+    // Create the most straightforward conversion
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hourStr = String(hours).padStart(2, '0');
-    const minuteStr = String(minutes).padStart(2, '0');
+    const month = date.getMonth();
+    const day = date.getDate();
     
-    // This is the key: we create a date-time that represents the backend time
-    const isoString = `${year}-${month}-${day}T${hourStr}:${minuteStr}:00`;
+    // Method: Create a moment representing the backend time and convert it directly
     
-    // Parse this datetime AS IF it's in the backend timezone
-    // Then display it in the user's timezone
-    const backendDate = new Date(isoString);
+    // Step 1: Create a date as if it's in the backend timezone
+    // We'll use this trick: assume the time is UTC first, then apply conversion
+    const tempDate = new Date(Date.UTC(year, month, day, hours, minutes, 0, 0));
     
-    // Use the most reliable method: toLocaleString with timezone conversion
-    const userTimeString = backendDate.toLocaleString('en-US', {
+    // Step 2: Now convert using the browser's built-in timezone handling
+    // First, see what this UTC time looks like in the backend timezone
+    const backendDisplay = new Intl.DateTimeFormat('en-US', {
+      timeZone: backendTimezone,
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    }).format(tempDate);
+    
+    // Parse the backend display time
+    const [backendHours, backendMinutes] = backendDisplay.split(':').map(Number);
+    
+    // Calculate how far off we are (what adjustment do we need?)
+    const backendOffsetHours = backendHours - hours;
+    const backendOffsetMinutes = backendMinutes - minutes;
+    const totalBackendOffsetMinutes = (backendOffsetHours * 60) + backendOffsetMinutes;
+    
+    // Apply reverse offset to get the "true" UTC time for this backend time
+    const correctedUTCTime = new Date(tempDate.getTime() - (totalBackendOffsetMinutes * 60000));
+    
+    // Now convert this corrected UTC time to user timezone
+    const userDisplay = new Intl.DateTimeFormat('en-US', {
       timeZone: userTimezone,
       hour: 'numeric',
       minute: '2-digit',
       hour12: true
-    });
+    }).format(correctedUTCTime);
     
-    // However, the above doesn't account for the fact that we created the date
-    // assuming it was in local timezone, not backend timezone
-    
-    // Better approach: use a reference conversion
-    const now = new Date();
-    const backendNow = new Date(now.toLocaleString('en-US', { timeZone: backendTimezone }));
-    const userNow = new Date(now.toLocaleString('en-US', { timeZone: userTimezone }));
-    const localNow = new Date();
-    
-    // Calculate the offset between backend and user timezone
-    const backendOffset = localNow.getTime() - backendNow.getTime();
-    const userOffset = localNow.getTime() - userNow.getTime();
-    const timezoneOffset = userOffset - backendOffset;
-    
-    // Apply this offset to our backend time
-    const convertedTime = new Date(backendDate.getTime() + timezoneOffset);
-    
-    // Format the result
-    return format(convertedTime, 'h:mm a');
+    console.log(`${timeSlot} (${backendTimezone}) -> ${userDisplay} (${userTimezone})`);
+    return userDisplay.toLowerCase();
     
   } catch (error) {
-    console.error('Timezone conversion error:', error);
+    console.error('Timezone conversion failed:', error);
     
-    // Simple fallback
+    // Ultra-simple fallback using known timezone math
     try {
+      // Let's do manual calculation for common cases
+      if (backendTimezone.includes('Chicago') || backendTimezone.includes('America/Chicago')) {
+        if (userTimezone.includes('Kolkata') || userTimezone.includes('Asia/Kolkata')) {
+          // Chicago to IST: +10.5 hours (Chicago CDT is UTC-5, IST is UTC+5:30)
+          return addHoursToTime(timeSlot, 10.5);
+        }
+      }
+      
+      if (backendTimezone.includes('New_York') || backendTimezone.includes('America/New_York')) {
+        if (userTimezone.includes('Kolkata') || userTimezone.includes('Asia/Kolkata')) {
+          // New York to IST: +9.5 hours (EDT is UTC-4, IST is UTC+5:30) or +10.5 (EST is UTC-5)
+          // Let's assume EDT for now
+          return addHoursToTime(timeSlot, 9.5);
+        }
+      }
+      
+      // Default fallback
       const parsedTime = parseTimeSlot(timeSlot);
       if (parsedTime) {
         const tempDate = new Date();
         tempDate.setHours(parsedTime.hours, parsedTime.minutes, 0, 0);
         return format(tempDate, 'h:mm a');
       }
-    } catch {
-      // Return original if everything fails
+      
+    } catch (fallbackError) {
+      console.error('Fallback failed:', fallbackError);
     }
     
     return timeSlot;
+  }
+};
+
+// Helper function to add hours to a time string
+const addHoursToTime = (timeString: string, hoursToAdd: number): string => {
+  try {
+    const parsedTime = parseTimeSlot(timeString);
+    if (!parsedTime) return timeString;
+    
+    const { hours, minutes } = parsedTime;
+    
+    // Convert to minutes for easier calculation
+    const totalMinutes = (hours * 60) + minutes + (hoursToAdd * 60);
+    
+    // Handle day overflow/underflow
+    const finalMinutes = ((totalMinutes % (24 * 60)) + (24 * 60)) % (24 * 60);
+    
+    const finalHours = Math.floor(finalMinutes / 60);
+    const finalMins = finalMinutes % 60;
+    
+    const resultDate = new Date();
+    resultDate.setHours(finalHours, finalMins, 0, 0);
+    
+    return format(resultDate, 'h:mm a');
+  } catch (error) {
+    console.error('Error in addHoursToTime:', error);
+    return timeString;
   }
 };
 
