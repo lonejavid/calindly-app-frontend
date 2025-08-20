@@ -39,53 +39,28 @@ export const useBookingState = () => {
     setSelectedDate(date);
   };
 
-  // const handleSelectSlot = (slot: string | null) => {
-  //   if (!selectedDate || !slot) {
-  //     setSelectedSlot(null);
-  //     return;
-  //   }
-  //   // Parse the slot time (e.g., "09:00") and set it on the selected date
-  //   console.log("till here contriol reached with slot",slot);
-  //   const parsedSlotTime = parse(slot, "HH:mm", new Date());
-  //   const slotDate = selectedDate.toDate(getLocalTimeZone());
-  //   slotDate.setHours(
-  //     parsedSlotTime.getHours(),
-  //     parsedSlotTime.getMinutes(),
-  //     0,
-  //     0
-  //   );
-  //   // Convert to UTC, format, and encode
-  //   const slotDateInUTC = toZonedTime(slotDate, timezone);
-  //   //console.log(slotDateInUTC.toISOString(), ".toISOString()");
-  //   const encodedSlot = encodeURIComponent(slotDateInUTC.toISOString());
-  //   setSelectedSlot(encodedSlot);
-  // };
-const handleSelectSlot = (slot: string | null | {original: string}) => {
-  if (!selectedDate || !slot) {
-    setSelectedSlot(null);
-    return;
-  }
-  
-  // Extract the time string if slot is an object
-  const timeString = typeof slot === 'string' ? slot : slot.original;
-  
-  console.log("till here control reached with slot", timeString);
-  
-  // Use 12-hour format with AM/PM - STRICTLY for 12-hour format
-  const parsedSlotTime = parse(timeString, "hh:mm a", new Date());
-  const slotDate = selectedDate.toDate(getLocalTimeZone());
-  
-  slotDate.setHours(
-    parsedSlotTime.getHours(),
-    parsedSlotTime.getMinutes(),
-    0,
-    0
-  );
-  
-  const slotDateInUTC = toZonedTime(slotDate, timezone);
-  const encodedSlot = encodeURIComponent(slotDateInUTC.toISOString());
-  setSelectedSlot(encodedSlot);
-};
+  const handleSelectSlot = (slot: string | null) => {
+    if (!selectedDate || !slot) {
+      setSelectedSlot(null);
+      return;
+    }
+    // Parse the slot time (e.g., "09:00") and set it on the selected date
+    console.log("till here contriol reached with slot",slot);
+    const parsedSlotTime = parse(slot, "HH:mm", new Date());
+    const slotDate = selectedDate.toDate(getLocalTimeZone());
+    slotDate.setHours(
+      parsedSlotTime.getHours(),
+      parsedSlotTime.getMinutes(),
+      0,
+      0
+    );
+    // Convert to UTC, format, and encode
+    const slotDateInUTC = toZonedTime(slotDate, timezone);
+    //console.log(slotDateInUTC.toISOString(), ".toISOString()");
+    const encodedSlot = encodeURIComponent(slotDateInUTC.toISOString());
+    setSelectedSlot(encodedSlot);
+  };
+
   const handleNext = () => {
     setNext(true);
   };
