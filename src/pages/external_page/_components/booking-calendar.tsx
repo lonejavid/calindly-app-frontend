@@ -711,7 +711,7 @@ const BookingCalendar = ({
 
   const selectedTime = selectedSlot ? (() => {
     try {
-      console.log("error is here");
+      console.log("error is here",selectedSlot);
       const slotInfo = JSON.parse(selectedSlot);
       return slotInfo.displayTime || slotInfo.original;
     } catch (error) {
