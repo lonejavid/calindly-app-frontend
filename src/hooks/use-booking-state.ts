@@ -1,7 +1,99 @@
+// import { parseAsBoolean, useQueryState } from "nuqs";
+// import { CalendarDate, getLocalTimeZone } from "@internationalized/date";
+// import { parse } from "date-fns";
+// import { toZonedTime } from "date-fns-tz";
+
+// export const useBookingState = () => {
+//   const [selectedDate, setSelectedDate] = useQueryState<CalendarDate>("date", {
+//     parse: (value) =>
+//       new CalendarDate(
+//         parseInt(value.split("-")[0]),
+//         parseInt(value.split("-")[1]),
+//         parseInt(value.split("-")[2])
+//       ),
+//     serialize: (value) => `${value.year}-${value.month}-${value.day}`,
+//   });
+//   const [selectedSlot, setSelectedSlot] = useQueryState("slot");
+
+//   const [next, setNext] = useQueryState(
+//     "next",
+//     parseAsBoolean.withDefault(false)
+//   );
+
+//   const [timezone, setTimezone] = useQueryState("timezone", {
+//     defaultValue: getLocalTimeZone(), // Default to user's system timezone
+//   });
+
+//   const [hourType, setHourType] = useQueryState<"12h" | "24h">("hourType", {
+//     defaultValue: "24h",
+//     parse: (value) => (value === "12h" ? "12h" : "24h"),
+//     serialize: (value) => value,
+//   });
+
+//   const [isSuccess, setIsSuccess] = useQueryState(
+//     "success",
+//     parseAsBoolean.withDefault(false)
+//   );
+
+//   const handleSelectDate = (date: CalendarDate) => {
+//     setSelectedDate(date);
+//   };
+
+//   const handleSelectSlot = (slot: string | null) => {
+//     if (!selectedDate || !slot) {
+//       setSelectedSlot(null);
+//       return;
+//     }
+//     // Parse the slot time (e.g., "09:00") and set it on the selected date
+//     console.log("till here contriol reached with slot",slot);
+//     const parsedSlotTime = parse(slot, "HH:mm", new Date());
+//     const slotDate = selectedDate.toDate(getLocalTimeZone());
+//     slotDate.setHours(
+//       parsedSlotTime.getHours(),
+//       parsedSlotTime.getMinutes(),
+//       0,
+//       0
+//     );
+//     // Convert to UTC, format, and encodehandleSelectSlot
+//     const slotDateInUTC = toZonedTime(slotDate, timezone);
+//     //console.log(slotDateInUTC.toISOString(), ".toISOString()");
+//     const encodedSlot = encodeURIComponent(slotDateInUTC.toISOString());
+//     console.log("slot things",encodedSlot);
+//     setSelectedSlot(encodedSlot);
+//   };
+
+//   const handleNext = () => {
+//     setNext(true);
+//   };
+
+//   const handleBack = () => {
+//     setNext(false);
+//   };
+
+//   const handleSuccess = (value: boolean) => {
+//     setIsSuccess(value || true);
+//   };
+//   return {
+//     selectedDate,
+//     selectedSlot,
+//     next: next,
+//     timezone,
+//     hourType,
+//     isSuccess,
+//     handleSelectDate,
+//     handleSelectSlot,
+//     handleNext,
+//     handleBack,
+//     handleSuccess,
+//     setTimezone,
+//     setHourType,
+//   };
+// };
+
+
 import { parseAsBoolean, useQueryState } from "nuqs";
 import { CalendarDate, getLocalTimeZone } from "@internationalized/date";
 import { parse } from "date-fns";
-import { toZonedTime } from "date-fns-tz";
 
 export const useBookingState = () => {
   const [selectedDate, setSelectedDate] = useQueryState<CalendarDate>("date", {
@@ -13,6 +105,7 @@ export const useBookingState = () => {
       ),
     serialize: (value) => `${value.year}-${value.month}-${value.day}`,
   });
+
   const [selectedSlot, setSelectedSlot] = useQueryState("slot");
 
   const [next, setNext] = useQueryState(
@@ -22,12 +115,6 @@ export const useBookingState = () => {
 
   const [timezone, setTimezone] = useQueryState("timezone", {
     defaultValue: getLocalTimeZone(), // Default to user's system timezone
-  });
-
-  const [hourType, setHourType] = useQueryState<"12h" | "24h">("hourType", {
-    defaultValue: "24h",
-    parse: (value) => (value === "12h" ? "12h" : "24h"),
-    serialize: (value) => value,
   });
 
   const [isSuccess, setIsSuccess] = useQueryState(
@@ -44,22 +131,45 @@ export const useBookingState = () => {
       setSelectedSlot(null);
       return;
     }
-    // Parse the slot time (e.g., "09:00") and set it on the selected date
-    console.log("till here contriol reached with slot",slot);
-    const parsedSlotTime = parse(slot, "HH:mm", new Date());
-    const slotDate = selectedDate.toDate(getLocalTimeZone());
-    slotDate.setHours(
-      parsedSlotTime.getHours(),
-      parsedSlotTime.getMinutes(),
-      0,
-      0
-    );
-    // Convert to UTC, format, and encodehandleSelectSlot
-    const slotDateInUTC = toZonedTime(slotDate, timezone);
-    //console.log(slotDateInUTC.toISOString(), ".toISOString()");
-    const encodedSlot = encodeURIComponent(slotDateInUTC.toISOString());
-    console.log("slot things",encodedSlot);
-    setSelectedSlot(encodedSlot);
+
+    try {
+      console.log("Control reached with slot:", slot);
+      
+      // Parse the slot time (e.g., "09:00" or "2:30 pm")
+      const parsedSlotTime = parse(slot, "HH:mm", new Date());
+      
+      // Create a proper Date object from CalendarDate
+      const slotDate = new Date(
+        selectedDate.year,
+        selectedDate.month - 1, // JavaScript months are 0-indexed
+        selectedDate.day,
+        parsedSlotTime.getHours(),
+        parsedSlotTime.getMinutes(),
+        0,
+        0
+      );
+
+      console.log("Slot date created:", slotDate);
+      
+      // Format as ISO string in local time (no UTC conversion)
+      const year = slotDate.getFullYear();
+      const month = String(slotDate.getMonth() + 1).padStart(2, '0');
+      const day = String(slotDate.getDate()).padStart(2, '0');
+      const hours = String(slotDate.getHours()).padStart(2, '0');
+      const minutes = String(slotDate.getMinutes()).padStart(2, '0');
+      
+      const localISOString = `${year}-${month}-${day}T${hours}:${minutes}:00`;
+      console.log("Local ISO string:", localISOString);
+      
+      // Encode for URL
+      const encodedSlot = encodeURIComponent(localISOString);
+      console.log("Encoded slot:", encodedSlot);
+      
+      setSelectedSlot(encodedSlot);
+    } catch (error) {
+      console.error("Error in handleSelectSlot:", error);
+      setSelectedSlot(null);
+    }
   };
 
   const handleNext = () => {
@@ -73,12 +183,12 @@ export const useBookingState = () => {
   const handleSuccess = (value: boolean) => {
     setIsSuccess(value || true);
   };
+
   return {
     selectedDate,
     selectedSlot,
     next: next,
     timezone,
-    hourType,
     isSuccess,
     handleSelectDate,
     handleSelectSlot,
@@ -86,6 +196,5 @@ export const useBookingState = () => {
     handleBack,
     handleSuccess,
     setTimezone,
-    setHourType,
   };
 };
