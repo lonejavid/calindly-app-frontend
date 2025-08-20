@@ -2,12 +2,12 @@ import { format } from "date-fns";
 import { Calendar } from "@/components/calendar";
 import { CalendarDate, DateValue } from "@internationalized/date";
 import { useBookingState } from "@/hooks/use-booking-state";
-import { decodeSlot, formatSlot } from "@/lib/helper";
+
 import { getPublicAvailabilityByEventIdQueryFn } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import { ErrorAlert } from "@/components/ErrorAlert";
 import { Loader } from "@/components/loader";
-import HourButton from "@/components/HourButton";
+
 import { useMemo } from "react";
 
 interface BookingCalendarProps {
@@ -343,9 +343,11 @@ const BookingCalendar = ({
     selectedSlot,
     handleSelectDate,
     handleSelectSlot,
-    handleNext,
+  
   } = useBookingState();
-
+function handleNext(){
+  console.log("hello");
+}
   // Get user's browser timezone
   const userTimezone = useMemo(() => {
     try {
