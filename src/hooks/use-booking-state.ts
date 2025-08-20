@@ -205,7 +205,7 @@ export const useBookingState = () => {
     setIsSuccess(value || true);
   };
 
-  console.log("Current state - next:", next, "selectedSlot:", selectedSlot, "selectedDate:", selectedDate);
+  console.log("Current state - next:", next, "selectedSlot:", selectedSlot, "selectedDate:", selectedDate,"success is ",isSuccess);
 
   return {
     selectedDate,
