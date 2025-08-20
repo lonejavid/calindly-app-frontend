@@ -152,7 +152,7 @@ export const useBookingState = () => {
 
   const [isSuccess, setIsSuccess] = useQueryState(
     "success",
-    parseAsBoolean.withDefault(true)
+    parseAsBoolean.withDefault(false)
   );
 
   const handleSelectDate = (date: CalendarDate) => {

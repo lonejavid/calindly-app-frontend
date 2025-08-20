@@ -901,6 +901,7 @@ const BookingForm = (props: { event: Event }) => {
 
     try {
       // selectedSlot now contains an ISO string, so parse it directly
+      console.log("this is just a test ");
       const startTime = parseISO(selectedSlot);
       const endTime = addMinutes(startTime, event.duration);
 
