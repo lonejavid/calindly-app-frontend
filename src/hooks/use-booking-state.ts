@@ -223,6 +223,7 @@ export const useBookingState = () => {
   const handleSuccess = (value: boolean) => {
     setIsSuccess(value || true);
   };
+  console.log("main next value",next);
 
   return {
     selectedDate,
