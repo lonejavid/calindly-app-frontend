@@ -240,7 +240,6 @@
 //   };
 // };
 
-
 import { parseAsBoolean, useQueryState } from "nuqs";
 import { CalendarDate, getLocalTimeZone } from "@internationalized/date";
 
@@ -291,10 +290,73 @@ export const useBookingState = () => {
     }
 
     try {
-      // For the simple approach, just store the display time directly
-      // This will be used for UI comparison
-      console.log("Storing slot:", slot);
-      setSelectedSlot(slot);
+      // Parse the time and create a proper datetime string
+      let hours = 0;
+      let minutes = 0;
+      
+      // Handle "2:30 pm", "3:00 am" format
+      if (slot.includes('pm') || slot.includes('am')) {
+        const timeMatch = slot.match(/(\d{1,2}):(\d{2})\s*(am|pm)/i);
+        if (timeMatch) {
+          hours = parseInt(timeMatch[1]);
+          minutes = parseInt(timeMatch[2]);
+          const period = timeMatch[3].toLowerCase();
+          
+          // Convert to 24-hour format
+          if (period === 'pm' && hours !== 12) {
+            hours += 12;
+          } else if (period === 'am' && hours === 12) {
+            hours = 0;
+          }
+        }
+      } 
+      // Handle "15:00", "09:30" format (24-hour)
+      else if (slot.includes(':')) {
+        const timeMatch = slot.match(/(\d{1,2}):(\d{2})/);
+        if (timeMatch) {
+          hours = parseInt(timeMatch[1]);
+          minutes = parseInt(timeMatch[2]);
+        }
+      }
+      
+      console.log("Parsed time:", { hours, minutes });
+      
+      // Validate parsed time
+      if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+        console.error("Invalid time values:", { hours, minutes });
+        setSelectedSlot(null);
+        return;
+      }
+      
+      // Create a proper Date object from CalendarDate
+      const slotDate = new Date(
+        selectedDate.year,
+        selectedDate.month - 1, // JavaScript months are 0-indexed
+        selectedDate.day,
+        hours,
+        minutes,
+        0,
+        0
+      );
+
+      console.log("Slot date created:", slotDate);
+      
+      // Validate the created date
+      if (isNaN(slotDate.getTime())) {
+        console.error("Invalid date created");
+        setSelectedSlot(null);
+        return;
+      }
+      
+      // Format as ISO string for storage
+      const isoString = slotDate.toISOString();
+      console.log("ISO string for storage:", isoString);
+      
+      // Encode for URL
+      const encodedSlot = encodeURIComponent(isoString);
+      console.log("Encoded slot for URL:", encodedSlot);
+      
+      setSelectedSlot(encodedSlot);
       
     } catch (error) {
       console.error("Error in handleSelectSlot:", error);
