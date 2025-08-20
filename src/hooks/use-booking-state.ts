@@ -45,6 +45,7 @@ export const useBookingState = () => {
       return;
     }
     // Parse the slot time (e.g., "09:00") and set it on the selected date
+    console.log("till here contriol reached with slot",slot);
     const parsedSlotTime = parse(slot, "HH:mm", new Date());
     const slotDate = selectedDate.toDate(getLocalTimeZone());
     slotDate.setHours(
