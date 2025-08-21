@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { addMinutes,parse,  format } from "date-fns";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,7 @@ import { Label } from "@/components/ui/label";
 import { useBookingState } from "@/hooks/use-booking-state";
 import { Fragment, useState, useMemo } from "react";
 import { CheckIcon, ExternalLink, User, Calendar, Globe, ChevronDown } from "lucide-react";
-import { scheduleMeetingMutationFn } from "@/lib/api";
+import { getPublicAvailabilityByEventIdQueryFn, scheduleMeetingMutationFn } from "@/lib/api";
 import { toast } from "sonner";
 import { Loader } from "@/components/loader";
 
@@ -314,7 +314,15 @@ const BookingForm = (props: { event: Event }) => {
   //     toast.error("Invalid date or time selection. Please try again.");
   //   }
   // };
+  const { data } = useQuery({
+    queryKey: ["availbility_single_event", event.id],
+    queryFn: () => getPublicAvailabilityByEventIdQueryFn(event.id),
+  });
 
+  console.log("please undersatn dthis is my time zone info",data);
+
+  const availability = data?.data || [];
+  console.log("Original availability from backend:", availability);
 
 const onSubmit = (values: FormData) => {
   if (!event.id || !selectedSlot || !selectedDate) {
