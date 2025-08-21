@@ -109,7 +109,7 @@ export const useBookingState = () => {
         if (parts.length !== 3) {
           return null;
         }
-        
+          console.log("this is a simple test..........");
         const year = parseInt(parts[0]);
         const month = parseInt(parts[1]);
         const day = parseInt(parts[2]);
