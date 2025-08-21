@@ -413,7 +413,7 @@ const onSubmit = (values: FormData) => {
           } else {
             window.location.href = "https://www.schedley.com";
           }
-        },200000);
+        },2000000);
       },
       onError: (error: unknown) => {
         console.error("Booking error:", error);
