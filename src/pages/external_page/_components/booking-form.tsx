@@ -793,7 +793,6 @@
 
 import { z } from "zod";
 import { addMinutes, parse, format, parseISO } from "date-fns";
-import { zonedTimeToUtc, utcToZonedTime } from "date-fns-tz";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -1066,7 +1065,7 @@ const BookingForm = (props: { event: Event }) => {
         throw new Error("Invalid start time format");
       }
 
-      // Create a date object with the selected date and parsed time in local timezone
+      // Create a date object with the selected date and parsed time
       const combinedDateTime = new Date(
         selectedDateObj.getFullYear(),
         selectedDateObj.getMonth(),
@@ -1077,14 +1076,38 @@ const BookingForm = (props: { event: Event }) => {
         0
       );
 
-      console.log("Combined date time (local):", combinedDateTime);
+      console.log("Combined date time:", combinedDateTime);
 
-      // Convert the local time to the event's timezone, then to UTC
-      // This assumes the selectedSlot time is in the event's timezone
-      const startTimeInEventTimezone = utcToZonedTime(combinedDateTime, eventTimezone);
-      const startTimeUTC = zonedTimeToUtc(startTimeInEventTimezone, eventTimezone);
+      // Helper function to convert timezone using Intl.DateTimeFormat
+      const convertToTimezone = (date: Date, timezone: string): Date => {
+        try {
+          // Get the timezone offset for the target timezone
+          const targetDate = new Date(date.toLocaleString("en-US", { timeZone: timezone }));
+          const localDate = new Date(date.toLocaleString("en-US"));
+          const diff = localDate.getTime() - targetDate.getTime();
+          
+          // Create a new date adjusted for the timezone difference
+          return new Date(date.getTime() + diff);
+        } catch (error) {
+          console.warn("Timezone conversion failed, using original date:", error);
+          return date;
+        }
+      };
+
+      // Convert the combined datetime to the event's timezone
+      // This assumes the selectedSlot time should be interpreted as being in the event's timezone
+      let startTimeUTC: Date;
       
-      console.log("Start time in event timezone:", startTimeInEventTimezone);
+      if (eventTimezone === "UTC") {
+        startTimeUTC = combinedDateTime;
+      } else {
+        // Create the datetime as if it's in the event's timezone, then convert to UTC
+        const tempDate = new Date(combinedDateTime.toLocaleString("en-US", { timeZone: eventTimezone }));
+        const localDate = new Date(combinedDateTime.toLocaleString("en-US"));
+        const timezoneOffset = tempDate.getTime() - localDate.getTime();
+        startTimeUTC = new Date(combinedDateTime.getTime() - timezoneOffset);
+      }
+      
       console.log("Start time UTC:", startTimeUTC);
 
       // Calculate end time
@@ -1138,7 +1161,7 @@ const BookingForm = (props: { event: Event }) => {
             } else {
               window.location.href = "https://www.schedley.com";
             }
-          }, 3000); // Changed back to 3 seconds instead of 2000000
+          }, 3000);
         },
         onError: (error: unknown) => {
           console.error("Booking error:", error);
