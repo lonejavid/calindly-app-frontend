@@ -275,8 +275,8 @@ const BookingForm = (props: { event: Event }) => {
         additionalInfo: values.additionalInfo || "",
         ...(event.allowGuests && values.guestEmails && { guestEmails: values.guestEmails }),
         eventId: event.id,
-        startTime: startTime.toISOString(),
-        endTime: endTime.toISOString(),
+        startTime: startTime,
+        endTime: endTime,
         questionAnswers,
       };
 
