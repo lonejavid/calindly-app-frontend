@@ -220,98 +220,202 @@ const BookingForm = (props: { event: Event }) => {
   // Watch email field to show real-time validation
   const watchedEmail = form.watch("guestEmail");
 
-  const onSubmit = (values: FormData) => {
-    if (!event.id || !selectedSlot || !selectedDate) {
-      console.error("Missing required data:", { eventId: event.id, selectedSlot, selectedDate });
-      toast.error("Please select a date and time slot");
-      return;
+  // const onSubmit = (values: FormData) => {
+  //   if (!event.id || !selectedSlot || !selectedDate) {
+  //     console.error("Missing required data:", { eventId: event.id, selectedSlot, selectedDate });
+  //     toast.error("Please select a date and time slot");
+  //     return;
+  //   }
+
+  //   // Double-check email domain blocking before submission
+  //   if (isEmailDomainBlocked(values.guestEmail)) {
+  //     const blockedDomainsArray = Array.isArray(event.blockedDomains) 
+  //       ? event.blockedDomains 
+  //       : event.blockedDomains 
+  //         ? [event.blockedDomains] 
+  //         : [];
+  //     const displayDomains = blockedDomainsArray.map(domain => 
+  //       domain.startsWith('@') ? domain.substring(1) : domain
+  //     );
+  //     toast.error(`Email domain is blocked. Domains ${displayDomains.join(", ")} are not allowed for this event.`);
+  //     return;
+  //   }
+
+  //   try {
+  //     // selectedSlot now contains an ISO string, so parse it directly
+  //     console.log("this is just a test ",selectedSlot);
+  //     const startTime = parseISO(selectedSlot);
+  //     const endTime = addMinutes(startTime, event.duration);
+
+  //     console.log("Start time:", startTime);
+  //     console.log("End time:", endTime);
+
+  //     // Extract question answers with proper formatting for different types
+  //     const questionAnswers = event.questions?.map((question) => {
+  //       const fieldValue = values[`question_${question.id}`];
+  //       let answer = "";
+        
+  //       if (question.type === "checkbox" && Array.isArray(fieldValue)) {
+  //         // For checkboxes, join selected options with commas
+  //         answer = fieldValue.join(", ");
+  //       } else {
+  //         // For other types, use the value as is
+  //         answer = (fieldValue as string) || "";
+  //       }
+        
+  //       return {
+  //         question: question.question,
+  //         answer,
+  //       };
+  //     }) || [];
+
+  //     const payload = {
+  //       guestName: values.guestName,
+  //       guestEmail: values.guestEmail,
+  //       additionalInfo: values.additionalInfo || "",
+  //       ...(event.allowGuests && values.guestEmails && { guestEmails: values.guestEmails }),
+  //       eventId: event.id,
+  //       startTime: startTime.toISOString(),
+  //       endTime: endTime.toISOString(),
+  //       questionAnswers,
+  //     };
+
+  //     if (isPending) return;
+  //     console.log("start time in here ",startTime);
+  //     console.log("end time is",endTime);
+  //     console.log("payload sent is ", payload);
+
+  //     mutate(payload, {
+  //       onSuccess: (response: any) => {
+  //         setMeetLink(response.data.meetLink);
+  //         setBookingDetails({
+  //           startTime: startTime.toISOString(),
+  //           endTime: endTime.toISOString(),
+  //           guestName: values.guestName,
+  //         });
+  //         handleSuccess(true);
+  //         setTimeout(() => {
+  //           if (event.redirectUrl) {
+  //             window.location.href = event.redirectUrl;
+  //           } else {
+  //             window.location.href = "https://www.schedley.com";
+  //           }
+  //         }, 3000);
+  //       },
+  //       onError: (error: unknown) => {
+  //         console.error("Booking error:", error);
+  //         toast.error(error.message || "Failed to schedule event");
+  //       },
+  //     });
+  //   } catch (error) {
+  //     console.error("Error parsing datetime:", error);
+  //     toast.error("Invalid date or time selection. Please try again.");
+  //   }
+  // };
+import { parse, addMinutes } from "date-fns";
+
+const onSubmit = (values: FormData) => {
+  if (!event.id || !selectedSlot || !selectedDate) {
+    console.error("Missing required data:", { eventId: event.id, selectedSlot, selectedDate });
+    toast.error("Please select a date and time slot");
+    return;
+  }
+
+  // Double-check email domain blocking before submission
+  if (isEmailDomainBlocked(values.guestEmail)) {
+    const blockedDomainsArray = Array.isArray(event.blockedDomains)
+      ? event.blockedDomains
+      : event.blockedDomains
+        ? [event.blockedDomains]
+        : [];
+    const displayDomains = blockedDomainsArray.map(domain =>
+      domain.startsWith('@') ? domain.substring(1) : domain
+    );
+    toast.error(`Email domain is blocked. Domains ${displayDomains.join(", ")} are not allowed for this event.`);
+    return;
+  }
+
+  try {
+    console.log("this is just a test ", selectedSlot);
+
+    // Parse plain time string "1:30 pm" using date-fns parse
+    const startTime = parse(selectedSlot, "h:mm a", new Date());
+    if (isNaN(startTime.getTime())) {
+      throw new Error("Invalid start time format");
     }
 
-    // Double-check email domain blocking before submission
-    if (isEmailDomainBlocked(values.guestEmail)) {
-      const blockedDomainsArray = Array.isArray(event.blockedDomains) 
-        ? event.blockedDomains 
-        : event.blockedDomains 
-          ? [event.blockedDomains] 
-          : [];
-      const displayDomains = blockedDomainsArray.map(domain => 
-        domain.startsWith('@') ? domain.substring(1) : domain
-      );
-      toast.error(`Email domain is blocked. Domains ${displayDomains.join(", ")} are not allowed for this event.`);
-      return;
-    }
+    const endTime = addMinutes(startTime, event.duration);
 
-    try {
-      // selectedSlot now contains an ISO string, so parse it directly
-      console.log("this is just a test ",selectedSlot);
-      const startTime = parseISO(selectedSlot);
-      const endTime = addMinutes(startTime, event.duration);
+    console.log("Start time:", startTime);
+    console.log("End time:", endTime);
 
-      console.log("Start time:", startTime);
-      console.log("End time:", endTime);
+    // Extract question answers
+    const questionAnswers = event.questions?.map((question) => {
+      const fieldValue = values[`question_${question.id}`];
+      let answer = "";
 
-      // Extract question answers with proper formatting for different types
-      const questionAnswers = event.questions?.map((question) => {
-        const fieldValue = values[`question_${question.id}`];
-        let answer = "";
-        
-        if (question.type === "checkbox" && Array.isArray(fieldValue)) {
-          // For checkboxes, join selected options with commas
-          answer = fieldValue.join(", ");
-        } else {
-          // For other types, use the value as is
-          answer = (fieldValue as string) || "";
-        }
-        
-        return {
-          question: question.question,
-          answer,
-        };
-      }) || [];
+      if (question.type === "checkbox" && Array.isArray(fieldValue)) {
+        answer = fieldValue.join(", ");
+      } else {
+        answer = (fieldValue as string) || "";
+      }
 
-      const payload = {
-        guestName: values.guestName,
-        guestEmail: values.guestEmail,
-        additionalInfo: values.additionalInfo || "",
-        ...(event.allowGuests && values.guestEmails && { guestEmails: values.guestEmails }),
-        eventId: event.id,
-        startTime: startTime.toISOString(),
-        endTime: endTime.toISOString(),
-        questionAnswers,
+      return {
+        question: question.question,
+        answer,
       };
+    }) || [];
 
-      if (isPending) return;
-      console.log("start time in here ",startTime);
-      console.log("end time is",endTime);
-      console.log("payload sent is ", payload);
+    const payload = {
+      guestName: values.guestName,
+      guestEmail: values.guestEmail,
+      additionalInfo: values.additionalInfo || "",
+      ...(event.allowGuests && values.guestEmails && { guestEmails: values.guestEmails }),
+      eventId: event.id,
+      startTime: startTime.toISOString(),
+      endTime: endTime.toISOString(),
+      questionAnswers,
+    };
 
-      mutate(payload, {
-        onSuccess: (response: any) => {
-          setMeetLink(response.data.meetLink);
-          setBookingDetails({
-            startTime: startTime.toISOString(),
-            endTime: endTime.toISOString(),
-            guestName: values.guestName,
-          });
-          handleSuccess(true);
-          setTimeout(() => {
-            if (event.redirectUrl) {
-              window.location.href = event.redirectUrl;
-            } else {
-              window.location.href = "https://www.schedley.com";
-            }
-          }, 3000);
-        },
-        onError: (error: unknown) => {
-          console.error("Booking error:", error);
-          toast.error(error.message || "Failed to schedule event");
-        },
-      });
-    } catch (error) {
-      console.error("Error parsing datetime:", error);
-      toast.error("Invalid date or time selection. Please try again.");
-    }
-  };
+    if (isPending) return;
+
+    console.log("start time in here ", startTime);
+    console.log("end time is", endTime);
+    console.log("payload sent is ", payload);
+
+    mutate(payload, {
+      onSuccess: (response: any) => {
+        setMeetLink(response.data.meetLink);
+        setBookingDetails({
+          startTime: startTime.toISOString(),
+          endTime: endTime.toISOString(),
+          guestName: values.guestName,
+        });
+        handleSuccess(true);
+        setTimeout(() => {
+          if (event.redirectUrl) {
+            window.location.href = event.redirectUrl;
+          } else {
+            window.location.href = "https://www.schedley.com";
+          }
+        }, 3000);
+      },
+      onError: (error: unknown) => {
+        console.error("Booking error:", error);
+        toast.error(error.message || "Failed to schedule event");
+      },
+    });
+  } catch (error) {
+    console.error("Error parsing datetime:", error);
+    toast.error("Invalid date or time selection. Please try again.");
+  }
+};
+
+
+
+
+
+
 
   const handleOpenInvitation = () => {
     // This will open the default email client
