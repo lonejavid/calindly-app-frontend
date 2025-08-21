@@ -275,12 +275,14 @@ const BookingForm = (props: { event: Event }) => {
         additionalInfo: values.additionalInfo || "",
         ...(event.allowGuests && values.guestEmails && { guestEmails: values.guestEmails }),
         eventId: event.id,
-        startTime: startTime,
-        endTime: endTime,
+        startTime: startTime.toISOString(),
+        endTime: endTime.toISOString(),
         questionAnswers,
       };
 
       if (isPending) return;
+      console.log("start time in here ",startTime);
+      console.log("end time is",endTime);
       console.log("payload sent is ", payload);
 
       mutate(payload, {
