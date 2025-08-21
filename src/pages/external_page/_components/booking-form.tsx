@@ -317,7 +317,7 @@ const BookingForm = (props: { event: Event }) => {
 const onSubmit = (values: FormData) => {
   if (!event.id || !selectedSlot || !selectedDate) {
     console.error("Missing required data:", { eventId: event.id, selectedSlot, selectedDate });
-    toast.error("Please select a date and time slot");
+    toast.error("Please select a  date and time slot");
     return;
   }
 
