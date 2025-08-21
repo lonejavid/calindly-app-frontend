@@ -319,10 +319,15 @@ const BookingForm = (props: { event: Event }) => {
     queryFn: () => getPublicAvailabilityByEventIdQueryFn(event.id),
   });
 
-  console.log("please undersatn dthis is my time zone info",data[0].timezone);
 
-  const availability = data?.data || [];
-  console.log("Original availability from backend:", availability);
+// Extract availability array safely
+const availability = data?.data || [];
+
+if (availability.length > 0) {
+  console.log("Timezone:", availability[0].timezone);
+}
+
+console.log("Original availability from backend:", availability);
 
 const onSubmit = (values: FormData) => {
   if (!event.id || !selectedSlot || !selectedDate) {
