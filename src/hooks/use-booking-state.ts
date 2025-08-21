@@ -109,7 +109,7 @@ export const useBookingState = () => {
         if (parts.length !== 3) {
           return null;
         }
-          console.log("this is a simple test..........");
+         
         const year = parseInt(parts[0]);
         const month = parseInt(parts[1]);
         const day = parseInt(parts[2]);
@@ -118,11 +118,12 @@ export const useBookingState = () => {
         if (isNaN(year) || isNaN(month) || isNaN(day)) {
           return null;
         }
-        
+         console.log("this is a simple test..........");
         // Additional validation for reasonable date ranges
         if (year < 1900 || year > 3000 || month < 1 || month > 12 || day < 1 || day > 31) {
           return null;
         }
+        console.log("this is what i wanted to have ",new CalendarDate(year, month, day));
         
         return new CalendarDate(year, month, day);
       } catch (error) {
