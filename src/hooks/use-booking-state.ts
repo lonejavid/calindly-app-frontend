@@ -118,7 +118,7 @@ export const useBookingState = () => {
         if (isNaN(year) || isNaN(month) || isNaN(day)) {
           return null;
         }
-         console.log("this is a simple test..........");
+         console.log("this is a simple test..........",year,"month ",month,"day ",day);
         // Additional validation for reasonable date ranges
         if (year < 1900 || year > 3000 || month < 1 || month > 12 || day < 1 || day > 31) {
           return null;
