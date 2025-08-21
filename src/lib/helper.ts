@@ -210,6 +210,7 @@ export const formatSelectedSlot = (
   duration: number
 ) => {
   if (!slot) return null;
+  console.log("angggg voh");
 
   const decodedSlot = decodeURIComponent(slot);
   let startTime: Date;
