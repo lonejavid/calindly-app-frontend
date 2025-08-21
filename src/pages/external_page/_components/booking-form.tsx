@@ -1055,12 +1055,20 @@ const BookingForm = (props: { event: Event }) => {
       const eventTimezone = availability.length > 0 ? availability[0].timezone : "UTC";
       console.log("Event timezone:", eventTimezone);
 
+      // Ensure we have valid string values
+      if (!selectedDate || !selectedSlot) {
+        throw new Error("Missing date or time slot");
+      }
+
       // Parse the selected date (assumes selectedDate is in YYYY-MM-DD format)
-      const selectedDateObj = parseISO(selectedDate);
+      const selectedDateObj = parseISO(selectedDate.toString());
+      if (isNaN(selectedDateObj.getTime())) {
+        throw new Error("Invalid date format");
+      }
       console.log("Parsed selected date:", selectedDateObj);
 
-      // Parse the time slot (e.g., "1:30 pm") and combine with the selected date
-      const timeOnlyDate = parse(selectedSlot, "h:mm a", new Date());
+      // Parse the time slot (e.g., "2:30 pm") and combine with the selected date
+      const timeOnlyDate = parse(selectedSlot.toString(), "h:mm a", new Date());
       if (isNaN(timeOnlyDate.getTime())) {
         throw new Error("Invalid start time format");
       }
@@ -1078,34 +1086,30 @@ const BookingForm = (props: { event: Event }) => {
 
       console.log("Combined date time:", combinedDateTime);
 
-      // Helper function to convert timezone using Intl.DateTimeFormat
-      const convertToTimezone = (date: Date, timezone: string): Date => {
-        try {
-          // Get the timezone offset for the target timezone
-          const targetDate = new Date(date.toLocaleString("en-US", { timeZone: timezone }));
-          const localDate = new Date(date.toLocaleString("en-US"));
-          const diff = localDate.getTime() - targetDate.getTime();
-          
-          // Create a new date adjusted for the timezone difference
-          return new Date(date.getTime() + diff);
-        } catch (error) {
-          console.warn("Timezone conversion failed, using original date:", error);
-          return date;
-        }
-      };
-
-      // Convert the combined datetime to the event's timezone
-      // This assumes the selectedSlot time should be interpreted as being in the event's timezone
+      // Simple timezone conversion approach
       let startTimeUTC: Date;
       
       if (eventTimezone === "UTC") {
         startTimeUTC = combinedDateTime;
       } else {
-        // Create the datetime as if it's in the event's timezone, then convert to UTC
-        const tempDate = new Date(combinedDateTime.toLocaleString("en-US", { timeZone: eventTimezone }));
-        const localDate = new Date(combinedDateTime.toLocaleString("en-US"));
-        const timezoneOffset = tempDate.getTime() - localDate.getTime();
-        startTimeUTC = new Date(combinedDateTime.getTime() - timezoneOffset);
+        try {
+          // Create a date string in the format that can be parsed correctly
+          const dateString = `${selectedDate}T${timeOnlyDate.getHours().toString().padStart(2, '0')}:${timeOnlyDate.getMinutes().toString().padStart(2, '0')}:00`;
+          console.log("Date string:", dateString);
+          
+          // Parse as if it's in the event timezone
+          const tempDate = new Date(dateString);
+          
+          // Get timezone offset in minutes for the event timezone
+          const eventTzOffset = getTimezoneOffset(eventTimezone, tempDate);
+          const localTzOffset = tempDate.getTimezoneOffset();
+          
+          // Convert to UTC
+          startTimeUTC = new Date(tempDate.getTime() + (localTzOffset - eventTzOffset) * 60000);
+        } catch (tzError) {
+          console.warn("Timezone conversion failed, using combined datetime:", tzError);
+          startTimeUTC = combinedDateTime;
+        }
       }
       
       console.log("Start time UTC:", startTimeUTC);
@@ -1171,6 +1175,18 @@ const BookingForm = (props: { event: Event }) => {
     } catch (error) {
       console.error("Error processing datetime:", error);
       toast.error("Invalid date or time selection. Please try again.");
+    }
+  };
+
+  // Helper function to get timezone offset
+  const getTimezoneOffset = (timezone: string, date: Date): number => {
+    try {
+      const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }));
+      const tzDate = new Date(date.toLocaleString('en-US', { timeZone: timezone }));
+      return (utcDate.getTime() - tzDate.getTime()) / (1000 * 60);
+    } catch (error) {
+      console.warn('Failed to get timezone offset, using 0:', error);
+      return 0;
     }
   };
 
