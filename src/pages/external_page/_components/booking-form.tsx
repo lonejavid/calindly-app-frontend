@@ -83,7 +83,7 @@ const BookingForm = (props: { event: Event }) => {
   
   const { selectedDate, isSuccess, selectedSlot, handleSuccess } = useBookingState();
 
-  console.log("user has selected the slot please checknit ",selectedSlot);
+  console.log("user has selected the slot please checknit ",selectedSlot,"selected Datea is here ",selectedDate);
 
   const { mutate, isPending } = useMutation({
     mutationFn: scheduleMeetingMutationFn,
