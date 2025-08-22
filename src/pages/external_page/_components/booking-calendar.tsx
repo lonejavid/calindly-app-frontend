@@ -753,8 +753,8 @@ const getTimezoneOffsetUsingBrowser = (
     const toOffset = getTimezoneOffset(normalizedToTz, fromDateTime);
     
     // Calculate the difference
-    const offsetMinutes = toOffset - fromOffset;
-    
+    //const offsetMinutes = fromOffset - toOffset;
+    const offsetMinutes = -toOffset - (-fromOffset); 
     // Cache the result
     timezoneOffsetCache[cacheKey] = { offsetMinutes, cachedAt: now };
     
