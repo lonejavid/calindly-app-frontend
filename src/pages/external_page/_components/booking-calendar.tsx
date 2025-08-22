@@ -596,6 +596,7 @@
 
 
 
+
 import { format } from "date-fns";
 import { Calendar } from "@/components/calendar";
 import { CalendarDate, DateValue } from "@internationalized/date";
@@ -616,16 +617,6 @@ interface BookingCalendarProps {
   isDateUnavailable?: (date: DateValue) => boolean;
 }
 
-interface ConversionApiResponse {
-  status: string;
-  message: string;
-  fromZone: string;
-  toZone: string;
-  fromTimestamp: number;
-  toTimestamp: number;
-  offset: number;
-}
-
 interface ConvertedSlot {
   original: string;
   converted: string;
@@ -641,17 +632,20 @@ interface TimezoneCache {
   };
 }
 
-// Cache for timezone differences to avoid repeated API calls
+// Cache for timezone differences
 const timezoneOffsetCache: TimezoneCache = {};
-const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
 // Helper function to parse time slots in 12-hour or 24-hour format
 const parseTimeSlot = (timeSlot: string): { hours: number; minutes: number } | null => {
   try {
+    // Clean up the time slot string
+    const cleanTimeSlot = timeSlot.trim().toUpperCase();
+    
     // Check if it's 12-hour format (contains AM/PM)
-    if (timeSlot.includes('AM') || timeSlot.includes('PM')) {
-      const isAM = timeSlot.includes('AM');
-      const timePart = timeSlot.replace(/\s*(AM|PM)/i, '').trim();
+    if (cleanTimeSlot.includes('AM') || cleanTimeSlot.includes('PM')) {
+      const isAM = cleanTimeSlot.includes('AM');
+      const timePart = cleanTimeSlot.replace(/\s*(AM|PM)/i, '').trim();
       const [hoursStr, minutesStr] = timePart.split(':');
       
       let hours = parseInt(hoursStr, 10);
@@ -699,13 +693,13 @@ const applyTimeOffset = (timeSlot: string, offsetMinutes: number): string => {
   return `${displayHours}:${newMinutes.toString().padStart(2, '0')} ${period}`.toLowerCase();
 };
 
-// Get timezone offset using API (only for the first slot)
-const getTimezoneOffset = async (
+// Calculate timezone offset using browser APIs (no external API needed)
+const getTimezoneOffsetUsingBrowser = (
   sampleTimeSlot: string,
   date: Date,
   fromTimezone: string,
   toTimezone: string
-): Promise<number> => {
+): number => {
   const cacheKey = `${fromTimezone}-${toTimezone}`;
   const now = Date.now();
   
@@ -720,56 +714,76 @@ const getTimezoneOffset = async (
     const parsedTime = parseTimeSlot(sampleTimeSlot);
     if (!parsedTime) throw new Error('Could not parse sample time slot');
 
-    const { hours, minutes } = parsedTime;
+    // Normalize timezone names
+    const normalizedFromTz = fromTimezone === 'Asia/Calcutta' ? 'Asia/Kolkata' : fromTimezone;
+    const normalizedToTz = toTimezone === 'Asia/Calcutta' ? 'Asia/Kolkata' : toTimezone;
     
     // If same timezone, no conversion needed
-    if (fromTimezone === toTimezone) {
+    if (normalizedFromTz === normalizedToTz) {
       timezoneOffsetCache[cacheKey] = { offsetMinutes: 0, cachedAt: now };
       return 0;
     }
 
-    // Create datetime string for API
+    const { hours, minutes } = parsedTime;
+    
+    // Create date objects in both timezones for the same local time
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hour = String(hours).padStart(2, '0');
-    const minute = String(minutes).padStart(2, '0');
+    const month = date.getMonth();
+    const day = date.getDate();
     
-    const dateTimeString = `${year}-${month}-${day} ${hour}:${minute}:00`;
+    // Create a date with the parsed time in the 'from' timezone
+    const fromDateTime = new Date();
+    fromDateTime.setFullYear(year, month, day);
+    fromDateTime.setHours(hours, minutes, 0, 0);
     
-    // Make API call
-    const apiUrl = `https://api.timezonedb.com/v2.1/convert-time-zone?key=1Q8FTQ9WLZIV&format=json&from=${encodeURIComponent(fromTimezone)}&to=${encodeURIComponent(toTimezone)}&time=${encodeURIComponent(dateTimeString)}`;
+    // Get the timezone offset for both zones at this date
+    const getTimezoneOffset = (timezone: string, date: Date): number => {
+      try {
+        // Create a date formatter for the specific timezone
+        const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }));
+        const tzDate = new Date(date.toLocaleString('en-US', { timeZone: timezone }));
+        return (utcDate.getTime() - tzDate.getTime()) / (1000 * 60); // offset in minutes
+      } catch (error) {
+        console.error(`Error getting offset for ${timezone}:`, error);
+        return 0;
+      }
+    };
     
-    console.log(`🌍 Getting timezone offset for ${fromTimezone} -> ${toTimezone}`);
+    const fromOffset = getTimezoneOffset(normalizedFromTz, fromDateTime);
+    const toOffset = getTimezoneOffset(normalizedToTz, fromDateTime);
     
-    const response = await fetch(apiUrl);
-    if (!response.ok) {
-      throw new Error(`API request failed: ${response.status}`);
-    }
-    
-    const data: ConversionApiResponse = await response.json();
-    
-    if (data.status !== 'OK') {
-      throw new Error(data.message || 'API returned error status');
-    }
-
-    // Calculate offset in minutes
-    const originalDate = new Date(data.fromTimestamp * 1000);
-    const convertedDate = new Date(data.toTimestamp * 1000);
-    const offsetMinutes = (convertedDate.getTime() - originalDate.getTime()) / (1000 * 60);
+    // Calculate the difference
+    const offsetMinutes = toOffset - fromOffset;
     
     // Cache the result
     timezoneOffsetCache[cacheKey] = { offsetMinutes, cachedAt: now };
     
-    console.log(`✅ Calculated offset for ${cacheKey}: ${offsetMinutes} minutes`);
+    console.log(`✅ Calculated offset for ${normalizedFromTz} -> ${normalizedToTz}: ${offsetMinutes} minutes`);
+    console.log(`From offset: ${fromOffset}, To offset: ${toOffset}`);
     
     return offsetMinutes;
     
   } catch (error) {
-    console.error('Timezone offset calculation failed:', error);
-    // Cache zero offset to avoid repeated failures
-    timezoneOffsetCache[cacheKey] = { offsetMinutes: 0, cachedAt: now };
-    return 0;
+    console.error('Browser timezone offset calculation failed:', error);
+    
+    // Fallback: Use a simple calculation based on known offsets
+    const commonOffsets: { [key: string]: number } = {
+      'UTC': 0,
+      'Europe/London': 60, // UTC+1 (BST)
+      'Asia/Kolkata': 330, // UTC+5:30
+      'Asia/Calcutta': 330, // Same as Kolkata
+      'America/New_York': -240, // UTC-4 (EDT)
+      'America/Los_Angeles': -420, // UTC-7 (PDT)
+    };
+    
+    const fromOffsetFallback = commonOffsets[fromTimezone] || 0;
+    const toOffsetFallback = commonOffsets[toTimezone] || 0;
+    const fallbackOffset = toOffsetFallback - fromOffsetFallback;
+    
+    timezoneOffsetCache[cacheKey] = { offsetMinutes: fallbackOffset, cachedAt: now };
+    console.log(`🔄 Using fallback offset: ${fallbackOffset} minutes`);
+    
+    return fallbackOffset;
   }
 };
 
@@ -799,10 +813,16 @@ const BookingCalendar = ({
   const [convertedSlots, setConvertedSlots] = useState<{ [key: string]: ConvertedSlot[] }>({});
   const [isConverting, setIsConverting] = useState(false);
 
-  // Get user's browser timezone as fallback
+  // Get user's browser timezone as fallback with proper Asia/Kolkata handling
   const detectedTimezone = useMemo(() => {
     try {
-      return Intl.DateTimeFormat().resolvedOptions().timeZone;
+      let timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      // Handle Asia/Calcutta -> Asia/Kolkata mapping
+      if (timezone === 'Asia/Calcutta') {
+        timezone = 'Asia/Kolkata';
+      }
+      console.log('🌍 Detected user timezone:', timezone);
+      return timezone;
     } catch (error) {
       console.error('Error getting user timezone:', error);
       return 'UTC';
@@ -820,7 +840,7 @@ const BookingCalendar = ({
   const availability = data?.data || [];
   console.log("📅 Original availability from backend:", availability);
 
-  // Optimized function to convert all slots using offset calculation
+  // Optimized function to convert all slots using browser-based offset calculation
   const convertSlotsForDay = async (
     day: any,
     selectedDate: DateValue,
@@ -838,13 +858,14 @@ const BookingCalendar = ({
     }
 
     console.log(`🔄 Converting slots for ${day.day} from ${backendTimezone} to ${userTimezone}`);
+    console.log('📋 Original slots:', day.slots);
     
     setIsConverting(true);
     
     try {
-      // Step 1: Get timezone offset using the first slot
+      // Step 1: Get timezone offset using the first slot (browser-based)
       const sampleSlot = day.slots[0];
-      const offsetMinutes = await getTimezoneOffset(
+      const offsetMinutes = getTimezoneOffsetUsingBrowser(
         sampleSlot,
         dateToUse,
         backendTimezone,
@@ -857,6 +878,8 @@ const BookingCalendar = ({
       const results: ConvertedSlot[] = day.slots.map((slot: string) => {
         try {
           const convertedTime = applyTimeOffset(slot, offsetMinutes);
+          
+          console.log(`🔄 ${slot} -> ${convertedTime} (offset: ${offsetMinutes}min)`);
           
           return {
             original: slot,
@@ -882,6 +905,8 @@ const BookingCalendar = ({
       }));
       
       console.log(`✅ Converted ${results.length} slots in one operation`);
+      console.log('🎯 Final converted slots:', results);
+      
       return results;
       
     } catch (error) {
@@ -995,7 +1020,8 @@ const BookingCalendar = ({
         timeZone: finalUserTimezone
       }).split(' ').pop();
       
-      return `${finalUserTimezone.replace(/_/g, ' ')} (${timezoneName})`;
+      const displayName = finalUserTimezone.replace(/_/g, ' ').replace('Asia/Kolkata', 'Asia/Kolkata (India)');
+      return `${displayName} (${timezoneName})`;
     } catch {
       return finalUserTimezone;
     }
@@ -1069,7 +1095,7 @@ const BookingCalendar = ({
                     <div className="flex flex-col items-center gap-3">
                       <Loader size="md" />
                       <div>Converting timezone...</div>
-                      <div className="text-xs">Optimizing with single API call...</div>
+                      <div className="text-xs">Using browser-based conversion...</div>
                     </div>
                   </div>
                 ) : timeSlots.length > 0 ? (
@@ -1100,7 +1126,7 @@ const BookingCalendar = ({
                               disabled
                             >
                               {displayTime}
-                              {showConversionInfo && (
+                              {showConversionInfo && !hasError && (
                                 <div className="text-xs opacity-75">
                                   (from {slotData.original})
                                 </div>
@@ -1138,9 +1164,9 @@ const BookingCalendar = ({
                               {showConversionInfo && !hasError && slotData.original !== displayTime && (
                                 <div className="text-xs opacity-60">
                                   from {slotData.original}
-                                  {slotData.timeDifferenceMinutes && (
+                                  {slotData.timeDifferenceMinutes !== undefined && (
                                     <span className="ml-1 text-green-600">
-                                      ({slotData.timeDifferenceMinutes > 0 ? '+' : ''}{slotData.timeDifferenceMinutes}min)
+                                      ({slotData.timeDifferenceMinutes > 0 ? '+' : ''}{Math.round(slotData.timeDifferenceMinutes/60 * 10)/10}h)
                                     </span>
                                   )}
                                 </div>
