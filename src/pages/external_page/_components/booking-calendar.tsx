@@ -700,7 +700,7 @@ const getTimezoneOffsetUsingBrowser = (
   fromTimezone: string,
   toTimezone: string
 ): number => {
-  const cacheKey = `${fromTimezone}-${toTimezone}`;
+  const cacheKey = `${fromTimezone}+${toTimezone}`;
   const now = Date.now();
   
   // Check cache first
