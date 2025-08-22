@@ -694,96 +694,135 @@ const applyTimeOffset = (timeSlot: string, offsetMinutes: number): string => {
 };
 
 // Calculate timezone offset using browser APIs (no external API needed)
+// const getTimezoneOffsetUsingBrowser = (
+//   sampleTimeSlot: string,
+//   date: Date,
+//   fromTimezone: string,
+//   toTimezone: string
+// ): number => {
+//   const cacheKey = `${fromTimezone}-${toTimezone}`;
+//   const now = Date.now();
+  
+//   // Check cache first
+//   if (timezoneOffsetCache[cacheKey] && 
+//       (now - timezoneOffsetCache[cacheKey].cachedAt) < CACHE_DURATION) {
+//     console.log(`🚀 Using cached offset for ${cacheKey}:`, timezoneOffsetCache[cacheKey].offsetMinutes);
+//     return timezoneOffsetCache[cacheKey].offsetMinutes;
+//   }
+
+//   try {
+//     const parsedTime = parseTimeSlot(sampleTimeSlot);
+//     if (!parsedTime) throw new Error('Could not parse sample time slot');
+
+//     // Normalize timezone names
+//     const normalizedFromTz = fromTimezone === 'Asia/Calcutta' ? 'Asia/Kolkata' : fromTimezone;
+//     const normalizedToTz = toTimezone === 'Asia/Calcutta' ? 'Asia/Kolkata' : toTimezone;
+    
+//     // If same timezone, no conversion needed
+//     if (normalizedFromTz === normalizedToTz) {
+//       timezoneOffsetCache[cacheKey] = { offsetMinutes: 0, cachedAt: now };
+//       return 0;
+//     }
+
+//     const { hours, minutes } = parsedTime;
+    
+//     // Create date objects in both timezones for the same local time
+//     const year = date.getFullYear();
+//     const month = date.getMonth();
+//     const day = date.getDate();
+    
+//     // Create a date with the parsed time in the 'from' timezone
+//     const fromDateTime = new Date();
+//     fromDateTime.setFullYear(year, month, day);
+//     fromDateTime.setHours(hours, minutes, 0, 0);
+    
+//     // Get the timezone offset for both zones at this date
+//     const getTimezoneOffset = (timezone: string, date: Date): number => {
+//       try {
+//         // Create a date formatter for the specific timezone
+//         const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }));
+//         const tzDate = new Date(date.toLocaleString('en-US', { timeZone: timezone }));
+//         return (utcDate.getTime() - tzDate.getTime()) / (1000 * 60); // offset in minutes
+//       } catch (error) {
+//         console.error(`Error getting offset for ${timezone}:`, error);
+//         return 0;
+//       }
+//     };
+    
+//     const fromOffset = getTimezoneOffset(normalizedFromTz, fromDateTime);
+//     const toOffset = getTimezoneOffset(normalizedToTz, fromDateTime);
+    
+//     // Calculate the difference
+//     const offsetMinutes = toOffset - fromOffset;
+    
+//     // Cache the result
+//     timezoneOffsetCache[cacheKey] = { offsetMinutes, cachedAt: now };
+    
+//     console.log(`✅ Calculated offset for ${normalizedFromTz} -> ${normalizedToTz}: ${offsetMinutes} minutes`);
+//     console.log(`From offset: ${fromOffset}, To offset: ${toOffset}`);
+    
+//     return offsetMinutes;
+    
+//   } catch (error) {
+//     console.error('Browser timezone offset calculation failed:', error);
+    
+//     // Fallback: Use a simple calculation based on known offsets
+//     const commonOffsets: { [key: string]: number } = {
+//       'UTC': 0,
+//       'Europe/London': 60, // UTC+1 (BST)
+//       'Asia/Kolkata': 330, // UTC+5:30
+//       'Asia/Calcutta': 330, // Same as Kolkata
+//       'America/New_York': -240, // UTC-4 (EDT)
+//       'America/Los_Angeles': -420, // UTC-7 (PDT)
+//     };
+    
+//     const fromOffsetFallback = commonOffsets[fromTimezone] || 0;
+//     const toOffsetFallback = commonOffsets[toTimezone] || 0;
+//     const fallbackOffset = toOffsetFallback - fromOffsetFallback;
+    
+//     timezoneOffsetCache[cacheKey] = { offsetMinutes: fallbackOffset, cachedAt: now };
+//     console.log(`🔄 Using fallback offset: ${fallbackOffset} minutes`);
+    
+//     return fallbackOffset;
+//   }
+// };
 const getTimezoneOffsetUsingBrowser = (
-  sampleTimeSlot: string,
   date: Date,
   fromTimezone: string,
   toTimezone: string
 ): number => {
-  const cacheKey = `${fromTimezone}+${toTimezone}`;
+  const cacheKey = `${fromTimezone}-${toTimezone}`;
   const now = Date.now();
   
   // Check cache first
   if (timezoneOffsetCache[cacheKey] && 
-      (now + timezoneOffsetCache[cacheKey].cachedAt) < CACHE_DURATION) {
-    console.log(`🚀 Using cached offset for ${cacheKey}:`, timezoneOffsetCache[cacheKey].offsetMinutes);
+      (now - timezoneOffsetCache[cacheKey].cachedAt) < CACHE_DURATION) {
     return timezoneOffsetCache[cacheKey].offsetMinutes;
   }
-
+  
   try {
-    const parsedTime = parseTimeSlot(sampleTimeSlot);
-    if (!parsedTime) throw new Error('Could not parse sample time slot');
-
-    // Normalize timezone names
     const normalizedFromTz = fromTimezone === 'Asia/Calcutta' ? 'Asia/Kolkata' : fromTimezone;
     const normalizedToTz = toTimezone === 'Asia/Calcutta' ? 'Asia/Kolkata' : toTimezone;
     
-    // If same timezone, no conversion needed
-    if (normalizedFromTz === normalizedToTz) {
-      timezoneOffsetCache[cacheKey] = { offsetMinutes: 0, cachedAt: now };
-      return 0;
-    }
-
-    const { hours, minutes } = parsedTime;
+    // Create a date object in the 'from' timezone
+    const fromTimezoneDate = new Date(date.toLocaleString('en-US', { timeZone: normalizedFromTz }));
     
-    // Create date objects in both timezones for the same local time
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const day = date.getDate();
+    // Create a date object in the 'to' timezone
+    const toTimezoneDate = new Date(date.toLocaleString('en-US', { timeZone: normalizedToTz }));
     
-    // Create a date with the parsed time in the 'from' timezone
-    const fromDateTime = new Date();
-    fromDateTime.setFullYear(year, month, day);
-    fromDateTime.setHours(hours, minutes, 0, 0);
+    // Calculate the difference in milliseconds
+    const offsetMillis = fromTimezoneDate.getTime() - toTimezoneDate.getTime();
     
-    // Get the timezone offset for both zones at this date
-    const getTimezoneOffset = (timezone: string, date: Date): number => {
-      try {
-        // Create a date formatter for the specific timezone
-        const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }));
-        const tzDate = new Date(date.toLocaleString('en-US', { timeZone: timezone }));
-        return (utcDate.getTime() - tzDate.getTime()) / (1000 * 60); // offset in minutes
-      } catch (error) {
-        console.error(`Error getting offset for ${timezone}:`, error);
-        return 0;
-      }
-    };
-    
-    const fromOffset = getTimezoneOffset(normalizedFromTz, fromDateTime);
-    const toOffset = getTimezoneOffset(normalizedToTz, fromDateTime);
-    
-    // Calculate the difference
-    const offsetMinutes = toOffset - fromOffset;
+    // Convert to minutes
+    const offsetMinutes = offsetMillis / (1000 * 60);
     
     // Cache the result
     timezoneOffsetCache[cacheKey] = { offsetMinutes, cachedAt: now };
     
-    console.log(`✅ Calculated offset for ${normalizedFromTz} -> ${normalizedToTz}: ${offsetMinutes} minutes`);
-    console.log(`From offset: ${fromOffset}, To offset: ${toOffset}`);
-    
     return offsetMinutes;
-    
   } catch (error) {
     console.error('Browser timezone offset calculation failed:', error);
-    
-    // Fallback: Use a simple calculation based on known offsets
-    const commonOffsets: { [key: string]: number } = {
-      'UTC': 0,
-      'Europe/London': 60, // UTC+1 (BST)
-      'Asia/Kolkata': 330, // UTC+5:30
-      'Asia/Calcutta': 330, // Same as Kolkata
-      'America/New_York': -240, // UTC-4 (EDT)
-      'America/Los_Angeles': -420, // UTC-7 (PDT)
-    };
-    
-    const fromOffsetFallback = commonOffsets[fromTimezone] || 0;
-    const toOffsetFallback = commonOffsets[toTimezone] || 0;
-    const fallbackOffset = toOffsetFallback - fromOffsetFallback;
-    
-    timezoneOffsetCache[cacheKey] = { offsetMinutes: fallbackOffset, cachedAt: now };
-    console.log(`🔄 Using fallback offset: ${fallbackOffset} minutes`);
-    
-    return fallbackOffset;
+    return 0; // Fallback
   }
 };
 
