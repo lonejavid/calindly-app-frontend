@@ -705,7 +705,7 @@ const getTimezoneOffsetUsingBrowser = (
   
   // Check cache first
   if (timezoneOffsetCache[cacheKey] && 
-      (now - timezoneOffsetCache[cacheKey].cachedAt) < CACHE_DURATION) {
+      (now + timezoneOffsetCache[cacheKey].cachedAt) < CACHE_DURATION) {
     console.log(`🚀 Using cached offset for ${cacheKey}:`, timezoneOffsetCache[cacheKey].offsetMinutes);
     return timezoneOffsetCache[cacheKey].offsetMinutes;
   }
