@@ -786,44 +786,34 @@ const applyTimeOffset = (timeSlot: string, offsetMinutes: number): string => {
 //     return fallbackOffset;
 //   }
 // };
-const getTimezoneOffsetUsingBrowser = (
-  date: Date,
-  fromTimezone: string,
-  toTimezone: string
-): number => {
-  const cacheKey = `${fromTimezone}-${toTimezone}`;
-  const now = Date.now();
-  
-  // Check cache first
-  if (timezoneOffsetCache[cacheKey] && 
-      (now - timezoneOffsetCache[cacheKey].cachedAt) < CACHE_DURATION) {
-    return timezoneOffsetCache[cacheKey].offsetMinutes;
+// Helper function to parse time slots using a more reliable regex
+const parseTimeSlot = (timeSlot: string): { hours: number; minutes: number } | null => {
+  const match = timeSlot.trim().toUpperCase().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/);
+
+  if (!match) {
+    console.error('Error parsing time slot:', timeSlot);
+    return null;
   }
+
+  const [, hoursStr, minutesStr, period] = match;
+  let hours = parseInt(hoursStr, 10);
+  const minutes = parseInt(minutesStr, 10);
   
-  try {
-    const normalizedFromTz = fromTimezone === 'Asia/Calcutta' ? 'Asia/Kolkata' : fromTimezone;
-    const normalizedToTz = toTimezone === 'Asia/Calcutta' ? 'Asia/Kolkata' : toTimezone;
-    
-    // Create a date object in the 'from' timezone
-    const fromTimezoneDate = new Date(date.toLocaleString('en-US', { timeZone: normalizedFromTz }));
-    
-    // Create a date object in the 'to' timezone
-    const toTimezoneDate = new Date(date.toLocaleString('en-US', { timeZone: normalizedToTz }));
-    
-    // Calculate the difference in milliseconds
-    const offsetMillis = fromTimezoneDate.getTime() - toTimezoneDate.getTime();
-    
-    // Convert to minutes
-    const offsetMinutes = offsetMillis / (1000 * 60);
-    
-    // Cache the result
-    timezoneOffsetCache[cacheKey] = { offsetMinutes, cachedAt: now };
-    
-    return offsetMinutes;
-  } catch (error) {
-    console.error('Browser timezone offset calculation failed:', error);
-    return 0; // Fallback
+  if (isNaN(hours) || isNaN(minutes)) {
+    console.error('Parsed hours or minutes are not a number:', hoursStr, minutesStr);
+    return null;
   }
+
+  // Handle 12-hour format
+  if (period) {
+    if (period === 'PM' && hours !== 12) {
+      hours += 12;
+    } else if (period === 'AM' && hours === 12) {
+      hours = 0;
+    }
+  }
+
+  return { hours, minutes };
 };
 
 // Helper function to get day of week considering timezone
