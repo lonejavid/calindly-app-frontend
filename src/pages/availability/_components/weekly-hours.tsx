@@ -841,48 +841,93 @@ const formatTimezoneLabel = (zone: TimezoneZone): string => {
   return `${city} (${offsetString})`;
 };
 
-// API function to fetch timezones
+// Fallback timezone options for when API fails or is not available
+const FALLBACK_TIMEZONE_OPTIONS: TimezoneOption[] = [
+  // Popular North America
+  { value: 'America/New_York', label: 'New York (UTC-5/-4)', group: 'NORTH_AMERICA', country: '🇺🇸', countryCode: 'US', gmtOffset: -18000 },
+  { value: 'America/Chicago', label: 'Chicago (UTC-6/-5)', group: 'NORTH_AMERICA', country: '🇺🇸', countryCode: 'US', gmtOffset: -21600 },
+  { value: 'America/Denver', label: 'Denver (UTC-7/-6)', group: 'NORTH_AMERICA', country: '🇺🇸', countryCode: 'US', gmtOffset: -25200 },
+  { value: 'America/Los_Angeles', label: 'Los Angeles (UTC-8/-7)', group: 'NORTH_AMERICA', country: '🇺🇸', countryCode: 'US', gmtOffset: -28800 },
+  { value: 'America/Toronto', label: 'Toronto (UTC-5/-4)', group: 'NORTH_AMERICA', country: '🇨🇦', countryCode: 'CA', gmtOffset: -18000 },
+  { value: 'America/Vancouver', label: 'Vancouver (UTC-8/-7)', group: 'NORTH_AMERICA', country: '🇨🇦', countryCode: 'CA', gmtOffset: -28800 },
+
+  // Popular Europe
+  { value: 'Europe/London', label: 'London (UTC+0/+1)', group: 'EUROPE', country: '🇬🇧', countryCode: 'GB', gmtOffset: 0 },
+  { value: 'Europe/Paris', label: 'Paris (UTC+1/+2)', group: 'EUROPE', country: '🇫🇷', countryCode: 'FR', gmtOffset: 3600 },
+  { value: 'Europe/Berlin', label: 'Berlin (UTC+1/+2)', group: 'EUROPE', country: '🇩🇪', countryCode: 'DE', gmtOffset: 3600 },
+  { value: 'Europe/Rome', label: 'Rome (UTC+1/+2)', group: 'EUROPE', country: '🇮🇹', countryCode: 'IT', gmtOffset: 3600 },
+  { value: 'Europe/Madrid', label: 'Madrid (UTC+1/+2)', group: 'EUROPE', country: '🇪🇸', countryCode: 'ES', gmtOffset: 3600 },
+  { value: 'Europe/Amsterdam', label: 'Amsterdam (UTC+1/+2)', group: 'EUROPE', country: '🇳🇱', countryCode: 'NL', gmtOffset: 3600 },
+  { value: 'Europe/Zurich', label: 'Zurich (UTC+1/+2)', group: 'EUROPE', country: '🇨🇭', countryCode: 'CH', gmtOffset: 3600 },
+  { value: 'Europe/Stockholm', label: 'Stockholm (UTC+1/+2)', group: 'EUROPE', country: '🇸🇪', countryCode: 'SE', gmtOffset: 3600 },
+
+  // Popular Asia
+  { value: 'Asia/Tokyo', label: 'Tokyo (UTC+9)', group: 'ASIA', country: '🇯🇵', countryCode: 'JP', gmtOffset: 32400 },
+  { value: 'Asia/Seoul', label: 'Seoul (UTC+9)', group: 'ASIA', country: '🇰🇷', countryCode: 'KR', gmtOffset: 32400 },
+  { value: 'Asia/Shanghai', label: 'Shanghai (UTC+8)', group: 'ASIA', country: '🇨🇳', countryCode: 'CN', gmtOffset: 28800 },
+  { value: 'Asia/Singapore', label: 'Singapore (UTC+8)', group: 'ASIA', country: '🇸🇬', countryCode: 'SG', gmtOffset: 28800 },
+  { value: 'Asia/Hong_Kong', label: 'Hong Kong (UTC+8)', group: 'ASIA', country: '🇭🇰', countryCode: 'HK', gmtOffset: 28800 },
+  { value: 'Asia/Kolkata', label: 'Mumbai/Kolkata (UTC+5:30)', group: 'ASIA', country: '🇮🇳', countryCode: 'IN', gmtOffset: 19800 },
+  { value: 'Asia/Dubai', label: 'Dubai (UTC+4)', group: 'ASIA', country: '🇦🇪', countryCode: 'AE', gmtOffset: 14400 },
+
+  // Popular Australia/Pacific
+  { value: 'Australia/Sydney', label: 'Sydney (UTC+10/+11)', group: 'AUSTRALIA_PACIFIC', country: '🇦🇺', countryCode: 'AU', gmtOffset: 36000 },
+  { value: 'Australia/Melbourne', label: 'Melbourne (UTC+10/+11)', group: 'AUSTRALIA_PACIFIC', country: '🇦🇺', countryCode: 'AU', gmtOffset: 36000 },
+  { value: 'Pacific/Auckland', label: 'Auckland (UTC+12/+13)', group: 'AUSTRALIA_PACIFIC', country: '🇳🇿', countryCode: 'NZ', gmtOffset: 43200 },
+
+  // UTC
+  { value: 'UTC', label: 'Coordinated Universal Time (UTC+0)', group: 'UTC', country: '🌍', countryCode: 'UTC', gmtOffset: 0 },
+];
+
+// API function to fetch timezones with fallback
 const fetchTimezones = async (): Promise<TimezoneOption[]> => {
-  const response = await fetch('http://api.timezonedb.com/v2.1/list-time-zone?key=1Q8FTQ9WLZIV&format=json');
-  if (!response.ok) {
-    throw new Error('Failed to fetch timezones');
-  }
-  
-  const data: TimezoneApiResponse = await response.json();
-  
-  if (data.status !== 'OK') {
-    throw new Error(data.message || 'API returned error status');
-  }
+  try {
+    // Use HTTPS instead of HTTP
+    const response = await fetch('https://api.timezonedb.com/v2.1/list-time-zone?key=1Q8FTQ9WLZIV&format=json');
+    if (!response.ok) {
+      throw new Error('Failed to fetch timezones');
+    }
+    
+    const data: TimezoneApiResponse = await response.json();
+    
+    if (data.status !== 'OK') {
+      throw new Error(data.message || 'API returned error status');
+    }
 
-  // Convert API zones to our format and sort by popular zones first
-  const popularZones = [
-    'America/New_York', 'America/Los_Angeles', 'America/Chicago', 'America/Denver',
-    'Europe/London', 'Europe/Paris', 'Europe/Berlin', 'Asia/Tokyo', 'Asia/Shanghai',
-    'Asia/Kolkata', 'Australia/Sydney', 'UTC'
-  ];
+    // Convert API zones to our format and sort by popular zones first
+    const popularZones = [
+      'America/New_York', 'America/Los_Angeles', 'America/Chicago', 'America/Denver',
+      'Europe/London', 'Europe/Paris', 'Europe/Berlin', 'Asia/Tokyo', 'Asia/Shanghai',
+      'Asia/Kolkata', 'Australia/Sydney', 'UTC'
+    ];
 
-  return data.zones
-    .map((zone): TimezoneOption => ({
-      value: zone.zoneName,
-      label: formatTimezoneLabel(zone),
-      group: getTimezoneGroup(zone.zoneName),
-      country: getCountryFlag(zone.countryCode),
-      countryCode: zone.countryCode,
-      gmtOffset: zone.gmtOffset
-    }))
-    .sort((a, b) => {
-      // Prioritize popular zones
-      const aPopular = popularZones.indexOf(a.value);
-      const bPopular = popularZones.indexOf(b.value);
-      
-      if (aPopular !== -1 && bPopular !== -1) return aPopular - bPopular;
-      if (aPopular !== -1) return -1;
-      if (bPopular !== -1) return 1;
-      
-      // Then sort by group and label
-      if (a.group !== b.group) return a.group.localeCompare(b.group);
-      return a.label.localeCompare(b.label);
-    });
+    return data.zones
+      .map((zone): TimezoneOption => ({
+        value: zone.zoneName,
+        label: formatTimezoneLabel(zone),
+        group: getTimezoneGroup(zone.zoneName),
+        country: getCountryFlag(zone.countryCode),
+        countryCode: zone.countryCode,
+        gmtOffset: zone.gmtOffset
+      }))
+      .sort((a, b) => {
+        // Prioritize popular zones
+        const aPopular = popularZones.indexOf(a.value);
+        const bPopular = popularZones.indexOf(b.value);
+        
+        if (aPopular !== -1 && bPopular !== -1) return aPopular - bPopular;
+        if (aPopular !== -1) return -1;
+        if (bPopular !== -1) return 1;
+        
+        // Then sort by group and label
+        if (a.group !== b.group) return a.group.localeCompare(b.group);
+        return a.label.localeCompare(b.label);
+      });
+  } catch (error) {
+    console.warn('Failed to fetch timezones from API, using fallback:', error);
+    // Return fallback timezones if API fails
+    return FALLBACK_TIMEZONE_OPTIONS;
+  }
 };
 
 // Helper function to get current time in a timezone
@@ -1032,16 +1077,17 @@ const WeeklyHoursRow = ({
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   
-  // Fetch timezones from API
+  // Fetch timezones from API with fallback to popular timezones
   const { 
-    data: timezoneOptions = [], 
+    data: timezoneOptions = FALLBACK_TIMEZONE_OPTIONS, 
     isLoading: isLoadingTimezones, 
     error: timezoneError 
   } = useQuery({
     queryKey: ['timezones'],
     queryFn: fetchTimezones,
     staleTime: 1000 * 60 * 60 * 24, // Cache for 24 hours
-    retry: 3,
+    retry: 1, // Only retry once to avoid long delays
+    refetchOnWindowFocus: false, // Don't refetch on window focus
   });
   
   const { mutate, isPending } = useMutation({
@@ -1206,7 +1252,7 @@ const WeeklyHoursRow = ({
 
   const selectedTimezoneInfo = timezoneOptions.find(tz => tz.value === form.watch("timezone"));
 
-  // Handle timezone loading and error states
+  // Handle timezone loading state - don't show error for fallback
   if (isLoadingTimezones) {
     return (
       <div className="bg-gradient-to-br from-white via-gray-50/50 to-white dark:from-gray-900 dark:via-gray-800/30 dark:to-gray-900 rounded-2xl border border-gray-200/60 dark:border-gray-700/60 shadow-xl backdrop-blur-sm overflow-hidden p-8">
@@ -1215,25 +1261,6 @@ const WeeklyHoursRow = ({
             <Loader />
             <span className="text-gray-600 dark:text-gray-400">Loading timezones...</span>
           </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (timezoneError) {
-    return (
-      <div className="bg-gradient-to-br from-white via-gray-50/50 to-white dark:from-gray-900 dark:via-gray-800/30 dark:to-gray-900 rounded-2xl border border-gray-200/60 dark:border-gray-700/60 shadow-xl backdrop-blur-sm overflow-hidden p-8">
-        <div className="text-center space-y-4">
-          <div className="text-red-600 dark:text-red-400">
-            Failed to load timezones. Please check your internet connection.
-          </div>
-          <Button 
-            onClick={() => window.location.reload()} 
-            variant="outline"
-            className="mx-auto"
-          >
-            Retry
-          </Button>
         </div>
       </div>
     );
