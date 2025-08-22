@@ -71,7 +71,7 @@ type FormData = {
 
 const BookingForm = (props: { event: Event }) => {
   const { event } = props;
-  console.log("my event details received are", event);
+ 
   const [meetLink, setMeetLink] = useState("");
   const [bookingDetails, setBookingDetails] = useState<{
     startTime: string;
@@ -82,6 +82,8 @@ const BookingForm = (props: { event: Event }) => {
   console.log(meetLink);
   
   const { selectedDate, isSuccess, selectedSlot, handleSuccess } = useBookingState();
+
+  console.log("user has selected the slot please checknit ",selectedSlot);
 
   const { mutate, isPending } = useMutation({
     mutationFn: scheduleMeetingMutationFn,
@@ -344,6 +346,8 @@ const BookingForm = (props: { event: Event }) => {
           answer,
         };
       }) || [];
+
+      console.log("before sendig to the backedn i tested the time info",startTimeUTC);
 
       const payload = {
         guestName: values.guestName,
