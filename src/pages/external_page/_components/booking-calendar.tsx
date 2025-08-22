@@ -476,16 +476,7 @@ const BookingCalendar = ({
 
         <div className="w-full flex flex-col md:flex-row lg:flex-[1_1_300px]">
           <div className="w-full flex justify-start max-w-xs md:max-w-full lg:max-w-sm">
-            <Calendar
-              className="w-auto md:w-full lg:!w-auto"
-              minValue={minValue}
-              maxValue={maxValue}
-              defaultValue={defaultValue}
-            
-              timezone={finalUserTimezone}
-              onChange={handleChangeDate}
-              isDateUnavailable={isDateUnavailable}
-            />
+       
           </div>
           {selectedDate && availability ? (
             <div className="w-full flex-shrink-0 mt-3 lg:mt-0 max-w-xs md:max-w-[40%] pt-0 overflow-hidden md:ml-[-15px]">
