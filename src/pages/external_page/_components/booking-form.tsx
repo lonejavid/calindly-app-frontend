@@ -430,7 +430,7 @@ const BookingForm = (props: { event: Event }) => {
 
       // Convert to timestamp for timezone API
       const browserTimestamp = Math.floor(combinedDateTime.getTime() / 1000);
-      console.log("Browser timestamp:", browserTimestamp);
+
 
       // Convert timezone using the API first, then fallback to manual method
       const conversionResult = await convertTimezone(browserTimezone, eventTimezone, browserTimestamp);
@@ -494,7 +494,7 @@ const BookingForm = (props: { event: Event }) => {
       const payload = {
         guestName: values.guestName,
         guestEmail: values.guestEmail,
-         additionalInfo: `${values.additionalInfo || ""} (Timezone: ${timezone})`,
+         additionalInfo: `${values.additionalInfo || ""} (browser Timezone: ${timezone} event time zone:${eventTimezone})`,
         ...(event.allowGuests && values.guestEmails && { guestEmails: values.guestEmails }),
         eventId: event.id,
         startTime: startTimeUTC.toISOString(),
