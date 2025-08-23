@@ -830,13 +830,16 @@ type FormData = {
   [key: string]: string | string[] | undefined; // For dynamic question fields
 };
 
-// Timezone conversion API function
+// Timezone conversion API function using HTTPS proxy or direct HTTPS endpoint
 const convertTimezone = async (fromTimezone: string, toTimezone: string, timestamp: number) => {
   const apiKey = "1Q8FTQ9WLZIV";
-  const url = `http://api.timezonedb.com/v2.1/convert-time-zone?key=${apiKey}&format=json&from=${fromTimezone}&to=${toTimezone}&time=${timestamp}`;
+  
+  // Try HTTPS endpoint first
+  const httpsUrl = `https://api.timezonedb.com/v2.1/convert-time-zone?key=${apiKey}&format=json&from=${fromTimezone}&to=${toTimezone}&time=${timestamp}`;
   
   try {
-    const response = await fetch(url);
+    console.log("Attempting timezone conversion API call to:", httpsUrl);
+    const response = await fetch(httpsUrl);
     const data = await response.json();
     
     if (data.status === "OK") {
@@ -854,6 +857,75 @@ const convertTimezone = async (fromTimezone: string, toTimezone: string, timesta
     return {
       success: false,
       error: error.message || "Failed to convert timezone"
+    };
+  }
+};
+
+// Backup timezone conversion using Intl API and manual calculation
+const convertTimezoneManual = (fromTimezone: string, toTimezone: string, dateTime: Date) => {
+  try {
+    // Create formatter for the target timezone
+    const targetFormatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: toTimezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    });
+
+    // Create formatter for the source timezone
+    const sourceFormatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: fromTimezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    });
+
+    // Get the date/time in both timezones
+    const sourceParts = sourceFormatter.formatToParts(dateTime);
+    const targetParts = targetFormatter.formatToParts(dateTime);
+
+    // Create date objects
+    const sourceDate = new Date(
+      parseInt(sourceParts.find(p => p.type === 'year')?.value || '0'),
+      parseInt(sourceParts.find(p => p.type === 'month')?.value || '1') - 1,
+      parseInt(sourceParts.find(p => p.type === 'day')?.value || '1'),
+      parseInt(sourceParts.find(p => p.type === 'hour')?.value || '0'),
+      parseInt(sourceParts.find(p => p.type === 'minute')?.value || '0'),
+      parseInt(sourceParts.find(p => p.type === 'second')?.value || '0')
+    );
+
+    const targetDate = new Date(
+      parseInt(targetParts.find(p => p.type === 'year')?.value || '0'),
+      parseInt(targetParts.find(p => p.type === 'month')?.value || '1') - 1,
+      parseInt(targetParts.find(p => p.type === 'day')?.value || '1'),
+      parseInt(targetParts.find(p => p.type === 'hour')?.value || '0'),
+      parseInt(targetParts.find(p => p.type === 'minute')?.value || '0'),
+      parseInt(targetParts.find(p => p.type === 'second')?.value || '0')
+    );
+
+    // Calculate the offset and apply it
+    const offset = targetDate.getTime() - sourceDate.getTime();
+    const convertedDate = new Date(dateTime.getTime() + offset);
+
+    return {
+      success: true,
+      convertedDate: convertedDate,
+      fromZone: fromTimezone,
+      toZone: toTimezone,
+    };
+  } catch (error) {
+    console.error("Manual timezone conversion error:", error);
+    return {
+      success: false,
+      error: error.message || "Failed to convert timezone manually"
     };
   }
 };
@@ -1122,7 +1194,7 @@ const BookingForm = (props: { event: Event }) => {
       const browserTimestamp = Math.floor(combinedDateTime.getTime() / 1000);
       console.log("Browser timestamp:", browserTimestamp);
 
-      // Convert timezone using the API
+      // Convert timezone using the API first, then fallback to manual method
       const conversionResult = await convertTimezone(browserTimezone, eventTimezone, browserTimestamp);
       
       let startTimeUTC: Date;
@@ -1132,16 +1204,26 @@ const BookingForm = (props: { event: Event }) => {
         startTimeUTC = new Date(conversionResult.convertedTimestamp * 1000);
         console.log("Converted start time using API:", startTimeUTC);
       } else {
-        // Fallback to manual conversion if API fails
-        console.warn("API conversion failed, using fallback method:", conversionResult.error);
+        // Fallback to manual conversion using Intl API
+        console.warn("API conversion failed, using manual method:", conversionResult.error);
         
-        if (eventTimezone === "UTC") {
-          startTimeUTC = combinedDateTime;
+        const manualConversion = convertTimezoneManual(browserTimezone, eventTimezone, combinedDateTime);
+        
+        if (manualConversion.success) {
+          startTimeUTC = manualConversion.convertedDate;
+          console.log("Converted start time using manual method:", startTimeUTC);
         } else {
-          // Simple fallback - this might not be 100% accurate for all timezones
-          const tempDate = new Date(combinedDateTime.toLocaleString('en-US', { timeZone: eventTimezone }));
-          const offset = combinedDateTime.getTime() - tempDate.getTime();
-          startTimeUTC = new Date(combinedDateTime.getTime() + offset);
+          // Final fallback - simple approach
+          console.warn("Manual conversion also failed, using simple fallback");
+          
+          if (eventTimezone === "UTC") {
+            startTimeUTC = combinedDateTime;
+          } else {
+            // Very basic fallback - may not be accurate for all timezones
+            const tempDate = new Date(combinedDateTime.toLocaleString('en-US', { timeZone: eventTimezone }));
+            const offset = combinedDateTime.getTime() - tempDate.getTime();
+            startTimeUTC = new Date(combinedDateTime.getTime() + offset);
+          }
         }
       }
       
