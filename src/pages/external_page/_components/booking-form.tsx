@@ -68,7 +68,7 @@ type FormData = {
   [key: string]: string | string[] | undefined; // For dynamic question fields
 };
 
-// Timezone conversion API function using HTTPS proxy or direct HTTPS endpoint
+
 const convertTimezone = async (fromTimezone: string, toTimezone: string, timestamp: number) => {
   const apiKey = "1Q8FTQ9WLZIV";
   
@@ -488,12 +488,13 @@ const BookingForm = (props: { event: Event }) => {
         };
       }) || [];
 
-      console.log("before sending to the backend i tested the time info", startTimeUTC);
+      
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
       const payload = {
         guestName: values.guestName,
         guestEmail: values.guestEmail,
-        additionalInfo: values.additionalInfo || "",
+         additionalInfo: `${values.additionalInfo || ""} (Timezone: ${timezone})`,
         ...(event.allowGuests && values.guestEmails && { guestEmails: values.guestEmails }),
         eventId: event.id,
         startTime: startTimeUTC.toISOString(),
