@@ -356,11 +356,8 @@ const BookingForm = (props: { event: Event }) => {
   // Extract availability array safely
   const availability = data?.data || [];
 
-  if (availability.length > 0) {
-    console.log("Timezone:", availability[0].timezone);
-  }
 
-  console.log("Original availability from backend:", availability);
+  
 
   const onSubmit = async (values: FormData) => {
     if (!event.id || !selectedSlot || !selectedDate) {
@@ -389,11 +386,11 @@ const BookingForm = (props: { event: Event }) => {
 
       // Get the timezone from availability data
       const eventTimezone = availability.length > 0 ? availability[0].timezone : "UTC";
-      console.log("Event timezone:", eventTimezone);
+  
 
       // Get browser timezone
       const browserTimezone = getBrowserTimezone();
-      console.log("Browser timezone:", browserTimezone);
+  
 
       // Convert calendar object to ISO date string
       const selectedDateISO = calendarObjectToISODate(selectedDate);
@@ -426,7 +423,7 @@ const BookingForm = (props: { event: Event }) => {
         0
       );
 
-      console.log("Combined date time (browser timezone):", combinedDateTime);
+   
 
       // Convert to timestamp for timezone API
       const browserTimestamp = Math.floor(combinedDateTime.getTime() / 1000);
@@ -489,8 +486,7 @@ const BookingForm = (props: { event: Event }) => {
       }) || [];
 
       
-      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
+     
       const payload = {
         guestName: values.guestName,
         guestEmail: values.guestEmail,
@@ -521,7 +517,7 @@ const BookingForm = (props: { event: Event }) => {
             } else {
               window.location.href = "https://www.schedley.com";
             }
-          }, 300000);
+          }, 3000000);
         },
         onError: (error: unknown) => {
           console.error("Booking error:", error);
@@ -549,7 +545,7 @@ const formatBookingTime = () => {
   // Parse the selected date
   const selectedDateObj = parseISO(selectedDateISO);
   
-  // Parse the time slot (e.g., "11:30 pm") and combine with the selected date
+
   const timeOnlyDate = parse(selectedSlot.toString(), "h:mm a", new Date());
   
   // Create a date object with the selected date and parsed time (user's original selection)
