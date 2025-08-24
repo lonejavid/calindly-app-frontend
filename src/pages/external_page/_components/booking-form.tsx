@@ -465,7 +465,7 @@ const BookingForm = (props: { event: Event }) => {
         }
       }
       
-      console.log("Final start time UTC:", startTimeUTC);
+     
 
       // Calculate end time
       const endTimeUTC = addMinutes(startTimeUTC, event.duration);
