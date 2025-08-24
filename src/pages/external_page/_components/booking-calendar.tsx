@@ -627,6 +627,7 @@ interface ConvertedSlot {
   backendTimezone: string;
   timeDifferenceMinutes?: number;
   conversionError?: string;
+  dateTime?: Date; // Added to store the actual date-time of the slot
 }
 
 interface TimezoneCache {
@@ -677,50 +678,34 @@ const parseTimeSlot = (timeSlot: string): { hours: number; minutes: number } | n
   }
 };
 
-// Helper function to check if time is before or equal to 12 PM
-const isBeforeOrEqual12PM = (timeString: string): boolean => {
-  try {
-    const parsed = parseTimeSlot(timeString);
-    if (!parsed) return false;
-    
-    // Check if it's 12:00 PM or earlier
-    if (timeString.toLowerCase().includes('pm') && parsed.hours === 12) {
-      return true; // Exactly 12 PM
-    }
-    
-    if (timeString.toLowerCase().includes('am')) {
-      return true; // All AM times are before 12 PM
-    }
-    
-    // For 24-hour format or converted times
-    return parsed.hours < 12 || (parsed.hours === 12 && parsed.minutes === 0);
-  } catch (error) {
-    console.error('Error checking if time is before 12 PM:', error, timeString);
-    return false;
-  }
-};
-
-// Convert time slot by applying offset in minutes
-const applyTimeOffset = (timeSlot: string, offsetMinutes: number): string => {
+// Convert time slot by applying offset in minutes and return the actual date object
+const applyTimeOffset = (timeSlot: string, offsetMinutes: number, baseDate: Date): { convertedTime: string, dateTime: Date } => {
   const parsed = parseTimeSlot(timeSlot);
-  if (!parsed) return timeSlot;
+  if (!parsed) return { convertedTime: timeSlot, dateTime: baseDate };
 
   const totalMinutes = parsed.hours * 60 + parsed.minutes + offsetMinutes;
   
   // Handle day overflow/underflow
+  const dayAdjustment = Math.floor(totalMinutes / (24 * 60));
   const adjustedMinutes = ((totalMinutes % (24 * 60)) + (24 * 60)) % (24 * 60);
-  
   
   const newHours = Math.floor(adjustedMinutes / 60);
   const newMinutes = adjustedMinutes % 60;
   
-  // Convert back to 12-hour format
+  // Create a new date with the adjusted time
+  const adjustedDate = new Date(baseDate);
+  adjustedDate.setDate(adjustedDate.getDate() + dayAdjustment);
+  adjustedDate.setHours(newHours, newMinutes, 0, 0);
+  
+  // Convert back to 12-hour format for display
   const period = newHours >= 12 ? 'PM' : 'AM';
   const displayHours = newHours === 0 ? 12 : newHours > 12 ? newHours - 12 : newHours;
   
-  return `${displayHours}:${newMinutes.toString().padStart(2, '0')} ${period}`.toLowerCase();
+  return {
+    convertedTime: `${displayHours}:${newMinutes.toString().padStart(2, '0')} ${period}`.toLowerCase(),
+    dateTime: adjustedDate
+  };
 };
-
 
 const getTimezoneOffsetUsingBrowser = (
   sampleTimeSlot: string,
@@ -781,12 +766,10 @@ const getTimezoneOffsetUsingBrowser = (
     const toOffset = getTimezoneOffset(normalizedToTz, fromDateTime);
     
     // Calculate the difference
-    //const offsetMinutes = fromOffset - toOffset;
     const offsetMinutes = -toOffset - (-fromOffset); 
     // Cache the result
     timezoneOffsetCache[cacheKey] = { offsetMinutes, cachedAt: now };
 
-    
     return offsetMinutes;
     
   } catch (error) {
@@ -812,13 +795,18 @@ const getTimezoneOffsetUsingBrowser = (
     return fallbackOffset;
   }
 };
-// Helper function to parse time slots using a more reliable regex
-
 
 // Helper function to get day of week considering timezone
 const getDayInTimezone = (date: DateValue, timezone: string): string => {
   const jsDate = date.toDate(timezone);
   return format(jsDate, "EEEE").toUpperCase();
+};
+
+// Helper function to check if a date is the same day (ignoring time)
+const isSameDay = (date1: Date, date2: Date): boolean => {
+  return date1.getFullYear() === date2.getFullYear() &&
+         date1.getMonth() === date2.getMonth() &&
+         date1.getDate() === date2.getDate();
 };
 
 const BookingCalendar = ({
@@ -902,18 +890,19 @@ const BookingCalendar = ({
       
       console.log(`⚡ Using offset of ${offsetMinutes} minutes for all slots`);
       
-      // Step 2: Apply the same offset to all slots
+      // Step 2: Apply the same offset to all slots and track the actual date
       const results: ConvertedSlot[] = day.slots.map((slot: string) => {
         try {
-          const convertedTime = applyTimeOffset(slot, offsetMinutes);
+          const { convertedTime, dateTime } = applyTimeOffset(slot, offsetMinutes, dateToUse);
           
-          console.log(`🔄 ${slot} -> ${convertedTime} (offset: ${offsetMinutes}min)`);
+          console.log(`🔄 ${slot} -> ${convertedTime} (offset: ${offsetMinutes}min, date: ${dateTime.toISOString()})`);
           
           return {
             original: slot,
             converted: convertedTime,
             backendTimezone: backendTimezone,
-            timeDifferenceMinutes: offsetMinutes
+            timeDifferenceMinutes: offsetMinutes,
+            dateTime: dateTime
           };
         } catch (error) {
           console.error(`Failed to convert slot ${slot}:`, error);
@@ -986,16 +975,38 @@ const BookingCalendar = ({
     return convertedSlots[dayKey] || [];
   }, [selectedDate, availability, finalUserTimezone, convertedSlots]);
 
-  // Filter time slots to only show those before or equal to 12 PM
+  // Filter time slots to only show those that fall on the selected date
   const filteredTimeSlots = useMemo(() => {
+    if (!selectedDate || timeSlots.length === 0) return [];
+    
+    const selectedDateObj = selectedDate.toDate(finalUserTimezone);
+    
     return timeSlots.filter(slotData => {
-      const displayTime = slotData.converted || slotData.original;
-      return isBeforeOrEqual12PM(displayTime);
+      // If we have the actual date-time information, use it for filtering
+      if (slotData.dateTime) {
+        return isSameDay(slotData.dateTime, selectedDateObj);
+      }
+      
+      // Fallback: try to parse the converted time and check if it's on the same day
+      // This is a less reliable method but serves as a fallback
+      try {
+        const parsed = parseTimeSlot(slotData.converted || slotData.original);
+        if (!parsed) return true; // If we can't parse, show it anyway
+        
+        // Create a date with the parsed time for the selected date
+        const slotDate = new Date(selectedDateObj);
+        slotDate.setHours(parsed.hours, parsed.minutes, 0, 0);
+        
+        return isSameDay(slotDate, selectedDateObj);
+      } catch (error) {
+        console.error('Error filtering time slot:', error);
+        return true; // If there's an error, show the slot
+      }
     });
-  }, [timeSlots]);
+  }, [timeSlots, selectedDate, finalUserTimezone]);
 
   console.log("⏰ Time slots for selected date:", timeSlots);
-  console.log("⏰ Filtered time slots (before 12 PM):", filteredTimeSlots);
+  console.log("⏰ Filtered time slots (same day only):", filteredTimeSlots);
 
   // Combined isDateUnavailable function
   const isDateUnavailable = (date: DateValue) => {
@@ -1124,9 +1135,6 @@ const BookingCalendar = ({
                 <h3 className="mt-0 mb-[10px] font-normal text-base leading-[38px]">
                   {format(selectedDate.toDate(finalUserTimezone), "EEEE d")}
                 </h3>
-                <div className="text-xs text-gray-500 self-center">
-                  Showing slots until 12 PM only
-                </div>
               </div>
 
               <div className="flex-[1_1_100px] pr-[8px] overflow-x-hidden overflow-y-auto scrollbar-thin scrollbar-track-transparent scroll--bar h-[400px]">
@@ -1219,7 +1227,7 @@ const BookingCalendar = ({
                   })
                 ) : (
                   <div className="text-center py-8 text-gray-500">
-                    No available time slots before 12 PM for this date
+                    No available time slots for this date
                   </div>
                 )}
               </div>
