@@ -1200,7 +1200,8 @@ const BookingCalendar = ({
             <div className="w-full flex-shrink-0 mt-3 lg:mt-0 max-w-xs md:max-w-[40%] pt-0 overflow-hidden md:ml-[-15px]">
               <div className="w-full pb-3 flex flex-col md:flex-row justify-between pr-8">
                 <h3 className="mt-0 mb-[10px] font-normal text-base leading-[38px]">
-                  {format(selectedDate.toDate(finalUserTimezone), "EEEE, MMMM d")}
+                  {/* {format(selectedDate.toDate(finalUserTimezone), "EEEE, MMMM d")} */}
+                  {format(new Date(selectedDate.year, selectedDate.month - 1, selectedDate.day), "EEEE, MMMM d")}
                   {showConversionInfo && timeSlots.length > 0 && (
                     <div className="text-xs text-gray-500 mt-1">
                       Times converted to your timezone
