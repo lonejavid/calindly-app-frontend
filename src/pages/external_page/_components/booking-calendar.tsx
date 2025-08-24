@@ -948,42 +948,83 @@ const BookingCalendar = ({
     computeConversions();
   }, [availability, finalUserTimezone]);
 
-  // Function to generate slots for any specific date
+  // Helper function to check if two dates are the same calendar date
+  const isSameCalendarDate = (date1: Date, date2: Date): boolean => {
+    return date1.getFullYear() === date2.getFullYear() &&
+           date1.getMonth() === date2.getMonth() &&
+           date1.getDate() === date2.getDate();
+  };
+
+  // Function to get all possible slots from all days that might affect this date
+  const getAllPossibleSlotsForDate = (date: CalendarDate): ConvertedSlot[] => {
+    const targetJsDate = date.toDate(finalUserTimezone);
+    const allPossibleSlots: ConvertedSlot[] = [];
+    
+    // Check current day and adjacent days to catch timezone spillovers
+    const daysToCheck = [-1, 0, 1]; // Previous day, current day, next day
+    
+    daysToCheck.forEach(dayOffset => {
+      const checkDate = new Date(targetJsDate);
+      checkDate.setDate(checkDate.getDate() + dayOffset);
+      const dayOfWeek = getDayOfWeekFromDate(checkDate);
+      
+      const conversionData = timezoneConversionData[dayOfWeek];
+      if (!conversionData) return;
+      
+      // Convert slots for this reference day
+      conversionData.slots.forEach(slotTemplate => {
+        try {
+          const { convertedTime, dateTime } = applyTimeOffset(
+            slotTemplate.original, 
+            conversionData.offsetMinutes, 
+            checkDate
+          );
+          
+          allPossibleSlots.push({
+            ...slotTemplate,
+            converted: convertedTime,
+            dateTime: dateTime
+          });
+        } catch (error) {
+          console.error(`Failed to convert slot ${slotTemplate.original}:`, error);
+          allPossibleSlots.push({
+            ...slotTemplate,
+            converted: slotTemplate.original,
+            conversionError: error instanceof Error ? error.message : 'Conversion failed'
+          });
+        }
+      });
+    });
+    
+    return allPossibleSlots;
+  };
+
+  // Function to generate slots for any specific date (only slots that actually fall on that date)
   const getSlotsForDate = (date: CalendarDate): ConvertedSlot[] => {
-    const jsDate = date.toDate(finalUserTimezone);
-    const dayOfWeek = getDayOfWeekFromDate(jsDate);
+    const targetJsDate = date.toDate(finalUserTimezone);
     
-    const conversionData = timezoneConversionData[dayOfWeek];
-    if (!conversionData) return [];
+    console.log(`🎯 Generating slots for ${date.toString()} (${getDayOfWeekFromDate(targetJsDate)})`);
     
-    console.log(`🎯 Generating slots for ${dayOfWeek} on ${date.toString()}`);
+    // Get all possible slots that might affect this date
+    const allPossibleSlots = getAllPossibleSlotsForDate(date);
     
-    // Convert each slot for this specific date
-    const convertedSlots = conversionData.slots.map(slotTemplate => {
-      try {
-        const { convertedTime, dateTime } = applyTimeOffset(
-          slotTemplate.original, 
-          conversionData.offsetMinutes, 
-          jsDate
-        );
-        
-        return {
-          ...slotTemplate,
-          converted: convertedTime,
-          dateTime: dateTime
-        };
-      } catch (error) {
-        console.error(`Failed to convert slot ${slotTemplate.original}:`, error);
-        return {
-          ...slotTemplate,
-          converted: slotTemplate.original,
-          conversionError: error instanceof Error ? error.message : 'Conversion failed'
-        };
+    // Filter to only include slots that actually fall on the target date
+    const filteredSlots = allPossibleSlots.filter(slot => {
+      if (!slot.dateTime) return false;
+      
+      const slotFallsOnTargetDate = isSameCalendarDate(slot.dateTime, targetJsDate);
+      
+      if (slotFallsOnTargetDate) {
+        console.log(`✅ Slot ${slot.original} -> ${slot.converted} falls on target date`);
+      } else {
+        console.log(`❌ Slot ${slot.original} -> ${slot.converted} falls on ${slot.dateTime.toDateString()}, not target date ${targetJsDate.toDateString()}`);
       }
+      
+      return slotFallsOnTargetDate;
     });
     
     // Sort by time
-    convertedSlots.sort((a, b) => {
+    filteredSlots.sort((a, b) => {
       if (a.dateTime && b.dateTime) {
         return a.dateTime.getTime() - b.dateTime.getTime();
       }
@@ -1000,7 +1041,9 @@ const BookingCalendar = ({
       return 0;
     });
     
-    return convertedSlots;
+    console.log(`🎯 Final filtered slots for ${date.toString()}:`, filteredSlots.map(s => `${s.original} -> ${s.converted}`));
+    
+    return filteredSlots;
   };
 
   // Get time slots for the selected date
@@ -1012,17 +1055,23 @@ const BookingCalendar = ({
 
   console.log("⏰ Time slots for selected date:", timeSlots);
 
-  // Check if a date has available slots (considering timezone conversion effects)
+  // Check if a date has available slots (considering timezone conversion effects and spillovers)
   const hasAvailableSlots = (date: DateValue): boolean => {
-    const jsDate = date.toDate(finalUserTimezone);
-    const dayOfWeek = getDayOfWeekFromDate(jsDate);
+    if (Object.keys(timezoneConversionData).length === 0) return false;
     
-    // Check if this day of week has availability
-    const dayAvailability = availability.find((day) => day.day === dayOfWeek);
-    if (!dayAvailability?.isAvailable) return false;
+    // Convert to CalendarDate to use the proper filtering function
+    const calendarDate = date as CalendarDate;
+    const slotsForDate = getSlotsForDate(calendarDate);
     
-    // Check if we have conversion data for this day
-    return timezoneConversionData[dayOfWeek] && timezoneConversionData[dayOfWeek].slots.length > 0;
+    const hasSlots = slotsForDate.length > 0;
+    
+    if (hasSlots) {
+      console.log(`✅ Date ${date.toString()} has ${slotsForDate.length} slots after timezone filtering`);
+    } else {
+      console.log(`❌ Date ${date.toString()} has no slots after timezone filtering`);
+    }
+    
+    return hasSlots;
   };
 
   // Enhanced isDateUnavailable function
