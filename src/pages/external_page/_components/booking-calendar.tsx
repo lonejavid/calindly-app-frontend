@@ -627,7 +627,7 @@ interface ConvertedSlot {
   backendTimezone: string;
   timeDifferenceMinutes?: number;
   conversionError?: string;
-  dateTime?: Date; // Added to store the actual date-time of the slot
+  dateTime?: Date;
 }
 
 interface TimezoneCache {
@@ -698,8 +698,22 @@ const applyTimeOffset = (timeSlot: string, offsetMinutes: number, baseDate: Date
   adjustedDate.setHours(newHours, newMinutes, 0, 0);
   
   // Convert back to 12-hour format for display
-  const period = newHours >= 12 ? 'PM' : 'AM';
-  const displayHours = newHours === 0 ? 12 : newHours > 12 ? newHours - 12 : newHours;
+  let period = 'AM';
+  let displayHours = newHours;
+  
+  if (newHours === 0) {
+    displayHours = 12;
+    period = 'AM';
+  } else if (newHours === 12) {
+    displayHours = 12;
+    period = 'PM';
+  } else if (newHours > 12) {
+    displayHours = newHours - 12;
+    period = 'PM';
+  } else {
+    displayHours = newHours;
+    period = 'AM';
+  }
   
   return {
     convertedTime: `${displayHours}:${newMinutes.toString().padStart(2, '0')} ${period}`.toLowerCase(),
