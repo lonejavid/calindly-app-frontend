@@ -1294,6 +1294,7 @@ interface ConvertedSlot {
   timeDifferenceMinutes?: number;
   conversionError?: string;
   dateTime?: Date;
+  actualDate?: CalendarDate; // New field to track the actual date this slot belongs to
 }
 
 interface TimezoneCache {
@@ -1306,6 +1307,15 @@ interface TimezoneCache {
 // Cache for timezone differences
 const timezoneOffsetCache: TimezoneCache = {};
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+
+// Helper function to create CalendarDate from JS Date
+const createCalendarDate = (jsDate: Date): CalendarDate => {
+  return new CalendarDate(
+    jsDate.getFullYear(),
+    jsDate.getMonth() + 1,
+    jsDate.getDate()
+  );
+};
 
 // Helper function to parse time slots in 12-hour or 24-hour format
 const parseTimeSlot = (timeSlot: string): { hours: number; minutes: number } | null => {
@@ -1345,9 +1355,13 @@ const parseTimeSlot = (timeSlot: string): { hours: number; minutes: number } | n
 };
 
 // Convert time slot by applying offset in minutes and return the actual date object
-const applyTimeOffset = (timeSlot: string, offsetMinutes: number, baseDate: Date): { convertedTime: string, dateTime: Date } => {
+const applyTimeOffset = (timeSlot: string, offsetMinutes: number, baseDate: Date): { convertedTime: string, dateTime: Date, actualDate: CalendarDate } => {
   const parsed = parseTimeSlot(timeSlot);
-  if (!parsed) return { convertedTime: timeSlot, dateTime: baseDate };
+  if (!parsed) return { 
+    convertedTime: timeSlot, 
+    dateTime: baseDate,
+    actualDate: createCalendarDate(baseDate)
+  };
 
   const totalMinutes = parsed.hours * 60 + parsed.minutes + offsetMinutes;
   
@@ -1383,7 +1397,8 @@ const applyTimeOffset = (timeSlot: string, offsetMinutes: number, baseDate: Date
   
   return {
     convertedTime: `${displayHours}:${newMinutes.toString().padStart(2, '0')} ${period}`.toLowerCase(),
-    dateTime: adjustedDate
+    dateTime: adjustedDate,
+    actualDate: createCalendarDate(adjustedDate)
   };
 };
 
@@ -1490,6 +1505,13 @@ const isSameDay = (date1: Date, date2: Date): boolean => {
          date1.getDate() === date2.getDate();
 };
 
+// Helper function to check if two CalendarDates are equal
+const areCalendarDatesEqual = (date1: CalendarDate, date2: CalendarDate): boolean => {
+  return date1.year === date2.year && 
+         date1.month === date2.month && 
+         date1.day === date2.day;
+};
+
 const BookingCalendar = ({
   eventId,
   minValue,
@@ -1506,8 +1528,8 @@ const BookingCalendar = ({
     handleNext,
   } = useBookingState();
 
-  // State for converted slots
-  const [convertedSlots, setConvertedSlots] = useState<{ [key: string]: ConvertedSlot[] }>({});
+  // State for converted slots grouped by date
+  const [convertedSlotsByDate, setConvertedSlotsByDate] = useState<{ [key: string]: ConvertedSlot[] }>({});
   const [isConverting, setIsConverting] = useState(false);
 
   // Get user's browser timezone as fallback with proper Asia/Kolkata handling
@@ -1537,158 +1559,121 @@ const BookingCalendar = ({
   const availability = data?.data || [];
   console.log("📅 Original availability from backend:", availability);
 
-  // Get the current day of week for the selected date in user's timezone
-  const selectedDayOfWeek = useMemo(() => {
-    if (!selectedDate) return null;
-    return getDayInTimezone(selectedDate, finalUserTimezone);
-  }, [selectedDate, finalUserTimezone]);
-
-  // Get availability for the selected day
-  const dayAvailability = useMemo(() => {
-    if (!selectedDayOfWeek || !availability.length) return null;
-    return availability.find((day) => day.day === selectedDayOfWeek);
-  }, [selectedDayOfWeek, availability]);
-
-  // Optimized function to convert all slots using browser-based offset calculation
-  const convertSlotsForDay = async (
-    day: any,
-    selectedDate: DateValue,
-    userTimezone: string
-  ) => {
-    if (!day.slots || day.slots.length === 0) return [];
-    
-    const backendTimezone = day.timezone || 'UTC';
-    const dateToUse = selectedDate.toDate(userTimezone);
-    const dayKey = `${day.day}-${backendTimezone}-${userTimezone}`;
-    
-    // Check if we already have conversions for this day
-    if (convertedSlots[dayKey]) {
-      return convertedSlots[dayKey];
-    }
-
-    console.log(`🔄 Converting slots for ${day.day} from ${backendTimezone} to ${userTimezone}`);
-    console.log('📋 Original slots:', day.slots);
-    
-    setIsConverting(true);
-    
-    try {
-      // Step 1: Get timezone offset using the first slot (browser-based)
-      const sampleSlot = day.slots[0];
-      const offsetMinutes = getTimezoneOffsetUsingBrowser(
-        sampleSlot,
-        dateToUse,
-        backendTimezone,
-        userTimezone
-      );
-      
-      console.log(`⚡ Using offset of ${offsetMinutes} minutes for all slots`);
-      
-      // Step 2: Apply the same offset to all slots and track the actual date
-      const results: ConvertedSlot[] = day.slots.map((slot: string) => {
-        try {
-          const { convertedTime, dateTime } = applyTimeOffset(slot, offsetMinutes, dateToUse);
-          
-          console.log(`🔄 ${slot} -> ${convertedTime} (offset: ${offsetMinutes}min, date: ${dateTime.toISOString()})`);
-          
-          return {
-            original: slot,
-            converted: convertedTime,
-            backendTimezone: backendTimezone,
-            timeDifferenceMinutes: offsetMinutes,
-            dateTime: dateTime
-          };
-        } catch (error) {
-          console.error(`Failed to convert slot ${slot}:`, error);
-          return {
-            original: slot,
-            converted: slot, // Fallback to original
-            backendTimezone: backendTimezone,
-            conversionError: error instanceof Error ? error.message : 'Conversion failed'
-          };
-        }
-      });
-      
-      // Cache the results
-      setConvertedSlots(prev => ({
-        ...prev,
-        [dayKey]: results
-      }));
-      
-      console.log(`✅ Converted ${results.length} slots in one operation`);
-      console.log('🎯 Final converted slots:', results);
-      
-      return results;
-      
-    } catch (error) {
-      console.error('Failed to convert slots:', error);
-      
-      // Fallback: return original slots
-      const fallbackResults = day.slots.map((slot: string) => ({
-        original: slot,
-        converted: slot,
-        backendTimezone: backendTimezone,
-        conversionError: 'Conversion failed, showing original time'
-      }));
-      
-      setConvertedSlots(prev => ({
-        ...prev,
-        [dayKey]: fallbackResults
-      }));
-      
-      return fallbackResults;
-    } finally {
-      setIsConverting(false);
-    }
-  };
-
-  // Convert slots when date is selected
+  // Convert all slots for all days and group them by actual date
   useEffect(() => {
-    if (selectedDate && dayAvailability && dayAvailability.isAvailable && finalUserTimezone) {
-      convertSlotsForDay(dayAvailability, selectedDate, finalUserTimezone);
-    }
-  }, [selectedDate, dayAvailability, finalUserTimezone]);
+    if (!availability.length || !finalUserTimezone) return;
+
+    const convertAllSlots = async () => {
+      setIsConverting(true);
+      
+      try {
+        const allConvertedSlots: { [key: string]: ConvertedSlot[] } = {};
+        
+        for (const day of availability) {
+          if (!day.isAvailable || !day.slots || day.slots.length === 0) continue;
+          
+          const backendTimezone = day.timezone || 'UTC';
+          console.log(`🔄 Converting slots for ${day.day} from ${backendTimezone} to ${finalUserTimezone}`);
+          
+          // Use a reference date for this day of week (we'll use the current week)
+          const today = new Date();
+          const currentDayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
+          
+          // Map day names to numbers
+          const dayNameToNumber: { [key: string]: number } = {
+            'SUNDAY': 0, 'MONDAY': 1, 'TUESDAY': 2, 'WEDNESDAY': 3,
+            'THURSDAY': 4, 'FRIDAY': 5, 'SATURDAY': 6
+          };
+          
+          const targetDayNumber = dayNameToNumber[day.day];
+          const daysDifference = targetDayNumber - currentDayOfWeek;
+          
+          const referenceDate = new Date(today);
+          referenceDate.setDate(today.getDate() + daysDifference);
+          referenceDate.setHours(0, 0, 0, 0);
+          
+          // Get timezone offset using the first slot
+          const sampleSlot = day.slots[0];
+          const offsetMinutes = getTimezoneOffsetUsingBrowser(
+            sampleSlot,
+            referenceDate,
+            backendTimezone,
+            finalUserTimezone
+          );
+          
+          console.log(`⚡ Using offset of ${offsetMinutes} minutes for ${day.day} slots`);
+          
+          // Convert all slots for this day
+          const convertedSlots: ConvertedSlot[] = day.slots.map((slot: string) => {
+            try {
+              const { convertedTime, dateTime, actualDate } = applyTimeOffset(slot, offsetMinutes, referenceDate);
+              
+              return {
+                original: slot,
+                converted: convertedTime,
+                backendTimezone: backendTimezone,
+                timeDifferenceMinutes: offsetMinutes,
+                dateTime: dateTime,
+                actualDate: actualDate
+              };
+            } catch (error) {
+              console.error(`Failed to convert slot ${slot}:`, error);
+              return {
+                original: slot,
+                converted: slot,
+                backendTimezone: backendTimezone,
+                conversionError: error instanceof Error ? error.message : 'Conversion failed',
+                actualDate: createCalendarDate(referenceDate)
+              };
+            }
+          });
+          
+          // Group slots by their actual date
+          convertedSlots.forEach(slot => {
+            if (slot.actualDate) {
+              const dateKey = `${slot.actualDate.year}-${slot.actualDate.month}-${slot.actualDate.day}`;
+              if (!allConvertedSlots[dateKey]) {
+                allConvertedSlots[dateKey] = [];
+              }
+              allConvertedSlots[dateKey].push(slot);
+            }
+          });
+        }
+        
+        // Sort slots within each date
+        Object.keys(allConvertedSlots).forEach(dateKey => {
+          allConvertedSlots[dateKey].sort((a, b) => {
+            if (a.dateTime && b.dateTime) {
+              return a.dateTime.getTime() - b.dateTime.getTime();
+            }
+            return 0;
+          });
+        });
+        
+        setConvertedSlotsByDate(allConvertedSlots);
+        console.log('✅ All slots converted and grouped by date:', allConvertedSlots);
+        
+      } catch (error) {
+        console.error('Failed to convert slots:', error);
+      } finally {
+        setIsConverting(false);
+      }
+    };
+
+    convertAllSlots();
+  }, [availability, finalUserTimezone]);
 
   // Get time slots for the selected date
   const timeSlots = useMemo(() => {
-    if (!selectedDate || !dayAvailability?.isAvailable) return [];
+    if (!selectedDate) return [];
     
-    const backendTimezone = dayAvailability.timezone || 'UTC';
-    const dayKey = `${selectedDayOfWeek}-${backendTimezone}-${finalUserTimezone}`;
-    
-    return convertedSlots[dayKey] || [];
-  }, [selectedDate, dayAvailability, selectedDayOfWeek, finalUserTimezone, convertedSlots]);
-
-  // FIXED: Show ALL converted slots for the selected day, regardless of date spillover
-  // This is the key change - we don't filter by date anymore, we show all slots for the selected day
-  const filteredTimeSlots = useMemo(() => {
-    if (!selectedDate || timeSlots.length === 0) return [];
-    
-    // Simply return all converted slots sorted by their actual datetime
-    // Don't filter by calendar date - show all slots from the selected day's availability
-    return timeSlots.sort((a, b) => {
-      // Sort by time
-      if (a.dateTime && b.dateTime) {
-        return a.dateTime.getTime() - b.dateTime.getTime();
-      }
-      
-      // Fallback sort by parsed time if dateTime is not available
-      const parseA = parseTimeSlot(a.converted || a.original);
-      const parseB = parseTimeSlot(b.converted || b.original);
-      
-      if (parseA && parseB) {
-        const timeA = parseA.hours * 60 + parseA.minutes;
-        const timeB = parseB.hours * 60 + parseB.minutes;
-        return timeA - timeB;
-      }
-      
-      return 0;
-    });
-  }, [timeSlots, selectedDate]);
+    const dateKey = `${selectedDate.year}-${selectedDate.month}-${selectedDate.day}`;
+    return convertedSlotsByDate[dateKey] || [];
+  }, [selectedDate, convertedSlotsByDate]);
 
   console.log("⏰ Time slots for selected date:", timeSlots);
-  console.log("⏰ Final time slots (showing ALL slots from selected day):", filteredTimeSlots);
 
-  // Combined isDateUnavailable function
+  // Enhanced isDateUnavailable function that considers converted slots
   const isDateUnavailable = (date: DateValue) => {
     // First check custom restrictions (date range)
     if (customIsDateUnavailable && customIsDateUnavailable(date)) {
@@ -1696,7 +1681,16 @@ const BookingCalendar = ({
       return true;
     }
 
-    // Then check day availability
+    // Check if this date has any available slots (after timezone conversion)
+    const dateKey = `${date.year}-${date.month}-${date.day}`;
+    const hasSlots = convertedSlotsByDate[dateKey] && convertedSlotsByDate[dateKey].length > 0;
+    
+    if (hasSlots) {
+      console.log('✅ Date available with converted slots:', date.toString());
+      return false;
+    }
+
+    // Fallback: check original day availability
     const dayOfWeek = getDayInTimezone(date, finalUserTimezone);
     const dayAvailability = availability.find((day) => day.day === dayOfWeek);
     const isDayUnavailable = !dayAvailability?.isAvailable;
@@ -1757,34 +1751,12 @@ const BookingCalendar = ({
 
   // Get backend timezone for display
   const getBackendTimezone = () => {
-    return dayAvailability?.timezone || 'UTC';
+    if (!timeSlots.length) return 'UTC';
+    return timeSlots[0]?.backendTimezone || 'UTC';
   };
 
   const backendTimezone = getBackendTimezone();
   const showConversionInfo = backendTimezone && backendTimezone !== finalUserTimezone;
-
-  // Helper function to format the date display for slots that spill to next day
-  const getSlotDateDisplay = (slotData: ConvertedSlot, selectedDate: DateValue) => {
-    if (!slotData.dateTime) return '';
-    
-    const selectedDateObj = selectedDate.toDate(finalUserTimezone);
-    const slotDate = slotData.dateTime;
-    
-    if (!isSameDay(selectedDateObj, slotDate)) {
-      // If the slot falls on a different date, show the date
-      const dayDiff = Math.floor((slotDate.getTime() - selectedDateObj.getTime()) / (1000 * 60 * 60 * 24));
-      
-      if (dayDiff === 1) {
-        return ' (next day)';
-      } else if (dayDiff === -1) {
-        return ' (prev day)';
-      } else {
-        return ` (${format(slotDate, 'MMM d')})`;
-      }
-    }
-    
-    return '';
-  };
 
   return (
     <div className="relative lg:flex-[1_1_50%] w-full flex-shrink-0 transition-all duration-220 ease-out p-4 pr-0">
@@ -1793,7 +1765,7 @@ const BookingCalendar = ({
           <div className="flex flex-col items-center gap-3">
             <Loader size="lg" color="black" />
             <div className="text-sm text-gray-600">
-              {isFetching ? 'Loading availability...' : 'Converting timezone...'}
+              {isFetching ? 'Loading availability...' : 'Converting timezones and organizing dates...'}
             </div>
           </div>
         </div>
@@ -1808,7 +1780,7 @@ const BookingCalendar = ({
           </div>
           {showConversionInfo && (
             <div className="text-xs text-blue-600 mt-1 flex items-center gap-1">
-              ⚡ Times automatically converted from: {backendTimezone}
+              ⚡ Dates and times automatically converted from: {backendTimezone}
               <span className="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
             </div>
           )}
@@ -1827,14 +1799,14 @@ const BookingCalendar = ({
               isDateUnavailable={isDateUnavailable}
             />
           </div>
-          {selectedDate && availability ? (
+          {selectedDate ? (
             <div className="w-full flex-shrink-0 mt-3 lg:mt-0 max-w-xs md:max-w-[40%] pt-0 overflow-hidden md:ml-[-15px]">
               <div className="w-full pb-3 flex flex-col md:flex-row justify-between pr-8">
                 <h3 className="mt-0 mb-[10px] font-normal text-base leading-[38px]">
                   {format(selectedDate.toDate(finalUserTimezone), "EEEE, MMMM d")}
-                  {showConversionInfo && filteredTimeSlots.length > 0 && (
+                  {showConversionInfo && timeSlots.length > 0 && (
                     <div className="text-xs text-gray-500 mt-1">
-                      Showing all slots from {selectedDayOfWeek.toLowerCase()} availability
+                      Times converted to your timezone
                     </div>
                   )}
                 </h3>
@@ -1845,17 +1817,16 @@ const BookingCalendar = ({
                   <div className="text-center py-8 text-gray-500">
                     <div className="flex flex-col items-center gap-3">
                       <Loader size="md" />
-                      <div>Converting timezone...</div>
-                      <div className="text-xs">Using browser-based conversion...</div>
+                      <div>Converting timezones...</div>
+                      <div className="text-xs">Organizing slots by correct dates...</div>
                     </div>
                   </div>
-                ) : filteredTimeSlots.length > 0 ? (
-                  filteredTimeSlots.map((slotData, i) => {
+                ) : timeSlots.length > 0 ? (
+                  timeSlots.map((slotData, i) => {
                     console.log('🎨 Rendering slot:', slotData);
                     const displayTime = slotData.converted || slotData.original;
                     const isSelected = selectedTime === displayTime;
                     const hasError = slotData.conversionError;
-                    const dateDisplay = getSlotDateDisplay(slotData, selectedDate);
                     
                     console.log(`Slot ${displayTime}: selected=${isSelected}, selectedTime=${selectedTime}, error=${hasError}`);
                     
@@ -1878,7 +1849,7 @@ const BookingCalendar = ({
                               disabled
                             >
                               <div className="flex flex-col items-center">
-                                <div>{displayTime}{dateDisplay}</div>
+                                <div>{displayTime}</div>
                                 {showConversionInfo && !hasError && (
                                   <div className="text-xs opacity-75">
                                     (from {slotData.original})
@@ -1909,7 +1880,7 @@ const BookingCalendar = ({
                             onClick={() => handleSlotSelection(slotData)}
                           >
                             <div className="flex flex-col items-center">
-                              <div>{displayTime}{dateDisplay}</div>
+                              <div>{displayTime}</div>
                               {hasError && (
                                 <div className="text-xs text-orange-500">
                                   (conversion failed)
@@ -1933,9 +1904,7 @@ const BookingCalendar = ({
                   })
                 ) : (
                   <div className="text-center py-8 text-gray-500">
-                    {dayAvailability?.isAvailable ? 
-                      "No available time slots for this date" : 
-                      "This day is not available for booking"}
+                    No available time slots for this date
                   </div>
                 )}
               </div>
