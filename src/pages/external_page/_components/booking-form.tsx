@@ -100,6 +100,7 @@ const convertTimezone = async (fromTimezone: string, toTimezone: string, timesta
 };
 
 // Backup timezone conversion using Intl API and manual calculation
+
 const convertTimezoneManual = (fromTimezone: string, toTimezone: string, dateTime: Date) => {
   try {
     // Create formatter for the target timezone
@@ -444,7 +445,7 @@ const BookingForm = (props: { event: Event }) => {
       } else {
         // Fallback to manual conversion using Intl API
         console.warn("API conversion failed, using manual method:", conversionResult.error);
-        
+        console.log("times are converted these are needed",browserTimezone," this the to ",eventTimezone," this is the valuses ",combinedDateTime);
         const manualConversion = convertTimezoneManual(browserTimezone, eventTimezone, combinedDateTime);
         
         if (manualConversion.success) {
