@@ -424,6 +424,8 @@ const BookingForm = (props: { event: Event }) => {
         0
       );
 
+      console.log("the selected date and parsed time in browser timezone",combinedDateTime);
+
    
 
       // Convert to timestamp for timezone API
