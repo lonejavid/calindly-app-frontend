@@ -411,6 +411,7 @@ const BookingForm = (props: { event: Event }) => {
       if (isNaN(timeOnlyDate.getTime())) {
         throw new Error("Invalid start time format");
       }
+      console.log("time and date after parsing",timeOnlyDate);
 
       // Create a date object with the selected date and parsed time in browser timezone
       const combinedDateTime = new Date(
