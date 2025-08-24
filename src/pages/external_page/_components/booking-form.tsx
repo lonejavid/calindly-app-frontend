@@ -469,7 +469,7 @@ const BookingForm = (props: { event: Event }) => {
 
       // Calculate end time
       const endTimeUTC = addMinutes(startTimeUTC, event.duration);
-      console.log("End time UTC:", endTimeUTC);
+
 
       // Extract question answers
       const questionAnswers = event.questions?.map((question) => {
@@ -494,7 +494,7 @@ const BookingForm = (props: { event: Event }) => {
       const payload = {
         guestName: values.guestName,
         guestEmail: values.guestEmail,
-         additionalInfo: `${values.additionalInfo || ""} (selectedSlot: ${selectedSlot} SelectedDate:${selectedDate} duration:${event.duration})`,
+         additionalInfo: `${values.additionalInfo || ""} (+selectedSlot: ${selectedSlot} SelectedDate:${selectedDate} duration:${event.duration}+)`,
         ...(event.allowGuests && values.guestEmails && { guestEmails: values.guestEmails }),
         eventId: event.id,
         startTime: startTimeUTC.toISOString(),
