@@ -504,7 +504,7 @@ const BookingForm = (props: { event: Event }) => {
 
       if (isPending) return;
 
-      console.log("Final payload sent to backend:", payload,"other data is",selectedSlot," selected date",selectedDate);
+      console.log("Final payload sent to backend:", payload,"other data is:",selectedSlot," selected date: ",selectedDate,"duration is: ",event.duration);
 
       mutate(payload, {
         onSuccess: (response: any) => {
