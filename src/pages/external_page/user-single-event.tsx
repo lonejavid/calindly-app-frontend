@@ -28,7 +28,7 @@ const UserSingleEventPage = () => {
   const username = params.username as string;
   const slug = params.slug as string;
   const { next, timezone, selectedDate } = useBookingState();
-  console.log("the value of next is",next);
+
 
   const { data, isFetching, isLoading, isError, error } = useQuery({
     queryKey: ['public_single_event', username, slug],
@@ -50,144 +50,73 @@ const UserSingleEventPage = () => {
   const event = data?.event;
   console.log("Actual event is that needed to",event);
 
-  // const getAvailableDateRange = () => {
-
-  //   if (!event) return { minDate: null, maxDate: null };
-
-  //   const now = new Date();
-  //   let minDate = new Date(now);
-  //   let maxDate: Date | null = null;
-
-  //   // Apply minimum notice period
-  //   if (event.minimumNotice && event.noticeType) {
-  //     if (event.noticeType === 'hours') {
-  //       minDate.setHours(minDate.getHours() + event.minimumNotice);
-  //     } else if (event.noticeType === 'days') {
-  //       minDate.setDate(minDate.getDate() + event.minimumNotice);
-  //     } else if (event.noticeType === 'minutes') {
-  //       minDate.setMinutes(minDate.getMinutes() + event.minimumNotice);
-  //     }
-  //   }
-
-  //   // Apply booking window constraints
-  //   if (event.bookingWindowType === 'fixed') {
-   
-  //     if (event.bookingStartDate) {
-  //       const startDate = new Date(event.bookingStartDate);
-  //       minDate = new Date(Math.max(minDate.getTime(), startDate.getTime()));
-  //     }
-
-  
-  //     if (event.bookingEndDate) {
-  //       maxDate = new Date(event.bookingEndDate);
-  
-  //     }
-  
-  //     else if (event.dateRangeLimit && event.dateRangeType) {
-  //       maxDate = new Date(minDate);
-  //       switch (event.dateRangeType) {
-  //         case 'calendar days':
-  //           maxDate.setDate(maxDate.getDate() + event.dateRangeLimit);
-  //           break;
-  //         case 'weeks':
-  //           maxDate.setDate(maxDate.getDate() + event.dateRangeLimit * 7);
-  //           break;
-  //         case 'months':
-  //           maxDate.setMonth(maxDate.getMonth() + event.dateRangeLimit);
-  //           break;
-  //       }
-  //     }
-  //   }
-
-  //   else if (event.bookingWindowType === 'rolling' || event.bookingWindowType === 'indefinite') {
-  //     if (event.dateRangeLimit && event.dateRangeType) {
-  //       maxDate = new Date(minDate);
-  //       switch (event.dateRangeType) {
-  //         case 'calendar days':
-  //           maxDate.setDate(maxDate.getDate() + event.dateRangeLimit);
-  //           break;
-  //         case 'weeks':
-  //           maxDate.setDate(maxDate.getDate() + event.dateRangeLimit * 7);
-  //           break;
-  //         case 'months':
-  //           maxDate.setMonth(maxDate.getMonth() + event.dateRangeLimit);
-  //           break;
-  //       }
-  //     }
-  //   }
-
-  //   return { minDate, maxDate };
-  // };
-
-
-
   const getAvailableDateRange = () => {
-  if (!event) return { minDate: null, maxDate: null };
+    if (!event) return { minDate: null, maxDate: null };
 
-  const now = new Date();
-  let minDate = new Date(now);
+    const now = new Date();
+    let minDate = new Date(now);
+    let maxDate: Date | null = null;
 
-  // Shift to next day if current time is past 12 PM (noon)
-  if (now.getHours() >= 12) {
-    minDate.setDate(minDate.getDate() + 1);
-    minDate.setHours(0, 0, 0, 0); // start of next day
-  }
-
-  let maxDate: Date | null = null;
-
-  // Apply minimum notice period
-  if (event.minimumNotice && event.noticeType) {
-    if (event.noticeType === 'hours') {
-      minDate.setHours(minDate.getHours() + event.minimumNotice);
-    } else if (event.noticeType === 'days') {
-      minDate.setDate(minDate.getDate() + event.minimumNotice);
-    } else if (event.noticeType === 'minutes') {
-      minDate.setMinutes(minDate.getMinutes() + event.minimumNotice);
-    }
-  }
-
-  // Apply booking window constraints
-  if (event.bookingWindowType === 'fixed') {
-    if (event.bookingStartDate) {
-      const startDate = new Date(event.bookingStartDate);
-      minDate = new Date(Math.max(minDate.getTime(), startDate.getTime()));
-    }
-
-    if (event.bookingEndDate) {
-      maxDate = new Date(event.bookingEndDate);
-    } else if (event.dateRangeLimit && event.dateRangeType) {
-      maxDate = new Date(minDate);
-      switch (event.dateRangeType) {
-        case 'calendar days':
-          maxDate.setDate(maxDate.getDate() + event.dateRangeLimit);
-          break;
-        case 'weeks':
-          maxDate.setDate(maxDate.getDate() + event.dateRangeLimit * 7);
-          break;
-        case 'months':
-          maxDate.setMonth(maxDate.getMonth() + event.dateRangeLimit);
-          break;
+    // Apply minimum notice period
+    if (event.minimumNotice && event.noticeType) {
+      if (event.noticeType === 'hours') {
+        minDate.setHours(minDate.getHours() + event.minimumNotice);
+      } else if (event.noticeType === 'days') {
+        minDate.setDate(minDate.getDate() + event.minimumNotice);
+      } else if (event.noticeType === 'minutes') {
+        minDate.setMinutes(minDate.getMinutes() + event.minimumNotice);
       }
     }
-  } else if (event.bookingWindowType === 'rolling' || event.bookingWindowType === 'indefinite') {
-    if (event.dateRangeLimit && event.dateRangeType) {
-      maxDate = new Date(minDate);
-      switch (event.dateRangeType) {
-        case 'calendar days':
-          maxDate.setDate(maxDate.getDate() + event.dateRangeLimit);
-          break;
-        case 'weeks':
-          maxDate.setDate(maxDate.getDate() + event.dateRangeLimit * 7);
-          break;
-        case 'months':
-          maxDate.setMonth(maxDate.getMonth() + event.dateRangeLimit);
-          break;
+
+    // Apply booking window constraints
+    if (event.bookingWindowType === 'fixed') {
+   
+      if (event.bookingStartDate) {
+        const startDate = new Date(event.bookingStartDate);
+        minDate = new Date(Math.max(minDate.getTime(), startDate.getTime()));
+      }
+
+  
+      if (event.bookingEndDate) {
+        maxDate = new Date(event.bookingEndDate);
+  
+      }
+  
+      else if (event.dateRangeLimit && event.dateRangeType) {
+        maxDate = new Date(minDate);
+        switch (event.dateRangeType) {
+          case 'calendar days':
+            maxDate.setDate(maxDate.getDate() + event.dateRangeLimit);
+            break;
+          case 'weeks':
+            maxDate.setDate(maxDate.getDate() + event.dateRangeLimit * 7);
+            break;
+          case 'months':
+            maxDate.setMonth(maxDate.getMonth() + event.dateRangeLimit);
+            break;
+        }
       }
     }
-  }
 
-  return { minDate, maxDate };
-};
+    else if (event.bookingWindowType === 'rolling' || event.bookingWindowType === 'indefinite') {
+      if (event.dateRangeLimit && event.dateRangeType) {
+        maxDate = new Date(minDate);
+        switch (event.dateRangeType) {
+          case 'calendar days':
+            maxDate.setDate(maxDate.getDate() + event.dateRangeLimit);
+            break;
+          case 'weeks':
+            maxDate.setDate(maxDate.getDate() + event.dateRangeLimit * 7);
+            break;
+          case 'months':
+            maxDate.setMonth(maxDate.getMonth() + event.dateRangeLimit);
+            break;
+        }
+      }
+    }
+
+    return { minDate, maxDate };
+  };
 
   // Helper function to format date for calendar (ensures consistent format)
   const formatDateForCalendar = (date: Date) => {
