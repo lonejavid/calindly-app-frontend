@@ -457,12 +457,13 @@ const BookingForm = (props: { event: Event }) => {
           
           if (eventTimezone === "UTC") {
             startTimeUTC = combinedDateTime;
+             console.log("final utc converted event time zone info is",startTimeUTC);
           } else {
             // Very basic fallback - may not be accurate for all timezones
             const tempDate = new Date(combinedDateTime.toLocaleString('en-US', { timeZone: eventTimezone }));
             const offset = combinedDateTime.getTime() - tempDate.getTime();
             startTimeUTC = new Date(combinedDateTime.getTime() + offset);
-            console.log("final utc converted event time zone info is",startTimeUTC);
+           
           }
         }
       }
