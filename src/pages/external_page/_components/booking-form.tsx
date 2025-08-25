@@ -492,7 +492,8 @@ const BookingForm = (props: { event: Event }) => {
       }) || [];
 
       
-     
+     console.log("before sending the pylod to the backedn starttimeutc  ",startTimeUTC);
+     console.log("before bpayload sendijg ", startTimeUTC.toISOString());
       const payload = {
         guestName: values.guestName,
         guestEmail: values.guestEmail,
