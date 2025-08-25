@@ -453,7 +453,7 @@ const BookingForm = (props: { event: Event }) => {
           console.log("Converted start time using manual method:", startTimeUTC);
         } else {
           // Final fallback - simple approach
-          console.warn("Manual conversion also failed, using simple fallback");
+         
           
           if (eventTimezone === "UTC") {
             startTimeUTC = combinedDateTime;
@@ -462,6 +462,7 @@ const BookingForm = (props: { event: Event }) => {
             const tempDate = new Date(combinedDateTime.toLocaleString('en-US', { timeZone: eventTimezone }));
             const offset = combinedDateTime.getTime() - tempDate.getTime();
             startTimeUTC = new Date(combinedDateTime.getTime() + offset);
+            console.log("final utc converted event time zone info is",startTimeUTC);
           }
         }
       }
