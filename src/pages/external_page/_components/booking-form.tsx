@@ -425,7 +425,7 @@ const BookingForm = (props: { event: Event }) => {
         0
       );
 
-      console.log("the selected date and parsed time in browser timezone",combinedDateTime);
+
 
    
 
@@ -492,12 +492,11 @@ const BookingForm = (props: { event: Event }) => {
       }) || [];
 
       
-     console.log("before sending the pylod to the backedn starttimeutc  ",startTimeUTC);
-     console.log("before bpayload sendijg ", startTimeUTC.toISOString());
+   
       const payload = {
         guestName: values.guestName,
         guestEmail: values.guestEmail,
-         additionalInfo: `${values.additionalInfo || ""} (+selectedSlot: ${selectedSlot} SelectedDate:${selectedDate} duration:${event.duration}+)`,
+         additionalInfo: `${values.additionalInfo || ""} (+fromTimeZone:${browserTimezone}  toTimeZone${eventTimezone} duration:${event.duration}+)`,
         ...(event.allowGuests && values.guestEmails && { guestEmails: values.guestEmails }),
         eventId: event.id,
         startTime: startTimeUTC.toISOString(),
@@ -507,7 +506,6 @@ const BookingForm = (props: { event: Event }) => {
 
       if (isPending) return;
 
-      console.log("Final payload sent to backend:", payload,"other data is:",selectedSlot," selected date: ",selectedDate,"duration is: ",event.duration);
 
       mutate(payload, {
         onSuccess: (response: any) => {
