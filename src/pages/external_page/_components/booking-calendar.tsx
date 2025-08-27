@@ -1014,11 +1014,7 @@ const BookingCalendar = ({
       
       const slotFallsOnTargetDate = isSameCalendarDate(slot.dateTime, targetJsDate);
       
-      if (slotFallsOnTargetDate) {
-        console.log(`✅ Slot ${slot.original} -> ${slot.converted} falls on target date`);
-      } else {
-        console.log(`❌ Slot ${slot.original} -> ${slot.converted} falls on ${slot.dateTime.toDateString()}, not target date ${targetJsDate.toDateString()}`);
-      }
+   
       
       return slotFallsOnTargetDate;
     });
