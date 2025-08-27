@@ -1061,11 +1061,7 @@ const BookingCalendar = ({
     
     const hasSlots = slotsForDate.length > 0;
     
-    if (hasSlots) {
-      console.log(`✅ Date ${date.toString()} has ${slotsForDate.length} slots after timezone filtering`);
-    } else {
-      console.log(`❌ Date ${date.toString()} has no slots after timezone filtering`);
-    }
+ 
     
     return hasSlots;
   };
@@ -1074,7 +1070,7 @@ const BookingCalendar = ({
   const isDateUnavailable = (date: DateValue) => {
     // First check custom restrictions (date range)
     if (customIsDateUnavailable && customIsDateUnavailable(date)) {
-      console.log('❌ Date unavailable due to custom restrictions:', date.toString());
+     
       return true;
     }
 
