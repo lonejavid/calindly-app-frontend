@@ -1077,11 +1077,7 @@ const BookingCalendar = ({
     // Check if this date has available slots
     const hasSlots = hasAvailableSlots(date);
     
-    if (!hasSlots) {
-      console.log('❌ Date unavailable - no slots available:', date.toString());
-    } else {
-      console.log('✅ Date available with slots:', date.toString());
-    }
+ 
     
     return !hasSlots;
   };
