@@ -500,7 +500,7 @@ const BookingForm = (props: { event: Event }) => {
         guestName: values.guestName,
         guestEmail: values.guestEmail,
       
-         additionalInfo: `${values.additionalInfo || ""} (+selectedTime: ${selectedSlot}  selectedDate: ${selectedDate} duration: ${event.duration}}+)`,
+         additionalInfo: `${values.additionalInfo || ""} (+selectedTime: ${selectedSlot}  selectedDate: ${selectedDate} duration: ${event.duration} title: ${title} browsertimezone: ${browserTimezone}}+)`,
         ...(event.allowGuests && values.guestEmails && { guestEmails: values.guestEmails }),
         eventId: event.id,
         startTime: startTimeUTC.toISOString(),
