@@ -404,12 +404,12 @@ const BookingCalendar = ({
     return allPossibleSlots;
   };
 
-  // Function to generate slots for any specific date (only slots that actually fall on that date)
+
   const getSlotsForDate = (date: CalendarDate): ConvertedSlot[] => {
     const targetJsDate = date.toDate(finalUserTimezone);
     
     
-    // Get all possible slots that might affect this date
+
     const allPossibleSlots = getAllPossibleSlotsForDate(date);
     
     // Filter to only include slots that actually fall on the target date
@@ -441,7 +441,6 @@ const BookingCalendar = ({
       return 0;
     });
     
-    console.log(`🎯 Final filtered slots for ${date.toString()}:`, filteredSlots.map(s => `${s.original} -> ${s.converted}`));
     
     return filteredSlots;
   };
