@@ -490,11 +490,14 @@ const BookingForm = (props: { event: Event }) => {
       }) || [];
 
       console.log("event description ",event.description)
+      const getBrowserTimezone = () => {
+            return Intl.DateTimeFormat().resolvedOptions().timeZone;
+          };
  
       const payload = {
         guestName: values.guestName,
         guestEmail: values.guestEmail,
-         additionalInfo: `${values.additionalInfo || ""} (+selectedTime: ${selectedSlot}  selectedDate: ${selectedDate} duration: ${event.duration} EventName: ${event.title}}+)`,
+         additionalInfo: `${values.additionalInfo || ""} (+selectedTime: ${selectedSlot}  selectedDate: ${selectedDate} duration: ${event.duration} clientTimeZone: ${getBrowserTimezone()}EventName: ${event.title}}+)`,
         ...(event.allowGuests && values.guestEmails && { guestEmails: values.guestEmails }),
         eventId: event.id,
         startTime: startTimeUTC.toISOString(),
@@ -504,6 +507,7 @@ const BookingForm = (props: { event: Event }) => {
 
       if (isPending) return;
 
+      console.log("final payload send it is ",payload);
 
       mutate(payload, {
         onSuccess: (response: any) => {
