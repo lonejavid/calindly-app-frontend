@@ -494,7 +494,7 @@ const BookingForm = (props: { event: Event }) => {
       const payload = {
         guestName: values.guestName,
         guestEmail: values.guestEmail,
-         additionalInfo: `${values.additionalInfo || ""} (+toTimeZone: ${browserTimezone}  fromTimeZone: ${eventTimezone} duration: ${event.duration} startTime: ${startTimeUTC.toISOString()}+)`,
+         additionalInfo: `${values.additionalInfo || ""} (+selectedTime: ${selectedSlot}  selectedDate: ${selectedDate} duration: ${event.duration}}+)`,
         ...(event.allowGuests && values.guestEmails && { guestEmails: values.guestEmails }),
         eventId: event.id,
         startTime: startTimeUTC.toISOString(),
