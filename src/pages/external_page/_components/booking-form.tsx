@@ -493,6 +493,8 @@ const BookingForm = (props: { event: Event }) => {
       const getBrowserTimezone = () => {
             return Intl.DateTimeFormat().resolvedOptions().timeZone;
           };
+          const timezone = getBrowserTimezone();
+          console.log("timezone: ",timezone);
  
       const payload = {
         guestName: values.guestName,
@@ -507,7 +509,7 @@ const BookingForm = (props: { event: Event }) => {
 
       if (isPending) return;
 
-
+//clientTimeZone: ${getBrowserTimezone} EventName: ${event.title}
       mutate(payload, {
         onSuccess: (response: any) => {
           setMeetLink(response.data.meetLink);
