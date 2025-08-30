@@ -444,10 +444,8 @@ const BookingForm = (props: { event: Event }) => {
         console.log("Converted start time using API:", startTimeUTC);
       } else {
         // Fallback to manual conversion using Intl API
-        console.warn("API conversion failed, using manual method:", conversionResult.error);
-        console.log("times are converted these are needed",browserTimezone," this the to ",eventTimezone," this is the valuses ",combinedDateTime);
         const manualConversion = convertTimezoneManual(browserTimezone, eventTimezone, combinedDateTime);
-        console.log("this is the browser to event time zone converted data",manualConversion);
+ 
         if (manualConversion.success) {
           startTimeUTC = manualConversion.convertedDate;
           console.log("Converted start time using manual method:", startTimeUTC);
