@@ -99,7 +99,7 @@ const convertTimezone = async (fromTimezone: string, toTimezone: string, timesta
   }
 };
 
-// Backup timezone conversion using Intl API and manual calculation
+
 
 const convertTimezoneManual = (fromTimezone: string, toTimezone: string, dateTime: Date) => {
   try {
@@ -208,7 +208,7 @@ const BookingForm = (props: { event: Event }) => {
   
   const { selectedDate, isSuccess, selectedSlot, handleSuccess } = useBookingState();
 
-  console.log("user has selected the slot please check it ", selectedSlot, selectedDate);
+  console.log("user has selected the slot please check it ", selectedSlot, selectedDate,event.duration);
 
   const { mutate, isPending } = useMutation({
     mutationFn: scheduleMeetingMutationFn,
