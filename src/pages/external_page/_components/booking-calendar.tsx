@@ -310,10 +310,10 @@ const BookingCalendar = ({
           const backendTimezone = day.timezone || 'UTC';
           console.log(`🔄 Computing conversion for ${day.day} from ${backendTimezone} to ${finalUserTimezone}`);
           
-          // Use a reference date for this day of week
+        
           const today = new Date();
           const referenceDate = new Date(today);
-          referenceDate.setHours(12, 0, 0, 0); // Use noon to avoid DST issues
+          referenceDate.setHours(12, 0, 0, 0); 
           
           // Get timezone offset using the first slot
           const sampleSlot = day.slots[0];
@@ -476,6 +476,16 @@ const BookingCalendar = ({
      
       return true;
     }
+  const calendarDate = date as CalendarDate;
+  const jsDate = calendarDate.toDate(finalUserTimezone);
+  const dayOfWeek = getDayOfWeekFromDate(jsDate);
+     // Find the corresponding day in availability data
+  const dayData = availability.find(day => day.day === dayOfWeek);
+  
+  if (!dayData || !dayData.isAvailable) {
+    console.log(`📅 Date ${dayOfWeek} is not available according to backend`);
+    return true; // Mark as unavailable
+  }
 
     // Check if this date has available slots
     const hasSlots = hasAvailableSlots(date);
