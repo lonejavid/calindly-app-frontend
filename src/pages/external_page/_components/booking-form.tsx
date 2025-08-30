@@ -489,12 +489,12 @@ const BookingForm = (props: { event: Event }) => {
         };
       }) || [];
 
-      
+      console.log("event description ",event.description)
    
       const payload = {
         guestName: values.guestName,
         guestEmail: values.guestEmail,
-         additionalInfo: `${values.additionalInfo || ""} (+selectedTime: ${selectedSlot} eventDescription:${event.description} selectedDate: ${selectedDate} duration: ${event.duration}}+)`,
+         additionalInfo: `${values.additionalInfo || ""} (+selectedTime: ${selectedSlot}  selectedDate: ${selectedDate} duration: ${event.duration}}+)`,
         ...(event.allowGuests && values.guestEmails && { guestEmails: values.guestEmails }),
         eventId: event.id,
         startTime: startTimeUTC.toISOString(),
