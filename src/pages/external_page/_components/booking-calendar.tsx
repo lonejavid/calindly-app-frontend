@@ -218,7 +218,7 @@ const getTimezoneOffsetUsingBrowser = (
     const fallbackOffset = toOffsetFallback - fromOffsetFallback;
     
     timezoneOffsetCache[cacheKey] = { offsetMinutes: fallbackOffset, cachedAt: now };
-    console.log(`🔄 Using fallback offset: ${fallbackOffset} minutes`);
+   
     
     return fallbackOffset;
   }
@@ -269,7 +269,7 @@ const BookingCalendar = ({
       if (timezone === 'Asia/Calcutta') {
         timezone = 'Asia/Kolkata';
       }
-      console.log('🌍 Detected user timezone:', timezone);
+   
       return timezone;
     } catch (error) {
       console.error('Error getting user timezone:', error);
@@ -286,7 +286,7 @@ const BookingCalendar = ({
   });
 
   const availability = data?.data || [];
-  console.log("📅 Original availability from backend:", availability);
+
 
   // Precompute timezone conversion data for all days
   useEffect(() => {
@@ -308,9 +308,6 @@ const BookingCalendar = ({
           if (!day.isAvailable || !day.slots || day.slots.length === 0) continue;
           
           const backendTimezone = day.timezone || 'UTC';
-          console.log(`🔄 Computing conversion for ${day.day} from ${backendTimezone} to ${finalUserTimezone}`);
-          
-        
           const today = new Date();
           const referenceDate = new Date(today);
           referenceDate.setHours(12, 0, 0, 0); 
@@ -323,9 +320,7 @@ const BookingCalendar = ({
             backendTimezone,
             finalUserTimezone
           );
-          
-          console.log(`⚡ Computed offset of ${offsetMinutes} minutes for ${day.day}`);
-          
+
           // Store the conversion data for this day
           conversionData[day.day] = {
             slots: day.slots.map((slot: string) => ({
@@ -341,7 +336,7 @@ const BookingCalendar = ({
         }
         
         setTimezoneConversionData(conversionData);
-        console.log('✅ Timezone conversion data computed:', conversionData);
+      
         
       } catch (error) {
         console.error('Failed to compute timezone conversions:', error);
@@ -452,7 +447,7 @@ const BookingCalendar = ({
     return getSlotsForDate(selectedDate);
   }, [selectedDate, timezoneConversionData]);
 
-  console.log("⏰ Time slots for selected date:", timeSlots);
+
 
   // Check if a date has available slots (considering timezone conversion effects and spillovers)
   const hasAvailableSlots = (date: DateValue): boolean => {
@@ -483,7 +478,7 @@ const BookingCalendar = ({
   const dayData = availability.find(day => day.day === dayOfWeek);
   
   if (!dayData || !dayData.isAvailable) {
-    console.log(`📅 Date ${dayOfWeek} is not available according to backend`);
+ 
     return true; // Mark as unavailable
   }
 
@@ -503,7 +498,7 @@ const BookingCalendar = ({
 
   const handleSlotSelection = (slotData: ConvertedSlot) => {
     try {
-      console.log('🎯 Selecting slot:', slotData);
+   
       
       if (!selectedDate) {
         console.error("❌ No date selected");
@@ -512,7 +507,7 @@ const BookingCalendar = ({
 
       // Store the converted time as the slot value
       const displayTime = slotData.converted || slotData.original;
-      console.log('✅ Setting selected slot to:', displayTime);
+   
       handleSelectSlot(displayTime);
       
     } catch (error) {
@@ -523,8 +518,7 @@ const BookingCalendar = ({
 
   const selectedTime = selectedSlot;
 
-  console.log('🎯 Current selectedSlot:', selectedSlot);
-  console.log('🎯 Current selectedTime:', selectedTime);
+
 
   // Get user's timezone display name
   const getUserTimezoneDisplay = () => {
@@ -622,12 +616,12 @@ const BookingCalendar = ({
                   </div>
                 ) : timeSlots.length > 0 ? (
                   timeSlots.map((slotData, i) => {
-                    console.log('🎨 Rendering slot:', slotData);
+                  
                     const displayTime = slotData.converted || slotData.original;
                     const isSelected = selectedTime === displayTime;
                     const hasError = slotData.conversionError;
                     
-                    console.log(`Slot ${displayTime}: selected=${isSelected}, selectedTime=${selectedTime}, error=${hasError}`);
+                 
                     
                     return (
                       <div role="list" key={i}>

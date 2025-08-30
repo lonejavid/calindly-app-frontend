@@ -76,7 +76,7 @@ const convertTimezone = async (fromTimezone: string, toTimezone: string, timesta
   const httpsUrl = `https://api.timezonedb.com/v2.1/convert-time-zone?key=${apiKey}&format=json&from=${fromTimezone}&to=${toTimezone}&time=${timestamp}`;
   
   try {
-    console.log("Attempting timezone conversion API call to:", httpsUrl);
+  
     const response = await fetch(httpsUrl);
     const data = await response.json();
     
@@ -204,11 +204,10 @@ const BookingForm = (props: { event: Event }) => {
     guestName: string;
   } | null>(null);
 
-  console.log(meetLink);
+
   
   const { selectedDate, isSuccess, selectedSlot, handleSuccess } = useBookingState();
 
-  console.log("user has selected the slot please check it ", selectedSlot, selectedDate,event.duration);
 
   const { mutate, isPending } = useMutation({
     mutationFn: scheduleMeetingMutationFn,
@@ -382,8 +381,7 @@ const BookingForm = (props: { event: Event }) => {
     }
 
     try {
-      console.log("Selected slot:", selectedSlot);
-      console.log("Selected date:", selectedDate);
+ 
 
       // Get the timezone from availability data
       const eventTimezone = availability.length > 0 ? availability[0].timezone : "UTC";
@@ -398,21 +396,21 @@ const BookingForm = (props: { event: Event }) => {
       if (!selectedDateISO) {
         throw new Error("Invalid date format from calendar");
       }
-      console.log("Selected date ISO:", selectedDateISO);
+
 
       // Parse the selected date
       const selectedDateObj = parseISO(selectedDateISO);
       if (isNaN(selectedDateObj.getTime())) {
         throw new Error("Invalid date format");
       }
-      console.log("Parsed selected date:", selectedDateObj);
+   
 
       // Parse the time slot (e.g., "11:30 pm") and combine with the selected date
       const timeOnlyDate = parse(selectedSlot.toString(), "h:mm a", new Date());
       if (isNaN(timeOnlyDate.getTime())) {
         throw new Error("Invalid start time format");
       }
-      console.log("time and date after parsing",timeOnlyDate);
+    
 
       // Create a date object with the selected date and parsed time in browser timezone
       const combinedDateTime = new Date(
@@ -441,21 +439,21 @@ const BookingForm = (props: { event: Event }) => {
       if (conversionResult.success) {
         // Use the converted timestamp from the API
         startTimeUTC = new Date(conversionResult.convertedTimestamp * 1000);
-        console.log("Converted start time using API:", startTimeUTC);
+
       } else {
         // Fallback to manual conversion using Intl API
         const manualConversion = convertTimezoneManual(browserTimezone, eventTimezone, combinedDateTime);
  
         if (manualConversion.success) {
           startTimeUTC = manualConversion.convertedDate;
-          console.log("Converted start time using manual method:", startTimeUTC);
+
         } else {
           // Final fallback - simple approach
          
           
           if (eventTimezone === "UTC") {
             startTimeUTC = combinedDateTime;
-             console.log("final utc converted event time zone info is",startTimeUTC);
+
           } else {
             // Very basic fallback - may not be accurate for all timezones
             const tempDate = new Date(combinedDateTime.toLocaleString('en-US', { timeZone: eventTimezone }));
@@ -492,7 +490,7 @@ const BookingForm = (props: { event: Event }) => {
 
       const title=event.title;
   
-       console.log("event title is ",title," browser time zone is ",browserTimezone);
+
 
       
    
