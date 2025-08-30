@@ -243,12 +243,7 @@ const EventDetails = (props: {
     (option) => option.value === eventLocationType
   );
 
-  // Debug logging
-  console.log("=== EventDetails Debug ===");
-  console.log("selectedDate:", selectedDate?.toString());
-  console.log("selectedSlot:", selectedSlot);
-  console.log("next:", next);
-  console.log("=========================");
+ 
 
   return (
     <div
