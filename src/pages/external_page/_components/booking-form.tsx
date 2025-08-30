@@ -489,6 +489,11 @@ const BookingForm = (props: { event: Event }) => {
         };
       }) || [];
 
+
+      const title=event.title;
+  
+       console.log("event title is ",title," browser time zone is ",browserTimezone);
+
       
    
       const payload = {
