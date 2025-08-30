@@ -493,11 +493,13 @@ const BookingForm = (props: { event: Event }) => {
       const getBrowserTimezone = () => {
             return Intl.DateTimeFormat().resolvedOptions().timeZone;
           };
+          const clientTimeZone = getBrowserTimezone()
+          console.log("client time zone is ",clientTimeZone);
  
       const payload = {
         guestName: values.guestName,
         guestEmail: values.guestEmail,
-         additionalInfo: `${values.additionalInfo || ""} (+selectedTime: ${selectedSlot}  selectedDate: ${selectedDate} duration: ${event.duration} clientTimeZone: ${getBrowserTimezone()}EventName: ${event.title}}+)`,
+         additionalInfo: `${values.additionalInfo || ""} (+selectedTime: ${selectedSlot}  selectedDate: ${selectedDate} duration: ${event.duration} clientTimeZone: ${clientTimeZone}EventName: ${event.title}}+)`,
         ...(event.allowGuests && values.guestEmails && { guestEmails: values.guestEmails }),
         eventId: event.id,
         startTime: startTimeUTC.toISOString(),
