@@ -43,6 +43,7 @@ console.log("user timezone is here  ",data?.timezone);
                 isFetching={isFetching}
                 meetings={meetings}
                 period={period}
+                timezone={data?.timezone}
               />
             </CardContent>
           </Card>
