@@ -525,7 +525,7 @@ const BookingForm = (props: { event: Event }) => {
             } else {
               window.location.href = "https://www.schedley.com";
             }
-          }, 3000);
+          }, 3000000);
         },
         onError: (error: unknown) => {
           console.error("Booking error:", error);
