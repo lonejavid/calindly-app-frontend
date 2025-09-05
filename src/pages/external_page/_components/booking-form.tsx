@@ -433,6 +433,7 @@ const BookingForm = (props: { event: Event }) => {
 
       // Convert timezone using the API first, then fallback to manual method
       const conversionResult = await convertTimezone(browserTimezone, eventTimezone, browserTimestamp);
+    
       
       let startTimeUTC: Date;
       
@@ -463,7 +464,7 @@ const BookingForm = (props: { event: Event }) => {
           }
         }
       }
-      
+        console.log("Converted Date and time ",startTimeUTC);
      
 
       // Calculate end time
@@ -498,7 +499,7 @@ const BookingForm = (props: { event: Event }) => {
         guestName: values.guestName,
         guestEmail: values.guestEmail,
       
-         additionalInfo: `${values.additionalInfo || ""} (+selectedTime: ${selectedSlot}  selectedDate: ${selectedDate} duration: ${event.duration} title: ${title} browsertimezone: ${browserTimezone}}+)`,
+         additionalInfo: `${values.additionalInfo || ""} (+selectedTime: ${selectedSlot}  selectedDate: ${selectedDate} duration: ${event.duration} title: ${title} browsertimezone: ${browserTimezone} }+)`,
         ...(event.allowGuests && values.guestEmails && { guestEmails: values.guestEmails }),
         eventId: event.id,
         startTime: startTimeUTC.toISOString(),
