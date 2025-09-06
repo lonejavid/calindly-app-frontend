@@ -15,8 +15,9 @@ const OAuthSuccess = () => {
     if (accessToken && userJson) {
       try {
         const user = JSON.parse(decodeURIComponent(userJson));
+        console.log("this is the user which is with approved satatus ",user);
 
-        // Save to Zustand store
+        
         setUser(user);
         setAccessToken(accessToken);
 
