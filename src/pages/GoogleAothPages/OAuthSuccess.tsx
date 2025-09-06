@@ -15,6 +15,7 @@ const OAuthSuccess = () => {
     if (accessToken && userJson) {
       try {
         const user = JSON.parse(decodeURIComponent(userJson));
+        console.log("user is: ",user);
 
         // Save to Zustand store
         setUser(user);
