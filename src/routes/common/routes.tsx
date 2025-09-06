@@ -12,6 +12,7 @@ import OAuthSuccess from "@/pages/GoogleAothPages/OAuthSuccess";
 import TermsOfService from "@/pages/Policy/TermsOfService";
 import PrivacyPolicy from "@/pages/Policy/PrivacyPolicy";
 import CareersPage from "@/pages/landing/CareersPage";
+import Setup from "@/pages/auth/components/Setup";
 export const authenticationRoutePaths = [
    { path: "/", element: <ScheduleyLanding /> },
    {path:"/terms",element:<TermsOfService/>},
@@ -22,6 +23,7 @@ export const authenticationRoutePaths = [
 ];
 
 export const protectedRoutePaths = [
+  { path: PROTECTED_ROUTES.SETUP, element: <Setup/> },
   { path: PROTECTED_ROUTES.EVENT_TYPES, element: <EventType /> },
   { path: PROTECTED_ROUTES.MEETINGS, element: <Meetings /> },
   { path: PROTECTED_ROUTES.AVAILBILITIY, element: <Availability /> },
