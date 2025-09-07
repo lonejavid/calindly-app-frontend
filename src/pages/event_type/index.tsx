@@ -71,11 +71,6 @@ const EventType = () => {
   const events = data?.data.events || [];
   const username = data?.data.username ?? "";
 
-  // ✅ If user exists and not approved → show Setup
-  if (user && user.isApproved === false) {
-    return <Setup />;
-  }
-
   return (
     <div className="flex flex-col !gap-8">
       <ErrorAlert isError={isError} error={error} />
@@ -94,9 +89,11 @@ const EventType = () => {
           <EventListSection events={events} username={username} />
         </div>
       )}
+
+      {/* ✅ Setup Modal - Rendered on top when user is not approved */}
+      {user && user.isApproved === false && <Setup />}
     </div>
   );
 };
 
 export default EventType;
-
