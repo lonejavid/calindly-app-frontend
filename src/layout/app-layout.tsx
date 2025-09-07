@@ -45,25 +45,12 @@ const AppLayout = () => {
   // Hide sidebar if user is not approved or on setup page
   const shouldShowSidebar = !isSetupPage && !isUserNotApproved;
 
-  // If user is not approved, show clean layout without sidebar
-  if (!shouldShowSidebar) {
-    return (
-      <div className="min-h-screen bg-[#fafafa]">
-        <div className="w-full flex flex-1 flex-col gap-1 px-3 lg:px-8 max-w-[1300px] mx-auto">
-          <Header />
-          <div className="pb-8">
-            <Outlet />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Normal layout with sidebar for approved users
   return (
     <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset className={`overflow-x-hidden p-0 !bg-[#fafafa]`}>
+      {/* Only render AppSidebar if user is approved */}
+      {shouldShowSidebar && <AppSidebar />}
+      
+      <SidebarInset className={`overflow-x-hidden p-0 !bg-[#fafafa] ${!shouldShowSidebar ? 'ml-0' : ''}`}>
         <div
           className="w-full flex flex-1 flex-col gap-1 px-3 lg:px-8 max-w-[1300px] mx-auto"
         >
