@@ -1,11 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { CheckCircle, ArrowLeft, ArrowRight, Calendar, Users, TrendingUp, Clock, Award, BarChart3 } from "lucide-react";
+import React, { useState } from "react";
 
 const Setup = () => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [animationKey, setAnimationKey] = useState(0);
   const [formData, setFormData] = useState({
     sellingMethod: "",
     icp: "",
@@ -21,12 +17,12 @@ const Setup = () => {
       field: "sellingMethod",
       type: "cards",
       options: [
-        { value: "Direct Sales", icon: Users, label: "Direct Sales", description: "One-on-one customer interactions" },
-        { value: "Resellers/Partners", icon: TrendingUp, label: "With partners", description: "Through channel partnerships" },
-        { value: "Inbound Marketing", icon: BarChart3, label: "Inbound Marketing", description: "Content-driven lead generation" },
-        { value: "Outbound Sales", icon: ArrowRight, label: "Outbound Sales", description: "Proactive customer outreach" },
-        { value: "Online Marketplace", icon: Calendar, label: "Online Marketplace", description: "E-commerce platforms" },
-        { value: "Other", icon: Award, label: "Other", description: "Different approach" }
+        { value: "Direct Sales", icon: "👤", label: "Direct Sales" },
+        { value: "Resellers/Partners", icon: "🤝", label: "With partners" },
+        { value: "Inbound Marketing", icon: "📈", label: "Inbound Marketing" },
+        { value: "Outbound Sales", icon: "📞", label: "Outbound Sales" },
+        { value: "Online Marketplace", icon: "🛒", label: "Online Marketplace" },
+        { value: "Other", icon: "⚡", label: "Other" }
       ]
     },
     {
@@ -35,12 +31,12 @@ const Setup = () => {
       field: "icp",
       type: "cards",
       options: [
-        { value: "Small Business", icon: Users, label: "Small Business", description: "1-50 employees" },
-        { value: "Enterprise", icon: TrendingUp, label: "Enterprise", description: "500+ employees" },
-        { value: "Startups", icon: ArrowRight, label: "Startups", description: "Early-stage companies" },
-        { value: "Healthcare", icon: Award, label: "Healthcare", description: "Medical organizations" },
-        { value: "Education", icon: BarChart3, label: "Education", description: "Schools and universities" },
-        { value: "Other", icon: Calendar, label: "Other", description: "Different industry" }
+        { value: "Small Business", icon: "🏪", label: "Small Business" },
+        { value: "Enterprise", icon: "🏢", label: "Enterprise" },
+        { value: "Startups", icon: "🚀", label: "Startups" },
+        { value: "Healthcare", icon: "🏥", label: "Healthcare" },
+        { value: "Education", icon: "🎓", label: "Education" },
+        { value: "Other", icon: "⚡", label: "Other" }
       ]
     },
     {
@@ -61,13 +57,6 @@ const Setup = () => {
 
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // Simulate navigation function (replace with actual useNavigate hook)
-  const navigate = (path) => {
-    console.log(`Navigating to: ${path}`);
-    // In real app: navigate(path);
-    alert(`Would navigate to: ${path}`);
-  };
-
   const handleInputChange = (value) => {
     const currentField = steps[currentStep].field;
     setFormData(prev => ({
@@ -76,71 +65,23 @@ const Setup = () => {
     }));
   };
 
-  const saveUserData = async (userData) => {
-    try {
-      // Simulate API call to save user data
-      const response = await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({
-            success: true,
-            user: { ...userData, isApproved: true, id: Date.now() }
-          });
-        }, 1000);
-      });
-      
-      // In real app, you would make an actual API call here
-      // const response = await fetch('/api/users', { method: 'POST', body: JSON.stringify(userData) });
-      
-      // Simulate saving to storage (replace with your actual storage solution)
-      const userWithApproval = { ...response.user, isApproved: true };
-      console.log("Saving user data:", userWithApproval);
-      // localStorage.setItem('user', JSON.stringify(userWithApproval));
-      // localStorage.setItem('userApproved', 'true');
-      
-      return userWithApproval;
-    } catch (error) {
-      console.error('Error saving user data:', error);
-      throw error;
-    }
-  };
-
-  const handleNext = async () => {
-    setIsTransitioning(true);
-    
+  const handleNext = () => {
     if (currentStep < steps.length - 1) {
-      setTimeout(() => {
-        setCurrentStep(currentStep + 1);
-        setAnimationKey(prev => prev + 1);
-        setIsTransitioning(false);
-      }, 300);
+      setCurrentStep(currentStep + 1);
     } else {
-      setIsLoading(true);
-      try {
-        const userData = await saveUserData(formData);
-        console.log("User Data Saved:", userData);
-        setShowSuccess(true);
-        
-        // Navigate to event types after success animation
-        setTimeout(() => {
-          navigate("/app/event_types");
-        }, 3000);
-      } catch (error) {
-        console.error("Error completing setup:", error);
-        setIsLoading(false);
-      }
-      setIsTransitioning(false);
+      setShowSuccess(true);
+      console.log("Setup Data:", formData);
     }
   };
 
   const handlePrevious = () => {
     if (currentStep > 0) {
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setCurrentStep(currentStep - 1);
-        setAnimationKey(prev => prev + 1);
-        setIsTransitioning(false);
-      }, 300);
+      setCurrentStep(currentStep - 1);
     }
+  };
+
+  const handleClose = () => {
+    window.location.reload();
   };
 
   const isCurrentStepValid = () => {
@@ -151,74 +92,42 @@ const Setup = () => {
 
   if (showSuccess) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center overflow-hidden relative">
-        {/* Animated background elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          {[...Array(12)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 animate-ping"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${i * 0.2}s`,
-                animationDuration: '2s'
-              }}
-            />
-          ))}
-        </div>
-
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen gap-8 lg:gap-16">
-            {/* Left Side - Content */}
-            <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left max-w-lg animate-fadeInUp">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center mb-6 shadow-2xl animate-bounce">
-                <CheckCircle className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+      <div className="min-h-screen bg-gray-50 flex">
+        {/* Left Side - Content */}
+        <div className="flex-1 flex flex-col justify-center px-12 lg:px-24">
+          <div className="max-w-md">
+            <div className="mb-8">
+              <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mb-6">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
               </div>
-              
-              <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4 leading-tight animate-slideInUp">
-                All set! 🎉
-              </h1>
-              
-              <p className="text-base sm:text-lg lg:text-xl text-gray-600 leading-relaxed mb-8 max-w-md animate-slideInUp" style={{ animationDelay: '0.2s' }}>
-                Our team will carefully analyze the details and will get back to you. You're being redirected to your dashboard...
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">All set! 🎉</h1>
+              <p className="text-lg text-gray-600 leading-relaxed mb-8">
+                Our team will carefully analyze the details and will get back to you.
               </p>
-              
-              <div className="flex items-center space-x-2 text-blue-600 animate-pulse">
-                <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
-                <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
-                <span className="ml-2 font-medium">Redirecting...</span>
-              </div>
-            </div>
-
-            {/* Right Side - Success Animation */}
-            <div className="flex-1 flex justify-center items-center max-w-lg animate-fadeInRight">
-              <div className="relative">
-                <div className="w-48 h-48 sm:w-64 sm:h-64 lg:w-80 lg:h-80 rounded-full bg-gradient-to-r from-blue-100 to-purple-100 flex items-center justify-center animate-spin-slow">
-                  <div className="text-6xl sm:text-7xl lg:text-9xl animate-bounce">
-                    🎉
-                  </div>
-                </div>
-                
-                {/* Orbiting elements */}
-                {[0, 72, 144, 216, 288].map((angle, i) => (
-                  <div
-                    key={i}
-                    className="absolute w-4 h-4 sm:w-6 sm:h-6 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full animate-spin-slow"
-                    style={{
-                      top: "50%",
-                      left: "50%",
-                      transformOrigin: "0 0",
-                      transform: `rotate(${angle}deg) translate(120px, 0) rotate(-${angle}deg)`,
-                      animationDelay: `${i * 0.2}s`,
-                      animationDuration: '8s'
-                    }}
-                  />
-                ))}
-              </div>
+              <button
+                onClick={handleClose}
+                className="bg-blue-600 text-white px-8 py-3 rounded-full font-medium hover:bg-blue-700 transition-colors"
+              >
+                Get Started
+              </button>
             </div>
           </div>
+        </div>
+
+        {/* Right Side - Decorative */}
+        <div className="hidden lg:block flex-1 relative bg-gradient-to-br from-blue-50 to-purple-50">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400 opacity-20"></div>
+          <svg className="absolute bottom-0 right-0 w-96 h-96" viewBox="0 0 200 200" fill="none">
+            <path d="M 0 100 Q 50 50 100 100 Q 150 150 200 100 L 200 200 L 0 200 Z" fill="url(#gradient)" />
+            <defs>
+              <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.3" />
+                <stop offset="100%" stopColor="#8B5CF6" stopOpacity="0.3" />
+              </linearGradient>
+            </defs>
+          </svg>
         </div>
       </div>
     );
@@ -227,39 +136,30 @@ const Setup = () => {
   const currentStepData = steps[currentStep];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex flex-col overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-10 sm:top-20 left-4 sm:left-20 w-12 h-12 sm:w-16 sm:h-16 lg:w-32 lg:h-32 bg-blue-200 rounded-full opacity-20 animate-float" />
-        <div className="absolute top-1/3 right-4 sm:right-20 w-8 h-8 sm:w-12 sm:h-12 lg:w-24 lg:h-24 bg-purple-200 rounded-full opacity-20 animate-float" style={{ animationDelay: '1s' }} />
-        <div className="absolute bottom-1/3 left-1/4 w-6 h-6 sm:w-10 sm:h-10 lg:w-20 lg:h-20 bg-pink-200 rounded-full opacity-20 animate-float" style={{ animationDelay: '2s' }} />
-      </div>
-
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-12 flex-1 flex flex-col">
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Left Side - Content */}
+      <div className="flex-1 flex flex-col justify-between px-12 lg:px-24 py-12">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-center justify-between mb-6 sm:mb-8 lg:mb-12 gap-4 animate-fadeInDown">
+        <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300 cursor-pointer">
-              <span className="text-white font-bold text-base sm:text-lg lg:text-xl">S</span>
+            <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-lg">S</span>
             </div>
-            <span className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Schedley
-            </span>
+            <span className="text-2xl font-bold text-blue-600">Schedley</span>
           </div>
-          
-          <div className="flex items-center space-x-3 sm:space-x-4">
-            <span className="text-xs sm:text-sm font-medium text-gray-600 bg-white px-2 sm:px-3 py-1 rounded-full shadow-sm whitespace-nowrap">
+          <div className="flex items-center space-x-4">
+            <span className="text-sm font-medium text-gray-600">
               STEP {currentStep + 1} OF {steps.length}
             </span>
             <div className="flex space-x-1">
               {steps.map((_, index) => (
                 <div
                   key={index}
-                  className={`h-2 rounded-full transition-all duration-500 ${
+                  className={`h-2 rounded-full transition-all duration-300 ${
                     index <= currentStep 
-                      ? "w-6 sm:w-8 lg:w-10 bg-gradient-to-r from-blue-600 to-purple-600 shadow-sm" 
+                      ? "w-8 bg-blue-600" 
                       : index === currentStep + 1 
-                        ? "w-4 sm:w-6 bg-blue-300"
+                        ? "w-6 bg-blue-300"
                         : "w-2 bg-gray-300"
                   }`}
                 />
@@ -269,290 +169,184 @@ const Setup = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 flex flex-col lg:flex-row gap-6 lg:gap-8 xl:gap-16">
-          {/* Left Side - Form */}
-          <div className="flex-1 flex flex-col justify-center">
-            <div 
-              key={animationKey}
-              className={`space-y-6 sm:space-y-8 transition-all duration-300 ${isTransitioning ? 'opacity-50 transform translate-x-4' : 'opacity-100 transform translate-x-0 animate-slideInLeft'}`}
-            >
-              {/* Title and Subtitle */}
-              <div className="space-y-3 sm:space-y-4">
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 leading-tight">
-                  {currentStepData.title}
-                </h1>
-                <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-gray-600 leading-relaxed">
-                  {currentStepData.subtitle}
-                </p>
-              </div>
-
-              {/* Form Content */}
-              <div className="space-y-4 sm:space-y-6">
-                {currentStepData.type === "cards" ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
-                    {currentStepData.options.map((option, index) => {
-                      const IconComponent = option.icon;
-                      return (
-                        <button
-                          key={index}
-                          onClick={() => handleInputChange(option.value)}
-                          className={`p-3 sm:p-4 lg:p-6 border-2 rounded-xl text-left transition-all duration-300 hover:scale-105 hover:shadow-lg animate-fadeInUp ${
-                            formData[currentStepData.field] === option.value
-                              ? "border-blue-500 bg-gradient-to-r from-blue-50 to-purple-50 shadow-lg transform scale-105"
-                              : "border-gray-200 bg-white hover:border-blue-300 hover:shadow-md"
-                          }`}
-                          style={{ animationDelay: `${index * 0.1}s` }}
-                        >
-                          <div className="flex flex-col space-y-2 sm:space-y-3">
-                            <div className="flex items-center space-x-3">
-                              <div className="p-2 rounded-lg bg-gradient-to-r from-blue-100 to-purple-100">
-                                <IconComponent className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-blue-600" />
-                              </div>
-                              <span className="font-semibold text-gray-900 text-sm sm:text-base">
-                                {option.label}
-                              </span>
-                            </div>
-                            <p className="text-xs sm:text-sm text-gray-600 leading-relaxed pl-11">
-                              {option.description}
-                            </p>
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                ) : currentStepData.type === "textarea" ? (
-                  <div className="max-w-full lg:max-w-2xl animate-fadeInUp">
-                    <textarea
-                      value={formData[currentStepData.field]}
-                      onChange={(e) => handleInputChange(e.target.value)}
-                      placeholder={currentStepData.placeholder}
-                      rows={4}
-                      className="w-full p-3 sm:p-4 lg:p-6 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-gray-900 transition-all duration-300 hover:shadow-md text-sm sm:text-base"
-                    />
-                  </div>
-                ) : currentStepData.type === "pricing" ? (
-                  <div className="max-w-full sm:max-w-md animate-fadeInUp">
-                    <div className="flex flex-col sm:flex-row gap-3">
-                      <select
-                        value={formData.currency}
-                        onChange={(e) => setFormData(prev => ({ ...prev, currency: e.target.value }))}
-                        className="w-full sm:w-28 p-3 sm:p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 text-sm sm:text-base"
-                      >
-                        <option value="USD">USD</option>
-                        <option value="EUR">EUR</option>
-                        <option value="GBP">GBP</option>
-                        <option value="INR">INR</option>
-                      </select>
-                      <input
-                        type="number"
-                        value={formData[currentStepData.field]}
-                        onChange={(e) => handleInputChange(e.target.value)}
-                        placeholder={currentStepData.placeholder}
-                        className="flex-1 p-3 sm:p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 hover:shadow-md text-sm sm:text-base"
-                      />
-                    </div>
-                  </div>
-                ) : null}
-              </div>
-            </div>
+        <div className="flex-1 flex flex-col justify-center max-w-2xl">
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              {currentStepData.title}
+            </h1>
+            <p className="text-lg text-gray-600">
+              {currentStepData.subtitle}
+            </p>
           </div>
 
-          {/* Right Side - Preview Cards (Hidden on mobile, visible on lg+) */}
-          <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-center relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-100/50 via-purple-100/50 to-pink-100/50 rounded-3xl" />
-            
-            {/* Calendar Preview */}
-            <div className="relative bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl p-6 w-80 border border-white/20 animate-fadeInRight">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full animate-pulse" />
-                  <div className="space-y-1">
-                    <div className="w-16 h-3 bg-gray-300 rounded-full animate-pulse" />
-                    <div className="w-20 h-2 bg-gray-200 rounded-full animate-pulse" />
-                  </div>
-                </div>
-                <div className="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded-full animate-bounce">
-                  Available Times
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-7 gap-1 mb-4">
-                {Array.from({ length: 35 }, (_, i) => (
-                  <div
-                    key={i}
-                    className={`h-8 flex items-center justify-center text-xs rounded transition-all hover:scale-110 ${
-                      i === 10 || i === 15 || i === 20 
-                        ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-sm animate-pulse" 
-                        : i > 6 && i < 28 
-                          ? "hover:bg-blue-50 cursor-pointer text-gray-700"
-                          : "text-gray-300"
-                    }`}
-                  >
-                    {i > 6 && i < 28 ? i - 6 : ""}
-                  </div>
-                ))}
-              </div>
-              
-              <div className="space-y-2">
-                {["9:00 AM", "10:30 AM", "2:00 PM", "4:00 PM"].map((time, index) => (
-                  <div
+          {/* Form Content */}
+          <div className="mb-12">
+            {currentStepData.type === "cards" ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {currentStepData.options.map((option, index) => (
+                  <button
                     key={index}
-                    className={`p-3 rounded-lg text-center text-sm font-medium transition-all hover:scale-105 ${
-                      index === 1 
-                        ? "border-2 border-blue-500 bg-gradient-to-r from-blue-50 to-purple-50 text-blue-600" 
-                        : "border border-gray-200 hover:border-blue-300"
+                    onClick={() => handleInputChange(option.value)}
+                    className={`p-6 border-2 rounded-lg text-left transition-all hover:border-blue-300 hover:shadow-sm ${
+                      formData[currentStepData.field] === option.value
+                        ? "border-blue-600 bg-blue-50"
+                        : "border-gray-200 bg-white"
                     }`}
                   >
-                    {time}
-                  </div>
+                    <div className="flex items-center space-x-3">
+                      <span className="text-2xl">{option.icon}</span>
+                      <span className="font-medium text-gray-900">{option.label}</span>
+                    </div>
+                  </button>
                 ))}
               </div>
-            </div>
-
-            {/* Floating stats cards */}
-            <div className="absolute -top-4 -right-4 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-4 w-48 border border-white/20 animate-fadeInUp">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold text-gray-800">Bookings Today</span>
-                <TrendingUp className="w-4 h-4 text-green-500" />
+            ) : currentStepData.type === "textarea" ? (
+              <div className="max-w-lg">
+                <textarea
+                  value={formData[currentStepData.field]}
+                  onChange={(e) => handleInputChange(e.target.value)}
+                  placeholder={currentStepData.placeholder}
+                  rows={4}
+                  className="w-full p-4 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-gray-900"
+                />
               </div>
-              <div className="text-2xl font-bold text-green-600 animate-bounce">12</div>
-              <div className="text-xs text-gray-500">+25% from yesterday</div>
-            </div>
-
-            <div className="absolute -bottom-4 -left-4 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-4 w-48 border border-white/20 animate-fadeInUp" style={{ animationDelay: '0.5s' }}>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold text-gray-800">Conversion Rate</span>
-                <BarChart3 className="w-4 h-4 text-blue-500" />
+            ) : currentStepData.type === "pricing" ? (
+              <div className="max-w-sm">
+                <div className="flex gap-3">
+                  <select
+                    value={formData.currency}
+                    onChange={(e) => setFormData(prev => ({ ...prev, currency: e.target.value }))}
+                    className="w-24 p-4 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="GBP">GBP</option>
+                    <option value="INR">INR</option>
+                  </select>
+                  <input
+                    type="number"
+                    value={formData[currentStepData.field]}
+                    onChange={(e) => handleInputChange(e.target.value)}
+                    placeholder={currentStepData.placeholder}
+                    className="flex-1 p-4 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
               </div>
-              <div className="text-2xl font-bold text-blue-600">78%</div>
-              <div className="w-full h-2 bg-gray-200 rounded-full mt-2">
-                <div className="h-full bg-gradient-to-r from-blue-400 to-purple-400 rounded-full animate-progress" style={{ width: '78%' }} />
-              </div>
-            </div>
+            ) : null}
           </div>
         </div>
 
         {/* Navigation Footer */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6 sm:mt-8 lg:mt-12 animate-fadeInUp">
+        <div className="flex justify-between items-center">
           <button
             onClick={handlePrevious}
             disabled={currentStep === 0}
-            className={`flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium transition-all duration-300 ${
+            className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-colors ${
               currentStep === 0
                 ? "text-gray-400 cursor-not-allowed"
-                : "text-gray-700 hover:bg-white hover:shadow-md hover:scale-105"
+                : "text-gray-700 hover:bg-gray-100"
             }`}
           >
-            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="text-sm sm:text-base">Back</span>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            <span>Back</span>
           </button>
 
           <button
             onClick={handleNext}
-            disabled={!isCurrentStepValid() || isLoading}
-            className={`w-full sm:w-auto px-6 sm:px-10 py-3 sm:py-4 rounded-xl font-semibold transition-all duration-300 ${
-              isCurrentStepValid() && !isLoading
-                ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:shadow-lg hover:scale-105"
+            disabled={!isCurrentStepValid()}
+            className={`px-8 py-3 rounded-full font-medium transition-colors ${
+              isCurrentStepValid()
+                ? "bg-blue-600 text-white hover:bg-blue-700"
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }`}
           >
-            {isLoading ? (
-              <div className="flex items-center justify-center space-x-2">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                <span className="text-sm sm:text-base">Setting up...</span>
-              </div>
-            ) : (
-              <div className="flex items-center justify-center space-x-2">
-                <span className="text-sm sm:text-base">{currentStep === steps.length - 1 ? "Complete Setup" : "Continue"}</span>
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
-              </div>
-            )}
+            {currentStep === steps.length - 1 ? "Complete" : "Next"}
           </button>
         </div>
       </div>
 
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
-        }
-        
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes fadeInDown {
-          from { opacity: 0; transform: translateY(-30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes fadeInLeft {
-          from { opacity: 0; transform: translateX(-30px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        
-        @keyframes fadeInRight {
-          from { opacity: 0; transform: translateX(30px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        
-        @keyframes slideInUp {
-          from { opacity: 0; transform: translateY(50px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes slideInLeft {
-          from { opacity: 0; transform: translateX(-50px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        
-        @keyframes spin-slow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        
-        @keyframes progress {
-          from { width: 0%; }
-          to { width: 78%; }
-        }
-        
-        .animate-float {
-          animation: float 3s ease-in-out infinite;
-        }
-        
-        .animate-fadeInUp {
-          animation: fadeInUp 0.6s ease-out;
-        }
-        
-        .animate-fadeInDown {
-          animation: fadeInDown 0.6s ease-out;
-        }
-        
-        .animate-fadeInLeft {
-          animation: fadeInLeft 0.6s ease-out;
-        }
-        
-        .animate-fadeInRight {
-          animation: fadeInRight 0.8s ease-out;
-        }
-        
-        .animate-slideInUp {
-          animation: slideInUp 0.8s ease-out;
-        }
-        
-        .animate-slideInLeft {
-          animation: slideInLeft 0.6s ease-out;
-        }
-        
-        .animate-spin-slow {
-          animation: spin-slow 8s linear infinite;
-        }
-        
-        .animate-progress {
-          animation: progress 2s ease-out 1s both;
-        }
-      `}</style>
+      {/* Right Side - Decorative */}
+      <div className="hidden lg:block flex-1 relative">
+        {/* Abstract background shapes */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50">
+          <svg className="absolute top-20 right-20 w-64 h-64 opacity-30" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="80" fill="url(#circleGradient)" />
+            <defs>
+              <linearGradient id="circleGradient">
+                <stop offset="0%" stopColor="#3B82F6" />
+                <stop offset="100%" stopColor="#8B5CF6" />
+              </linearGradient>
+            </defs>
+          </svg>
+          
+          <svg className="absolute bottom-32 right-32 w-48 h-48 opacity-20" viewBox="0 0 200 200">
+            <path d="M 50 100 Q 100 50 150 100 Q 100 150 50 100 Z" fill="#EC4899" />
+          </svg>
+
+          <svg className="absolute bottom-0 right-0 w-96 h-96" viewBox="0 0 400 400">
+            <path 
+              d="M 0 200 Q 100 100 200 200 Q 300 300 400 200 L 400 400 L 0 400 Z" 
+              fill="url(#waveGradient)" 
+              opacity="0.6"
+            />
+            <defs>
+              <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#3B82F6" />
+                <stop offset="50%" stopColor="#8B5CF6" />
+                <stop offset="100%" stopColor="#EC4899" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        {/* Sample calendar/scheduling preview */}
+        <div className="absolute top-1/4 right-12 bg-white rounded-2xl shadow-xl p-6 w-80">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gray-300 rounded-full"></div>
+              <div>
+                <div className="w-16 h-3 bg-gray-300 rounded"></div>
+                <div className="w-20 h-2 bg-gray-200 rounded mt-1"></div>
+              </div>
+            </div>
+            <div className="text-xs font-medium text-blue-600 bg-blue-100 px-2 py-1 rounded">
+              Select a Date & Time
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-7 gap-1 mb-4">
+            {Array.from({ length: 35 }, (_, i) => (
+              <div
+                key={i}
+                className={`h-8 flex items-center justify-center text-xs rounded ${
+                  i === 10 || i === 15 || i === 20 
+                    ? "bg-blue-600 text-white" 
+                    : i > 6 && i < 28 
+                      ? "hover:bg-gray-100 cursor-pointer text-gray-700"
+                      : "text-gray-300"
+                }`}
+              >
+                {i > 6 && i < 28 ? i - 6 : ""}
+              </div>
+            ))}
+          </div>
+          
+          <div className="space-y-2">
+            {["9:00 AM", "10:30 AM", "2:00 PM", "4:00 PM"].map((time, index) => (
+              <div
+                key={index}
+                className={`p-2 rounded border text-center text-sm ${
+                  index === 1 ? "border-blue-600 bg-blue-50 text-blue-600" : "border-gray-200"
+                }`}
+              >
+                {time}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
