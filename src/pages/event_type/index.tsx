@@ -42,7 +42,6 @@
 
 // export default EventType;
 
-
 import UserSection from "./_components/user-section";
 import EventListSection from "./_components/event-list-section";
 import { geteventListQueryFn } from "@/lib/api";
@@ -63,6 +62,12 @@ const EventType = () => {
     }
   })();
 
+  // ✅ If user exists and not approved → show ONLY Setup (like Calendly)
+  if (user && user.isApproved === false) {
+    return <Setup />;
+  }
+
+  // ✅ Only fetch data and show main content if user is approved or doesn't exist
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["event_list"],
     queryFn: geteventListQueryFn,
@@ -89,9 +94,6 @@ const EventType = () => {
           <EventListSection events={events} username={username} />
         </div>
       )}
-
-      {/* ✅ Setup Modal - Rendered on top when user is not approved */}
-      {user && user.isApproved === false && <Setup />}
     </div>
   );
 };
