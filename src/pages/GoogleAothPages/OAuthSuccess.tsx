@@ -30,7 +30,8 @@ const OAuthSuccess = () => {
          if (user.isApproved) {
           navigate("/app/event_types");
         } else {
-          navigate("/app/setup");
+         // navigate("/app/setup");
+           navigate("/app/event_types");
         }
       } catch (err) {
         console.error("❌ Failed to parse or store data", err);
