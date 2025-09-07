@@ -13,41 +13,44 @@ const Setup = () => {
   const steps = [
     {
       title: "How are you currently selling your product?",
-      subtitle: "Help us understand your current sales approach",
+      subtitle: "Your responses will help us tailor your experience to your needs.",
       field: "sellingMethod",
-      type: "select",
-      icon: "💼",
+      type: "cards",
       options: [
-        "Direct Sales",
-        "Resellers/Partners", 
-        "Inbound Marketing",
-        "Outbound Sales",
-        "Online Marketplace",
-        "Other"
+        { value: "Direct Sales", icon: "👤", label: "Direct Sales" },
+        { value: "Resellers/Partners", icon: "🤝", label: "With partners" },
+        { value: "Inbound Marketing", icon: "📈", label: "Inbound Marketing" },
+        { value: "Outbound Sales", icon: "📞", label: "Outbound Sales" },
+        { value: "Online Marketplace", icon: "🛒", label: "Online Marketplace" },
+        { value: "Other", icon: "⚡", label: "Other" }
       ]
     },
     {
       title: "Who is your ideal customer?",
-      subtitle: "Tell us about your target market and customer profile",
+      subtitle: "Understanding your target market will help us set up your first scheduling link.",
       field: "icp",
-      type: "textarea",
-      icon: "🎯",
-      placeholder: "e.g., Small to medium businesses in healthcare, Enterprise companies in fintech with 100+ employees..."
+      type: "cards",
+      options: [
+        { value: "Small Business", icon: "🏪", label: "Small Business" },
+        { value: "Enterprise", icon: "🏢", label: "Enterprise" },
+        { value: "Startups", icon: "🚀", label: "Startups" },
+        { value: "Healthcare", icon: "🏥", label: "Healthcare" },
+        { value: "Education", icon: "🎓", label: "Education" },
+        { value: "Other", icon: "⚡", label: "Other" }
+      ]
     },
     {
       title: "What product are you selling?",
-      subtitle: "Give us a brief overview of your product or service",
-      field: "productDescription", 
+      subtitle: "Tell us about your product or service to personalize your experience.",
+      field: "productDescription",
       type: "textarea",
-      icon: "🚀",
       placeholder: "Describe your product, its key features, and what problems it solves..."
     },
     {
       title: "What's your pricing?",
-      subtitle: "Help us understand your pricing structure",
+      subtitle: "Help us understand your pricing structure for better recommendations.",
       field: "pricing",
-      type: "number",
-      icon: "💰",
+      type: "pricing",
       placeholder: "Enter amount"
     }
   ];
@@ -89,25 +92,42 @@ const Setup = () => {
 
   if (showSuccess) {
     return (
-      <div className="fixed inset-0 bg-white bg-opacity-95 backdrop-blur-sm flex items-center justify-center z-50">
-        <div className="bg-white rounded-3xl shadow-xl max-w-lg w-full mx-6 p-12 text-center border border-gray-100">
-          <div className="mb-8">
-            <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-              </svg>
+      <div className="min-h-screen bg-gray-50 flex">
+        {/* Left Side - Content */}
+        <div className="flex-1 flex flex-col justify-center px-12 lg:px-24">
+          <div className="max-w-md">
+            <div className="mb-8">
+              <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mb-6">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">All set! 🎉</h1>
+              <p className="text-lg text-gray-600 leading-relaxed mb-8">
+                Our team will carefully analyze the details and will get back to you.
+              </p>
+              <button
+                onClick={handleClose}
+                className="bg-blue-600 text-white px-8 py-3 rounded-full font-medium hover:bg-blue-700 transition-colors"
+              >
+                Get Started
+              </button>
             </div>
-            <h3 className="text-3xl font-bold text-gray-900 mb-4">All set! 🎉</h3>
-            <p className="text-lg text-gray-600 leading-relaxed">
-              Our team will carefully analyze your details and get back to you soon with personalized recommendations.
-            </p>
           </div>
-          <button
-            onClick={handleClose}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 px-6 rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-          >
-            Get Started
-          </button>
+        </div>
+
+        {/* Right Side - Decorative */}
+        <div className="hidden lg:block flex-1 relative bg-gradient-to-br from-blue-50 to-purple-50">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400 opacity-20"></div>
+          <svg className="absolute bottom-0 right-0 w-96 h-96" viewBox="0 0 200 200" fill="none">
+            <path d="M 0 100 Q 50 50 100 100 Q 150 150 200 100 L 200 200 L 0 200 Z" fill="url(#gradient)" />
+            <defs>
+              <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.3" />
+                <stop offset="100%" stopColor="#8B5CF6" stopOpacity="0.3" />
+              </linearGradient>
+            </defs>
+          </svg>
         </div>
       </div>
     );
@@ -116,83 +136,87 @@ const Setup = () => {
   const currentStepData = steps[currentStep];
 
   return (
-    <div className="fixed inset-0 bg-white bg-opacity-95 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[95vh] overflow-hidden border border-gray-100">
-        
-        {/* Progress Section */}
-        <div className="bg-gradient-to-r from-gray-50 to-blue-50 px-8 py-6 border-b border-gray-100">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold">S</span>
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-gray-900">Quick Setup</h2>
-                <p className="text-sm text-gray-600">Just a few questions to get started</p>
-              </div>
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Left Side - Content */}
+      <div className="flex-1 flex flex-col justify-between px-12 lg:px-24 py-12">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-lg">S</span>
             </div>
-            <div className="text-sm font-medium text-blue-600 bg-blue-100 px-3 py-1.5 rounded-full">
-              {currentStep + 1} of {steps.length}
-            </div>
+            <span className="text-2xl font-bold text-blue-600">Schedley</span>
           </div>
-          
-          {/* Progress Bar */}
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div
-              className="bg-gradient-to-r from-blue-600 to-blue-700 h-2 rounded-full transition-all duration-500 ease-out"
-              style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
-            ></div>
+          <div className="flex items-center space-x-4">
+            <span className="text-sm font-medium text-gray-600">
+              STEP {currentStep + 1} OF {steps.length}
+            </span>
+            <div className="flex space-x-1">
+              {steps.map((_, index) => (
+                <div
+                  key={index}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    index <= currentStep 
+                      ? "w-8 bg-blue-600" 
+                      : index === currentStep + 1 
+                        ? "w-6 bg-blue-300"
+                        : "w-2 bg-gray-300"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Content Section */}
-        <div className="p-8">
-          <div className="text-center mb-8">
-            <div className="text-4xl mb-4">{currentStepData.icon}</div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-3">
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col justify-center max-w-2xl">
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
               {currentStepData.title}
-            </h3>
-            <p className="text-gray-600 text-lg">
+            </h1>
+            <p className="text-lg text-gray-600">
               {currentStepData.subtitle}
             </p>
           </div>
-          
-          <div className="max-w-md mx-auto">
-            {currentStepData.type === "select" ? (
-              <div className="relative">
-                <select
-                  value={formData[currentStepData.field]}
-                  onChange={(e) => handleInputChange(e.target.value)}
-                  className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white appearance-none cursor-pointer hover:border-gray-300 transition-colors text-lg"
-                >
-                  <option value="">Choose an option</option>
-                  {currentStepData.options.map((option, index) => (
-                    <option key={index} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
-                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
+
+          {/* Form Content */}
+          <div className="mb-12">
+            {currentStepData.type === "cards" ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {currentStepData.options.map((option, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleInputChange(option.value)}
+                    className={`p-6 border-2 rounded-lg text-left transition-all hover:border-blue-300 hover:shadow-sm ${
+                      formData[currentStepData.field] === option.value
+                        ? "border-blue-600 bg-blue-50"
+                        : "border-gray-200 bg-white"
+                    }`}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <span className="text-2xl">{option.icon}</span>
+                      <span className="font-medium text-gray-900">{option.label}</span>
+                    </div>
+                  </button>
+                ))}
               </div>
             ) : currentStepData.type === "textarea" ? (
-              <textarea
-                value={formData[currentStepData.field]}
-                onChange={(e) => handleInputChange(e.target.value)}
-                placeholder={currentStepData.placeholder}
-                rows={4}
-                className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-gray-900 text-lg hover:border-gray-300 transition-colors"
-              />
-            ) : currentStepData.type === "number" ? (
-              <div className="space-y-4">
+              <div className="max-w-lg">
+                <textarea
+                  value={formData[currentStepData.field]}
+                  onChange={(e) => handleInputChange(e.target.value)}
+                  placeholder={currentStepData.placeholder}
+                  rows={4}
+                  className="w-full p-4 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-gray-900"
+                />
+              </div>
+            ) : currentStepData.type === "pricing" ? (
+              <div className="max-w-sm">
                 <div className="flex gap-3">
                   <select
                     value={formData.currency}
                     onChange={(e) => setFormData(prev => ({ ...prev, currency: e.target.value }))}
-                    className="w-24 p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 text-lg hover:border-gray-300 transition-colors"
+                    className="w-24 p-4 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option value="USD">USD</option>
                     <option value="EUR">EUR</option>
@@ -204,61 +228,123 @@ const Setup = () => {
                     value={formData[currentStepData.field]}
                     onChange={(e) => handleInputChange(e.target.value)}
                     placeholder={currentStepData.placeholder}
-                    className="flex-1 p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 text-lg hover:border-gray-300 transition-colors"
+                    className="flex-1 p-4 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
-                <p className="text-sm text-gray-500 text-center">
-                  Don't worry, this helps us provide better recommendations
-                </p>
               </div>
-            ) : (
-              <input
-                type="text"
-                value={formData[currentStepData.field]}
-                onChange={(e) => handleInputChange(e.target.value)}
-                placeholder={currentStepData.placeholder}
-                className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 text-lg hover:border-gray-300 transition-colors"
-              />
-            )}
+            ) : null}
           </div>
         </div>
 
         {/* Navigation Footer */}
-        <div className="bg-gray-50 px-8 py-6 flex justify-between items-center border-t border-gray-100">
+        <div className="flex justify-between items-center">
           <button
             onClick={handlePrevious}
             disabled={currentStep === 0}
-            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
+            className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-colors ${
               currentStep === 0
-                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow"
+                ? "text-gray-400 cursor-not-allowed"
+                : "text-gray-700 hover:bg-gray-100"
             }`}
           >
-            ← Previous
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            <span>Back</span>
           </button>
-
-          <div className="flex space-x-2">
-            {steps.map((_, index) => (
-              <div
-                key={index}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  index <= currentStep ? "bg-blue-600" : "bg-gray-300"
-                }`}
-              />
-            ))}
-          </div>
 
           <button
             onClick={handleNext}
             disabled={!isCurrentStepValid()}
-            className={`px-8 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 ${
+            className={`px-8 py-3 rounded-full font-medium transition-colors ${
               isCurrentStepValid()
-                ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800"
-                : "bg-gray-200 text-gray-400 cursor-not-allowed shadow-none transform-none"
+                ? "bg-blue-600 text-white hover:bg-blue-700"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }`}
           >
-            {currentStep === steps.length - 1 ? "Complete Setup →" : "Next →"}
+            {currentStep === steps.length - 1 ? "Complete" : "Next"}
           </button>
+        </div>
+      </div>
+
+      {/* Right Side - Decorative */}
+      <div className="hidden lg:block flex-1 relative">
+        {/* Abstract background shapes */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50">
+          <svg className="absolute top-20 right-20 w-64 h-64 opacity-30" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="80" fill="url(#circleGradient)" />
+            <defs>
+              <linearGradient id="circleGradient">
+                <stop offset="0%" stopColor="#3B82F6" />
+                <stop offset="100%" stopColor="#8B5CF6" />
+              </linearGradient>
+            </defs>
+          </svg>
+          
+          <svg className="absolute bottom-32 right-32 w-48 h-48 opacity-20" viewBox="0 0 200 200">
+            <path d="M 50 100 Q 100 50 150 100 Q 100 150 50 100 Z" fill="#EC4899" />
+          </svg>
+
+          <svg className="absolute bottom-0 right-0 w-96 h-96" viewBox="0 0 400 400">
+            <path 
+              d="M 0 200 Q 100 100 200 200 Q 300 300 400 200 L 400 400 L 0 400 Z" 
+              fill="url(#waveGradient)" 
+              opacity="0.6"
+            />
+            <defs>
+              <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#3B82F6" />
+                <stop offset="50%" stopColor="#8B5CF6" />
+                <stop offset="100%" stopColor="#EC4899" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        {/* Sample calendar/scheduling preview */}
+        <div className="absolute top-1/4 right-12 bg-white rounded-2xl shadow-xl p-6 w-80">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gray-300 rounded-full"></div>
+              <div>
+                <div className="w-16 h-3 bg-gray-300 rounded"></div>
+                <div className="w-20 h-2 bg-gray-200 rounded mt-1"></div>
+              </div>
+            </div>
+            <div className="text-xs font-medium text-blue-600 bg-blue-100 px-2 py-1 rounded">
+              Select a Date & Time
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-7 gap-1 mb-4">
+            {Array.from({ length: 35 }, (_, i) => (
+              <div
+                key={i}
+                className={`h-8 flex items-center justify-center text-xs rounded ${
+                  i === 10 || i === 15 || i === 20 
+                    ? "bg-blue-600 text-white" 
+                    : i > 6 && i < 28 
+                      ? "hover:bg-gray-100 cursor-pointer text-gray-700"
+                      : "text-gray-300"
+                }`}
+              >
+                {i > 6 && i < 28 ? i - 6 : ""}
+              </div>
+            ))}
+          </div>
+          
+          <div className="space-y-2">
+            {["9:00 AM", "10:30 AM", "2:00 PM", "4:00 PM"].map((time, index) => (
+              <div
+                key={index}
+                className={`p-2 rounded border text-center text-sm ${
+                  index === 1 ? "border-blue-600 bg-blue-50 text-blue-600" : "border-gray-200"
+                }`}
+              >
+                {time}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
