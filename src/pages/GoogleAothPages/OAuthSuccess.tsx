@@ -28,13 +28,7 @@ const OAuthSuccess = () => {
         console.log("✅ Stored in Zustand:", { accessToken, user });
 
         // Navigate to dashboard
-        // navigate("/app/event_types");
-        if (user.isApproved) {
-            navigate("/app/event_types");
-          } else {
-            navigate("/app/setup");
-          }
-
+        navigate("/app/event_types");
       } catch (err) {
         console.error("❌ Failed to parse or store data", err);
       }

@@ -23,7 +23,7 @@ export const authenticationRoutePaths = [
 ];
 
 export const protectedRoutePaths = [
-  {path:PROTECTED_ROUTES.SETUP, element:<Setup/>},
+ 
   { path: PROTECTED_ROUTES.EVENT_TYPES, element: <EventType /> },
   { path: PROTECTED_ROUTES.MEETINGS, element: <Meetings /> },
   { path: PROTECTED_ROUTES.AVAILBILITIY, element: <Availability /> },
