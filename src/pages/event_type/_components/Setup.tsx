@@ -538,8 +538,7 @@ const Setup = () => {
               </h1>
               
               <p className="text-base sm:text-lg lg:text-xl text-gray-600 leading-relaxed mb-8 max-w-md">
-                Our team will carefully analyze the details and will get back to you. 
-                You're being redirected to your dashboard...
+                Setup completed successfully! Redirecting to your dashboard in 2 seconds...
               </p>
               
               <div className="flex items-center space-x-2 text-blue-600">
@@ -548,6 +547,14 @@ const Setup = () => {
                 <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
                 <span className="ml-2 font-medium">Redirecting...</span>
               </div>
+              
+              {/* Manual navigation button as backup */}
+              <button
+                onClick={() => navigate("/app/event_types")}
+                className="mt-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-full font-medium hover:shadow-lg transition-all duration-300"
+              >
+                Continue to Dashboard
+              </button>
             </div>
 
             {/* Right Side - Success Animation */}
