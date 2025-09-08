@@ -20,7 +20,7 @@ const OAuthSuccess = () => {
         setUser(user);
         setAccessToken(accessToken);
 
-        // Optional: Save to localStorage for persistence
+       
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("user", JSON.stringify(user));
 

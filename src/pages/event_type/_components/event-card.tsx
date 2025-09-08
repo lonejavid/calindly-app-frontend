@@ -1,731 +1,3300 @@
-import { EventType } from "@/types/api.type";
-import { Copy, Settings, Edit3, Trash2, Power, X, Clock, Users, FileText, Shield, Calendar } from "lucide-react";
-import { FC, useState, useRef, useEffect } from "react";
+// import { EventType } from "@/types/api.type";
+// import { Copy, Settings, Edit3, Trash2, Power, X, Clock, Users, FileText, Shield, Calendar } from "lucide-react";
+// import { FC, useState, useRef, useEffect } from "react";
 
-// Simple utility function to combine class names
-const cn = (...classes: (string | boolean | undefined)[]) => {
-  return classes.filter(Boolean).join(' ');
-};
+// // Simple utility function to combine class names
+// const cn = (...classes: (string | boolean | undefined)[]) => {
+//   return classes.filter(Boolean).join(' ');
+// };
 
-// Simple loader component
-const Loader: FC<{ size?: 'sm' | 'md'; color?: string }> = ({ size = 'md'}) => (
-  <div className={`inline-block animate-spin rounded-full border-2 border-solid border-current border-r-transparent ${size === 'sm' ? 'h-4 w-4' : 'h-6 w-6'}`}>
-    <span className="sr-only">Loading...</span>
-  </div>
-);
+// // Simple loader component
+// const Loader: FC<{ size?: 'sm' | 'md'; color?: string }> = ({ size = 'md'}) => (
+//   <div className={`inline-block animate-spin rounded-full border-2 border-solid border-current border-r-transparent ${size === 'sm' ? 'h-4 w-4' : 'h-6 w-6'}`}>
+//     <span className="sr-only">Loading...</span>
+//   </div>
+// );
 
-// Simple button component
-const Button: FC<{
-  children: React.ReactNode;
-  variant?: 'ghost' | 'outline' | 'primary';
-  size?: 'sm' | 'md';
-  className?: string;
-  disabled?: boolean;
-  onClick?: () => void;
-}> = ({ children, variant = 'outline', size = 'md', className = '', disabled = false, onClick }) => {
-  const baseClasses = 'inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none';
-  const variants = {
-    ghost: 'hover:bg-gray-100',
-    outline: 'border border-gray-300 bg-white hover:bg-gray-50',
-    primary: 'bg-blue-600 text-white hover:bg-blue-700'
-  };
-  const sizes = {
-    sm: 'px-3 py-1.5 text-sm rounded-md',
-    md: 'px-4 py-2 text-sm rounded-md'
-  };
+// // Simple button component
+// const Button: FC<{
+//   children: React.ReactNode;
+//   variant?: 'ghost' | 'outline' | 'primary';
+//   size?: 'sm' | 'md';
+//   className?: string;
+//   disabled?: boolean;
+//   onClick?: () => void;
+// }> = ({ children, variant = 'outline', size = 'md', className = '', disabled = false, onClick }) => {
+//   const baseClasses = 'inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none';
+//   const variants = {
+//     ghost: 'hover:bg-gray-100',
+//     outline: 'border border-gray-300 bg-white hover:bg-gray-50',
+//     primary: 'bg-blue-600 text-white hover:bg-blue-700'
+//   };
+//   const sizes = {
+//     sm: 'px-3 py-1.5 text-sm rounded-md',
+//     md: 'px-4 py-2 text-sm rounded-md'
+//   };
   
-  return (
-    <button
-      className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`}
-      disabled={disabled}
-      onClick={onClick}
-    >
-      {children}
-    </button>
-  );
-};
+//   return (
+//     <button
+//       className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`}
+//       disabled={disabled}
+//       onClick={onClick}
+//     >
+//       {children}
+//     </button>
+//   );
+// };
 
-const Card: FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
-  <div className={`rounded-lg border bg-white shadow-sm ${className}`}>
-    {children}
-  </div>
-);
+// const Card: FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
+//   <div className={`rounded-lg border bg-white shadow-sm ${className}`}>
+//     {children}
+//   </div>
+// );
 
-const CardContent: FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
-  <div className={`p-6 ${className}`}>
-    {children}
-  </div>
-);
+// const CardContent: FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
+//   <div className={`p-6 ${className}`}>
+//     {children}
+//   </div>
+// );
 
-const CardFooter: FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
-  <div className={`flex items-center p-6 pt-0 ${className}`}>
-    {children}
-  </div>
-);
+// const CardFooter: FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
+//   <div className={`flex items-center p-6 pt-0 ${className}`}>
+//     {children}
+//   </div>
+// );
 
-// Input component
-const Input: FC<{
-  type?: string;
-  placeholder?: string;
-  value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  className?: string;
-  min?: string;
-}> = ({ type = 'text', placeholder, value, onChange, className = '', min }) => (
-  <input
-    type={type}
-    placeholder={placeholder}
-    value={value}
-    onChange={onChange}
-    min={min}
-    className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${className}`}
-  />
-);
+// // Input component
+// const Input: FC<{
+//   type?: string;
+//   placeholder?: string;
+//   value?: string;
+//   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+//   className?: string;
+//   min?: string;
+// }> = ({ type = 'text', placeholder, value, onChange, className = '', min }) => (
+//   <input
+//     type={type}
+//     placeholder={placeholder}
+//     value={value}
+//     onChange={onChange}
+//     min={min}
+//     className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${className}`}
+//   />
+// );
 
-// Textarea component
-const Textarea: FC<{
-  placeholder?: string;
-  value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  rows?: number;
-  className?: string;
-}> = ({ placeholder, value, onChange, rows = 3, className = '' }) => (
-  <textarea
-    placeholder={placeholder}
-    value={value}
-    onChange={onChange}
-    rows={rows}
-    className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical ${className}`}
-  />
-);
+// // Textarea component
+// const Textarea: FC<{
+//   placeholder?: string;
+//   value?: string;
+//   onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+//   rows?: number;
+//   className?: string;
+// }> = ({ placeholder, value, onChange, rows = 3, className = '' }) => (
+//   <textarea
+//     placeholder={placeholder}
+//     value={value}
+//     onChange={onChange}
+//     rows={rows}
+//     className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical ${className}`}
+//   />
+// );
 
-// Toggle component
-const Toggle: FC<{
-  checked: boolean;
-  onChange: (checked: boolean) => void;
-  disabled?: boolean;
-}> = ({ checked, onChange, disabled = false }) => (
-  <button
-    type="button"
-    className={cn(
-      'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
-      checked ? 'bg-blue-600' : 'bg-gray-200',
-      disabled && 'opacity-50 cursor-not-allowed'
-    )}
-    onClick={() => !disabled && onChange(!checked)}
-    disabled={disabled}
-  >
-    <span
-      className={cn(
-        'inline-block h-4 w-4 transform rounded-full bg-white transition-transform',
-        checked ? 'translate-x-6' : 'translate-x-1'
-      )}
-    />
-  </button>
-);
+// // Toggle component
+// const Toggle: FC<{
+//   checked: boolean;
+//   onChange: (checked: boolean) => void;
+//   disabled?: boolean;
+// }> = ({ checked, onChange, disabled = false }) => (
+//   <button
+//     type="button"
+//     className={cn(
+//       'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
+//       checked ? 'bg-blue-600' : 'bg-gray-200',
+//       disabled && 'opacity-50 cursor-not-allowed'
+//     )}
+//     onClick={() => !disabled && onChange(!checked)}
+//     disabled={disabled}
+//   >
+//     <span
+//       className={cn(
+//         'inline-block h-4 w-4 transform rounded-full bg-white transition-transform',
+//         checked ? 'translate-x-6' : 'translate-x-1'
+//       )}
+//     />
+//   </button>
+// );
 
-// Simple toast function
-const showToast = (message: string, type: 'success' | 'error' = 'success') => {
-  const toast = document.createElement('div');
-  toast.className = `fixed top-4 right-4 px-4 py-2 rounded-md text-white z-50 ${
-    type === 'success' ? 'bg-green-500' : 'bg-red-500'
-  }`;
-  toast.textContent = message;
-  document.body.appendChild(toast);
+// // Simple toast function
+// const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+//   const toast = document.createElement('div');
+//   toast.className = `fixed top-4 right-4 px-4 py-2 rounded-md text-white z-50 ${
+//     type === 'success' ? 'bg-green-500' : 'bg-red-500'
+//   }`;
+//   toast.textContent = message;
+//   document.body.appendChild(toast);
   
-  setTimeout(() => {
-    document.body.removeChild(toast);
-  }, 3000);
-};
+//   setTimeout(() => {
+//     document.body.removeChild(toast);
+//   }, 3000);
+// };
 
-// Edit Event Slider Component
-const EditEventSlider: FC<{
+// // Edit Event Slider Component
+// const EditEventSlider: FC<{
+//   isOpen: boolean;
+//   onClose: () => void;
+//   eventData: {
+//     title: string;
+//     duration: number;
+//     description: string;
+//     location: string;
+//   };
+//   onSave: (data: unknown) => void;
+// }> = ({ isOpen, onClose, eventData, onSave }) => {
+//   const [formData, setFormData] = useState({
+//     title: eventData.title,
+//     duration: eventData.duration,
+//     description: eventData.description || '',
+//     location: eventData.location || 'Google Meet',
+//     bufferTimeBefore: 0,
+//     bufferTimeAfter: 0,
+//     maxInviteesPerEvent: 1,
+//     enableInviteeQuestions: true,
+//     requireInviteeDetails: true,
+//     allowRescheduling: true,
+//     allowCancellation: true,
+//     confirmationRedirect: '',
+//     customMessage: ''
+//   });
+
+//   const [activeSection, setActiveSection] = useState('basic');
+
+//   const handleInputChange = (field: string, value: unknown) => {
+//     setFormData(prev => ({ ...prev, [field]: value }));
+//   };
+
+//   const handleSave = () => {
+//     onSave(formData);
+//     showToast('Event updated successfully!');
+//     onClose();
+//   };
+
+//   const sections = [
+//     { id: 'basic', label: 'Basic Info', icon: FileText },
+//     { id: 'duration', label: 'Duration & Buffers', icon: Clock },
+//     { id: 'limits', label: 'Limits', icon: Users },
+//     { id: 'form', label: 'Invite Form', icon: Calendar },
+//     { id: 'policies', label: 'Policies', icon: Shield }
+//   ];
+
+//   return (
+//     <>
+//       {/* Transparent backdrop - keeps content visible but handles clicks */}
+//       {isOpen && (
+//         <div 
+//           className="fixed inset-0 z-40"
+//           onClick={onClose}
+//         />
+//       )}
+      
+//       {/* Slider */}
+//       <div className={cn(
+//         "fixed top-0 right-0 h-full w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out border-l border-gray-200",
+//         isOpen ? "translate-x-0" : "translate-x-full"
+//       )}>
+//         {/* Header */}
+//         <div className="flex items-center justify-between p-6 border-b border-gray-200">
+//           <h2 className="text-xl font-semibold text-gray-900">Edit Event</h2>
+//           <button
+//             onClick={onClose}
+//             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+//           >
+//             <X className="w-5 h-5 text-gray-500" />
+//           </button>
+//         </div>
+
+//         {/* Navigation */}
+//         <div className="border-b border-gray-200">
+//           <nav className="flex overflow-x-auto">
+//             {sections.map((section) => {
+//               const Icon = section.icon;
+//               return (
+//                 <button
+//                   key={section.id}
+//                   onClick={() => setActiveSection(section.id)}
+//                   className={cn(
+//                     "flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap",
+//                     activeSection === section.id
+//                       ? "border-blue-500 text-blue-600"
+//                       : "border-transparent text-gray-500 hover:text-gray-700"
+//                   )}
+//                 >
+//                   <Icon className="w-4 h-4" />
+//                   {section.label}
+//                 </button>
+//               );
+//             })}
+//           </nav>
+//         </div>
+
+//         {/* Content */}
+//         <div className="flex-1 overflow-y-auto p-6">
+//           {activeSection === 'basic' && (
+//             <div className="space-y-6">
+//               <div>
+//                 <label className="block text-sm font-medium text-gray-700 mb-2">
+//                   Event Name
+//                 </label>
+//                 <Input
+//                   value={formData.title}
+//                   onChange={(e) => handleInputChange('title', e.target.value)}
+//                   placeholder="Enter event name"
+//                 />
+//               </div>
+              
+//               <div>
+//                 <label className="block text-sm font-medium text-gray-700 mb-2">
+//                   Description
+//                 </label>
+//                 <Textarea
+//                   value={formData.description}
+//                   onChange={(e) => handleInputChange('description', e.target.value)}
+//                   placeholder="Add a description for your event..."
+//                   rows={4}
+//                 />
+//               </div>
+
+//               <div>
+//                 <label className="block text-sm font-medium text-gray-700 mb-2">
+//                   Location
+//                 </label>
+//                 <select
+//                   value={formData.location}
+//                   onChange={(e) => handleInputChange('location', e.target.value)}
+//                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+//                 >
+//                   <option value="Google Meet">Google Meet</option>
+//                   <option value="Microsoft Teams">Microsoft Teams</option>
+//                   <option value="Zoom">Zoom</option>
+//                   <option value="Phone Call">Phone Call</option>
+//                   <option value="In Person">In Person</option>
+//                 </select>
+//               </div>
+//             </div>
+//           )}
+
+//           {activeSection === 'duration' && (
+//             <div className="space-y-6">
+//               <div>
+//                 <label className="block text-sm font-medium text-gray-700 mb-2">
+//                   Duration (minutes)
+//                 </label>
+//                 <Input
+//                   type="number"
+//                   value={formData.duration.toString()}
+//                   onChange={(e) => handleInputChange('duration', parseInt(e.target.value) || 0)}
+//                   placeholder="30"
+//                 />
+//               </div>
+
+//               <div>
+//                 <label className="block text-sm font-medium text-gray-700 mb-2">
+//                   Buffer Time Before (minutes)
+//                 </label>
+//                 <Input
+//                   type="number"
+//                   value={formData.bufferTimeBefore.toString()}
+//                   onChange={(e) => handleInputChange('bufferTimeBefore', parseInt(e.target.value) || 0)}
+//                   placeholder="0"
+//                 />
+//                 <p className="text-xs text-gray-500 mt-1">
+//                   Time to prepare before the meeting
+//                 </p>
+//               </div>
+
+//               <div>
+//                 <label className="block text-sm font-medium text-gray-700 mb-2">
+//                   Buffer Time After (minutes)
+//                 </label>
+//                 <Input
+//                   type="number"
+//                   value={formData.bufferTimeAfter.toString()}
+//                   onChange={(e) => handleInputChange('bufferTimeAfter', parseInt(e.target.value) || 0)}
+//                   placeholder="0"
+//                 />
+//                 <p className="text-xs text-gray-500 mt-1">
+//                   Time to wrap up after the meeting
+//                 </p>
+//               </div>
+//             </div>
+//           )}
+
+//           {activeSection === 'limits' && (
+//             <div className="space-y-6">
+//               <div>
+//                 <label className="block text-sm font-medium text-gray-700 mb-2">
+//                   Max Invitees Per Event
+//                 </label>
+//                 <Input
+//                   type="number"
+//                   value={formData.maxInviteesPerEvent.toString()}
+//                   onChange={(e) => handleInputChange('maxInviteesPerEvent', parseInt(e.target.value) || 1)}
+//                   placeholder="1"
+//                   min="1"
+//                 />
+//                 <p className="text-xs text-gray-500 mt-1">
+//                   Maximum number of people who can book this event
+//                 </p>
+//               </div>
+//             </div>
+//           )}
+
+//           {activeSection === 'form' && (
+//             <div className="space-y-6">
+//               <div className="flex items-center justify-between">
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-700">
+//                     Enable Invitee Questions
+//                   </label>
+//                   <p className="text-xs text-gray-500 mt-1">
+//                     Ask invitees questions when they book
+//                   </p>
+//                 </div>
+//                 <Toggle
+//                   checked={formData.enableInviteeQuestions}
+//                   onChange={(checked) => handleInputChange('enableInviteeQuestions', checked)}
+//                 />
+//               </div>
+
+//               <div className="flex items-center justify-between">
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-700">
+//                     Require Invitee Details
+//                   </label>
+//                   <p className="text-xs text-gray-500 mt-1">
+//                     Require name and email from invitees
+//                   </p>
+//                 </div>
+//                 <Toggle
+//                   checked={formData.requireInviteeDetails}
+//                   onChange={(checked) => handleInputChange('requireInviteeDetails', checked)}
+//                 />
+//               </div>
+
+//               <div>
+//                 <label className="block text-sm font-medium text-gray-700 mb-2">
+//                   Custom Message for Invitees
+//                 </label>
+//                 <Textarea
+//                   value={formData.customMessage}
+//                   onChange={(e) => handleInputChange('customMessage', e.target.value)}
+//                   placeholder="Add a custom message that invitees will see..."
+//                   rows={3}
+//                 />
+//               </div>
+//             </div>
+//           )}
+
+//           {activeSection === 'policies' && (
+//             <div className="space-y-6">
+//               <div className="flex items-center justify-between">
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-700">
+//                     Allow Rescheduling
+//                   </label>
+//                   <p className="text-xs text-gray-500 mt-1">
+//                     Let invitees reschedule their appointments
+//                   </p>
+//                 </div>
+//                 <Toggle
+//                   checked={formData.allowRescheduling}
+//                   onChange={(checked) => handleInputChange('allowRescheduling', checked)}
+//                 />
+//               </div>
+
+//               <div className="flex items-center justify-between">
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-700">
+//                     Allow Cancellation
+//                   </label>
+//                   <p className="text-xs text-gray-500 mt-1">
+//                     Let invitees cancel their appointments
+//                   </p>
+//                 </div>
+//                 <Toggle
+//                   checked={formData.allowCancellation}
+//                   onChange={(checked) => handleInputChange('allowCancellation', checked)}
+//                 />
+//               </div>
+
+//               <div>
+//                 <label className="block text-sm font-medium text-gray-700 mb-2">
+//                   Confirmation Redirect URL
+//                 </label>
+//                 <Input
+//                   type="url"
+//                   value={formData.confirmationRedirect}
+//                   onChange={(e) => handleInputChange('confirmationRedirect', e.target.value)}
+//                   placeholder="https://example.com/thank-you"
+//                 />
+//                 <p className="text-xs text-gray-500 mt-1">
+//                   Redirect invitees to this page after booking
+//                 </p>
+//               </div>
+//             </div>
+//           )}
+//         </div>
+
+//         {/* Footer */}
+//         <div className="border-t border-gray-200 p-6">
+//           <div className="flex gap-3 justify-end">
+//             <Button variant="ghost" onClick={onClose}>
+//               Cancel
+//             </Button>
+//             <Button variant="primary" onClick={handleSave}>
+//               Save Changes
+//             </Button>
+//           </div>
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
+// interface PropsType {
+//   id: string;
+//   title: string;
+//   slug: string;
+//   duration: number;
+//   isPrivate: boolean;
+//   username: string;
+//   isPending: boolean;
+//   onToggle: () => void;
+//   onDelete: () => void;
+//   onEdit?: () => void;
+//   onClone?: () => void;
+//   event: EventType; 
+// }
+
+// const EventCard: FC<PropsType> = ({
+//   title,
+//   duration,
+//   slug,
+//   isPrivate = false,
+//   username,
+//   isPending,
+//   onToggle,
+//   onDelete,
+//   event,
+//   onEdit,
+//   onClone,
+  
+// }) => {
+//   //  console.log("Received event prop in EventCard:", event); 
+//   const [isCopied, setIsCopied] = useState(false);
+//   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+//   const [isEditSliderOpen, setIsEditSliderOpen] = useState(false);
+//   const dropdownRef = useRef<HTMLDivElement>(null);
+//   const event_link = `https://www.schedley.com/${username}/${slug}`;
+
+//   const handleCopyLink = () => {
+//     navigator.clipboard
+//       .writeText(event_link)
+//       .then(() => {
+//         setIsCopied(true);
+//         setTimeout(() => setIsCopied(false), 2000);
+//         showToast("Event link copied", "success");
+//       })
+//       .catch((error) => {
+//         console.error("Failed to copy link:", error);
+//       });
+//   };
+
+//   // Close dropdown when clicking outside
+//   useEffect(() => {
+//     const handleClickOutside = (event: MouseEvent) => {
+//       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+//         setIsDropdownOpen(false);
+//       }
+//     };
+
+//     document.addEventListener('mousedown', handleClickOutside);
+//     return () => {
+//       document.removeEventListener('mousedown', handleClickOutside);
+//     };
+//   }, []);
+
+//   const handleDropdownAction = (action: () => void) => {
+//     action();
+//     setIsDropdownOpen(false);
+//   };
+
+//   const handleEditClick = () => {
+//       console.log("Full event object:", event);
+//     setIsEditSliderOpen(true);
+//     if (onEdit) onEdit();
+//   };
+
+//   const handleSaveEvent = (formData: unknown) => {
+//     console.log('Saving event data:', formData);
+   
+//   };
+
+//   return (
+//     <>
+//       <div>
+//         <Card
+//           className={cn(
+//             `!p-0 !ring-0 w-full max-w-[400px]
+//           box-border min-h-[220px] border border-[#CCCCCC)] bg-white rounded-[4px]
+//           shadow-[0_1px_6px_0_rgb(0_0_0_/_10%)] hover:shadow-[0_4px_12px_0_rgb(0_0_0_/_15%)]
+//           transition-all duration-300 group relative`,
+//             isPrivate && "bg-transparent opacity-75"
+//           )}
+//         >
+//           <CardContent className="relative flex flex-col p-0">
+//             {/* Header with colored bar */}
+//             <div
+//               className={cn(
+//                 `bg-gradient-to-r from-purple-500 to-pink-500
+//             h-[6px] -mt-[1px] -mr-[1px] -ml-[1px] rounded-tl-[4px] rounded-tr-[4px]
+//             `,
+//                 isPrivate && "from-gray-400 to-gray-500"
+//               )}
+//             ></div>
+
+//             {/* Settings dropdown in top right */}
+//             <div className="absolute top-2 right-2 z-20" ref={dropdownRef}>
+//               <button
+//                 className={cn(
+//                   "w-10 h-10 rounded-full bg-white border-2 border-gray-300 shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-200 hover:border-purple-400 hover:scale-110",
+//                   isDropdownOpen && "border-purple-500 shadow-xl scale-110 bg-purple-50"
+//                 )}
+//                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+//               >
+//                 <Settings className="w-5 h-5 text-gray-700 hover:text-purple-600" />
+//               </button>
+
+//               {/* Dropdown Menu */}
+//               {isDropdownOpen && (
+//                 <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-xl shadow-2xl border border-gray-200 py-3 z-30 animate-in fade-in duration-200">
+               
+//                   <button
+//                     onClick={() => handleDropdownAction(handleEditClick)}
+//                     className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 flex items-center gap-3 transition-all duration-150"
+//                   >
+//                     <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+//                       <Edit3 className="w-4 h-4 text-blue-600" />
+//                     </div>
+//                     <span className="font-medium">Edit Event</span>
+//                   </button>
+
+//                   {/* Clone Event */}
+//                   <button
+//                     onClick={() => handleDropdownAction(onClone || (() => {}))}
+//                     className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 flex items-center gap-3 transition-all duration-150"
+//                     disabled={!onClone}
+//                   >
+//                     <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+//                       <Copy className="w-4 h-4 text-green-600" />
+//                     </div>
+//                     <span className="font-medium">Clone Event</span>
+//                   </button>
+
+//                   {/* Divider */}
+//                   <div className="border-t border-gray-100 my-2 mx-3"></div>
+
+//                   {/* Toggle On/Off */}
+//                   <button
+//                     onClick={() => handleDropdownAction(onToggle)}
+//                     className={cn(
+//                       "w-full px-4 py-3 text-left text-sm text-gray-700 flex items-center gap-3 transition-all duration-150",
+//                       isPrivate 
+//                         ? "hover:bg-green-50 hover:text-green-700" 
+//                         : "hover:bg-orange-50 hover:text-orange-700"
+//                     )}
+//                     disabled={isPending}
+//                   >
+//                     <div className={cn(
+//                       "w-8 h-8 rounded-full flex items-center justify-center",
+//                       isPrivate ? "bg-green-100" : "bg-orange-100"
+//                     )}>
+//                       <Power className={cn(
+//                         "w-4 h-4",
+//                         isPrivate ? "text-green-600" : "text-orange-600"
+//                       )} />
+//                     </div>
+//                     <span className="font-medium flex items-center gap-2">
+//                       Turn {isPrivate ? "On" : "Off"}
+//                       {isPending && <Loader size="sm" color="gray" />}
+//                     </span>
+//                   </button>
+
+//                   {/* Divider */}
+//                   <div className="border-t border-gray-100 my-2 mx-3"></div>
+
+//                   {/* Delete Event */}
+//                   <button
+//                     onClick={() => handleDropdownAction(onDelete)}
+//                     className="w-full px-4 py-3 text-left text-sm text-red-600 hover:bg-red-50 hover:text-red-700 flex items-center gap-3 transition-all duration-150"
+//                     disabled={isPending}
+//                   >
+//                     <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
+//                       <Trash2 className="w-4 h-4 text-red-600" />
+//                     </div>
+//                     <span className="font-medium">Delete Event</span>
+//                   </button>
+//                 </div>
+//               )}
+//             </div>
+
+//             {/* Event details */}
+//             <div className="w-full flex flex-col p-[18px_16px] pr-14">
+//               <h2
+//                 className={cn(
+//                   `text-lg font-semibold text-gray-800 mb-1`,
+//                   isPrivate && "text-gray-500"
+//                 )}
+//               >
+//                 {title}
+//               </h2>
+//               <div className="flex items-center gap-2 mb-3">
+//                 <div className="w-2 h-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500"></div>
+//                 <p className="text-sm text-gray-600 font-medium">{duration} minutes</p>
+//               </div>
+//               <a
+//                 target="_blank"
+//                 href={event_link}
+//                 rel="noopener noreferrer"
+//                 className={cn(
+//                   `text-sm text-blue-600 hover:text-blue-800 underline decoration-1 underline-offset-2 transition-colors duration-200`,
+//                   isPrivate && "pointer-events-none opacity-60 no-underline"
+//                 )}
+//               >
+//                 View booking page →
+//               </a>
+//             </div>
+//           </CardContent>
+
+//           {/* Footer */}
+//           <CardFooter
+//             className="p-[12px_16px] border-t border-gray-100 h-full flex items-center justify-between bg-gray-50/50"
+//           >
+//             <Button
+//               variant="ghost"
+//               disabled={isPrivate}
+//               className={cn(
+//                 "flex items-center gap-2 cursor-pointer font-medium text-sm px-3 py-2 rounded-lg transition-all duration-200",
+//                 isPrivate 
+//                   ? "text-gray-400 cursor-not-allowed" 
+//                   : "text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+//               )}
+//               onClick={handleCopyLink}
+//             >
+//               <Copy className="w-4 h-4" />
+//               <span>{isCopied ? "Copied!" : "Copy link"}</span>
+//             </Button>
+
+//             {/* Status indicator */}
+//             <div className="flex items-center gap-2">
+//               <div className={cn(
+//                 "w-2 h-2 rounded-full transition-colors duration-200",
+//                 isPrivate ? "bg-gray-400" : "bg-green-500"
+//               )}></div>
+//               <span className={cn(
+//                 "text-xs font-medium",
+//                 isPrivate ? "text-gray-500" : "text-green-600"
+//               )}>
+//                 {isPrivate ? "Private" : "Public"}
+//               </span>
+//             </div>
+//           </CardFooter>
+//         </Card>
+//       </div>
+
+//       {/* Edit Event Slider */}
+//       <EditEventSlider
+//         isOpen={isEditSliderOpen}
+//         onClose={() => setIsEditSliderOpen(false)}
+//         eventData={{
+//           title,
+//           duration,
+//           description: "A brief description of the event",
+//           location: "Google Meet"
+//         }}
+//         onSave={handleSaveEvent}
+//       />
+//     </>
+//   );
+// };
+
+
+// export default EventCard; 
+
+
+
+
+
+
+
+
+
+
+
+
+import { JSX, useState, useEffect } from 'react';
+
+import {
+
+  X,
+
+  Calendar,
+
+  MapPin,
+
+  Clock,
+
+  Shield,
+
+  Users,
+
+  FileText,
+
+  Bell,
+
+  CheckCircle,
+
+  Plus,
+
+  Minus,
+
+  Info,
+
+  Zap,
+
+  Trash2,
+
+  CalendarDays,
+
+  Sparkles,
+
+
+
+} from 'lucide-react';
+
+
+
+// Enum for video conferencing platforms
+
+enum VideoConferencingPlatform {
+
+  GOOGLE_MEET_AND_CALENDAR = 'GOOGLE_MEET_AND_CALENDAR',
+
+  ZOOM_MEETING = 'ZOOM_MEETING',
+
+  MICROSOFT_TEAMS = 'MICROSOFT_TEAMS',
+
+}
+
+
+
+// Types
+
+interface CreateEventData {
+
+  title: string;
+
+  description: string;
+
+  accessSpecifier: 'allow_all' | 'block_domains';
+
+  locationType: VideoConferencingPlatform; 
+
+  selectedLocationType: string | null;
+
+  appConnected: boolean;
+
+  duration: number;
+
+  bufferBefore: number;
+
+  bufferAfter: number;
+
+  maxBookingsPerDay: number | null;
+
+  allowGuests: boolean;
+
+  timeZoneDisplay: string;
+
+  timeSlotInterval: number;
+
+  blockedDomains: string[];
+
+  questions: Question[];
+
+  notifications: {
+
+    emailConfirmation: boolean;
+
+    emailReminder: boolean;
+
+    calendarInvitation: boolean;
+
+  };
+
+  confirmationMessage: string;
+
+  redirectToUrl: boolean;
+
+  redirectUrl: string | null;
+
+  createdAt: string;
+
+  isActive: boolean;
+
+  minimumNotice: number;
+
+  noticeType: 'minutes' | 'hours' | 'days';
+
+  dateRangeLimit: number;
+
+  bookingWindowType: 'fixed' | 'date-range' | 'indefinite';
+
+  dateRangeType: 'calendar days' | 'business days' | 'weeks' | 'months';
+
+}
+
+
+
+interface EventCreationSidePanelProps {
+
   isOpen: boolean;
+
   onClose: () => void;
-  eventData: {
-    title: string;
-    duration: number;
-    description: string;
-    location: string;
+
+  editData?: CreateEventData | null; // Optional edit data
+
+  isEditMode?: boolean; // Flag to determine if we're in edit mode
+
+}
+
+
+
+interface LocationOption {
+
+  value: string;
+
+  label: string;
+
+  logo: string;
+
+  isAvailable: boolean;
+
+}
+
+
+
+interface DomainOption {
+
+  value: string;
+
+  label: string;
+
+}
+
+
+
+interface Question {
+
+  id: number;
+
+  question: string;
+
+  type: 'text' | 'textarea' | 'select' | 'radio' | 'checkbox';
+
+  required: boolean;
+
+  options: string[];
+
+}
+
+
+
+interface FormData {
+
+  title: string;
+
+  duration: number;
+
+  description: string;
+
+  accessSpecifier: 'allow_all' | 'block_domains';
+
+  locationType: string;
+
+}
+
+
+
+interface FormErrors {
+
+  [key: string]: string | null;
+
+}
+
+
+
+interface Section {
+
+  id: string;
+
+  name: string;
+
+  icon: React.ComponentType<{ className?: string }>;
+
+  color: string;
+
+}
+
+
+
+const locationOptions: LocationOption[] = [
+
+  {
+
+    value: VideoConferencingPlatform.GOOGLE_MEET_AND_CALENDAR,
+
+    label: 'Google Meet',
+
+    logo: 'https://img.icons8.com/?size=100&id=9730&format=png&color=000000',
+
+    isAvailable: true,
+
+  },
+
+  {
+
+    value: VideoConferencingPlatform.ZOOM_MEETING,
+
+    label: 'Zoom',
+
+    logo: 'https://img.icons8.com/?size=100&id=5pu47piHKg1I&format=png&color=000000',
+
+    isAvailable: true,
+
+  },
+
+  {
+
+    value: VideoConferencingPlatform.MICROSOFT_TEAMS,
+
+    label: 'Teams',
+
+    logo: 'https://img.icons8.com/?size=100&id=65231&format=png&color=000000',
+
+    isAvailable: true,
+
+  },
+
+];
+
+
+
+const commonDomains: DomainOption[] = [
+
+  { value: '@gmail.com', label: 'Gmail (@gmail.com)' },
+
+  { value: '@yahoo.com', label: 'Yahoo (@yahoo.com)' },
+
+  { value: '@outlook.com', label: 'Outlook (@outlook.com)' },
+
+  { value: '@hotmail.com', label: 'Hotmail (@hotmail.com)' },
+
+  { value: '@icloud.com', label: 'iCloud (@icloud.com)' },
+
+  { value: '@aol.com', label: 'AOL (@aol.com)' },
+
+];
+
+
+
+const EventCreationSidePanel = ({ isOpen, onClose, editData = null, isEditMode = false }: EventCreationSidePanelProps) => {
+
+  // Initialize state based on whether we're editing or creating
+
+  const getInitialFormData = (): FormData => {
+
+    if (isEditMode && editData) {
+
+      return {
+
+        title: editData.title,
+
+        duration: editData.duration,
+
+        description: editData.description,
+
+        accessSpecifier: editData.accessSpecifier,
+
+        locationType: editData.locationType,
+
+      };
+
+    }
+
+    return {
+
+      title: '',
+
+      duration: 30,
+
+      description: '',
+
+      accessSpecifier: 'allow_all',
+
+      locationType: '',
+
+    };
+
   };
-  onSave: (data: unknown) => void;
-}> = ({ isOpen, onClose, eventData, onSave }) => {
-  const [formData, setFormData] = useState({
-    title: eventData.title,
-    duration: eventData.duration,
-    description: eventData.description || '',
-    location: eventData.location || 'Google Meet',
-    bufferTimeBefore: 0,
-    bufferTimeAfter: 0,
-    maxInviteesPerEvent: 1,
-    enableInviteeQuestions: true,
-    requireInviteeDetails: true,
-    allowRescheduling: true,
-    allowCancellation: true,
-    confirmationRedirect: '',
-    customMessage: ''
-  });
 
-  const [activeSection, setActiveSection] = useState('basic');
 
-  const handleInputChange = (field: string, value: unknown) => {
+
+  const getInitialQuestions = (): Question[] => {
+
+    if (isEditMode && editData && editData.questions.length > 0) {
+
+      return editData.questions;
+
+    }
+
+    return [
+
+      {
+
+        id: 1,
+
+        question: 'What is your interest in this meeting?',
+
+        type: 'text',
+
+        required: false,
+
+        options: [],
+
+      },
+
+    ];
+
+  };
+
+
+
+
+
+  const [bookingWindowType, setBookingWindowType] = useState<'fixed' | 'date-range' | 'indefinite'>(
+
+    isEditMode && editData ? editData.bookingWindowType : 'fixed'
+
+  );
+
+  const [dateRangeType, setDateRangeType] = useState<'calendar days' | 'business days' | 'weeks' | 'months'>(
+
+    isEditMode && editData ? editData.dateRangeType : 'calendar days'
+
+  );
+
+  const [minimumNotice, setMinimumNotice] = useState<number>(
+
+    isEditMode && editData ? editData.minimumNotice : 30
+
+  );
+
+  const [noticeType, setNoticeType] = useState<'minutes' | 'hours' | 'days'>(
+
+    isEditMode && editData ? editData.noticeType : 'minutes'
+
+  );
+
+  const [dateRangeLimit, setDateRangeLimit] = useState<number>(
+
+    isEditMode && editData ? editData.dateRangeLimit : 30
+
+  );
+
+  
+
+  const [activeSection, setActiveSection] = useState<string>('basic-info');
+
+  const [selectedLocationType, setSelectedLocationType] = useState<string | null>(
+
+    isEditMode && editData ? editData.selectedLocationType : null
+
+  );
+
+  const [error, setError] = useState<string | null>(null);
+
+  const [isChecking, setIsChecking] = useState<boolean>(false);
+
+  const [appConnected, setAppConnected] = useState<boolean>(
+
+    isEditMode && editData ? editData.appConnected : false
+
+  );
+
+  const [bufferBefore, setBufferBefore] = useState<number>(
+
+    isEditMode && editData ? editData.bufferBefore : 0
+
+  );
+
+  const [bufferAfter, setBufferAfter] = useState<number>(
+
+    isEditMode && editData ? editData.bufferAfter : 0
+
+  );
+
+  const [maxBookingsPerDay, setMaxBookingsPerDay] = useState<number | null>(
+
+    isEditMode && editData ? editData.maxBookingsPerDay : null
+
+  );
+
+  const [allowGuests, setAllowGuests] = useState<boolean>(
+
+    isEditMode && editData ? editData.allowGuests : true
+
+  );
+
+  const [timeZoneDisplay, setTimeZoneDisplay] = useState<string>(
+
+    isEditMode && editData ? editData.timeZoneDisplay : 'auto-detect'
+
+  );
+
+  const [timeSlotInterval, setTimeSlotInterval] = useState<string>(
+
+    isEditMode && editData ? editData.timeSlotInterval.toString() : '30'
+
+  );
+
+  const [emailConfirmation, setEmailConfirmation] = useState<boolean>(
+
+    isEditMode && editData ? editData.notifications.emailConfirmation : true
+
+  );
+
+  const [emailReminder, setEmailReminder] = useState<boolean>(
+
+    isEditMode && editData ? editData.notifications.emailReminder : true
+
+  );
+
+  const [calendarInvitation, setCalendarInvitation] = useState<boolean>(
+
+    isEditMode && editData ? editData.notifications.calendarInvitation : true
+
+  );
+
+  const [redirectToUrl, setRedirectToUrl] = useState<boolean>(
+
+    isEditMode && editData ? editData.redirectToUrl : false
+
+  );
+
+  const [redirectUrl, setRedirectUrl] = useState<string>(
+
+    isEditMode && editData ? (editData.redirectUrl || '') : ''
+
+  );
+
+  const [confirmationMessage, setConfirmationMessage] = useState<string>(
+
+    isEditMode && editData ? editData.confirmationMessage : 'Thank you for booking! We look forward to meeting with you.'
+
+  );
+
+  const [blockedDomains, setBlockedDomains] = useState<string[]>(
+
+    isEditMode && editData ? editData.blockedDomains : []
+
+  );
+
+
+
+  const [customDomain, setCustomDomain] = useState<string>('');
+
+  const [questions, setQuestions] = useState<Question[]>(getInitialQuestions());
+
+  const [formData, setFormData] = useState<FormData>(getInitialFormData());
+
+  const [errors, setErrors] = useState<FormErrors>({});
+
+
+
+  // Reset form when switching between create/edit modes or when editData changes
+
+  useEffect(() => {
+
+    if (isOpen) {
+
+      setFormData(getInitialFormData());
+
+      setQuestions(getInitialQuestions());
+
+      setActiveSection('basic-info');
+
+      
+
+      if (isEditMode && editData) {
+
+        // Set all the state values from editData
+
+        setBookingWindowType(editData.bookingWindowType);
+
+        setDateRangeType(editData.dateRangeType);
+
+        setMinimumNotice(editData.minimumNotice);
+
+        setNoticeType(editData.noticeType);
+
+        setDateRangeLimit(editData.dateRangeLimit);
+
+        setSelectedLocationType(editData.selectedLocationType);
+
+        setAppConnected(editData.appConnected);
+
+        setBufferBefore(editData.bufferBefore);
+
+        setBufferAfter(editData.bufferAfter);
+
+        setMaxBookingsPerDay(editData.maxBookingsPerDay);
+
+        setAllowGuests(editData.allowGuests);
+
+        setTimeZoneDisplay(editData.timeZoneDisplay);
+
+        setTimeSlotInterval(editData.timeSlotInterval.toString());
+
+        setEmailConfirmation(editData.notifications.emailConfirmation);
+
+        setEmailReminder(editData.notifications.emailReminder);
+
+        setCalendarInvitation(editData.notifications.calendarInvitation);
+
+        setRedirectToUrl(editData.redirectToUrl);
+
+        setRedirectUrl(editData.redirectUrl || '');
+
+        setConfirmationMessage(editData.confirmationMessage);
+
+        setBlockedDomains(editData.blockedDomains);
+
+      }
+
+    }
+
+  }, [isOpen, isEditMode, editData]);
+
+
+
+  const validateForm = (): boolean => {
+
+    const newErrors: FormErrors = {};
+
+    if (!formData.title.trim()) newErrors.title = 'Event name is required';
+
+    if (!formData.duration || formData.duration < 1) newErrors.duration = 'Duration is required and must be at least 1 minute';
+
+    if (!formData.locationType) newErrors.locationType = 'Location type is required';
+
+    if (minimumNotice < 1) newErrors.minimumNotice = 'Minimum notice must be at least 1';
+
+    if (dateRangeLimit < 1 && bookingWindowType === 'fixed') {
+
+      newErrors.dateRangeLimit = 'Date range limit must be at least 1';
+
+    }
+
+    if (!formData.description.trim()) newErrors.description = 'Description is required';
+
+    if (dateRangeLimit < 1) newErrors.dateRangeLimit = 'Date range limit must be at least 1 day';
+
+    const hasValidQuestion = questions.some(q => q.question.trim() !== '');
+
+    if (!hasValidQuestion) newErrors.questions = 'At least one question must be provided';
+
+    questions.forEach((q, index) => {
+
+      if (q.required && !q.question.trim()) {
+
+        newErrors[`question_${q.id}`] = `Question ${index + 1} is marked as required but has no question text`;
+
+      }
+
+    });
+
+    if (customDomain && !customDomain.startsWith('@')) newErrors.customDomain = 'Custom domain must start with @';
+
+    if (redirectToUrl && !redirectUrl.trim()) newErrors.redirectUrl = 'Redirect URL is required when redirect option is enabled';
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+
+  };
+
+
+
+  const handleInputChange = (field: keyof FormData, value: string | number): void => {
+
     setFormData(prev => ({ ...prev, [field]: value }));
+
+    if (errors[field]) setErrors(prev => ({ ...prev, [field]: null }));
+
   };
 
-  const handleSave = () => {
-    onSave(formData);
-    showToast('Event updated successfully!');
-    onClose();
-  };
 
-  const sections = [
-    { id: 'basic', label: 'Basic Info', icon: FileText },
-    { id: 'duration', label: 'Duration & Buffers', icon: Clock },
-    { id: 'limits', label: 'Limits', icon: Users },
-    { id: 'form', label: 'Invite Form', icon: Calendar },
-    { id: 'policies', label: 'Policies', icon: Shield }
+
+  const sections: Section[] = [
+
+    { id: 'basic-info', name: 'Event type', icon: Calendar, color: 'bg-purple-500' },
+
+    { id: 'location', name: 'Location', icon: MapPin, color: 'bg-blue-500' },
+
+    { id: 'duration', name: 'Duration', icon: Clock, color: 'bg-green-500' },
+
+    { id: 'buffers', name: 'Limits & buffers', icon: Shield, color: 'bg-orange-500' },
+
+    { id: 'booking-options', name: 'Booking page options', icon: Users, color: 'bg-pink-500' },
+
+    { id: 'invitee-form', name: 'Invitee form', icon: FileText, color: 'bg-indigo-500' },
+
+    { id: 'notifications', name: 'Notifications', icon: Bell, color: 'bg-red-500' },
+
+    { id: 'confirmation', name: 'Confirmation page', icon: CheckCircle, color: 'bg-teal-500' },
+
+    { id: 'availability', name: 'Availability', icon: CalendarDays, color: 'bg-cyan-500' },
+
   ];
 
+
+
+  const formatNoticeDisplay = (): string => {
+
+    if (noticeType === 'minutes') {
+
+      return `${minimumNotice} minute${minimumNotice !== 1 ? 's' : ''}`;
+
+    } else if (noticeType === 'hours') {
+
+      return `${minimumNotice} hour${minimumNotice !== 1 ? 's' : ''}`;
+
+    } else {
+
+      return `${minimumNotice} day${minimumNotice !== 1 ? 's' : ''}`;
+
+    }
+
+  };
+
+
+
+  const handleLocationTypeChange = async (value: string): Promise<void> => {
+
+    setSelectedLocationType(value);
+
+    setAppConnected(false);
+
+    handleInputChange('locationType', value);
+
+    setError(null);
+
+
+
+    if (value === VideoConferencingPlatform.GOOGLE_MEET_AND_CALENDAR) {
+
+      setIsChecking(true);
+
+      try {
+
+        // Mock check - replace with actual API call
+
+        const isConnected = true;
+
+        if (!isConnected) {
+
+          setError('Google Meet is not connected. Visit the integration page to connect your account.');
+
+          return;
+
+        }
+
+        setAppConnected(true);
+
+      } catch (err) {
+
+        setError('Failed to check Google Meet integration status.');
+
+        console.error('Integration error:', err);
+
+      } finally {
+
+        setIsChecking(false);
+
+      }
+
+    } else {
+
+      setAppConnected(true);
+
+    }
+
+  };
+
+
+
+  const addQuestion = (): void => {
+
+    const newQuestion: Question = {
+
+      id: Date.now(),
+
+      question: '',
+
+      type: 'text',
+
+      required: false,
+
+      options: [],
+
+    };
+
+    setQuestions([...questions, newQuestion]);
+
+  };
+
+
+
+  const updateQuestionOption = (questionId: number, optionIndex: number, value: string): void => {
+
+    setQuestions(questions.map(q => {
+
+      if (q.id === questionId) {
+
+        const newOptions = [...q.options];
+
+        newOptions[optionIndex] = value;
+
+        return { ...q, options: newOptions };
+
+      }
+
+      return q;
+
+    }));
+
+    
+
+    if (errors[`question_options_${questionId}`]) {
+
+      setErrors(prev => ({ ...prev, [`question_options_${questionId}`]: null }));
+
+    }
+
+  };
+
+
+
+  const updateQuestion = (id: number, field: keyof Question, value: string | boolean): void => {
+
+    setQuestions(questions.map(q => (q.id === id ? { ...q, [field]: value } : q)));
+
+  };
+
+
+
+  const removeQuestion = (id: number): void => {
+
+    setQuestions(questions.filter(q => q.id !== id));
+
+  };
+
+
+
+  const handleDomainToggle = (domain: string): void => {
+
+    setBlockedDomains(prev =>
+
+      prev.includes(domain) ? prev.filter(d => d !== domain) : [...prev, domain]
+
+    );
+
+  };
+
+
+
+  const addCustomDomain = (): void => {
+
+    if (customDomain && customDomain.startsWith('@') && !blockedDomains.includes(customDomain)) {
+
+      setBlockedDomains(prev => [...prev, customDomain]);
+
+      setCustomDomain('');
+
+      setErrors(prev => ({ ...prev, customDomain: null }));
+
+    }
+
+  };
+
+
+
+  const addQuestionOption = (questionId: number): void => {
+
+    setQuestions(questions.map(q => {
+
+      if (q.id === questionId) {
+
+        return { ...q, options: [...q.options, ''] };
+
+      }
+
+      return q;
+
+    }));
+
+  };
+
+
+
+  const removeQuestionOption = (questionId: number, optionIndex: number): void => {
+
+    setQuestions(questions.map(q => {
+
+      if (q.id === questionId) {
+
+        const newOptions = q.options.filter((_, index) => index !== optionIndex);
+
+        return { ...q, options: newOptions };
+
+      }
+
+      return q;
+
+    }));
+
+  };
+
+
+
+  const removeCustomDomain = (domain: string): void => {
+
+    setBlockedDomains(prev => prev.filter(d => d !== domain));
+
+  };
+
+
+
+  const handleSubmit = (): void => {
+
+    if (!validateForm()) {
+
+      const errorKeys = Object.keys(errors);
+
+      if (errorKeys.some(key => ['title', 'description', 'accessSpecifier'].includes(key))) {
+
+        setActiveSection('basic-info');
+
+      } else if (errorKeys.includes('locationType')) {
+
+        setActiveSection('location');
+
+      } else if (errorKeys.includes('duration')) {
+
+        setActiveSection('duration');
+
+      } else if (errorKeys.some(key => key.startsWith('question_') || key === 'questions')) {
+
+        setActiveSection('invitee-form');
+
+      } else if (errorKeys.includes('redirectUrl')) {
+
+        setActiveSection('confirmation');
+
+      }
+
+      if (errorKeys.some(key => ['minimumNotice', 'dateRangeLimit'].includes(key))) {
+
+        setActiveSection('availability');
+
+      }
+
+      return;
+
+    }
+
+
+
+    const eventData: CreateEventData = {
+
+      title: formData.title,
+
+      description: formData.description,
+
+      accessSpecifier: formData.accessSpecifier,
+
+      locationType: formData.locationType as VideoConferencingPlatform,
+
+      selectedLocationType,
+
+      appConnected,
+
+      duration: formData.duration,
+
+      bufferBefore,
+
+      bufferAfter,
+
+      maxBookingsPerDay: maxBookingsPerDay ? parseInt(maxBookingsPerDay.toString()) : null,
+
+      allowGuests,
+
+      timeZoneDisplay,
+
+      timeSlotInterval: parseInt(timeSlotInterval),
+
+      blockedDomains,
+
+      questions: questions.filter(q => q.question.trim() !== ''),
+
+      notifications: { emailConfirmation, emailReminder, calendarInvitation },
+
+      confirmationMessage,
+
+      redirectToUrl,
+
+      redirectUrl: redirectToUrl ? redirectUrl : null,
+
+      createdAt: isEditMode ? (editData?.createdAt || new Date().toISOString()) : new Date().toISOString(),
+
+      isActive: isEditMode ? (editData?.isActive ?? true) : true,
+
+      minimumNotice,
+
+      noticeType,
+
+      dateRangeLimit,
+
+      bookingWindowType,
+
+      dateRangeType,
+
+    };
+
+
+
+    console.log(isEditMode ? "Updated event data:" : "New event data:", eventData);
+
+    
+
+    // Show success message
+
+    const successMessage = isEditMode ? 'Event updated successfully!' : 'Event created successfully!';
+
+    setTimeout(() => alert(successMessage), 100);
+
+    
+
+    onClose();
+
+  };
+
+
+
+  if (!isOpen) return null;
+
+
+
+  const renderSectionContent = (): JSX.Element | null => {
+
+    switch (activeSection) {
+
+      case 'basic-info':
+
+        return (
+
+          <div className="space-y-6">
+
+            <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-xl border border-purple-100">
+
+              <div className="flex items-center space-x-2 mb-2">
+
+                <Sparkles className="w-5 h-5 text-purple-600" />
+
+                <h3 className="font-semibold text-purple-900">Event Basics</h3>
+
+              </div>
+
+              <p className="text-sm text-purple-700">
+
+                {isEditMode ? 'Update your event details' : 'Create your perfect event template'}
+
+              </p>
+
+            </div>
+
+            <div>
+
+              <label className="block text-sm font-semibold mb-3 text-gray-800">
+
+                Event name <span className="text-red-500">*</span>
+
+              </label>
+
+              <input
+
+                value={formData.title}
+
+                onChange={(e) => handleInputChange('title', e.target.value)}
+
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 bg-white shadow-sm"
+
+                placeholder="Enter event name"
+
+              />
+
+              {errors.title && <p className="mt-1 text-sm text-red-600">{errors.title}</p>}
+
+            </div>
+
+            <div>
+
+              <label className="block text-sm font-semibold mb-3 text-gray-800">
+
+                Description <span className="text-red-500">*</span>
+
+              </label>
+
+              <textarea
+
+                value={formData.description}
+
+                onChange={(e) => handleInputChange('description', e.target.value)}
+
+                rows={4}
+
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 bg-white shadow-sm resize-none"
+
+                placeholder="Tell your invitees what this meeting is about"
+
+              />
+
+              {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description}</p>}
+
+            </div>
+
+            <div>
+
+              <label className="block text-sm font-semibold mb-3 text-gray-800">Access Control</label>
+
+              <select
+
+                value={formData.accessSpecifier}
+
+                onChange={(e) => handleInputChange('accessSpecifier', e.target.value as 'allow_all' | 'block_domains')}
+
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 bg-white shadow-sm"
+
+              >
+
+                <option value="allow_all">Allow all email domains to book</option>
+
+                <option value="block_domains">Block specific email domains</option>
+
+              </select>
+
+            </div>
+
+            {formData.accessSpecifier === 'block_domains' && (
+
+              <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-5">
+
+                <h4 className="font-semibold text-yellow-900 mb-4 flex items-center">
+
+                  <Shield className="w-4 h-4 mr-2" />
+
+                  Block Email Domains
+
+                </h4>
+
+                <div className="space-y-4">
+
+                  <div>
+
+                    <label className="block text-sm font-medium mb-2 text-yellow-800">Common Email Domains</label>
+
+                    <div className="grid grid-cols-2 gap-2">
+
+                      {commonDomains.map((domain) => (
+
+                        <label key={domain.value} className="flex items-center space-x-2 bg-white p-3 rounded-lg border cursor-pointer hover:bg-yellow-50">
+
+                          <input
+
+                            type="checkbox"
+
+                            checked={blockedDomains.includes(domain.value)}
+
+                            onChange={() => handleDomainToggle(domain.value)}
+
+                            className="rounded text-yellow-600 focus:ring-yellow-500"
+
+                          />
+
+                          <span className="text-sm text-gray-700">{domain.label}</span>
+
+                        </label>
+
+                      ))}
+
+                    </div>
+
+                  </div>
+
+                  <div>
+
+                    <label className="block text-sm font-medium mb-2 text-yellow-800">Add Custom Domain</label>
+
+                    <div className="flex space-x-2">
+
+                      <input
+
+                        type="text"
+
+                        value={customDomain}
+
+                        onChange={(e) => setCustomDomain(e.target.value)}
+
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+
+                        placeholder="@company.com"
+
+                      />
+
+                      <button
+
+                        type="button"
+
+                        onClick={addCustomDomain}
+
+                        className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+
+                      >
+
+                        Add
+
+                      </button>
+
+                    </div>
+
+                    {errors.customDomain && <p className="mt-1 text-sm text-red-600">{errors.customDomain}</p>}
+
+                  </div>
+
+                  {blockedDomains.length > 0 && (
+
+                    <div>
+
+                      <label className="block text-sm font-medium mb-2 text-yellow-800">Blocked Domains</label>
+
+                      <div className="flex flex-wrap gap-2">
+
+                        {blockedDomains.map((domain) => (
+
+                          <span
+
+                            key={domain}
+
+                            className="inline-flex items-center px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm"
+
+                          >
+
+                            {domain}
+
+                            <button
+
+                              type="button"
+
+                              onClick={() => removeCustomDomain(domain)}
+
+                              className="ml-2 text-red-600 hover:text-red-800"
+
+                            >
+
+                              <X className="w-3 h-3" />
+
+                            </button>
+
+                          </span>
+
+                        ))}
+
+                      </div>
+
+                    </div>
+
+                  )}
+
+                </div>
+
+              </div>
+
+            )}
+
+          </div>
+
+        );
+
+
+
+      case 'location':
+
+        return (
+
+          <div className="space-y-6">
+
+            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-4 rounded-xl border border-blue-100">
+
+              <div className="flex items-center space-x-2 mb-2">
+
+                <MapPin className="w-5 h-5 text-blue-600" />
+
+                <h3 className="font-semibold text-blue-900">Meeting Location</h3>
+
+              </div>
+
+              <p className="text-sm text-blue-700">Choose where your meeting will take place</p>
+
+            </div>
+
+            <div>
+
+              <label className="block text-sm font-semibold mb-3 text-gray-800">
+
+                Location Type <span className="text-red-500">*</span>
+
+              </label>
+
+              <div className="space-y-3">
+
+                {locationOptions.map((option) => (
+
+                  <div
+
+                    key={option.value}
+
+                    className={`border-2 rounded-xl p-5 cursor-pointer transition-all duration-300 hover:shadow-lg ${
+
+                      selectedLocationType === option.value
+
+                        ? appConnected
+
+                          ? 'border-green-400 bg-gradient-to-r from-green-50 to-emerald-50 shadow-lg transform scale-[1.02]'
+
+                          : error
+
+                          ? 'border-red-400 bg-gradient-to-r from-red-50 to-pink-50 shadow-lg'
+
+                          : 'border-blue-400 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-lg'
+
+                        : 'border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50'
+
+                    }`}
+
+                    onClick={() => handleLocationTypeChange(option.value)}
+
+                  >
+
+                    <div className="flex items-center space-x-4">
+
+                      <div className="p-2 bg-white rounded-lg shadow-sm">
+
+                        <img src={option.logo} alt={option.label} className="w-6 h-6" />
+
+                      </div>
+
+                      <div className="flex-1">
+
+                        <h4 className="font-semibold text-gray-900">{option.label}</h4>
+
+                        <p className="text-sm text-gray-600">
+
+                          {option.value === VideoConferencingPlatform.GOOGLE_MEET_AND_CALENDAR
+
+                            ? 'Google Meet video conference'
+
+                            : option.value === VideoConferencingPlatform.ZOOM_MEETING
+
+                            ? 'Zoom video conference'
+
+                            : 'Microsoft Teams video conference'}
+
+                        </p>
+
+                      </div>
+
+                      {isChecking && selectedLocationType === option.value && (
+
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+
+                      )}
+
+                      {appConnected && selectedLocationType === option.value && (
+
+                        <div className="bg-green-500 rounded-full p-1">
+
+                          <CheckCircle className="w-5 h-5 text-white" />
+
+                        </div>
+
+                      )}
+
+                    </div>
+
+                  </div>
+
+                ))}
+
+              </div>
+
+              {error && (
+
+                <div className="mt-4 p-4 bg-gradient-to-r from-red-50 to-pink-50 border-2 border-red-200 rounded-xl">
+
+                  <p
+
+                    className="text-sm text-red-700 flex items-center"
+
+                    dangerouslySetInnerHTML={{ __html: error }}
+
+                  />
+
+                </div>
+
+              )}
+
+              {errors.locationType && <p className="mt-1 text-sm text-red-600">{errors.locationType}</p>}
+
+            </div>
+
+          </div>
+
+        );
+
+
+
+      case 'duration':
+
+        return (
+
+          <div className="space-y-6">
+
+            <div className="bg-gradient-to-r from-green-50 to-teal-50 p-4 rounded-xl border border-green-100">
+
+              <div className="flex items-center space-x-2 mb-2">
+
+                <Clock className="w-5 h-5 text-green-600" />
+
+                <h3 className="font-semibold text-green-900">Event Duration</h3>
+
+              </div>
+
+              <p className="text-sm text-green-700">Set the perfect time for your meetings</p>
+
+            </div>
+
+            <div>
+
+              <label className="block text-sm font-semibold mb-3 text-gray-800">
+
+                Duration (minutes) <span className="text-red-500">*</span>
+
+              </label>
+
+              <input
+
+                type="number"
+
+                value={formData.duration}
+
+                onChange={(e) => handleInputChange('duration', parseInt(e.target.value) || 0)}
+
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-white shadow-sm"
+
+                placeholder="30"
+
+                min="1"
+
+              />
+
+              {errors.duration && <p className="mt-1 text-sm text-red-600">{errors.duration}</p>}
+
+            </div>
+
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-5">
+
+              <div className="flex items-start space-x-3">
+
+                <div className="bg-blue-500 rounded-full p-1 mt-0.5">
+
+                  <Info className="w-4 h-4 text-white" />
+
+                </div>
+
+                <div className="text-sm">
+
+                  <p className="font-semibold text-blue-900 mb-1">Duration affects scheduling</p>
+
+                  <p className="text-blue-700">This duration will be used to block time on your calendar and determine available time slots.</p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        );
+
+
+
+      case 'buffers':
+
+        return (
+
+          <div className="space-y-6">
+
+            <div className="bg-gradient-to-r from-orange-50 to-yellow-50 p-4 rounded-xl border border-orange-100">
+
+              <div className="flex items-center space-x-2 mb-2">
+
+                <Shield className="w-5 h-5 text-orange-600" />
+
+                <h3 className="font-semibold text-orange-900">Smart Buffers</h3>
+
+              </div>
+
+              <p className="text-sm text-orange-700">Add breathing room between meetings</p>
+
+            </div>
+
+            <div>
+
+              <h3 className="text-lg font-semibold mb-6 text-gray-800">Buffer times</h3>
+
+              <div className="space-y-6">
+
+                <div className="bg-white p-5 rounded-xl border-2 border-gray-100 shadow-sm">
+
+                  <label className="block text-sm font-semibold mb-3 text-gray-800">Buffer before event (minutes)</label>
+
+                  <div className="flex items-center space-x-3">
+
+                    <button
+
+                      type="button"
+
+                      onClick={() => setBufferBefore(Math.max(0, bufferBefore - 5))}
+
+                      className="p-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl hover:from-orange-600 hover:to-red-600 transition-all duration-200 shadow-md hover:shadow-lg"
+
+                    >
+
+                      <Minus className="w-4 h-4" />
+
+                    </button>
+
+                    <input
+
+                      type="number"
+
+                      value={bufferBefore}
+
+                      onChange={(e) => setBufferBefore(parseInt(e.target.value) || 0)}
+
+                      className="w-24 px-3 py-3 border-2 border-gray-200 rounded-xl text-center font-semibold text-lg bg-gradient-to-r from-gray-50 to-white"
+
+                      min="0"
+
+                    />
+
+                    <button
+
+                      type="button"
+
+                      onClick={() => setBufferBefore(bufferBefore + 5)}
+
+                      className="p-3 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-xl hover:from-green-600 hover:to-teal-600 transition-all duration-200 shadow-md hover:shadow-lg"
+
+                    >
+
+                      <Plus className="w-4 h-4" />
+
+                    </button>
+
+                  </div>
+
+                </div>
+
+                <div className="bg-white p-5 rounded-xl border-2 border-gray-100 shadow-sm">
+
+                  <label className="block text-sm font-semibold mb-3 text-gray-800">Buffer after event (minutes)</label>
+
+                  <div className="flex items-center space-x-3">
+
+                    <button
+
+                      type="button"
+
+                      onClick={() => setBufferAfter(Math.max(0, bufferAfter - 5))}
+
+                      className="p-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl hover:from-orange-600 hover:to-red-600 transition-all duration-200 shadow-md hover:shadow-lg"
+
+                    >
+
+                      <Minus className="w-4 h-4" />
+
+                    </button>
+
+                    <input
+
+                      type="number"
+
+                      value={bufferAfter}
+
+                      onChange={(e) => setBufferAfter(parseInt(e.target.value) || 0)}
+
+                      className="w-24 px-3 py-3 border-2 border-gray-200 rounded-xl text-center font-semibold text-lg bg-gradient-to-r from-gray-50 to-white"
+
+                      min="0"
+
+                    />
+
+                    <button
+
+                      type="button"
+
+                      onClick={() => setBufferAfter(bufferAfter + 5)}
+
+                      className="p-3 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-xl hover:from-green-600 hover:to-teal-600 transition-all duration-200 shadow-md hover:shadow-lg"
+
+                    >
+
+                      <Plus className="w-4 h-4" />
+
+                    </button>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div className="bg-white p-5 rounded-xl border-2 border-gray-100 shadow-sm">
+
+              <h3 className="text-lg font-semibold mb-4 text-gray-800">Booking limits</h3>
+
+              <div>
+
+                <label className="block text-sm font-semibold mb-3 text-gray-800">Maximum bookings per day</label>
+
+                <input
+
+                  type="number"
+
+                  value={maxBookingsPerDay ?? ''}
+
+                  onChange={(e) => setMaxBookingsPerDay(e.target.value ? parseInt(e.target.value) : null)}
+
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 bg-white shadow-sm"
+
+                  placeholder="No limit"
+
+                  min="1"
+
+                />
+
+              </div>
+
+            </div>
+
+          </div>
+
+        );
+
+
+
+      case 'booking-options':
+
+        return (
+
+          <div className="space-y-6">
+
+            <div className="bg-gradient-to-r from-pink-50 to-purple-50 p-4 rounded-xl border border-pink-100">
+
+              <div className="flex items-center space-x-2 mb-2">
+
+                <Users className="w-5 h-5 text-pink-600" />
+
+                <h3 className="font-semibold text-pink-900">Booking Experience</h3>
+
+              </div>
+
+              <p className="text-sm text-pink-700">Customize how invitees book your events</p>
+
+            </div>
+
+            <div>
+
+              <div className="space-y-4">
+
+                <div className="flex items-center justify-between py-4 px-5 bg-white rounded-xl border-2 border-gray-100 shadow-sm">
+
+                  <div>
+
+                    <h4 className="font-semibold text-gray-900">Allow guests</h4>
+
+                    <p className="text-sm text-gray-600">Let invitees add guests to the meeting</p>
+
+                  </div>
+
+                  <label className="relative inline-flex items-center cursor-pointer">
+
+                    <input
+
+                      type="checkbox"
+
+                      checked={allowGuests}
+
+                      onChange={(e) => setAllowGuests(e.target.checked)}
+
+                      className="sr-only peer"
+
+                    />
+
+                    <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-pink-500 peer-checked:to-purple-500 shadow-lg"></div>
+
+                  </label>
+
+                </div>
+
+                <div className="py-4 px-5 bg-white rounded-xl border-2 border-gray-100 shadow-sm">
+
+                  <h4 className="font-semibold mb-3 text-gray-900">Time zone display</h4>
+
+                  <select
+
+                    value={timeZoneDisplay}
+
+                    onChange={(e) => setTimeZoneDisplay(e.target.value)}
+
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all duration-200 bg-white shadow-sm"
+
+                  >
+
+                    <option value="auto-detect">Auto-detect invitee time zone</option>
+
+                    <option value="use-mine">Use my time zone</option>
+
+                    <option value="let-choose">Let invitee choose</option>
+
+                  </select>
+
+                </div>
+
+                <div className="py-4 px-5 bg-white rounded-xl border-2 border-gray-100 shadow-sm">
+
+                  <h4 className="font-semibold mb-3 text-gray-900">Time slot intervals</h4>
+
+                  <select
+
+                    value={timeSlotInterval}
+
+                    onChange={(e) => setTimeSlotInterval(e.target.value)}
+
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all duration-200 bg-white shadow-sm"
+
+                  >
+
+                    <option value="15">15 minutes</option>
+
+                    <option value="30">30 minutes</option>
+
+                    <option value="60">60 minutes</option>
+
+                  </select>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        );
+
+
+
+      case 'availability':
+
+        return (
+
+          <div className="space-y-4">
+
+            <div className="bg-gradient-to-r from-cyan-50 to-blue-50 p-3 rounded-lg border border-cyan-100">
+
+              <div className="flex items-center space-x-2 mb-1">
+
+                <CalendarDays className="w-4 h-4 text-cyan-600" />
+
+                <h3 className="font-semibold text-cyan-900">Booking Availability</h3>
+
+              </div>
+
+              <p className="text-xs text-cyan-700">Control when people can book meetings</p>
+
+            </div>
+
+
+
+            <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+
+              <div className="flex items-center space-x-2 mb-3">
+
+                <Clock className="w-4 h-4 text-cyan-600" />
+
+                <h4 className="font-medium text-gray-900">Minimum Notice</h4>
+
+              </div>
+
+              
+
+              <div className="flex items-center space-x-2 mb-3">
+
+                <input
+
+                  type="number"
+
+                  value={minimumNotice}
+
+                  onChange={(e) => {
+
+                    const value = parseInt(e.target.value) || 1;
+
+                    setMinimumNotice(Math.max(1, value));
+
+                  }}
+
+                  className="w-16 px-2 py-1.5 border border-gray-300 rounded text-center text-sm focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500"
+
+                  min="1"
+
+                />
+
+                <select
+
+                  value={noticeType}
+
+                  onChange={(e) => setNoticeType(e.target.value as 'minutes' | 'hours' | 'days')}
+
+                  className="px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500"
+
+                >
+
+                  <option value="minutes">min</option>
+
+                  <option value="hours">hrs</option>
+
+                  <option value="days">days</option>
+
+                </select>
+
+                <span className="text-sm text-gray-600">before meeting</span>
+
+              </div>
+
+
+
+              {errors.minimumNotice && (
+
+                <p className="text-xs text-red-600 mb-2">{errors.minimumNotice}</p>
+
+              )}
+
+
+
+              <div className="flex flex-wrap gap-1">
+
+                {[
+
+                  { value: 30, type: 'minutes', label: '30m' },
+
+                  { value: 1, type: 'hours', label: '1h' },
+
+                  { value: 4, type: 'hours', label: '4h' },
+
+                  { value: 1, type: 'days', label: '1d' },
+
+                  { value: 2, type: 'days', label: '2d' }
+
+                ].map((preset) => (
+
+                  <button
+
+                    key={`${preset.value}-${preset.type}`}
+
+                    type="button"
+
+                    onClick={() => {
+
+                      setMinimumNotice(preset.value);
+
+                      setNoticeType(preset.type as 'minutes' | 'hours' | 'days');
+
+                    }}
+
+                    className={`px-2 py-1 text-xs rounded transition-colors ${
+
+                      minimumNotice === preset.value && noticeType === preset.type
+
+                        ? 'bg-cyan-600 text-white'
+
+                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+
+                    }`}
+
+                  >
+
+                    {preset.label}
+
+                  </button>
+
+                ))}
+
+              </div>
+
+            </div>
+
+
+
+            <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+
+              <div className="flex items-center space-x-2 mb-3">
+
+                <Calendar className="w-4 h-4 text-cyan-600" />
+
+                <h4 className="font-medium text-gray-900">Booking Window</h4>
+
+              </div>
+
+
+
+              <div className="space-y-2">
+
+                <label className="flex items-start space-x-2 cursor-pointer p-2 rounded hover:bg-gray-50">
+
+                  <input
+
+                    type="radio"
+
+                    name="bookingWindow"
+
+                    value="fixed"
+
+                    checked={bookingWindowType === 'fixed'}
+
+                    onChange={(e) => setBookingWindowType(e.target.value as 'fixed' | 'date-range' | 'indefinite')}
+
+                    className="mt-0.5 w-3 h-3 text-cyan-600"
+
+                  />
+
+                  <div className="flex-1 min-w-0">
+
+                    <div className="mb-1">
+
+                      <span className="text-sm font-medium text-gray-900">Fixed duration</span>
+
+                      <p className="text-xs text-gray-600">Invitees can schedule</p>
+
+                    </div>
+
+                    <div className="flex items-center space-x-2 mb-1">
+
+                      <input
+
+                        type="number"
+
+                        value={dateRangeLimit}
+
+                        onChange={(e) => {
+
+                          const value = parseInt(e.target.value) || 1;
+
+                          setDateRangeLimit(Math.max(1, value));
+
+                        }}
+
+                        className="w-16 px-2 py-1 border border-gray-300 rounded text-center text-sm focus:ring-1 focus:ring-cyan-500 disabled:bg-gray-100"
+
+                        min="1"
+
+                        disabled={bookingWindowType !== 'fixed'}
+
+                      />
+
+                      <select
+
+                        value={dateRangeType}
+
+                        onChange={(e) => setDateRangeType(e.target.value as 'calendar days' | 'business days' | 'weeks' | 'months')}
+
+                        disabled={bookingWindowType !== 'fixed'}
+
+                        className="px-2 py-1 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-cyan-500 disabled:bg-gray-100"
+
+                      >
+
+                        <option value="calendar days">days</option>
+
+                        <option value="weeks">weeks</option>
+
+                        <option value="months">months</option>
+
+                      </select>
+
+                      <span className="text-xs text-gray-600">into the future</span>
+
+                    </div>
+
+                    <p className="text-xs text-gray-600">
+
+                      with at least <span className="font-medium text-gray-900">{formatNoticeDisplay()}</span> notice
+
+                    </p>
+
+                  </div>
+
+                </label>
+
+                <label className="flex items-start space-x-2 cursor-pointer p-2 rounded hover:bg-gray-50">
+
+                  <input
+
+                    type="radio"
+
+                    name="bookingWindow"
+
+                    value="indefinite"
+
+                    checked={bookingWindowType === 'indefinite'}
+
+                    onChange={(e) => setBookingWindowType(e.target.value as 'fixed' | 'date-range' | 'indefinite')}
+
+                    className="mt-0.5 w-3 h-3 text-cyan-600"
+
+                  />
+
+                  <div>
+
+                    <span className="text-sm font-medium text-gray-900">No limit</span>
+
+                    <p className="text-xs text-gray-600">Invitees can schedule indefinitely into the future</p>
+
+                  </div>
+
+                </label>
+
+              </div>
+
+
+
+              {bookingWindowType === 'indefinite' && (
+
+                <div className="mt-2 ml-5 p-2 bg-green-50 rounded text-xs text-green-700">
+
+                  <p>with at least <span className="font-medium text-green-900">{formatNoticeDisplay()}</span> notice</p>
+
+                </div>
+
+              )}
+
+
+
+              {errors.dateRangeLimit && (
+
+                <p className="text-xs text-red-600 mt-2">{errors.dateRangeLimit}</p>
+
+              )}
+
+
+
+              {bookingWindowType === 'fixed' && (
+
+                <div className="mt-3 pt-3 border-t border-gray-100">
+
+                  <p className="text-xs text-gray-600 mb-2">Quick settings:</p>
+
+                  <div className="flex flex-wrap gap-1">
+
+                    {[
+
+                      { value: 30, type: 'calendar days', label: '30d' },
+
+                      { value: 60, type: 'calendar days', label: '60d' },
+
+                      { value: 3, type: 'months', label: '3m' },
+
+                      { value: 6, type: 'months', label: '6m' }
+
+                    ].map((preset) => (
+
+                      <button
+
+                        key={`range-${preset.value}-${preset.type}`}
+
+                        type="button"
+
+                        onClick={() => {
+
+                          setDateRangeLimit(preset.value);
+
+                          setDateRangeType(preset.type as 'calendar days' | 'business days' | 'weeks' | 'months');
+
+                        }}
+
+                        className={`px-2 py-1 text-xs rounded transition-colors ${
+
+                          dateRangeLimit === preset.value && dateRangeType === preset.type
+
+                            ? 'bg-cyan-600 text-white'
+
+                            : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+
+                        }`}
+
+                      >
+
+                        {preset.label}
+
+                      </button>
+
+                    ))}
+
+                  </div>
+
+                </div>
+
+              )}
+
+            </div>
+
+
+
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-3">
+
+              <div className="flex items-start space-x-2">
+
+                <CheckCircle className="w-4 h-4 text-green-600 mt-0.5" />
+
+                <div className="text-sm text-green-800">
+
+                  <p className="font-medium mb-1">Current settings:</p>
+
+                  <ul className="space-y-1 text-xs">
+
+                    <li>• Min notice: {formatNoticeDisplay()}</li>
+
+                    <li>• Window: {bookingWindowType === 'indefinite' 
+
+                      ? 'No limit' 
+
+                      : bookingWindowType === 'date-range' 
+
+                      ? 'Date range (coming soon)'
+
+                      : `${dateRangeLimit} ${dateRangeType}`}</li>
+
+                  </ul>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        );
+
+
+
+      case 'invitee-form':
+
+        return (
+
+          <div className="space-y-6">
+
+            <div className="bg-gradient-to-r from-indigo-50 to-blue-50 p-4 rounded-xl border border-indigo-100">
+
+              <div className="flex items-center space-x-2 mb-2">
+
+                <FileText className="w-5 h-5 text-indigo-600" />
+
+                <h3 className="font-semibold text-indigo-900">Invitee Form</h3>
+
+              </div>
+
+              <p className="text-sm text-indigo-700">Collect the information you need</p>
+
+            </div>
+
+            <div className="bg-gradient-to-r from-gray-50 to-blue-50 border-2 border-gray-200 rounded-xl p-5">
+
+              <p className="text-sm text-gray-700 flex items-center">
+
+                <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+
+                Name and email are always collected. Add custom questions below.
+
+              </p>
+
+            </div>
+
+            <div>
+
+              <div className="flex items-center justify-between mb-4">
+
+                <h4 className="font-semibold text-gray-900">Custom questions</h4>
+
+                <span className="bg-indigo-100 text-indigo-800 text-xs font-semibold px-3 py-1 rounded-full">
+
+                  {questions.length} question{questions.length !== 1 ? 's' : ''}
+
+                </span>
+
+              </div>
+
+              {errors.questions && <p className="mb-4 text-sm text-red-600">{errors.questions}</p>}
+
+              <div className="space-y-4">
+
+                {questions.map((question, index) => (
+
+                  <div key={question.id} className="border-2 border-gray-200 rounded-xl p-5 bg-white shadow-sm hover:shadow-md transition-all duration-200">
+
+                    <div className="flex items-center justify-between mb-4">
+
+                      <span className="font-semibold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full text-sm">Question {index + 1}</span>
+
+                      {questions.length > 1 && (
+
+                        <button
+
+                          type="button"
+
+                          onClick={() => removeQuestion(question.id)}
+
+                          className="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 rounded-full p-2 transition-all duration-200"
+
+                        >
+
+                          <X className="w-4 h-4" />
+
+                        </button>
+
+                      )}
+
+                    </div>
+
+                    <div className="space-y-4">
+
+                      <div>
+
+                        <input
+
+                          type="text"
+
+                          value={question.question}
+
+                          onChange={(e) => updateQuestion(question.id, 'question', e.target.value)}
+
+                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white shadow-sm"
+
+                          placeholder="Enter your question"
+
+                        />
+
+                        {errors[`question_${question.id}`] && (
+
+                          <p className="mt-1 text-sm text-red-600">{errors[`question_${question.id}`]}</p>
+
+                        )}
+
+                      </div>
+
+                      <div className="flex items-center space-x-4">
+
+                        <select
+
+                          value={question.type}
+
+                          onChange={(e) => updateQuestion(question.id, 'type', e.target.value as Question['type'])}
+
+                          className="px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white shadow-sm"
+
+                        >
+
+                          <option value="text">Text</option>
+
+                          <option value="textarea">Long text</option>
+
+                          <option value="select">Dropdown</option>
+
+                          <option value="radio">Radio buttons</option>
+
+                          <option value="checkbox">Checkboxes</option>
+
+                        </select>
+
+                        <label className="flex items-center space-x-2 bg-gray-50 px-4 py-3 rounded-xl">
+
+                          <input
+
+                            type="checkbox"
+
+                            checked={question.required}
+
+                            onChange={(e) => updateQuestion(question.id, 'required', e.target.checked)}
+
+                            className="rounded text-indigo-600 focus:ring-indigo-500"
+
+                          />
+
+                          <span className="text-sm font-medium text-gray-700">Required</span>
+
+                        </label>
+
+                      </div>
+
+
+
+                      {['select', 'radio', 'checkbox'].includes(question.type) && (
+
+                        <div className="bg-gradient-to-r from-indigo-50 to-blue-50 border-2 border-indigo-200 rounded-xl p-4">
+
+                          <div className="flex items-center justify-between mb-3">
+
+                            <h5 className="font-semibold text-indigo-900">Answer Options</h5>
+
+                            <button
+
+                              type="button"
+
+                              onClick={() => addQuestionOption(question.id)}
+
+                              className="flex items-center space-x-1 px-3 py-1 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm"
+
+                            >
+
+                              <Plus className="w-3 h-3" />
+
+                              <span>Add Option</span>
+
+                            </button>
+
+                          </div>
+
+                          {errors[`question_options_${question.id}`] && (
+
+                            <p className="mb-3 text-sm text-red-600">{errors[`question_options_${question.id}`]}</p>
+
+                          )}
+
+                          <div className="space-y-2">
+
+                            {question.options.map((option, optionIndex) => (
+
+                              <div key={optionIndex} className="flex items-center space-x-2">
+
+                                <span className="text-sm font-medium text-indigo-700 w-8 text-center">
+
+                                  {optionIndex + 1}.
+
+                                </span>
+
+                                <input
+
+                                  type="text"
+
+                                  value={option}
+
+                                  onChange={(e) => updateQuestionOption(question.id, optionIndex, e.target.value)}
+
+                                  className="flex-1 px-3 py-2 border-2 border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white"
+
+                                  placeholder={`Option ${optionIndex + 1}`}
+
+                                />
+
+                                {question.options.length > 1 && (
+
+                                  <button
+
+                                    type="button"
+
+                                    onClick={() => removeQuestionOption(question.id, optionIndex)}
+
+                                    className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200"
+
+                                  >
+
+                                    <Trash2 className="w-4 h-4" />
+
+                                  </button>
+
+                                )}
+
+                              </div>
+
+                            ))}
+
+                          </div>
+
+                        </div>
+
+                      )}
+
+                    </div>
+
+                  </div>
+
+                ))}
+
+                <button
+
+                  type="button"
+
+                  onClick={addQuestion}
+
+                  className="w-full border-2 border-dashed border-indigo-300 rounded-xl p-6 text-indigo-600 hover:border-indigo-400 hover:text-indigo-700 hover:bg-indigo-50 transition-all duration-200 flex items-center justify please give me that part only i needed that part
+                  className="w-full border-2 border-dashed border-indigo-300 rounded-xl p-6 text-indigo-600 hover:border-indigo-400 hover:text-indigo-700 hover:bg-indigo-50 transition-all duration-200 flex items-center justify-center space-x-2 group"
+                >
+                  <Plus className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
+                  <span className="font-medium">Add question</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'notifications':
+        return (
+          <div className="space-y-6">
+            <div className="bg-gradient-to-r from-red-50 to-pink-50 p-4 rounded-xl border border-red-100">
+              <div className="flex items-center space-x-2 mb-2">
+                <Bell className="w-5 h-5 text-red-600" />
+                <h3 className="font-semibold text-red-900">Smart Notifications</h3>
+              </div>
+              <p className="text-sm text-red-700">Keep everyone in the loop</p>
+            </div>
+            <div>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between py-4 px-5 bg-white rounded-xl border-2 border-gray-100 shadow-sm">
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Email confirmation to invitee</h4>
+                    <p className="text-sm text-gray-600">Send booking confirmation email</p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={emailConfirmation}
+                      onChange={(e) => setEmailConfirmation(e.target.checked)}
+                      className="sr-only peer"
+                    />
+                    <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-red-500 peer-checked:to-pink-500 shadow-lg"></div>
+                  </label>
+                </div>
+                <div className="flex items-center justify-between py-4 px-5 bg-white rounded-xl border-2 border-gray-100 shadow-sm">
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Email reminder to invitee</h4>
+                    <p className="text-sm text-gray-600">Send reminder before the meeting</p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={emailReminder}
+                      onChange={(e) => setEmailReminder(e.target.checked)}
+                      className="sr-only peer"
+                    />
+                    <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-red-500 peer-checked:to-pink-500 shadow-lg"></div>
+                  </label>
+                </div>
+                <div className="flex items-center justify-between py-4 px-5 bg-white rounded-xl border-2 border-gray-100 shadow-sm">
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Calendar invitation</h4>
+                    <p className="text-sm text-gray-600">Add to invitee's calendar</p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={calendarInvitation}
+                      onChange={(e) => setCalendarInvitation(e.target.checked)}
+                      className="sr-only peer"
+                    />
+                    <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-red-500 peer-checked:to-pink-500 shadow-lg"></div>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'confirmation':
+        return (
+          <div className="space-y-6">
+            <div className="bg-gradient-to-r from-teal-50 to-green-50 p-4 rounded-xl border border-teal-100">
+              <div className="flex items-center space-x-2 mb-2">
+                <CheckCircle className="w-5 h-5 text-teal-600" />
+                <h3 className="font-semibold text-teal-900">Confirmation Page</h3>
+              </div>
+              <p className="text-sm text-teal-700">Create a memorable booking experience</p>
+            </div>
+            <div>
+              <div className="space-y-6">
+                <div className="bg-white p-5 rounded-xl border-2 border-gray-100 shadow-sm">
+                  <label className="block text-sm font-semibold mb-3 text-gray-800">Confirmation message</label>
+                  <textarea
+                    rows={4}
+                    value={confirmationMessage}
+                    onChange={(e) => setConfirmationMessage(e.target.value)}
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 bg-white shadow-sm resize-none"
+                    placeholder="Thank you for booking! We look forward to meeting with you."
+                  />
+                </div>
+                <div className="flex items-center justify-between py-4 px-5 bg-white rounded-xl border-2 border-gray-100 shadow-sm">
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Redirect to external URL</h4>
+                    <p className="text-sm text-gray-600">Redirect invitees after booking</p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={redirectToUrl}
+                      onChange={(e) => setRedirectToUrl(e.target.checked)}
+                      className="sr-only peer"
+                    />
+                    <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-teal-500 peer-checked:to-green-500 shadow-lg"></div>
+                  </label>
+                </div>
+                {redirectToUrl && (
+                  <div className="bg-white p-5 rounded-xl border-2 border-gray-100 shadow-sm">
+                    <label className="block text-sm font-semibold mb-3 text-gray-800">
+                      Redirect URL <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="url"
+                      value={redirectUrl}
+                      onChange={(e) => setRedirectUrl(e.target.value)}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 bg-white shadow-sm"
+                      placeholder="https://example.com/thank-you"
+                    />
+                    {errors.redirectUrl && <p className="mt-1 text-sm text-red-600">{errors.redirectUrl}</p>}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
   return (
-    <>
-      {/* Transparent backdrop - keeps content visible but handles clicks */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 z-40"
-          onClick={onClose}
-        />
-      )}
-      
-      {/* Slider */}
-      <div className={cn(
-        "fixed top-0 right-0 h-full w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out border-l border-gray-200",
-        isOpen ? "translate-x-0" : "translate-x-full"
-      )}>
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">Edit Event</h2>
+    <div className="fixed inset-0 z-50 flex">
+      <div className="flex-1 bg-transparent" onClick={onClose}></div>
+      <div className="w-96 bg-gradient-to-b from-white to-gray-50 shadow-2xl flex flex-col h-full border-l-4 border-purple-500">
+        <div className="flex items-center justify-between p-6 border-b-2 border-gray-100 bg-gradient-to-r from-purple-500 to-pink-500">
+          <div className="flex items-center space-x-3">
+            <div className="bg-white bg-opacity-20 rounded-full p-2">
+              <Zap className="w-5 h-5 text-white" />
+            </div>
+            <h2 className="text-xl font-bold text-white">
+              {isEditMode ? 'Edit Event Type' : 'Create Event Type'}
+            </h2>
+          </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 hover:bg-white hover:bg-opacity-20 rounded-xl transition-all duration-200 group"
           >
-            <X className="w-5 h-5 text-gray-500" />
+            <X className="w-5 h-5 text-white group-hover:rotate-90 transition-transform duration-200" />
           </button>
         </div>
 
-        {/* Navigation */}
-        <div className="border-b border-gray-200">
-          <nav className="flex overflow-x-auto">
-            {sections.map((section) => {
-              const Icon = section.icon;
-              return (
-                <button
-                  key={section.id}
-                  onClick={() => setActiveSection(section.id)}
-                  className={cn(
-                    "flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap",
-                    activeSection === section.id
-                      ? "border-blue-500 text-blue-600"
-                      : "border-transparent text-gray-500 hover:text-gray-700"
-                  )}
-                >
-                  <Icon className="w-4 h-4" />
-                  {section.label}
-                </button>
-              );
-            })}
-          </nav>
+        <div className="border-b border-gray-200 bg-white">
+          <div className="px-4 py-3">
+            <div className="flex space-x-1 overflow-x-auto scrollbar-hide">
+              {sections.map((section) => {
+                const Icon = section.icon;
+                const isActive = activeSection === section.id;
+                return (
+                  <button
+                    key={section.id}
+                    onClick={() => setActiveSection(section.id)}
+                    className={`flex items-center space-x-2 px-4 py-3 rounded-xl text-sm font-semibold whitespace-nowrap transition-all duration-200 ${
+                      isActive
+                        ? `${section.color} text-white shadow-lg transform scale-105`
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 hover:shadow-md'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span>{section.name}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6">
-          {activeSection === 'basic' && (
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Event Name
-                </label>
-                <Input
-                  value={formData.title}
-                  onChange={(e) => handleInputChange('title', e.target.value)}
-                  placeholder="Enter event name"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Description
-                </label>
-                <Textarea
-                  value={formData.description}
-                  onChange={(e) => handleInputChange('description', e.target.value)}
-                  placeholder="Add a description for your event..."
-                  rows={4}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Location
-                </label>
-                <select
-                  value={formData.location}
-                  onChange={(e) => handleInputChange('location', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="Google Meet">Google Meet</option>
-                  <option value="Microsoft Teams">Microsoft Teams</option>
-                  <option value="Zoom">Zoom</option>
-                  <option value="Phone Call">Phone Call</option>
-                  <option value="In Person">In Person</option>
-                </select>
-              </div>
-            </div>
-          )}
-
-          {activeSection === 'duration' && (
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Duration (minutes)
-                </label>
-                <Input
-                  type="number"
-                  value={formData.duration.toString()}
-                  onChange={(e) => handleInputChange('duration', parseInt(e.target.value) || 0)}
-                  placeholder="30"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Buffer Time Before (minutes)
-                </label>
-                <Input
-                  type="number"
-                  value={formData.bufferTimeBefore.toString()}
-                  onChange={(e) => handleInputChange('bufferTimeBefore', parseInt(e.target.value) || 0)}
-                  placeholder="0"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  Time to prepare before the meeting
-                </p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Buffer Time After (minutes)
-                </label>
-                <Input
-                  type="number"
-                  value={formData.bufferTimeAfter.toString()}
-                  onChange={(e) => handleInputChange('bufferTimeAfter', parseInt(e.target.value) || 0)}
-                  placeholder="0"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  Time to wrap up after the meeting
-                </p>
-              </div>
-            </div>
-          )}
-
-          {activeSection === 'limits' && (
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Max Invitees Per Event
-                </label>
-                <Input
-                  type="number"
-                  value={formData.maxInviteesPerEvent.toString()}
-                  onChange={(e) => handleInputChange('maxInviteesPerEvent', parseInt(e.target.value) || 1)}
-                  placeholder="1"
-                  min="1"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  Maximum number of people who can book this event
-                </p>
-              </div>
-            </div>
-          )}
-
-          {activeSection === 'form' && (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Enable Invitee Questions
-                  </label>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Ask invitees questions when they book
-                  </p>
-                </div>
-                <Toggle
-                  checked={formData.enableInviteeQuestions}
-                  onChange={(checked) => handleInputChange('enableInviteeQuestions', checked)}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Require Invitee Details
-                  </label>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Require name and email from invitees
-                  </p>
-                </div>
-                <Toggle
-                  checked={formData.requireInviteeDetails}
-                  onChange={(checked) => handleInputChange('requireInviteeDetails', checked)}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Custom Message for Invitees
-                </label>
-                <Textarea
-                  value={formData.customMessage}
-                  onChange={(e) => handleInputChange('customMessage', e.target.value)}
-                  placeholder="Add a custom message that invitees will see..."
-                  rows={3}
-                />
-              </div>
-            </div>
-          )}
-
-          {activeSection === 'policies' && (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Allow Rescheduling
-                  </label>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Let invitees reschedule their appointments
-                  </p>
-                </div>
-                <Toggle
-                  checked={formData.allowRescheduling}
-                  onChange={(checked) => handleInputChange('allowRescheduling', checked)}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Allow Cancellation
-                  </label>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Let invitees cancel their appointments
-                  </p>
-                </div>
-                <Toggle
-                  checked={formData.allowCancellation}
-                  onChange={(checked) => handleInputChange('allowCancellation', checked)}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Confirmation Redirect URL
-                </label>
-                <Input
-                  type="url"
-                  value={formData.confirmationRedirect}
-                  onChange={(e) => handleInputChange('confirmationRedirect', e.target.value)}
-                  placeholder="https://example.com/thank-you"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  Redirect invitees to this page after booking
-                </p>
-              </div>
-            </div>
-          )}
+        <div className="flex-1 overflow-y-auto p-6 bg-gradient-to-b from-gray-50 to-white">
+          {renderSectionContent()}
         </div>
 
-        {/* Footer */}
-        <div className="border-t border-gray-200 p-6">
-          <div className="flex gap-3 justify-end">
-            <Button variant="ghost" onClick={onClose}>
+        <div className="border-t-2 border-gray-100 p-6 bg-white">
+          <div className="flex space-x-3">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-semibold"
+            >
               Cancel
-            </Button>
-            <Button variant="primary" onClick={handleSave}>
-              Save Changes
-            </Button>
+            </button>
+            <button
+              onClick={handleSubmit}
+              className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold flex items-center justify-center space-x-2 hover:from-purple-600 hover:to-pink-600"
+            >
+              <Zap className="w-4 h-4" />
+              <span>{isEditMode ? 'Update Event' : 'Create Event'}</span>
+            </button>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
-
-interface PropsType {
-  id: string;
-  title: string;
-  slug: string;
-  duration: number;
-  isPrivate: boolean;
-  username: string;
-  isPending: boolean;
-  onToggle: () => void;
-  onDelete: () => void;
-  onEdit?: () => void;
-  onClone?: () => void;
-  event: EventType; 
-}
-
-const EventCard: FC<PropsType> = ({
-  title,
-  duration,
-  slug,
-  isPrivate = false,
-  username,
-  isPending,
-  onToggle,
-  onDelete,
-  event,
-  onEdit,
-  onClone,
-  
-}) => {
-  //  console.log("Received event prop in EventCard:", event); 
-  const [isCopied, setIsCopied] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isEditSliderOpen, setIsEditSliderOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const event_link = `https://www.schedley.com/${username}/${slug}`;
-
-  const handleCopyLink = () => {
-    navigator.clipboard
-      .writeText(event_link)
-      .then(() => {
-        setIsCopied(true);
-        setTimeout(() => setIsCopied(false), 2000);
-        showToast("Event link copied", "success");
-      })
-      .catch((error) => {
-        console.error("Failed to copy link:", error);
-      });
-  };
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  const handleDropdownAction = (action: () => void) => {
-    action();
-    setIsDropdownOpen(false);
-  };
-
-  const handleEditClick = () => {
-      console.log("Full event object:", event);
-    setIsEditSliderOpen(true);
-    if (onEdit) onEdit();
-  };
-
-  const handleSaveEvent = (formData: unknown) => {
-    console.log('Saving event data:', formData);
-   
-  };
-
-  return (
-    <>
-      <div>
-        <Card
-          className={cn(
-            `!p-0 !ring-0 w-full max-w-[400px]
-          box-border min-h-[220px] border border-[#CCCCCC)] bg-white rounded-[4px]
-          shadow-[0_1px_6px_0_rgb(0_0_0_/_10%)] hover:shadow-[0_4px_12px_0_rgb(0_0_0_/_15%)]
-          transition-all duration-300 group relative`,
-            isPrivate && "bg-transparent opacity-75"
-          )}
-        >
-          <CardContent className="relative flex flex-col p-0">
-            {/* Header with colored bar */}
-            <div
-              className={cn(
-                `bg-gradient-to-r from-purple-500 to-pink-500
-            h-[6px] -mt-[1px] -mr-[1px] -ml-[1px] rounded-tl-[4px] rounded-tr-[4px]
-            `,
-                isPrivate && "from-gray-400 to-gray-500"
-              )}
-            ></div>
-
-            {/* Settings dropdown in top right */}
-            <div className="absolute top-2 right-2 z-20" ref={dropdownRef}>
-              <button
-                className={cn(
-                  "w-10 h-10 rounded-full bg-white border-2 border-gray-300 shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-200 hover:border-purple-400 hover:scale-110",
-                  isDropdownOpen && "border-purple-500 shadow-xl scale-110 bg-purple-50"
-                )}
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              >
-                <Settings className="w-5 h-5 text-gray-700 hover:text-purple-600" />
-              </button>
-
-              {/* Dropdown Menu */}
-              {isDropdownOpen && (
-                <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-xl shadow-2xl border border-gray-200 py-3 z-30 animate-in fade-in duration-200">
-               
-                  <button
-                    onClick={() => handleDropdownAction(handleEditClick)}
-                    className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 flex items-center gap-3 transition-all duration-150"
-                  >
-                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                      <Edit3 className="w-4 h-4 text-blue-600" />
-                    </div>
-                    <span className="font-medium">Edit Event</span>
-                  </button>
-
-                  {/* Clone Event */}
-                  <button
-                    onClick={() => handleDropdownAction(onClone || (() => {}))}
-                    className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 flex items-center gap-3 transition-all duration-150"
-                    disabled={!onClone}
-                  >
-                    <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                      <Copy className="w-4 h-4 text-green-600" />
-                    </div>
-                    <span className="font-medium">Clone Event</span>
-                  </button>
-
-                  {/* Divider */}
-                  <div className="border-t border-gray-100 my-2 mx-3"></div>
-
-                  {/* Toggle On/Off */}
-                  <button
-                    onClick={() => handleDropdownAction(onToggle)}
-                    className={cn(
-                      "w-full px-4 py-3 text-left text-sm text-gray-700 flex items-center gap-3 transition-all duration-150",
-                      isPrivate 
-                        ? "hover:bg-green-50 hover:text-green-700" 
-                        : "hover:bg-orange-50 hover:text-orange-700"
-                    )}
-                    disabled={isPending}
-                  >
-                    <div className={cn(
-                      "w-8 h-8 rounded-full flex items-center justify-center",
-                      isPrivate ? "bg-green-100" : "bg-orange-100"
-                    )}>
-                      <Power className={cn(
-                        "w-4 h-4",
-                        isPrivate ? "text-green-600" : "text-orange-600"
-                      )} />
-                    </div>
-                    <span className="font-medium flex items-center gap-2">
-                      Turn {isPrivate ? "On" : "Off"}
-                      {isPending && <Loader size="sm" color="gray" />}
-                    </span>
-                  </button>
-
-                  {/* Divider */}
-                  <div className="border-t border-gray-100 my-2 mx-3"></div>
-
-                  {/* Delete Event */}
-                  <button
-                    onClick={() => handleDropdownAction(onDelete)}
-                    className="w-full px-4 py-3 text-left text-sm text-red-600 hover:bg-red-50 hover:text-red-700 flex items-center gap-3 transition-all duration-150"
-                    disabled={isPending}
-                  >
-                    <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
-                      <Trash2 className="w-4 h-4 text-red-600" />
-                    </div>
-                    <span className="font-medium">Delete Event</span>
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Event details */}
-            <div className="w-full flex flex-col p-[18px_16px] pr-14">
-              <h2
-                className={cn(
-                  `text-lg font-semibold text-gray-800 mb-1`,
-                  isPrivate && "text-gray-500"
-                )}
-              >
-                {title}
-              </h2>
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-2 h-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500"></div>
-                <p className="text-sm text-gray-600 font-medium">{duration} minutes</p>
-              </div>
-              <a
-                target="_blank"
-                href={event_link}
-                rel="noopener noreferrer"
-                className={cn(
-                  `text-sm text-blue-600 hover:text-blue-800 underline decoration-1 underline-offset-2 transition-colors duration-200`,
-                  isPrivate && "pointer-events-none opacity-60 no-underline"
-                )}
-              >
-                View booking page →
-              </a>
-            </div>
-          </CardContent>
-
-          {/* Footer */}
-          <CardFooter
-            className="p-[12px_16px] border-t border-gray-100 h-full flex items-center justify-between bg-gray-50/50"
-          >
-            <Button
-              variant="ghost"
-              disabled={isPrivate}
-              className={cn(
-                "flex items-center gap-2 cursor-pointer font-medium text-sm px-3 py-2 rounded-lg transition-all duration-200",
-                isPrivate 
-                  ? "text-gray-400 cursor-not-allowed" 
-                  : "text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-              )}
-              onClick={handleCopyLink}
-            >
-              <Copy className="w-4 h-4" />
-              <span>{isCopied ? "Copied!" : "Copy link"}</span>
-            </Button>
-
-            {/* Status indicator */}
-            <div className="flex items-center gap-2">
-              <div className={cn(
-                "w-2 h-2 rounded-full transition-colors duration-200",
-                isPrivate ? "bg-gray-400" : "bg-green-500"
-              )}></div>
-              <span className={cn(
-                "text-xs font-medium",
-                isPrivate ? "text-gray-500" : "text-green-600"
-              )}>
-                {isPrivate ? "Private" : "Public"}
-              </span>
-            </div>
-          </CardFooter>
-        </Card>
-      </div>
-
-      {/* Edit Event Slider */}
-      <EditEventSlider
-        isOpen={isEditSliderOpen}
-        onClose={() => setIsEditSliderOpen(false)}
-        eventData={{
-          title,
-          duration,
-          description: "A brief description of the event",
-          location: "Google Meet"
-        }}
-        onSave={handleSaveEvent}
-      />
-    </>
-  );
-};
-
-
-export default EventCard; 
