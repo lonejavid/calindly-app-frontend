@@ -1067,10 +1067,7 @@ import mylogo from "../../../mylogo.png";
 import { ENV } from '@/lib/get-env';
 
 // Simple route constants
-const AUTH_ROUTES = {
-  SIGN_IN: '/signin',
-  SETUPAI: '/setup-ai'
-};
+import { AUTH_ROUTES } from "@/routes/common/routePaths";
 
 const ScheduleyLanding = () => {
   const [isVisible, setIsVisible] = useState(false);
