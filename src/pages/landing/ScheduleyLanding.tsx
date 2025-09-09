@@ -1064,6 +1064,7 @@ import { useNavigate } from "react-router-dom";
 import { Groq } from 'groq-sdk';
 
 import mylogo from "../../../mylogo.png";
+import { ENV } from '@/lib/get-env';
 
 // Simple route constants
 const AUTH_ROUTES = {
@@ -1092,7 +1093,7 @@ const ScheduleyLanding = () => {
 
   // Initialize Groq client
   const groq = new Groq({
-    apiKey: process.env.VITE_GROQ_API_KEY,
+    apiKey: ENV.VITE_GROQ_API_KEY,
     dangerouslyAllowBrowser: true
   });
 

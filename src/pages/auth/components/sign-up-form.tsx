@@ -51,7 +51,7 @@ export function SignUpForm() {
   });
 
   const onSubmit = (values: SignUpFormValues) => {
-    console.log("Form values:", values);
+
     if (isPending) return;
 
     mutate(values, {
