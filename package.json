@@ -3,13 +3,12 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-"scripts": {
-  "dev": "vite",
-  "build": "SKIP_PREFLIGHT_CHECK=true vite build",
-  "lint": "eslint .",
-  "preview": "vite preview"
-},
-
+  "scripts": {
+    "dev": "vite",
+    "build": "SKIP_PREFLIGHT_CHECK=true vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@hookform/resolvers": "^4.1.2",
     "@radix-ui/react-avatar": "^1.1.3",
@@ -31,6 +30,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
     "date-fns-tz": "^3.2.0",
+    "groq-sdk": "^0.32.0",
     "immer": "^10.1.1",
     "lucide-react": "^0.475.0",
     "next-themes": "^0.4.4",
