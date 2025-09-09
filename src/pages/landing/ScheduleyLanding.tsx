@@ -2006,7 +2006,7 @@ Be helpful, informative, and enthusiastic about how Schedley can help users get 
       <section className="py-16 sm:py-24 px-4 sm:px-6 relative">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
+             <h2 className="text-3xl sm:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
               Real Results from Real Clients
             </h2>
             <p className="text-lg text-gray-400">Success stories from professionals who got their guarantee fulfilled</p>
@@ -2159,4 +2159,4 @@ Be helpful, informative, and enthusiastic about how Schedley can help users get 
   );
 };
 
-export default ScheduleyLanding;
+export default ScheduleyLanding; 
