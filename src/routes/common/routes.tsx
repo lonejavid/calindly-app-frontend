@@ -20,6 +20,7 @@ export const authenticationRoutePaths = [
     {path:"/carrer",element:<CareersPage/>},
   { path: AUTH_ROUTES.SIGN_IN, element: <SignIn /> },
   { path: AUTH_ROUTES.SIGN_UP, element: <SignUp /> },
+  {path:AUTH_ROUTES.SETUPAI,element:<Setup/>},
 ];
 
 export const protectedRoutePaths = [
