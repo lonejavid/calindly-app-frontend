@@ -6,10 +6,11 @@ export const AUTH_ROUTES = {
   LANDING: "/", 
   SIGN_IN: "/login",
   SIGN_UP: "/sign-up",
+   SETUP: "/app/setup", 
 };
 
 export const PROTECTED_ROUTES = {
-  SETUP: "/app/setup", 
+
   EVENT_TYPES: "/app/event_types",
   INTEGRATIONS: "/app/integrations",
   AVAILBILITIY: "/app/availability/schedules",
