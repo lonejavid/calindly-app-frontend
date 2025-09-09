@@ -6,7 +6,7 @@ export const AUTH_ROUTES = {
   LANDING: "/", 
   SIGN_IN: "/login",
   SIGN_UP: "/sign-up",
-   SETUP: "/app/setup", 
+   SETUPAI: "/setup", 
 };
 
 export const PROTECTED_ROUTES = {
