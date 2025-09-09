@@ -952,96 +952,96 @@
 //       </section>
 
 //       {/* Enhanced Footer */}
-//       <footer className="py-16 px-4 sm:px-6 border-t border-white/10 bg-gradient-to-r from-slate-900/50 to-purple-900/50">
-//         <div className="max-w-7xl mx-auto">
-//           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-//             {/* Brand Section */}
-//             <div className="md:col-span-2">
-//               <div className="flex items-center space-x-4 mb-6">
-//                 <div className="w-14 h-14 rounded-xl overflow-hidden flex items-center justify-center bg-white shadow-2xl">
-//                   <img
-//                     src={mylogo}
-//                     alt="Schedley - Intelligent Scheduling & Client Acquisition Platform"
-//                     className="w-full h-full object-contain"
-//                   />
-//                 </div>
-//                 <span className="text-3xl font-bold bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
-//                   Schedley
-//                 </span>
-//               </div>
-//               <p className="text-gray-400 leading-relaxed mb-6 max-w-md">
-//                 The world's first intelligent scheduling and client acquisition platform. 
-//                 AI-powered spam protection plus human-driven lead generation with guaranteed results.
-//               </p>
-//               <div className="flex space-x-4">
-//                 <a 
-//                   href="https://www.linkedin.com/company/schedley-com" 
-//                   target="_blank" 
-//                   rel="noopener noreferrer"
-//                   className="w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
-//                 >
-//                   <Linkedin className="w-5 h-5" />
-//                 </a>
-//               </div>
-//             </div>
+      // <footer className="py-16 px-4 sm:px-6 border-t border-white/10 bg-gradient-to-r from-slate-900/50 to-purple-900/50">
+      //   <div className="max-w-7xl mx-auto">
+      //     <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+      //       {/* Brand Section */}
+      //       <div className="md:col-span-2">
+      //         <div className="flex items-center space-x-4 mb-6">
+      //           <div className="w-14 h-14 rounded-xl overflow-hidden flex items-center justify-center bg-white shadow-2xl">
+      //             <img
+      //               src={mylogo}
+      //               alt="Schedley - Intelligent Scheduling & Client Acquisition Platform"
+      //               className="w-full h-full object-contain"
+      //             />
+      //           </div>
+      //           <span className="text-3xl font-bold bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
+      //             Schedley
+      //           </span>
+      //         </div>
+      //         <p className="text-gray-400 leading-relaxed mb-6 max-w-md">
+      //           The world's first intelligent scheduling and client acquisition platform. 
+      //           AI-powered spam protection plus human-driven lead generation with guaranteed results.
+      //         </p>
+      //         <div className="flex space-x-4">
+      //           <a 
+      //             href="https://www.linkedin.com/company/schedley-com" 
+      //             target="_blank" 
+      //             rel="noopener noreferrer"
+      //             className="w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+      //           >
+      //             <Linkedin className="w-5 h-5" />
+      //           </a>
+      //         </div>
+      //       </div>
             
-//             {/* Platform Links */}
-//             <div>
-//               <h3 className="font-bold text-white mb-4">Platform</h3>
-//               <div className="space-y-3">
-//                 <a href="#features" className="block text-gray-400 hover:text-white transition-colors duration-300">Features</a>
-//                 <a href="#how-it-works" className="block text-gray-400 hover:text-white transition-colors duration-300">How It Works</a>
-//                 <a href="#guarantee" className="block text-gray-400 hover:text-white transition-colors duration-300">Guarantee</a>
-//                 <button onClick={() => navigate('/carrer')} className="block text-gray-400 hover:text-white transition-colors duration-300 text-left">Careers</button>
-//                 <button onClick={handleBookDemo} className="block text-gray-400 hover:text-white transition-colors duration-300 text-left flex items-center">
-//                   Book Demo <ExternalLink className="w-3 h-3 ml-1" />
-//                 </button>
-//                 <button onClick={handleSetupAI} className="block text-gray-400 hover:text-white transition-colors duration-300 text-left">Set Up AI</button>
-//               </div>
-//             </div>
+      //       {/* Platform Links */}
+      //       <div>
+      //         <h3 className="font-bold text-white mb-4">Platform</h3>
+      //         <div className="space-y-3">
+      //           <a href="#features" className="block text-gray-400 hover:text-white transition-colors duration-300">Features</a>
+      //           <a href="#how-it-works" className="block text-gray-400 hover:text-white transition-colors duration-300">How It Works</a>
+      //           <a href="#guarantee" className="block text-gray-400 hover:text-white transition-colors duration-300">Guarantee</a>
+      //           <button onClick={() => navigate('/carrer')} className="block text-gray-400 hover:text-white transition-colors duration-300 text-left">Careers</button>
+      //           <button onClick={handleBookDemo} className="block text-gray-400 hover:text-white transition-colors duration-300 text-left flex items-center">
+      //             Book Demo <ExternalLink className="w-3 h-3 ml-1" />
+      //           </button>
+      //           <button onClick={handleSetupAI} className="block text-gray-400 hover:text-white transition-colors duration-300 text-left">Set Up AI</button>
+      //         </div>
+      //       </div>
             
-//             {/* Legal */}
-//             <div>
-//               <h3 className="font-bold text-white mb-4">Legal</h3>
-//               <div className="space-y-3">
-//                 <button onClick={() => navigate('/privacy')} className="block text-gray-400 hover:text-white transition-colors duration-300 text-left">Privacy Policy</button>
-//                 <button onClick={() => navigate('/terms')} className="block text-gray-400 hover:text-white transition-colors duration-300 text-left">Terms of Service</button>
-//                 <a href="mailto:notifications@schedley.com" className="block text-gray-400 hover:text-white transition-colors duration-300">Support</a>
-//               </div>
-//             </div>
-//           </div>
+      //       {/* Legal */}
+      //       <div>
+      //         <h3 className="font-bold text-white mb-4">Legal</h3>
+      //         <div className="space-y-3">
+      //           <button onClick={() => navigate('/privacy')} className="block text-gray-400 hover:text-white transition-colors duration-300 text-left">Privacy Policy</button>
+      //           <button onClick={() => navigate('/terms')} className="block text-gray-400 hover:text-white transition-colors duration-300 text-left">Terms of Service</button>
+      //           <a href="mailto:notifications@schedley.com" className="block text-gray-400 hover:text-white transition-colors duration-300">Support</a>
+      //         </div>
+      //       </div>
+      //     </div>
           
-//           <div className="flex flex-col sm:flex-row justify-between items-center pt-8 border-t border-white/10 space-y-4 sm:space-y-0">
-//             <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-8 text-gray-400 text-sm">
-//               <span>© 2024 Schedley.com - All rights reserved</span>
-//               <span className="hidden sm:block">•</span>
-//               <span>Intelligent Scheduling & Client Acquisition Platform</span>
-//               <span className="hidden sm:block">•</span>
-//               <span>notification@schedley.com</span>
-//             </div>
+      //     <div className="flex flex-col sm:flex-row justify-between items-center pt-8 border-t border-white/10 space-y-4 sm:space-y-0">
+      //       <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-8 text-gray-400 text-sm">
+      //         <span>© 2024 Schedley.com - All rights reserved</span>
+      //         <span className="hidden sm:block">•</span>
+      //         <span>Intelligent Scheduling & Client Acquisition Platform</span>
+      //         <span className="hidden sm:block">•</span>
+      //         <span>notification@schedley.com</span>
+      //       </div>
             
-//             <div className="flex items-center space-x-4 text-gray-400 text-sm">
-//               <div className="flex items-center">
-//                 <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
-//                 7-Day Guarantee Active
-//               </div>
-//             </div>
-//           </div>
+      //       <div className="flex items-center space-x-4 text-gray-400 text-sm">
+      //         <div className="flex items-center">
+      //           <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+      //           7-Day Guarantee Active
+      //         </div>
+      //       </div>
+      //     </div>
           
-//           {/* SEO Footer Content */}
-//           <div className="mt-8 pt-8 border-t border-white/10 text-xs text-gray-500 leading-relaxed">
-//             <p>
-//               <strong>Schedley</strong> - The World's First Intelligent Scheduling & Client Acquisition Platform | 
-//               AI-Powered Spam Protection | Real-Time Email Validation | Done-For-You Lead Generation | 
-//               Dedicated Account Management | 7-Day Client Guarantee | Professional Meeting Management | 
-//               Human-Powered Outreach | Qualified Lead Delivery | Corporate Email Filtering | 
-//               Google Meet Integration | Calendar Sync | Zero-Risk Growth | High-Ticket Client Acquisition | 
-//               Enterprise Security | GDPR Compliant | Personal Account Manager | 100% Money-Back Guarantee | 
-//               Business Productivity | Revenue Optimization | Client Success Platform
-//             </p>
-//           </div>
-//         </div>
-//       </footer>
+      //     {/* SEO Footer Content */}
+      //     <div className="mt-8 pt-8 border-t border-white/10 text-xs text-gray-500 leading-relaxed">
+      //       <p>
+      //         <strong>Schedley</strong> - The World's First Intelligent Scheduling & Client Acquisition Platform | 
+      //         AI-Powered Spam Protection | Real-Time Email Validation | Done-For-You Lead Generation | 
+      //         Dedicated Account Management | 7-Day Client Guarantee | Professional Meeting Management | 
+      //         Human-Powered Outreach | Qualified Lead Delivery | Corporate Email Filtering | 
+      //         Google Meet Integration | Calendar Sync | Zero-Risk Growth | High-Ticket Client Acquisition | 
+      //         Enterprise Security | GDPR Compliant | Personal Account Manager | 100% Money-Back Guarantee | 
+      //         Business Productivity | Revenue Optimization | Client Success Platform
+      //       </p>
+      //     </div>
+      //   </div>
+      // </footer>
       
       
 //     </div>
@@ -2159,6 +2159,96 @@ Be helpful, informative, and enthusiastic about how Schedley can help users get 
           )}
         </div>
       )}
+       <footer className="py-16 px-4 sm:px-6 border-t border-white/10 bg-gradient-to-r from-slate-900/50 to-purple-900/50">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+            {/* Brand Section */}
+            <div className="md:col-span-2">
+              <div className="flex items-center space-x-4 mb-6">
+                <div className="w-14 h-14 rounded-xl overflow-hidden flex items-center justify-center bg-white shadow-2xl">
+                  <img
+                    src={mylogo}
+                    alt="Schedley - Intelligent Scheduling & Client Acquisition Platform"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <span className="text-3xl font-bold bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
+                  Schedley
+                </span>
+              </div>
+              <p className="text-gray-400 leading-relaxed mb-6 max-w-md">
+                The world's first intelligent scheduling and client acquisition platform. 
+                AI-powered spam protection plus human-driven lead generation with guaranteed results.
+              </p>
+              <div className="flex space-x-4">
+                <a 
+                  href="https://www.linkedin.com/company/schedley-com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                >
+                  <Linkedin className="w-5 h-5" />
+                </a>
+              </div>
+            </div>
+            
+            {/* Platform Links */}
+            <div>
+              <h3 className="font-bold text-white mb-4">Platform</h3>
+              <div className="space-y-3">
+                <a href="#features" className="block text-gray-400 hover:text-white transition-colors duration-300">Features</a>
+                <a href="#how-it-works" className="block text-gray-400 hover:text-white transition-colors duration-300">How It Works</a>
+                <a href="#guarantee" className="block text-gray-400 hover:text-white transition-colors duration-300">Guarantee</a>
+                <button onClick={() => navigate('/carrer')} className="block text-gray-400 hover:text-white transition-colors duration-300 text-left">Careers</button>
+                <button onClick={handleBookDemo} className="block text-gray-400 hover:text-white transition-colors duration-300 text-left flex items-center">
+                  Book Demo <ExternalLink className="w-3 h-3 ml-1" />
+                </button>
+                <button onClick={handleSetupAI} className="block text-gray-400 hover:text-white transition-colors duration-300 text-left">Set Up AI</button>
+              </div>
+            </div>
+            
+            {/* Legal */}
+            <div>
+              <h3 className="font-bold text-white mb-4">Legal</h3>
+              <div className="space-y-3">
+                <button onClick={() => navigate('/privacy')} className="block text-gray-400 hover:text-white transition-colors duration-300 text-left">Privacy Policy</button>
+                <button onClick={() => navigate('/terms')} className="block text-gray-400 hover:text-white transition-colors duration-300 text-left">Terms of Service</button>
+                <a href="mailto:notifications@schedley.com" className="block text-gray-400 hover:text-white transition-colors duration-300">Support</a>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row justify-between items-center pt-8 border-t border-white/10 space-y-4 sm:space-y-0">
+            <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-8 text-gray-400 text-sm">
+              <span>© 2024 Schedley.com - All rights reserved</span>
+              <span className="hidden sm:block">•</span>
+              <span>Intelligent Scheduling & Client Acquisition Platform</span>
+              <span className="hidden sm:block">•</span>
+              <span>notification@schedley.com</span>
+            </div>
+            
+            <div className="flex items-center space-x-4 text-gray-400 text-sm">
+              <div className="flex items-center">
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+                7-Day Guarantee Active
+              </div>
+            </div>
+          </div>
+          
+          {/* SEO Footer Content */}
+          <div className="mt-8 pt-8 border-t border-white/10 text-xs text-gray-500 leading-relaxed">
+            <p>
+              <strong>Schedley</strong> - The World's First Intelligent Scheduling & Client Acquisition Platform | 
+              AI-Powered Spam Protection | Real-Time Email Validation | Done-For-You Lead Generation | 
+              Dedicated Account Management | 7-Day Client Guarantee | Professional Meeting Management | 
+              Human-Powered Outreach | Qualified Lead Delivery | Corporate Email Filtering | 
+              Google Meet Integration | Calendar Sync | Zero-Risk Growth | High-Ticket Client Acquisition | 
+              Enterprise Security | GDPR Compliant | Personal Account Manager | 100% Money-Back Guarantee | 
+              Business Productivity | Revenue Optimization | Client Success Platform
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
