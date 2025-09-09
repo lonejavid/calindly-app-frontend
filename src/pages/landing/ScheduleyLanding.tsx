@@ -1063,7 +1063,8 @@ import { Calendar, Shield, Linkedin, CheckCircle, ArrowRight, Zap, Users, Menu, 
 import { useNavigate } from "react-router-dom";
 import { Groq } from 'groq-sdk';
 
-import mylogo from "../assets/mylogo.png";
+
+ import mylogo from "../../../mylogo.png";
 
 // Simple route constants
 const AUTH_ROUTES = {
