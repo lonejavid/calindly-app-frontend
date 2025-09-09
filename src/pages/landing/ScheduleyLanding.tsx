@@ -1088,6 +1088,7 @@ const ScheduleyLanding = () => {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  console.log("this is the key ",process.env.VITE_GROQ_API_KEY);
 
   // Initialize Groq client
   const groq = new Groq({
