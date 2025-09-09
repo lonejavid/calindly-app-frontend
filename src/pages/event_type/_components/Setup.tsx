@@ -703,7 +703,7 @@ const Setup = () => {
         // Auto logout after 8 seconds
         setTimeout(() => {
           onLogout();
-        }, 8000);
+        }, 3000);
       } catch (error) {
         console.error("Setup completion error:", error);
       }
