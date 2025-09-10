@@ -1051,7 +1051,7 @@ any question asked which is not in our context directely tell that i am not auth
                 <Bot className="w-3 h-3 xs:w-4 xs:h-4 sm:w-5 sm:h-5 text-white" />
               </div>
               <div>
-                <h3 className="font-bold text-white text-xs xs:text-sm sm:text-base">Schedley AI</h3>
+                <h3 className="font-bold text-white text-xs xs:text-sm sm:text-base">Schedley Expert</h3>
                 <p className="text-xs text-gray-400">Always here to help</p>
               </div>
             </div>
