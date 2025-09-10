@@ -21,7 +21,7 @@ const ScheduleyLanding = () => {
   const [isMinimized, setIsMinimized] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: 'Hi! I\'m your Schedley AI assistant. Ask me anything about our platform, features, or how we can help you get more clients!' }
+    { role: 'assistant', content: 'Hi! I\'m your Schedley assistant. Ask me anything about our platform, features, or how we can help you get more clients!' }
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
