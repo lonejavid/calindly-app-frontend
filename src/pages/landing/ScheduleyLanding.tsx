@@ -962,7 +962,7 @@ any question asked which is not in our context directely tell that i am not auth
               Perfect For Revenue-Focused Professionals
             </h2>
             <p className="text-sm xs:text-base sm:text-lg lg:text-xl text-gray-400 max-w-3xl mx-auto">
-              Join industry leaders who transformed their business with guaranteed client acquisition
+              Join industry leaders.. who transformed their business with guaranteed client acquisition
             </p>
           </div>
 
