@@ -8,13 +8,21 @@ const OAuthSuccess = () => {
   const setAccessToken = useStore((state) => state.setAccessToken);
 
   useEffect(() => {
+    console.log("🔍 OAuthSuccess - Starting OAuth callback processing");
+    console.log("🔍 Current URL:", window.location.href);
+    
     const queryParams = new URLSearchParams(window.location.search);
     const accessToken = queryParams.get("accessToken");
     const userJson = queryParams.get("user");
 
+    console.log("🔍 accessToken exists:", !!accessToken);
+    console.log("🔍 userJson exists:", !!userJson);
+
     if (accessToken && userJson) {
       try {
+        console.log("🔍 Parsing user data...");
         const user = JSON.parse(decodeURIComponent(userJson));
+        console.log("✅ Parsed user:", user);
 
         // Save to Zustand store
         setUser(user);
@@ -26,18 +34,25 @@ const OAuthSuccess = () => {
 
         // Debugging
         console.log("✅ Stored in Zustand:", { accessToken, user });
+        console.log("✅ Stored in localStorage");
 
+        console.log("🔍 user.isApproved:", user.isApproved);
          if (user.isApproved) {
+          console.log("✅ User approved - navigating to /app/event_types");
           navigate("/app/event_types");
         } else {
-         // navigate("/app/setup");
-           navigate("/app/event_types");
+          console.log("⚠️ User NOT approved - navigating to /app/event_types anyway");
+          navigate("/app/event_types");
         }
       } catch (err) {
-        console.error("❌ Failed to parse or store data", err);
+        console.error("❌ Failed to parse or store data:", err);
+        console.error("❌ userJson value:", userJson);
       }
     } else {
       console.error("❌ Missing token or user data");
+      console.error("❌ accessToken:", accessToken);
+      console.error("❌ userJson:", userJson);
+      console.error("❌ Full URL:", window.location.href);
     }
   }, [navigate, setUser, setAccessToken]);
 
