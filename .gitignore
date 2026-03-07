@@ -9,7 +9,8 @@ lerna-debug.log*
 
 node_modules
 dist
-backend/data
+backend/
+docker-compose.yml
 
 # Env files (secrets)
 .env
