@@ -4,7 +4,7 @@ import { format, toZonedTime, fromZonedTime } from 'date-fns-tz';
 export const getAllTimeZones = (): string[] => {
   // Type assertion as workaround
   if ('supportedValuesOf' in Intl) {
-    return (Intl as any).supportedValuesOf('timeZone');
+    return (Intl as Intl & { supportedValuesOf(key: 'timeZone'): string[] }).supportedValuesOf('timeZone');
   }
   
 

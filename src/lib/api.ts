@@ -28,9 +28,7 @@ export const loginMutationFn = async (
 };
 
 export const registerMutationFn = async (data: registerType) =>
-       await API.post("/auth/register", data);
-   
-console.log("registering in the backend");
+  await API.post("/auth/register", data);
 
 //*********** */ EVENT APIS
 export const CreateEventMutationFn = async (data: CreateEventPayloadType) =>
@@ -58,13 +56,13 @@ export const geteventListQueryFn = async (): Promise<UserEventListResponse> => {
 export const checkIntegrationQueryFn = async (
   appType: VideoConferencingPlatform
 ) => {
-  const response = await API.get(`integration/check/${appType}`);
+  const response = await API.get(`/integration/check/${appType}`);
   return response.data;
 };
 
 export const getAllIntegrationQueryFn =
   async (): Promise<GetAllIntegrationResponseType> => {
-    const response = await API.get(`integration/all`);
+    const response = await API.get(`/integration/all`);
     return response.data;
   };
 
@@ -72,7 +70,7 @@ export const connectAppIntegrationQueryFn = async (
   appType: IntegrationAppType
 ) => {
   console.log("testing for teams");
-  const response = await API.get(`integration/connect/${appType}`);
+  const response = await API.get(`/integration/connect/${appType}`);
   return response.data;
 };
 
@@ -127,8 +125,15 @@ export const getSinglePublicEventBySlugQueryFn = async (data: {
 
 export const getPublicAvailabilityByEventIdQueryFn = async (
   eventId: string,
+  options?: { timezone?: string; from?: string; to?: string },
 ): Promise<PublicAvailabilityEventResponseType> => {
-  const response = await PublicAPI.get(`/availability/public/${eventId}`);
+  const params = new URLSearchParams();
+  if (options?.timezone) params.set("timezone", options.timezone);
+  if (options?.from) params.set("from", options.from);
+  if (options?.to) params.set("to", options.to);
+  const query = params.toString();
+  const url = `/availability/public/${eventId}${query ? `?${query}` : ""}`;
+  const response = await PublicAPI.get(url);
   return response.data;
 };
 

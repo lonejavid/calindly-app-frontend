@@ -16,7 +16,6 @@ const Meetings = () => {
     queryKey: ["userMeetings", period],
     queryFn: () => getUserMeetingsQueryFn(period),
   });
-console.log("user timezone is here  ",data?.timezone);
   const meetings = data?.meetings || [];
 
   return (

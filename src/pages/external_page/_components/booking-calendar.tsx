@@ -42,15 +42,6 @@ interface TimezoneCache {
 const timezoneOffsetCache: TimezoneCache = {};
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
-// Helper function to create CalendarDate from JS Date
-const createCalendarDate = (jsDate: Date): CalendarDate => {
-  return new CalendarDate(
-    jsDate.getFullYear(),
-    jsDate.getMonth() + 1,
-    jsDate.getDate()
-  );
-};
-
 // Helper function to parse time slots in 12-hour or 24-hour format
 const parseTimeSlot = (timeSlot: string): { hours: number; minutes: number } | null => {
   try {
@@ -222,12 +213,6 @@ const getTimezoneOffsetUsingBrowser = (
     
     return fallbackOffset;
   }
-};
-
-// Helper function to get day of week considering timezone
-const getDayInTimezone = (date: DateValue, timezone: string): string => {
-  const jsDate = date.toDate(timezone);
-  return format(jsDate, "EEEE").toUpperCase();
 };
 
 // Helper function to get day of week from JavaScript Date

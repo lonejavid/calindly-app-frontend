@@ -22,10 +22,6 @@ const Availability = () => {
   const timeGap = availability?.timeGap || 30;
   const backendTimezone = availability?.timezone;
 
-  // Single console log to show the timezone coming from backend
-  console.log("full data comming from the backedn as avialiability",availability);
-  console.log("🌍 Timezone received from backend:", backendTimezone);
-
   return (
     <div className="flex flex-col !gap-3">
       <PageTitle title="Availability" />

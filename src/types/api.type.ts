@@ -8,6 +8,7 @@ export type LoginResponseType = {
     name: string;
     username: string;
     email: string;
+    isApproved?: boolean;
   };
   accessToken: string;
   expiresAt: number;
@@ -98,7 +99,7 @@ export interface UserAvailabilityResponseType {
 }
 
 // Legacy support - alias to maintain backward compatibility
-export interface UserAvailabilityType extends AvailabilityType {}
+export type UserAvailabilityType = AvailabilityType;
 
 export interface AvailabilityResponse {
   success: boolean;

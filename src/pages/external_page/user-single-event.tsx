@@ -13,16 +13,6 @@ import { useBookingState } from "@/hooks/use-booking-state";
 import PageContainer from "./_components/page-container";
 import { getSinglePublicEventBySlugQueryFn } from "@/lib/api";
 
-interface BookingWindow {
-  startDate: Date | null;
-  endDate: Date | null;
-  minimumNotice: number;
-  noticeType: 'hours' | 'days';
-  windowType: 'rolling' | 'fixed' | 'indefinite';
-  dateRangeLimit?: number;
-  dateRangeType?: 'calendar days' | 'weeks' | 'months';
-}
-
 const UserSingleEventPage = () => {
   const params = useParams();
   const username = params.username as string;

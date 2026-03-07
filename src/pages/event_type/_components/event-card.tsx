@@ -1,4 +1,5 @@
 import { EventType } from "@/types/api.type";
+import { ENV } from "@/lib/get-env";
 import { Copy, Settings, Edit3, Trash2, Power, X, Clock, Users, FileText, Shield, Calendar } from "lucide-react";
 import { FC, useState, useRef, useEffect } from "react";
 
@@ -494,7 +495,7 @@ const EventCard: FC<PropsType> = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isEditSliderOpen, setIsEditSliderOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const event_link = `https://www.schedley.com/${username}/${slug}`;
+  const event_link = `${ENV.VITE_APP_ORIGIN || "http://localhost:3000"}/${username}/${slug}`;
 
   const handleCopyLink = () => {
     navigator.clipboard

@@ -6,6 +6,8 @@ import { Groq } from 'groq-sdk';
 import mylogo from "../../../mylogo.png";
 import { ENV } from '@/lib/get-env';
 
+const hasGroqKey = Boolean(ENV.VITE_GROQ_API_KEY);
+
 // Simple route constants
 import { AUTH_ROUTES } from "@/routes/common/routePaths";
 
@@ -27,12 +29,6 @@ const ScheduleyLanding = () => {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
-
-  // Initialize Groq client
-  const groq = new Groq({
-    apiKey: ENV.VITE_GROQ_API_KEY,
-    dangerouslyAllowBrowser: true
-  });
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -77,6 +73,21 @@ const ScheduleyLanding = () => {
     
     setTimeout(async () => {
       try {
+        if (!hasGroqKey) {
+          setIsTyping(false);
+          setIsLoading(false);
+          setMessages(prev => [...prev, {
+            role: 'assistant',
+            content: "Chat isn't configured in this environment. Sign up or contact us to learn how Schedley can help you get more clients!"
+          }]);
+          return;
+        }
+
+        const groq = new Groq({
+          apiKey: ENV.VITE_GROQ_API_KEY!,
+          dangerouslyAllowBrowser: true
+        });
+
         // Add system context about Schedley
         const systemPrompt = {
           role: 'system' as const,

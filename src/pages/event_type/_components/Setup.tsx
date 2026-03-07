@@ -716,10 +716,6 @@ const Setup = () => {
     }
   };
 
-  const handleClose = () => {
-    window.location.reload();
-  };
-
   const isCurrentStepValid = () => {
     const currentField = steps[currentStep].field;
     const value = formData[currentField];

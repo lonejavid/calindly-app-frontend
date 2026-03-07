@@ -3,18 +3,19 @@ export const isAuthRoute = (pathname: string): boolean => {
 };
 
 export const AUTH_ROUTES = {
-  LANDING: "/", 
+  LANDING: "/",
   SIGN_IN: "/login",
   SIGN_UP: "/sign-up",
-  SETUPAI: "/setup", 
+  SETUPAI: "/setup",
+  TALENT: "/talent",
 };
 
 export const PROTECTED_ROUTES = {
-
   EVENT_TYPES: "/app/event_types",
   INTEGRATIONS: "/app/integrations",
   AVAILBILITIY: "/app/availability/schedules",
   MEETINGS: "/app/scheduled_events",
+  SETUP: "/setup",
 };
 
 export const PUBLIC_ROUTES = {

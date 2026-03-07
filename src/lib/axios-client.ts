@@ -25,22 +25,20 @@ API.interceptors.request.use((config) => {
 API.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const { data, status } = error.response;
-    if (data === "Unauthorized" && status === 401) {
+    const status = error.response?.status;
+    const data = error.response?.data;
+    if (status === 401) {
       const store = useStore.getState();
       store.clearUser();
       store.clearAccessToken();
       store.clearExpiresAt();
       window.location.href = "/";
     }
-
-    console.log(data, "data");
     const customError: CustomError = {
       ...error,
-      message: data?.message,
+      message: data?.message ?? error.message ?? "Request failed",
       errorCode: data?.errorCode || "UNKNOWN_ERROR",
     };
-
     return Promise.reject(customError);
   }
 );
@@ -51,10 +49,10 @@ export const PublicAPI = axios.create(options);
 PublicAPI.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const { data } = error.response;
+    const data = error.response?.data;
     const customError: CustomError = {
       ...error,
-      message: data?.message,
+      message: data?.message ?? error.message ?? "Request failed",
       errorCode: data?.errorCode || "UNKNOWN_ERROR",
     };
     return Promise.reject(customError);

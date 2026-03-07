@@ -173,7 +173,12 @@ const getBrowserTimezone = () => {
 };
 
 // Convert calendar object to ISO date string
-const calendarObjectToISODate = (calendarObj: any) => {
+interface CalendarLike {
+  year?: number;
+  month?: number;
+  day?: number;
+}
+const calendarObjectToISODate = (calendarObj: CalendarLike | null | undefined) => {
   if (!calendarObj || typeof calendarObj !== 'object') {
     return null;
   }
@@ -252,12 +257,7 @@ const BookingForm = (props: { event: Event }) => {
 
     // Enhanced email validation with proper blocked domains checking
     if (blockedDomainsArray.length > 0) {
-      // Format blocked domains for display (remove @ if present)
-      const displayDomains = blockedDomainsArray.map(domain => 
-        domain.startsWith('@') ? domain.substring(1) : domain
-      );
-
-      schemaFields.guestEmail = z
+        schemaFields.guestEmail = z
         .string()
         .min(1, "Email is required")
         .email("Invalid email address")
@@ -509,13 +509,15 @@ const BookingForm = (props: { event: Event }) => {
 
 
       mutate(payload, {
-        onSuccess: (response: any) => {
-          setMeetLink(response.data.meetLink);
+        onSuccess: (response: { meeting?: { meetLink?: string } }) => {
+          const link = response?.meeting?.meetLink ?? "";
+          setMeetLink(link);
           setBookingDetails({
             startTime: startTimeUTC.toISOString(),
             endTime: endTimeUTC.toISOString(),
             guestName: values.guestName,
           });
+          if (link) toast.success("Meeting scheduled! Check your email for the meeting link.");
           handleSuccess(true);
           setTimeout(() => {
             if (event.redirectUrl) {
@@ -577,7 +579,7 @@ const formatBookingTime = () => {
 };
 
   // Enhanced function to render question fields based on type with improved styling
-  const renderQuestionField = (question: EventQuestion, field: any) => {
+  const renderQuestionField = (question: EventQuestion, field: { value: unknown; onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void; onBlur: () => void; ref: React.RefCallback<unknown> }) => {
     switch (question.type) {
       case "text":
         return (
@@ -731,15 +733,26 @@ const formatBookingTime = () => {
               {event.confirmationMessage || "A calendar invitation has been sent to your email address."}
             </p>
 
-            {/* Open Invitation Button */}
-            <Button 
-              variant="outline" 
-              onClick={handleOpenInvitation}
-              className="mb-4 sm:mb-6 flex items-center gap-2 h-10 sm:h-11 text-sm sm:text-base px-4 sm:px-6"
-            >
-              <ExternalLink className="w-4 h-4" />
-              Open Invitation
-            </Button>
+            {/* Open Invitation / Meet Link Button */}
+            {meetLink ? (
+              <Button
+                variant="outline"
+                onClick={() => window.open(meetLink, "_blank")}
+                className="mb-4 sm:mb-6 flex items-center gap-2 h-10 sm:h-11 text-sm sm:text-base px-4 sm:px-6"
+              >
+                <ExternalLink className="w-4 h-4" />
+                Open Meeting Link
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                onClick={handleOpenInvitation}
+                className="mb-4 sm:mb-6 flex items-center gap-2 h-10 sm:h-11 text-sm sm:text-base px-4 sm:px-6"
+              >
+                <ExternalLink className="w-4 h-4" />
+                Open Invitation
+              </Button>
+            )}
 
             {/* Event Details Card */}
             <div className="bg-gray-50 rounded-lg p-4 sm:p-6 text-left space-y-3 sm:space-y-4">
@@ -757,6 +770,9 @@ const formatBookingTime = () => {
                   <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0 mt-0.5" />
                   <span className="break-words">{formatBookingTime()}</span>
                 </div>
+                {bookingDetails && (
+                  <p className="text-xs text-gray-500">Scheduled for {bookingDetails.guestName}</p>
+                )}
                 
                 <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-600">
                   <Globe className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />

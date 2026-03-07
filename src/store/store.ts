@@ -1,12 +1,14 @@
 import { create, StateCreator } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { devtools, persist } from "zustand/middleware";
+import { devtools, persist, createJSONStorage } from "zustand/middleware";
 import createSelectors from "./selectors";
 
 type UserType = {
+  id?: string;
   name: string;
   username: string;
   email: string;
+  isApproved?: boolean;
 };
 
 type AuthState = {
@@ -47,7 +49,7 @@ export const useStoreBase = create<StoreType>()(
       })),
       {
         name: "local-storage",
-        getStorage: () => localStorage,
+        storage: createJSONStorage(() => localStorage),
       }
     )
   )

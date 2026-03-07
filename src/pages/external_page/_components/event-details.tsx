@@ -128,7 +128,6 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft, CalendarIcon, Clock } from "lucide-react";
 import { locationOptions } from "@/lib/types";
 import { useBookingState } from "@/hooks/use-booking-state";
-import { formatSelectedSlot } from "@/lib/helper";
 import { UserType } from "@/types/api.type";
 import { format } from "date-fns";
 
@@ -150,15 +149,7 @@ const EventDetails = (props: {
   } = props;
 
   const navigate = useNavigate();
-  const { 
-    timezone, 
-    hourType, 
-    next, 
-    isSuccess, 
-    selectedSlot, 
-    selectedDate, 
-    handleBack 
-  } = useBookingState();
+  const { next, isSuccess, selectedSlot, selectedDate, handleBack } = useBookingState();
 
   const handleClick = () => {
     if (isSuccess) {
@@ -169,51 +160,6 @@ const EventDetails = (props: {
       return;
     }
     navigate(`/${username}`);
-  };
-
-  // Helper function to safely format the selected date without timezone issues
-  const getFormattedDateAndSlot = () => {
-    if (!selectedDate || !selectedSlot) return "No slot selected";
-    
-    try {
-      // Create date using CalendarDate components directly to avoid timezone conversion
-      const displayDate = new Date(
-        selectedDate.year, 
-        selectedDate.month - 1, 
-        selectedDate.day,
-        12, // Use noon to avoid any DST issues
-        0, 
-        0
-      );
-      
-      // Format the date part
-      const formattedDate = format(displayDate, "EEEE, MMMM d, yyyy");
-      
-      // For the time part, we can still use the formatSelectedSlot function
-      // but we need to pass the correct date
-      const timeFormatted = formatSelectedSlot(
-        selectedSlot,
-        duration,
-        timezone,
-        hourType,
-        selectedDate // Pass the CalendarDate to avoid internal conversion issues
-      );
-      
-      // If formatSelectedSlot returns the full date+time, extract just the time part
-      // Otherwise combine date and time
-      if (timeFormatted.includes(',')) {
-        // If it already includes date, extract the time part after the comma
-        const timePart = timeFormatted.split(',').slice(1).join(',').trim();
-        return `${timePart}, ${formattedDate}`;
-      } else {
-        // If it's just time, combine with our correctly formatted date
-        return `${timeFormatted}, ${formattedDate}`;
-      }
-      
-    } catch (error) {
-      console.error('Error formatting date and slot:', error);
-      return `${selectedSlot} - Error formatting date`;
-    }
   };
 
   // Alternative simpler approach - just format the date correctly

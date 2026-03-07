@@ -62,13 +62,19 @@ const IntegrationCard = ({
     setIsLoading(true);
     try {
       const { url } = await connectAppIntegrationQueryFn(appType);
-      console.log(SUCCESS_MESSAGES[appType], url);
       setSelectedType(null);
-      window.location.href = url;
+      setIsLoading(false);
+      if (url) {
+        window.location.href = url;
+      } else {
+        toast.info(
+          "Google sign-in isn't configured yet. Add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in the backend .env to enable Connect.",
+        );
+      }
     } catch (error) {
       setIsLoading(false);
-      console.error("Failed to connect Google Calendar:", error);
-      toast.error(ERROR_MESSAGES[appType]);
+      console.error("Failed to connect:", error);
+      toast.error(ERROR_MESSAGES[appType] ?? "Failed to connect. Please try again.");
     }
   };
 

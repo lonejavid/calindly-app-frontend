@@ -19,18 +19,17 @@ const Header = () => {
     navigate(AUTH_ROUTES.SIGN_IN);
   };
 
-  const onDeleteAccount = async() => {
-    // Add confirmation dialog logic here
+  const onDeleteAccount = async () => {
     const confirmed = window.confirm(
       "Are you sure you want to delete your account? This action cannot be undone."
     );
-    
-    if (confirmed) {
-      // Add delete account API call here
-      console.log("Deleting account...");
-      
-     await  API.delete("/auth/delete-account");
+    if (!confirmed) return;
+    try {
+      await API.post("/auth/delete-account", {});
       onLogout();
+    } catch (err: unknown) {
+      const message = err && typeof err === "object" && "message" in err ? String((err as { message: unknown }).message) : "Failed to delete account";
+      window.alert(message);
     }
   };
 

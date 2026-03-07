@@ -11,16 +11,17 @@ import OAuthSuccess from "@/pages/GoogleAothPages/OAuthSuccess";
 import TermsOfService from "@/pages/Policy/TermsOfService";
 import PrivacyPolicy from "@/pages/Policy/PrivacyPolicy";
 import CareersPage from "@/pages/landing/CareersPage";
+import TalentHiringPage from "@/pages/landing/TalentHiringPage";
 import Setup from "@/pages/event_type/_components/Setup";
 
 export const authenticationRoutePaths = [
-   { path: "/", element: <ScheduleyLanding /> },
-   {path:"/terms",element:<TermsOfService/>},
-   {path:"/privacy",element:<PrivacyPolicy/>},
-    {path:"/carrer",element:<CareersPage/>},
+  { path: "/", element: <ScheduleyLanding /> },
+  { path: "/terms", element: <TermsOfService /> },
+  { path: "/privacy", element: <PrivacyPolicy /> },
+  { path: "/carrer", element: <CareersPage /> },
+  { path: AUTH_ROUTES.TALENT, element: <TalentHiringPage /> },
   { path: AUTH_ROUTES.SIGN_IN, element: <SignIn /> },
   { path: AUTH_ROUTES.SIGN_UP, element: <SignUp /> },
-  {path:AUTH_ROUTES.SETUPAI,element:<Setup/>},
 ];
 
 export const protectedRoutePaths = [

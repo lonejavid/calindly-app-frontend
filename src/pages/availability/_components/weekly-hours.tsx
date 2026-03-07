@@ -941,7 +941,7 @@ const getCurrentTimeInTimezone = (timezone: string): string => {
       hour12: true,
       timeZoneName: 'short'
     }).format(now);
-  } catch (error) {
+  } catch {
     return 'N/A';
   }
 };
@@ -1074,14 +1074,13 @@ const WeeklyHoursRow = ({
     existingUserTimezone || detectUserTimezone()
   );
   const [searchValue, setSearchValue] = useState("");
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [, setCurrentTime] = useState(new Date());
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   
   // Fetch timezones from API with fallback to popular timezones
   const { 
     data: timezoneOptions = FALLBACK_TIMEZONE_OPTIONS, 
     isLoading: isLoadingTimezones, 
-    error: timezoneError 
   } = useQuery({
     queryKey: ['timezones'],
     queryFn: fetchTimezones,
