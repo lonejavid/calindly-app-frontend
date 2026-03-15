@@ -4,45 +4,77 @@ export default {
   content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        "serif-display": ["Lora", "Georgia", "serif"],
+        urbanist: ["Urbanist", "sans-serif"],
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        /* Semantic (from theme via index.css) – use var() so hex theme vars work */
+        background: "var(--background)",
+        foreground: "var(--foreground)",
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+          DEFAULT: "var(--card)",
+          foreground: "var(--card-foreground)",
         },
         popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+          DEFAULT: "var(--popover)",
+          foreground: "var(--popover-foreground)",
         },
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "var(--primary)",
+          foreground: "var(--primary-foreground)",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "var(--secondary)",
+          foreground: "var(--secondary-foreground)",
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: "var(--muted)",
+          foreground: "var(--muted-foreground)",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "var(--accent)",
+          foreground: "var(--accent-foreground)",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
+        border: "var(--border)",
+        input: "var(--input)",
+        ring: "var(--ring)",
+        /* Theme tokens (theme.css) for direct use */
+        blue: {
+          DEFAULT: "var(--blue)",
+          dark: "var(--blue-dark)",
+          deep: "var(--blue-deep)",
+          mid: "var(--blue-mid)",
+          lite: "var(--blue-lite)",
+        },
+        amber: {
+          DEFAULT: "var(--amber)",
+          dark: "var(--amber-dark)",
+          deep: "var(--amber-deep)",
+          lite: "var(--amber-lite)",
+        },
+        wa: {
+          DEFAULT: "var(--wa)",
+          dark: "var(--wa-dark)",
+          lite: "var(--wa-lite)",
+        },
+        ink: {
+          DEFAULT: "var(--ink)",
+          mid: "var(--ink-mid)",
+          soft: "var(--ink-soft)",
+          muted: "var(--ink-muted)",
+        },
+        surface: "var(--surface)",
+        white: "var(--white)",
         chart: {
           1: "hsl(var(--chart-1))",
           2: "hsl(var(--chart-2))",

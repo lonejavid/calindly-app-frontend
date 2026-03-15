@@ -1,3 +1,4 @@
+@import "./theme/theme.css";
 @import "tailwindcss";
 @plugin "tailwindcss-animate";
 @custom-variant dark (&:is(.dark *));
@@ -8,6 +9,73 @@ body {
   background-color: #fafafa;
   margin: 0;
   padding: 0;
+}
+
+/* Auth pages: visible blue links on white, with hover */
+.auth-link {
+  color: var(--blue);
+  text-underline-offset: 4px;
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+.auth-link:hover {
+  color: var(--blue-deep);
+  text-decoration: underline;
+}
+
+/* Auth pages: Google sign-in/sign-up button – default theme bg, text, and hover */
+.auth-google-btn {
+  background-color: var(--surface);
+  color: var(--ink);
+  border-color: var(--line-strong);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.auth-google-btn:hover {
+  background-color: var(--blue-lite);
+  border-color: var(--blue);
+  color: var(--blue-deep);
+}
+
+/* Auth pages: primary Sign in / Sign up – default blue, hover dark blue */
+.auth-primary-btn {
+  background-color: var(--blue);
+  box-shadow: var(--sh-blue);
+  color: white;
+  transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.1s ease;
+}
+.auth-primary-btn:hover:not(:disabled) {
+  background-color: var(--blue-dark);
+  opacity: 0.95;
+}
+.auth-primary-btn:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+/* Auth Remember me: native checkbox, blue when checked, no focus border */
+.auth-remember-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: var(--surface);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  outline: none;
+  box-shadow: none;
+}
+.auth-remember-checkbox:focus,
+.auth-remember-checkbox:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+.auth-remember-checkbox:checked {
+  background-color: var(--blue);
+  border-color: var(--blue);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+  background-size: 14px 14px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.auth-remember-checkbox:checked:focus,
+.auth-remember-checkbox:checked:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
 
 .underline--text {
@@ -66,41 +134,42 @@ body {
 }
 
 :root {
-  --background: oklch(1 0 0); /* White */
-  --foreground: oklch(0.141 0.005 285.823); /* Dark gray */
+  /* Semantic tokens from theme (theme.css) – white main, blue primary */
+  --background: var(--white);
+  --foreground: var(--ink);
 
-  --card: oklch(1 0 0); /* White */
-  --card-foreground: oklch(0.141 0.005 285.823); /* Dark gray */
+  --card: var(--white);
+  --card-foreground: var(--ink);
 
-  --popover: oklch(1 0 0); /* White */
-  --popover-foreground: oklch(0.141 0.005 285.823); /* Dark gray */
+  --popover: var(--white);
+  --popover-foreground: var(--ink);
 
-  --primary: oklch(0.52 0.22 260); /* Your brand color (#006bff) */
-  --primary-foreground: oklch(1 0 0); /* White */
+  --primary: var(--blue);
+  --primary-foreground: var(--white);
 
-  --secondary: oklch(0.967 0.001 286.375); /* Light gray */
-  --secondary-foreground: oklch(0.52 0.22 260); /* Your brand color */
+  --secondary: var(--surface);
+  --secondary-foreground: var(--ink);
 
-  --muted: oklch(0.967 0.001 286.375); /* Light gray */
-  --muted-foreground: oklch(0.552 0.016 285.938); /* Gray */
+  --muted: var(--surface);
+  --muted-foreground: var(--ink-muted);
 
-  --accent: oklch(0.967 0.001 286.375); /* Light gray */
-  --accent-foreground: oklch(0.52 0.22 260); /* Your brand color */
+  --accent: var(--blue-lite);
+  --accent-foreground: var(--blue-deep);
 
-  --destructive: oklch(0.577 0.245 27.325); /* Red */
-  --destructive-foreground: oklch(1 0 0); /* White */
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(1 0 0);
 
-  --border: oklch(0.92 0.004 286.32); /* Light gray */
-  --input: oklch(0.92 0.004 286.32); /* Light gray */
-  --ring: oklch(0.52 0.22 260); /* Your brand color */
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--blue);
+
+  --radius: var(--r-m);
 
   --chart-1: oklch(0.646 0.222 41.116); /* Orange */
   --chart-2: oklch(0.6 0.118 184.704); /* Green */
   --chart-3: oklch(0.398 0.07 227.392); /* Blue */
   --chart-4: oklch(0.828 0.189 84.429); /* Yellow */
   --chart-5: oklch(0.769 0.188 70.08); /* Gold */
-
-  --radius: 0.625rem; /* Border radius */
 
   --sidebar: oklch(1 0 0); /* White */
   --sidebar-foreground: oklch(0.141 0.005 285.823); /* Dark gray */
@@ -283,4 +352,61 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Landing: first-time scroll reveal (Intersection Observer toggles .scroll-reveal--visible) */
+.scroll-reveal {
+  opacity: 0;
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1),
+    filter 0.9s ease;
+  will-change: transform, opacity;
+}
+.scroll-reveal.scroll-reveal--visible {
+  opacity: 1;
+}
+.scroll-reveal--fade-up {
+  transform: translate3d(0, 44px, 0);
+}
+.scroll-reveal--fade-up.scroll-reveal--visible,
+.scroll-reveal--fade-up-slow.scroll-reveal--visible {
+  transform: translate3d(0, 0, 0);
+}
+.scroll-reveal--fade-up-slow {
+  transform: translate3d(0, 56px, 0);
+  transition-duration: 1.1s, 1.1s, 1.1s;
+}
+.scroll-reveal--slide-left {
+  transform: translate3d(48px, 0, 0);
+}
+.scroll-reveal--slide-left.scroll-reveal--visible {
+  transform: translate3d(0, 0, 0);
+}
+.scroll-reveal--slide-right {
+  transform: translate3d(-48px, 0, 0);
+}
+.scroll-reveal--slide-right.scroll-reveal--visible {
+  transform: translate3d(0, 0, 0);
+}
+.scroll-reveal--zoom-in {
+  transform: scale(0.94);
+}
+.scroll-reveal--zoom-in.scroll-reveal--visible {
+  transform: scale(1);
+}
+.scroll-reveal--blur-in {
+  filter: blur(10px);
+  transform: translate3d(0, 20px, 0);
+}
+.scroll-reveal--blur-in.scroll-reveal--visible {
+  filter: blur(0);
+  transform: translate3d(0, 0, 0);
+}
+.scroll-reveal--tilt-up {
+  transform: translate3d(0, 32px, 0) perspective(800px) rotateX(6deg);
+  transform-origin: center top;
+}
+.scroll-reveal--tilt-up.scroll-reveal--visible {
+  transform: translate3d(0, 0, 0) perspective(800px) rotateX(0deg);
 }

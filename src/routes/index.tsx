@@ -8,10 +8,12 @@ import AppLayout from "@/layout/app-layout";
 import BaseLayout from "@/layout/base-layout";
 import AuthRoute from "./authRoute";
 import ProtectedRoute from "./protectedRoute";
+import ScrollToTop from "@/components/ScrollToTop";
 
 function AppRoutes() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<AuthRoute />}>
           <Route element={<BaseLayout />}>

@@ -27,12 +27,12 @@ API.interceptors.response.use(
   async (error) => {
     const status = error.response?.status;
     const data = error.response?.data;
-    if (status === 401) {
-      const store = useStore.getState();
-      store.clearUser();
-      store.clearAccessToken();
-      store.clearExpiresAt();
-      window.location.href = "/";
+    const requestUrl = error.config?.url ?? "";
+    const isLoginOrRegister =
+      requestUrl.includes("/auth/login") || requestUrl.includes("/auth/register");
+    if (status === 401 && !isLoginOrRegister) {
+      useStore.getState().clearAuth();
+      window.location.href = "/login";
     }
     const customError: CustomError = {
       ...error,

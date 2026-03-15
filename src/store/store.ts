@@ -8,6 +8,7 @@ type UserType = {
   name: string;
   username: string;
   email: string;
+  imageUrl?: string | null;
   isApproved?: boolean;
 };
 
@@ -23,6 +24,8 @@ type AuthState = {
   clearUser: () => void;
   clearAccessToken: () => void;
   clearExpiresAt: () => void;
+  /** Clear all auth state (e.g. on logout or 401). */
+  clearAuth: () => void;
 };
 
 const createAuthSlice: StateCreator<AuthState> = (set) => ({
@@ -37,6 +40,8 @@ const createAuthSlice: StateCreator<AuthState> = (set) => ({
   clearUser: () => set({ user: null }),
   clearAccessToken: () => set({ accessToken: null }),
   clearExpiresAt: () => set({ expiresAt: null }),
+  clearAuth: () =>
+    set({ user: null, accessToken: null, expiresAt: null }),
 });
 
 type StoreType = AuthState;

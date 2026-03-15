@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { Calendar, Shield, Linkedin, CheckCircle, ArrowRight, Zap, Users, Menu, X, Star, Award, TrendingUp, Rocket, Target, BarChart, Lock, MessageCircle, UserCheck, Mail, Phone, DollarSign, Headphones, RefreshCw, Play, Settings, ExternalLink, Send, Bot, Minimize2, Maximize2 } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Calendar, Shield, Linkedin, CheckCircle, ArrowRight, Users, X, Star, TrendingUp, Rocket, Target, BarChart, Lock, MessageCircle, UserCheck, Mail, Phone, DollarSign, Headphones, RefreshCw, Play, ExternalLink, Send, Bot, Minimize2, Maximize2, Clock } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
 import { Groq } from 'groq-sdk';
 
@@ -8,13 +8,18 @@ import { ENV } from '@/lib/get-env';
 
 const hasGroqKey = Boolean(ENV.VITE_GROQ_API_KEY);
 
-// Simple route constants
 import { AUTH_ROUTES } from "@/routes/common/routePaths";
+import { LandingHeader } from "@/components/LandingHeader";
+import { SectionHeader } from "@/components/SectionHeader";
+import SectionDivider from "@/components/SectionDivider";
+import SectionReveal, { sectionEffectForIndex } from "@/components/SectionReveal";
+import { useFooter } from "@/contexts/FooterContext";
 
 const ScheduleyLanding = () => {
+  const navigate = useNavigate();
+  const { setFooter } = useFooter();
   const [isVisible, setIsVisible] = useState(false);
   const [activeFeature, setActiveFeature] = useState(0);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [animatedStats, setAnimatedStats] = useState({ blocked: 0, qualified: 0, hours: 0, clients: 0 });
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   
@@ -197,59 +202,56 @@ any question asked which is not in our context directely tell that i am not auth
     };
   }, []);
 
-  const navigate = useNavigate();
-
-  // Handle external demo booking
-  const handleBookDemo = () => {
+  // Handle external demo booking (stable ref to avoid infinite loop in useEffect below)
+  const handleBookDemo = useCallback(() => {
     window.open('https://www.schedley.com/lonejavida829/schedley-demo-see-how-client-acquisition-works-9040', '_blank');
-  };
+  }, []);
 
-  // Handle setup navigation
-  const handleSetupAI = () => {
-    console.log("before ");
-    navigate(AUTH_ROUTES.SETUPAI);
-    console.log("After");
-  };
+  // Provide footer props to shared Footer (logo + Book Demo handler)
+  useEffect(() => {
+    setFooter({ logoSrc: mylogo, onBookDemo: handleBookDemo });
+    return () => setFooter({});
+  }, [setFooter, handleBookDemo]);
 
   // Updated features reflecting actual Schedley capabilities
   const features = [
     {
-      icon: <Shield className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8" />,
+      icon: <Shield className="w-8 h-8 sm:w-9 sm:h-9" strokeWidth={2} />,
       title: "AI-Powered Real-Time Email Validation",
       description: "Advanced AI filters and validates every booking request instantly. Blocks public domains, fake emails, and suspicious accounts automatically - ensuring only serious prospects reach your calendar.",
       highlight: "99.7% Accuracy",
       badge: "CORE FEATURE"
     },
     {
-      icon: <UserCheck className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8" />,
+      icon: <UserCheck className="w-8 h-8 sm:w-9 sm:h-9" strokeWidth={2} />,
       title: "Done-For-You Client Acquisition",
       description: "Our dedicated lead generation team identifies, contacts, and qualifies prospects that match your ideal client profile. We don't just organize schedules - we fill them with revenue opportunities.",
       highlight: "Human-Powered",
       badge: "UNIQUE VALUE"
     },
     {
-      icon: <Calendar className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8" />,
+      icon: <Calendar className="w-8 h-8 sm:w-9 sm:h-9" strokeWidth={2} />,
       title: "Smart Event Management",
       description: "Create professional events with detailed agendas. Auto-generated Google Meet links, calendar sync, and email confirmations eliminate manual work while maintaining a premium client experience.",
       highlight: "Fully Automated",
       badge: "SEAMLESS"
     },
     {
-      icon: <Headphones className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8" />,
+      icon: <Headphones className="w-8 h-8 sm:w-9 sm:h-9" strokeWidth={2} />,
       title: "Dedicated Account Management",
       description: "Each client receives a personal account manager who optimizes booking flows, troubleshoots issues, and maximizes lead quality. You're never left alone - our team works alongside yours.",
       highlight: "Personal Support",
       badge: "PREMIUM SERVICE"
     },
     {
-      icon: <Target className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8" />,
+      icon: <Target className="w-8 h-8 sm:w-9 sm:h-9" strokeWidth={2} />,
       title: "Qualified Lead Guarantee",
       description: "Only prospects that fit your company's ideal client profile are invited to book. Our outreach automation combined with human qualification ensures every meeting has revenue potential.",
       highlight: "Quality Guaranteed",
       badge: "RESULTS DRIVEN"
     },
     {
-      icon: <DollarSign className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8" />,
+      icon: <DollarSign className="w-8 h-8 sm:w-9 sm:h-9" strokeWidth={2} />,
       title: "7-Day Success Guarantee",
       description: "Get your first high-ticket client booked in 7 days or pay nothing. 100% refund with no questions asked. We're as invested in your growth as you are - completely risk-free.",
       highlight: "Risk-Free",
@@ -259,17 +261,17 @@ any question asked which is not in our context directely tell that i am not auth
 
   // Trust-building benefits
   const benefits = [
-    { text: "Zero spam or fake meeting requests guaranteed", icon: <Shield className="w-4 h-4" /> },
-    { text: "Qualified prospects delivered to your calendar", icon: <UserCheck className="w-4 h-4" /> },
-    { text: "Dedicated team working for your success", icon: <Users className="w-4 h-4" /> },
-    { text: "Professional corporate email filtering only", icon: <Mail className="w-4 h-4" /> },
-    { text: "First high-ticket client in 7 days or full refund", icon: <DollarSign className="w-4 h-4" /> },
-    { text: "Personal account manager assigned to you", icon: <Headphones className="w-4 h-4" /> },
-    { text: "Real human support, not just software", icon: <MessageCircle className="w-4 h-4" /> },
-    { text: "Risk-free growth with money-back guarantee", icon: <CheckCircle className="w-4 h-4" /> }
+    { text: "Zero spam or fake meeting requests guaranteed", icon: <Shield className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2} /> },
+    { text: "Qualified prospects delivered to your calendar", icon: <UserCheck className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2} /> },
+    { text: "Dedicated team working for your success", icon: <Users className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2} /> },
+    { text: "Professional corporate email filtering only", icon: <Mail className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2} /> },
+    { text: "First high-ticket client in 7 days or full refund", icon: <DollarSign className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2} /> },
+    { text: "Personal account manager assigned to you", icon: <Headphones className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2} /> },
+    { text: "Real human support, not just software", icon: <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2} /> },
+    { text: "Risk-free growth with money-back guarantee", icon: <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2} /> }
   ];
 
-  // Updated testimonials to reflect actual value
+  // Updated testimonials to reflect actual value (image: client photo or avatar URL)
   const testimonials = [
     {
       name: "David Chen",
@@ -277,7 +279,8 @@ any question asked which is not in our context directely tell that i am not auth
       company: "TechCorp Solutions",
       content: "Schedley didn't just organize my calendar - they filled it with qualified leads. Got 3 high-value clients in the first week. The human touch makes all the difference.",
       rating: 5,
-      result: "3 clients in 7 days"
+      result: "3 clients in 7 days",
+      image: "https://i.pravatar.cc/300?img=11"
     },
     {
       name: "Maria Rodriguez",
@@ -285,7 +288,8 @@ any question asked which is not in our context directely tell that i am not auth
       company: "Growth Partners LLC",
       content: "Finally, a scheduling platform that actually brings me clients! The AI filtering is incredible - zero spam, only serious prospects. My productivity has doubled.",
       rating: 5,
-      result: "$45K in new contracts"
+      result: "$45K in new contracts",
+      image: "https://i.pravatar.cc/300?img=5"
     },
     {
       name: "James Thompson",
@@ -293,7 +297,8 @@ any question asked which is not in our context directely tell that i am not auth
       company: "StartupLabs",
       content: "The guarantee sold me, but the results keep me. My account manager understands my business better than most of my employees. This is partnership, not just software.",
       rating: 5,
-      result: "ROI: 340%"
+      result: "ROI: 340%",
+      image: "https://i.pravatar.cc/300?img=12"
     }
   ];
 
@@ -303,750 +308,711 @@ any question asked which is not in our context directely tell that i am not auth
       step: "1",
       title: "Create Your Events",
       description: "Set up professional events with detailed descriptions, agendas, and purposes. Get your unique booking link instantly.",
-      icon: <Calendar className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6" />
+      icon: <Calendar className="w-8 h-8 sm:w-9 sm:h-9" strokeWidth={2} />
     },
     {
-      step: "2", 
+      step: "2",
       title: "AI Validates Every Request",
       description: "Our advanced AI filters out spam, fake emails, and public domains in real-time. Only verified professional leads get through.",
-      icon: <Shield className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6" />
+      icon: <Shield className="w-8 h-8 sm:w-9 sm:h-9" strokeWidth={2} />
     },
     {
       step: "3",
       title: "We Find Your Ideal Clients",
       description: "Our dedicated team identifies and contacts prospects matching your ideal client profile. Human-powered outreach, not just automation.",
-      icon: <Users className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6" />
+      icon: <Users className="w-8 h-8 sm:w-9 sm:h-9" strokeWidth={2} />
     },
     {
       step: "4",
       title: "Qualified Meetings Delivered",
       description: "Only pre-qualified prospects that fit your criteria book meetings. Every slot on your calendar becomes a revenue opportunity.",
-      icon: <Target className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6" />
+      icon: <Target className="w-8 h-8 sm:w-9 sm:h-9" strokeWidth={2} />
     }
   ];
 
   const useCases = [
     {
-      icon: <BarChart className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6" />,
+      icon: <BarChart className="w-8 h-8 sm:w-9 sm:h-9" strokeWidth={2} />,
       title: "Sales Teams",
       description: "Fill your pipeline with qualified leads, not empty bookings"
     },
     {
-      icon: <MessageCircle className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6" />,
+      icon: <MessageCircle className="w-8 h-8 sm:w-9 sm:h-9" strokeWidth={2} />,
       title: "Consultants",
       description: "Professional client acquisition with guaranteed results"
     },
     {
-      icon: <TrendingUp className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6" />,
+      icon: <TrendingUp className="w-8 h-8 sm:w-9 sm:h-9" strokeWidth={2} />,
       title: "Business Owners",
       description: "Scale your business with dedicated lead generation support"
     },
     {
-      icon: <Rocket className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6" />,
+      icon: <Rocket className="w-8 h-8 sm:w-9 sm:h-9" strokeWidth={2} />,
       title: "Entrepreneurs",
       description: "Focus on closing deals while we find your next clients"
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 text-white overflow-hidden">
-      {/* SEO Meta Tags (would be added to document head in real implementation) */}
-      
-      {/* Enhanced Animated Background - Responsive */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-10 -right-10 xs:-top-16 xs:-right-16 sm:-top-20 sm:-right-20 lg:-top-40 lg:-right-40 w-20 h-20 xs:w-32 xs:h-32 sm:w-40 sm:h-40 lg:w-80 lg:h-80 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse"></div>
-        <div className="absolute -bottom-10 -left-10 xs:-bottom-16 xs:-left-16 sm:-bottom-20 sm:-left-20 lg:-bottom-40 lg:-left-40 w-20 h-20 xs:w-32 xs:h-32 sm:w-40 sm:h-40 lg:w-80 lg:h-80 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full mix-blend-multiply filter blur-xl opacity-25 animate-pulse" style={{animationDelay: '2s'}}></div>
-        <div className="absolute top-1/2 left-1/2 w-16 h-16 xs:w-24 xs:h-24 sm:w-30 sm:h-30 lg:w-60 lg:h-60 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" style={{animationDelay: '4s'}}></div>
-      </div>
+    <div className="min-h-screen bg-[var(--white)] text-[var(--ink)] overflow-hidden font-urbanist">
+      <LandingHeader isVisible={isVisible} />
 
-      {/* Navigation - Enhanced Responsive */}
-      <nav className={`relative z-50 p-2 xs:p-3 sm:p-4 lg:p-6 transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-10 opacity-0'}`}>
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-2 xs:space-x-3 sm:space-x-4">
-            <div className="w-8 h-8 xs:w-10 xs:h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 rounded-xl overflow-hidden flex items-center justify-center bg-white shadow-2xl transform hover:scale-105 transition-transform duration-300">
-              <img
-                src={mylogo}
-                alt="Schedley - Intelligent Scheduling & Client Acquisition Platform"
-                className="w-full h-full object-contain"
-              />
+      {/* Hero Section – dark bg var(--ink), all text clearly visible */}
+      <section className="relative bg-[var(--ink)] z-10 pt-6 sm:pt-10 lg:pt-16 pb-8 sm:pb-12 lg:pb-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto">
+          <div className={`text-center transition-all duration-700 delay-200 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`}>
+            <div
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5 sm:mb-6 border border-[var(--amber)]/60 bg-[var(--amber)]/10"
+              style={{ boxShadow: 'var(--sh-amber)' }}
+            >
+              <CheckCircle className="w-4 h-4 text-[var(--amber)] shrink-0" />
+              <span className="text-xs sm:text-sm font-semibold text-white">
+                <span className="sm:hidden">7-Day Guarantee • Risk-Free</span>
+                <span className="hidden sm:inline">7-Day Client Guarantee • 100% Money-Back • Zero Risk</span>
+              </span>
+              <Shield className="w-4 h-4 text-[var(--amber)] shrink-0" />
             </div>
-            <span className="text-lg xs:text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent">
-              Schedley
-            </span>
-          </div>
 
-          <div className="hidden xl:flex items-center space-x-4 lg:space-x-6">
-            <button 
-              onClick={() => navigate('/carrer')} 
-              className="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105 text-sm lg:text-base"
-            >
-              Careers
-            </button>
-            <a href="#features" className="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105 text-sm lg:text-base">Features</a>
-            <a href="#how-it-works" className="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105 text-sm lg:text-base">How It Works</a>
-            <a href="#guarantee" className="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105 text-sm lg:text-base">Guarantee</a>
-            
-            {/* New Action Buttons - Responsive */}
-            <button 
-              onClick={handleBookDemo}
-              className="flex items-center px-2 lg:px-4 py-1.5 lg:py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-full transition-all duration-300 transform hover:scale-105 font-semibold text-xs lg:text-sm shadow-lg"
-            >
-              <Play className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
-              <span className="hidden lg:inline">Book</span> Demo
-              <ExternalLink className="w-2 h-2 lg:w-3 lg:h-3 ml-1 lg:ml-2 opacity-70" />
-            </button>
-            
-            <button 
-              onClick={handleSetupAI}
-              className="flex items-center px-2 lg:px-4 py-1.5 lg:py-2 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 rounded-full transition-all duration-300 transform hover:scale-105 font-semibold text-xs lg:text-sm shadow-lg"
-            >
-              <Settings className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
-              <span className="hidden lg:inline">Set Up</span> AI
-            </button>
-            
-            <button className="bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 px-3 lg:px-6 py-1.5 lg:py-2 rounded-full hover:from-purple-700 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl font-semibold text-xs lg:text-sm" onClick={() => navigate(AUTH_ROUTES.SIGN_IN)}>
-              <span className="hidden lg:inline">Create Your Own</span> Booking<span className="hidden lg:inline"> Link</span>
-            </button>
-            
-            <a 
-              href="https://www.linkedin.com/company/schedley-com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-gray-300 hover:text-white transition-all duration-300 transform hover:scale-110 p-2 rounded-full hover:bg-white/10"
-            >
-              <Linkedin className="w-4 h-4 lg:w-5 lg:h-5" />
-            </a>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="xl:hidden p-2 text-white hover:bg-white/10 rounded-lg transition-colors duration-300"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
-          </button>
-        </div>
-
-        {/* Mobile Menu - Enhanced */}
-        {mobileMenuOpen && (
-          <div className="xl:hidden absolute top-full left-0 right-0 bg-slate-900/98 backdrop-blur-xl border-t border-white/10 p-4 sm:p-6 shadow-2xl max-h-[80vh] overflow-y-auto">
-            <div className="flex flex-col space-y-4 sm:space-y-6">
-              <button 
-                onClick={() => {
-                  navigate('/carrer');
-                  setMobileMenuOpen(false);
-                }} 
-                className="text-gray-300 hover:text-white transition-colors duration-300 py-2 text-left text-base sm:text-lg"
-              >
-                Careers
-              </button>
-              <a href="#features" className="text-gray-300 hover:text-white transition-colors duration-300 py-2 text-base sm:text-lg" onClick={() => setMobileMenuOpen(false)}>Features</a>
-              <a href="#how-it-works" className="text-gray-300 hover:text-white transition-colors duration-300 py-2 text-base sm:text-lg" onClick={() => setMobileMenuOpen(false)}>How It Works</a>
-              <a href="#guarantee" className="text-gray-300 hover:text-white transition-colors duration-300 py-2 text-base sm:text-lg" onClick={() => setMobileMenuOpen(false)}>Guarantee</a>
-              <a 
-                href="https://www.linkedin.com/company/schedley-com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-gray-300 hover:text-white transition-colors duration-300 py-2 flex items-center text-base sm:text-lg"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <Linkedin className="w-5 h-5 mr-3" />
-                LinkedIn
-              </a>
-              
-              {/* Mobile Action Buttons - Enhanced */}
-              <button 
-                onClick={() => {
-                  handleBookDemo();
-                  setMobileMenuOpen(false);
-                }}
-                className="flex items-center justify-center w-full bg-gradient-to-r from-blue-600 to-cyan-600 px-4 sm:px-6 py-3 sm:py-4 rounded-full font-semibold transition-all duration-300 text-sm sm:text-base"
-              >
-                <Play className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                Book Demo
-                <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 ml-2 opacity-70" />
-              </button>
-              
-              <button 
-                onClick={() => {
-                  handleSetupAI();
-                  setMobileMenuOpen(false);
-                }}
-                className="flex items-center justify-center w-full bg-gradient-to-r from-emerald-600 to-green-600 px-4 sm:px-6 py-3 sm:py-4 rounded-full font-semibold transition-all duration-300 text-sm sm:text-base"
-              >
-                <Settings className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                Set Up Your AI
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 group-hover:translate-x-2 transition-transform" />
-              </button>
-              
-              <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-4 sm:px-8 py-3 sm:py-4 rounded-full hover:from-purple-600 hover:to-pink-600 transition-all duration-300 text-center font-semibold text-sm sm:text-base"  onClick={() => {
-                navigate(AUTH_ROUTES.SIGN_IN);
-                setMobileMenuOpen(false);
-              }}>
-                Create Your Own Booking Link Now
-              </button>
-            </div>
-          </div>
-        )}
-      </nav>
-
-      {/* Hero Section - Ultra Responsive */}
-      <section className="relative z-10 pt-4 xs:pt-6 sm:pt-8 lg:pt-16 pb-8 xs:pb-12 sm:pb-16 lg:pb-24 px-2 xs:px-3 sm:px-4 lg:px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className={`text-center transition-all duration-1000 delay-300 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-            {/* Trust Badge - Responsive */}
-            <div className="inline-flex items-center px-3 xs:px-4 sm:px-6 py-2 xs:py-2.5 sm:py-3 bg-gradient-to-r from-emerald-500/20 via-green-500/20 to-emerald-500/20 backdrop-blur-xl rounded-full mb-4 xs:mb-6 sm:mb-8 border border-emerald-500/40 shadow-2xl">
-              <CheckCircle className="w-3 h-3 xs:w-4 xs:h-4 mr-2 xs:mr-3 text-emerald-400" />
-              <span className="text-xs xs:text-sm font-semibold bg-gradient-to-r from-white to-emerald-200 bg-clip-text text-transparent">
-                <span className="inline xs:hidden">7-Day Guarantee • Risk-Free</span>
-                <span className="hidden xs:inline">✅ 7-Day Client Guarantee • 100% Money-Back Promise • Zero Risk</span>
-              </span>
-              <Shield className="w-3 h-3 xs:w-4 xs:h-4 ml-2 xs:ml-3 text-emerald-400" />
-            </div>
-            
-            <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-black mb-3 xs:mb-4 sm:mb-6 lg:mb-8 leading-tight tracking-tight">
-              <span className="bg-gradient-to-r from-white via-purple-100 to-white bg-clip-text text-transparent block">
-                The World's First
-              </span>
-              <span className="bg-gradient-to-r from-purple-400 via-pink-500 to-purple-600 bg-clip-text text-transparent block">
-                Intelligent Scheduling
-              </span>
-              <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent block">
-                & Client Acquisition
-              </span>
-              <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent block">
-                Platform
-              </span>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-3 sm:mb-4 leading-[1.1] tracking-tight">
+              <span className="text-white/90 block">The World's First</span>
+              <span className="text-[var(--blue-mid)] block">Intelligent Scheduling</span>
+              <span className="text-[var(--blue)] block">& Client Acquisition</span>
+              <span className="text-[var(--amber)] block">Platform</span>
             </h1>
-       
-            <p className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-gray-300 mb-4 xs:mb-6 sm:mb-8 lg:mb-12 max-w-5xl mx-auto leading-relaxed font-medium">
-              We don't just manage your schedule - <strong className="text-white">we help you book high-value meetings.</strong><br className="hidden sm:block" />
-              <strong className="text-purple-300">AI-powered spam protection</strong> + <strong className="text-emerald-300">dedicated client acquisition team</strong> = <strong className="text-yellow-300">guaranteed results</strong>
+
+            <p className="text-base sm:text-lg text-white/80 mb-6 sm:mb-8 max-w-xl mx-auto">
+              One platform. Real meetings. Real results.
             </p>
-            
-            <p className="text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl text-gray-400 mb-6 xs:mb-8 sm:mb-10 max-w-4xl mx-auto">
-              Get your <strong className="text-white">first high-ticket client booked in 7 days</strong> or pay nothing. 
-              Our unique combination of AI technology and human expertise eliminates spam while delivering 
-              <strong className="text-emerald-300"> revenue-ready prospects</strong> directly to your calendar.
-            </p>
-            
-            {/* Enhanced CTA Buttons Section - Ultra Responsive */}
-            <div className="flex flex-col sm:flex-row gap-3 xs:gap-4 justify-center items-center mb-6 xs:mb-8">
-              <button className="group bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 px-4 xs:px-6 sm:px-8 py-3 xs:py-3.5 sm:py-4 rounded-full text-sm xs:text-base sm:text-lg font-bold hover:from-purple-700 hover:to-pink-600 transition-all duration-300 transform hover:scale-110 hover:shadow-2xl flex items-center w-full sm:w-auto justify-center shadow-purple-500/25 shadow-2xl border-2 border-purple-400/50" onClick={() => navigate(AUTH_ROUTES.SIGN_IN)}>
-                <UserCheck className="mr-2 xs:mr-3 w-4 h-4 xs:w-5 xs:h-5" />
-                <span className="xs:hidden">Get Client</span>
-                <span className="hidden xs:inline">Get Your First Client</span>
-                <ArrowRight className="ml-2 xs:ml-3 w-4 h-4 xs:w-5 xs:h-5 group-hover:translate-x-2 transition-transform" />
-              </button>
-              
-              <button 
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
+              <button
+                type="button"
                 onClick={handleBookDemo}
-                className="group bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 px-4 xs:px-6 sm:px-8 py-3 xs:py-3.5 sm:py-4 rounded-full text-sm xs:text-base sm:text-lg font-bold transition-all duration-300 transform hover:scale-110 hover:shadow-2xl flex items-center w-full sm:w-auto justify-center shadow-blue-500/25 shadow-2xl border-2 border-blue-400/50"
+                className="group inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 rounded-[var(--r-m)] text-base sm:text-lg font-bold text-white bg-[var(--blue)] border-2 border-[var(--blue)] hover:bg-[var(--blue-dark)] hover:border-[var(--blue-dark)] transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] w-full sm:w-auto"
+                style={{ boxShadow: 'var(--sh-blue)' }}
               >
-                <Play className="mr-2 xs:mr-3 w-4 h-4 xs:w-5 xs:h-5" />
-                <span className="xs:hidden">Demo</span>
-                <span className="hidden xs:inline">Watch Live Demo</span>
-                <ExternalLink className="ml-2 xs:ml-3 w-3 h-3 xs:w-4 xs:h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-              
-              <button 
-                onClick={handleSetupAI}
-                className="group bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 px-4 xs:px-6 sm:px-8 py-3 xs:py-3.5 sm:py-4 rounded-full text-sm xs:text-base sm:text-lg font-bold transition-all duration-300 transform hover:scale-110 hover:shadow-2xl flex items-center w-full sm:w-auto justify-center shadow-emerald-500/25 shadow-2xl border-2 border-emerald-400/50"
-              >
-                <Settings className="mr-2 xs:mr-3 w-4 h-4 xs:w-5 xs:h-5" />
-                <span className="xs:hidden">Setup AI</span>
-                <span className="hidden xs:inline">Set Up Your AI</span>
-                <ArrowRight className="ml-2 xs:ml-3 w-4 h-4 xs:w-5 xs:h-5 group-hover:translate-x-2 transition-transform" />
+                <Play className="w-5 h-5 shrink-0" />
+                <span className="sm:hidden">Watch Demo</span>
+                <span className="hidden sm:inline">Watch Live Demo</span>
+                <ExternalLink className="w-4 h-4 shrink-0 group-hover:translate-x-0.5 transition-transform" />
               </button>
             </div>
 
-            <div className="text-center mb-6 xs:mb-8">
-              <div className="text-xs xs:text-sm font-bold text-emerald-400 mb-1">🎯 7-Day Success Guarantee</div>
-              <div className="text-xs text-gray-400">First client or 100% refund</div>
-            </div>
+            <p className="text-xs text-white/70 mb-8">7-Day Success Guarantee • First client or 100% refund</p>
 
-            {/* Value Propositions - Responsive */}
-            <div className="flex flex-wrap justify-center items-center gap-2 xs:gap-3 sm:gap-4 lg:gap-8 text-xs xs:text-sm text-gray-300 mb-6 xs:mb-8">
-              <div className="flex items-center bg-white/5 px-2 xs:px-3 sm:px-4 py-1.5 xs:py-2 rounded-full border border-white/20">
-                <Shield className="w-3 h-3 xs:w-4 xs:h-4 mr-1.5 xs:mr-2 text-blue-400" />
-                <span className="hidden xs:inline">AI Spam</span> Protection
+            <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-4 text-xs sm:text-sm text-white/90">
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10">
+                <Shield className="w-4 h-4 text-[var(--blue-mid)] shrink-0" />
+                <span>AI spam protection</span>
               </div>
-              <div className="flex items-center bg-white/5 px-2 xs:px-3 sm:px-4 py-1.5 xs:py-2 rounded-full border border-white/20">
-                <Users className="w-3 h-3 xs:w-4 xs:h-4 mr-1.5 xs:mr-2 text-purple-400" />
-                <span className="hidden xs:inline">Human</span> Lead Gen
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10">
+                <Users className="w-4 h-4 text-[var(--blue-mid)] shrink-0" />
+                <span>Human lead gen</span>
               </div>
-              <div className="flex items-center bg-white/5 px-2 xs:px-3 sm:px-4 py-1.5 xs:py-2 rounded-full border border-white/20">
-                <DollarSign className="w-3 h-3 xs:w-4 xs:h-4 mr-1.5 xs:mr-2 text-emerald-400" />
-                <span className="hidden xs:inline">Guaranteed</span> Results
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10">
+                <DollarSign className="w-4 h-4 text-[var(--amber)] shrink-0" />
+                <span>Guaranteed results</span>
               </div>
-              <div className="flex items-center bg-white/5 px-2 xs:px-3 sm:px-4 py-1.5 xs:py-2 rounded-full border border-white/20">
-                <Headphones className="w-3 h-3 xs:w-4 xs:h-4 mr-1.5 xs:mr-2 text-pink-400" />
-                <span className="hidden xs:inline">Personal</span> Support
-              </div>
-            </div>
-          </div>
-
-          {/* Hero Visual - Ultra Responsive */}
-          <div className={`mt-8 xs:mt-12 sm:mt-16 lg:mt-20 transition-all duration-1000 delay-600 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
-            <div className="relative max-w-6xl mx-auto px-2 xs:px-4">
-              <div className="bg-gradient-to-br from-white/15 via-white/10 to-white/5 backdrop-blur-2xl rounded-xl xs:rounded-2xl sm:rounded-3xl p-4 xs:p-6 sm:p-8 border border-white/30 shadow-2xl">
-                <div className="text-center mb-4 xs:mb-6">
-                  <h3 className="text-sm xs:text-base sm:text-lg font-bold text-white mb-2">Live Platform Activity</h3>
-                  <p className="text-xs xs:text-sm text-gray-400">Real-time filtering and client acquisition in action</p>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 xs:gap-4 sm:gap-6">
-                  <div className="bg-gradient-to-br from-red-500/30 to-red-600/20 rounded-xl xs:rounded-2xl p-3 xs:p-4 sm:p-6 border border-red-500/30 transform hover:scale-105 transition-transform duration-300">
-                    <div className="flex items-center justify-between mb-2 xs:mb-4">
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 xs:w-3 xs:h-3 bg-red-500 rounded-full mr-2 xs:mr-3 animate-pulse"></div>
-                        <span className="text-xs xs:text-sm font-semibold text-red-300">BLOCKED</span>
-                      </div>
-                      <Shield className="w-3 h-3 xs:w-4 xs:h-4 sm:w-5 sm:h-5 text-red-400" />
-                    </div>
-                    <p className="text-xs xs:text-sm text-gray-300 mb-1 xs:mb-2 font-mono break-all">spam@gmail.com</p>
-                    <p className="text-xs text-red-400 bg-red-500/20 px-2 xs:px-3 py-0.5 xs:py-1 rounded-full">Public domain detected</p>
-                  </div>
-                  
-                  <div className="bg-gradient-to-br from-yellow-500/30 to-yellow-600/20 rounded-xl xs:rounded-2xl p-3 xs:p-4 sm:p-6 border border-yellow-500/30 transform hover:scale-105 transition-transform duration-300">
-                    <div className="flex items-center justify-between mb-2 xs:mb-4">
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 xs:w-3 xs:h-3 bg-yellow-500 rounded-full mr-2 xs:mr-3 animate-spin"></div>
-                        <span className="text-xs xs:text-sm font-semibold text-yellow-300">QUALIFYING</span>
-                      </div>
-                      <Users className="w-3 h-3 xs:w-4 xs:h-4 sm:w-5 sm:h-5 text-yellow-400" />
-                    </div>
-                    <p className="text-xs xs:text-sm text-gray-300 mb-1 xs:mb-2 font-mono break-all">lead@enterprise.co</p>
-                    <p className="text-xs text-yellow-400 bg-yellow-500/20 px-2 xs:px-3 py-0.5 xs:py-1 rounded-full">Human verification...</p>
-                  </div>
-                  
-                  <div className="bg-gradient-to-br from-blue-500/30 to-blue-600/20 rounded-xl xs:rounded-2xl p-3 xs:p-4 sm:p-6 border border-blue-500/30 transform hover:scale-105 transition-transform duration-300">
-                    <div className="flex items-center justify-between mb-2 xs:mb-4">
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 xs:w-3 xs:h-3 bg-blue-500 rounded-full mr-2 xs:mr-3"></div>
-                        <span className="text-xs xs:text-sm font-semibold text-blue-300">OUTREACH</span>
-                      </div>
-                      <Phone className="w-3 h-3 xs:w-4 xs:h-4 sm:w-5 sm:h-5 text-blue-400" />
-                    </div>
-                    <p className="text-xs xs:text-sm text-gray-300 mb-1 xs:mb-2 font-mono">Contacting prospects</p>
-                    <p className="text-xs text-blue-400 bg-blue-500/20 px-2 xs:px-3 py-0.5 xs:py-1 rounded-full">AI + Human team</p>
-                  </div>
-                  
-                  <div className="bg-gradient-to-br from-green-500/30 to-green-600/20 rounded-xl xs:rounded-2xl p-3 xs:p-4 sm:p-6 border border-green-500/30 transform hover:scale-105 transition-transform duration-300">
-                    <div className="flex items-center justify-between mb-2 xs:mb-4">
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 xs:w-3 xs:h-3 bg-green-500 rounded-full mr-2 xs:mr-3"></div>
-                        <span className="text-xs xs:text-sm font-semibold text-green-300">BOOKED</span>
-                      </div>
-                      <CheckCircle className="w-3 h-3 xs:w-4 xs:h-4 sm:w-5 sm:h-5 text-green-400" />
-                    </div>
-                    <p className="text-xs xs:text-sm text-gray-300 mb-1 xs:mb-2 font-mono break-all">cto@techfirm.com</p>
-                    <p className="text-xs text-green-400 bg-green-500/20 px-2 xs:px-3 py-0.5 xs:py-1 rounded-full">High-value prospect</p>
-                  </div>
-                </div>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10">
+                <Headphones className="w-4 h-4 text-[var(--blue-mid)] shrink-0" />
+                <span>Personal support</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Live Statistics Dashboard - Ultra Responsive */}
-      <section className="py-8 xs:py-12 sm:py-16 px-2 xs:px-4 sm:px-6 relative">
+      {/* Section 1: High-value meetings – visual with icons + scroll reveal */}
+      <section className="relative z-10 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 bg-[var(--surface)]">
+        <div className="max-w-5xl mx-auto">
+          <SectionReveal effect="fade-up">
+          {/* Icon strip – calendar, handshake, target */}
+          <div className="flex justify-center gap-6 sm:gap-10 mb-8 sm:mb-10">
+            <div className="flex flex-col items-center gap-2">
+              <span className="flex h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center shadow-[var(--sh-sm)]">
+                <Calendar className="w-7 h-7 sm:w-8 sm:h-8" strokeWidth={2} />
+              </span>
+              <span className="text-xs font-semibold text-[var(--ink-muted)] uppercase tracking-wider">Schedule</span>
+            </div>
+            <span className="flex items-center text-[var(--line-strong)] self-center">
+              <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 hidden sm:block" />
+            </span>
+            <div className="flex flex-col items-center gap-2">
+              <span className="flex h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center shadow-[var(--sh-sm)]">
+                <UserCheck className="w-7 h-7 sm:w-8 sm:h-8" strokeWidth={2} />
+              </span>
+              <span className="text-xs font-semibold text-[var(--ink-muted)] uppercase tracking-wider">High-value</span>
+            </div>
+            <span className="flex items-center text-[var(--line-strong)] self-center">
+              <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 hidden sm:block" />
+            </span>
+            <div className="flex flex-col items-center gap-2">
+              <span className="flex h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-[var(--amber-lite)] text-[var(--amber)] items-center justify-center shadow-[var(--sh-sm)]">
+                <Target className="w-7 h-7 sm:w-8 sm:h-8" strokeWidth={2} />
+              </span>
+              <span className="text-xs font-semibold text-[var(--ink-muted)] uppercase tracking-wider">Meetings</span>
+            </div>
+          </div>
+          <SectionHeader
+            titleBefore="We don't just manage your schedule — "
+            titleAccent="we help you book high-value meetings."
+            className="max-w-4xl"
+          />
+          </SectionReveal>
+        </div>
+      </section>
+      <SectionDivider />
+
+      {/* Section 2: AI + Human = Results – three pillars with larger text & icons */}
+      <section className="relative z-10 py-12 sm:py-16 lg:py-24 px-4 sm:px-6 bg-[var(--white)]">
         <div className="max-w-6xl mx-auto">
-          <div className="bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-xl rounded-xl xs:rounded-2xl sm:rounded-3xl p-4 xs:p-6 sm:p-8 border border-white/20">
-            <h3 className="text-lg xs:text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-4 xs:mb-6 sm:mb-8 bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
-              🔥 Platform Performance This Month
-            </h3>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 xs:gap-4 sm:gap-6">
-              <div className="text-center">
-                <div className="text-xl xs:text-2xl sm:text-3xl lg:text-4xl font-black text-red-400 mb-1 xs:mb-2">
+          <SectionReveal effect={sectionEffectForIndex(0)}>
+          <SectionHeader
+            eyebrow="How we deliver"
+            titleBefore="AI + human expertise"
+            titleAccent=" = guaranteed results"
+            subtitle="Three pillars that make Schedley different from traditional scheduling tools."
+            className="mb-10 sm:mb-14"
+          />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
+            <div className="group text-center p-8 sm:p-10 rounded-[var(--r-xl)] border-2 border-[var(--line)] bg-[var(--surface)] hover:border-[var(--blue)] hover:shadow-[var(--sh-md)] transition-all duration-300">
+              <div className="inline-flex h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center mb-5 sm:mb-6 group-hover:scale-105 transition-all duration-300">
+                <Shield className="w-8 h-8 sm:w-10 sm:h-10" strokeWidth={2} />
+              </div>
+              <h3 className="font-bold text-[var(--ink)] text-xl sm:text-2xl mb-3">AI-powered spam protection</h3>
+              <p className="text-base sm:text-lg text-[var(--ink-muted)] leading-relaxed">Block fake emails and public domains so only serious prospects reach your calendar.</p>
+            </div>
+            <div className="group text-center p-8 sm:p-10 rounded-[var(--r-xl)] border-2 border-[var(--line)] bg-[var(--surface)] hover:border-[var(--blue)] hover:shadow-[var(--sh-md)] transition-all duration-300">
+              <div className="inline-flex h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center mb-5 sm:mb-6 group-hover:scale-105 transition-all duration-300">
+                <Users className="w-8 h-8 sm:w-10 sm:h-10" strokeWidth={2} />
+              </div>
+              <h3 className="font-bold text-[var(--ink)] text-xl sm:text-2xl mb-3">Dedicated client acquisition</h3>
+              <p className="text-base sm:text-lg text-[var(--ink-muted)] leading-relaxed">Human experts find and qualify leads, then deliver them to your calendar.</p>
+            </div>
+            <div className="group text-center p-8 sm:p-10 rounded-[var(--r-xl)] border-2 border-[var(--line)] bg-[var(--surface)] hover:border-[var(--blue)] hover:shadow-[var(--sh-md)] transition-all duration-300">
+              <div className="inline-flex h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-[var(--amber-lite)] text-[var(--amber)] items-center justify-center mb-5 sm:mb-6 group-hover:scale-105 transition-all duration-300">
+                <DollarSign className="w-8 h-8 sm:w-10 sm:h-10" strokeWidth={2} />
+              </div>
+              <h3 className="font-bold text-[var(--ink)] text-xl sm:text-2xl mb-3">Guaranteed results</h3>
+              <p className="text-base sm:text-lg text-[var(--ink-muted)] leading-relaxed">Our combination of AI and human expertise delivers revenue-ready outcomes.</p>
+            </div>
+          </div>
+          <p className="text-center mt-8 sm:mt-10 text-lg sm:text-xl text-[var(--ink-soft)] font-semibold">
+            <span className="text-[var(--blue)]">AI-powered spam protection</span> + <span className="text-[var(--blue)]">dedicated client acquisition</span> = <span className="text-[var(--amber)]">guaranteed results</span>
+          </p>
+          </SectionReveal>
+        </div>
+      </section>
+
+      {/* Live Platform Activity – SectionHeader + scroll reveal (not tied to hero isVisible) */}
+      <section className="relative z-10 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 bg-[var(--ink)]">
+        <div className="max-w-6xl mx-auto">
+          <SectionReveal effect="blur-in" className="will-change-auto">
+            <SectionHeader
+              eyebrow="Real-time pipeline"
+              titleBefore="Live Platform "
+              titleAccent="Activity"
+              subtitle="Real-time filtering and client acquisition in action"
+              variant="light"
+              className="mb-8 sm:mb-10 lg:mb-12"
+            />
+
+            {/* Activity pipeline – cards with flow */}
+            <div className="relative rounded-[var(--r-xl)] border-2 border-white/20 bg-white/5 p-4 sm:p-6 lg:p-8 shadow-[var(--sh-md)]">
+              {/* Connector line between cards on desktop */}
+              <div className="hidden xl:block absolute top-1/2 left-[12.5%] right-[12.5%] h-0.5 bg-white/30 -translate-y-1/2 pointer-events-none" aria-hidden />
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
+                {/* BLOCKED */}
+                <div className="relative z-10 group rounded-[var(--r-l)] p-4 sm:p-5 lg:p-6 border-2 border-red-200 bg-white hover:border-red-300 hover:shadow-[var(--sh-sm)] transition-all">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="inline-flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse" aria-hidden />
+                      <span className="text-sm font-bold uppercase tracking-wider text-red-700">Blocked</span>
+                    </span>
+                    <span className="flex h-10 w-10 rounded-xl bg-red-100 text-red-600 items-center justify-center group-hover:scale-105 transition-transform">
+                      <Shield className="w-5 h-5" strokeWidth={2} />
+                    </span>
+                  </div>
+                  <p className="text-sm font-mono text-[var(--ink)] break-all mb-2">spam@gmail.com</p>
+                  <span className="inline-block text-xs font-medium text-red-700 bg-red-100 px-2.5 py-1 rounded-lg">Public domain detected</span>
+                </div>
+
+                {/* QUALIFYING */}
+                <div className="relative z-10 group rounded-[var(--r-l)] p-4 sm:p-5 lg:p-6 border-2 border-[var(--amber)]/40 bg-white hover:border-[var(--amber)]/60 hover:shadow-[var(--sh-sm)] transition-all">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="inline-flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 bg-[var(--amber)] rounded-full animate-pulse" aria-hidden />
+                      <span className="text-sm font-bold uppercase tracking-wider text-[var(--amber-deep)]">Qualifying</span>
+                    </span>
+                    <span className="flex h-10 w-10 rounded-xl bg-[var(--amber-lite)] text-[var(--amber)] items-center justify-center group-hover:scale-105 transition-transform">
+                      <Users className="w-5 h-5" strokeWidth={2} />
+                    </span>
+                  </div>
+                  <p className="text-sm font-mono text-[var(--ink)] break-all mb-2">lead@enterprise.co</p>
+                  <span className="inline-block text-xs font-medium text-[var(--amber-deep)] bg-[var(--amber-ghost)] px-2.5 py-1 rounded-lg">Human verification...</span>
+                </div>
+
+                {/* OUTREACH */}
+                <div className="relative z-10 group rounded-[var(--r-l)] p-4 sm:p-5 lg:p-6 border-2 border-[var(--blue)]/30 bg-white hover:border-[var(--blue)]/50 hover:shadow-[var(--sh-sm)] transition-all">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="inline-flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 bg-[var(--blue)] rounded-full" aria-hidden />
+                      <span className="text-sm font-bold uppercase tracking-wider text-[var(--blue)]">Outreach</span>
+                    </span>
+                    <span className="flex h-10 w-10 rounded-xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center group-hover:scale-105 transition-transform">
+                      <Phone className="w-5 h-5" strokeWidth={2} />
+                    </span>
+                  </div>
+                  <p className="text-sm text-[var(--ink)] mb-2">Contacting prospects</p>
+                  <span className="inline-block text-xs font-medium text-[var(--blue)] bg-[var(--blue-ghost)] px-2.5 py-1 rounded-lg">AI + Human team</span>
+                </div>
+
+                {/* BOOKED */}
+                <div className="relative z-10 group rounded-[var(--r-l)] p-4 sm:p-5 lg:p-6 border-2 border-[var(--wa)]/40 bg-white hover:border-[var(--wa)]/60 hover:shadow-[var(--sh-sm)] transition-all">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="inline-flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 bg-[var(--wa)] rounded-full" aria-hidden />
+                      <span className="text-sm font-bold uppercase tracking-wider text-[var(--wa-dark)]">Booked</span>
+                    </span>
+                    <span className="flex h-10 w-10 rounded-xl bg-[var(--wa-lite)] text-[var(--wa)] items-center justify-center group-hover:scale-105 transition-transform">
+                      <CheckCircle className="w-5 h-5" strokeWidth={2} />
+                    </span>
+                  </div>
+                  <p className="text-sm font-mono text-[var(--ink)] break-all mb-2">cto@techfirm.com</p>
+                  <span className="inline-block text-xs font-medium text-[var(--wa-dark)] bg-[var(--wa-ghost)] px-2.5 py-1 rounded-lg">High-value prospect</span>
+                </div>
+              </div>
+            </div>
+          </SectionReveal>
+        </div>
+      </section>
+
+      {/* Platform Performance – icons + improved card design */}
+      <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 relative z-10 bg-[var(--surface)]">
+        <div className="max-w-6xl mx-auto">
+          <SectionReveal effect={sectionEffectForIndex(1)}>
+          <SectionHeader
+            eyebrow="This month"
+            titleBefore="Platform "
+            titleAccent="Performance"
+            className="mb-8 sm:mb-10"
+          />
+          <div className="rounded-[var(--r-xl)] p-5 sm:p-6 lg:p-8 border-2 border-[var(--line)] bg-[var(--white)] shadow-[var(--sh-md)]">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+              <div className="group text-center p-5 sm:p-6 rounded-[var(--r-l)] border-2 border-red-100 bg-white hover:border-red-200 hover:shadow-[var(--sh-sm)] transition-all">
+                <span className="inline-flex h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-red-100 text-red-600 items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+                  <Shield className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={2} />
+                </span>
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-red-600 mb-2">
                   {animatedStats.blocked.toLocaleString()}+
                 </div>
-                <div className="text-gray-300 font-semibold text-xs xs:text-sm">Spam Requests Blocked</div>
-                <div className="text-xs text-gray-500 mt-1">AI Protection Active</div>
+                <div className="text-[var(--ink)] font-bold text-sm sm:text-base">Spam Requests Blocked</div>
+                <div className="text-xs sm:text-sm text-[var(--ink-muted)] mt-1 font-medium">AI Protection Active</div>
               </div>
-              <div className="text-center">
-                <div className="text-xl xs:text-2xl sm:text-3xl lg:text-4xl font-black text-green-400 mb-1 xs:mb-2">
+              <div className="group text-center p-5 sm:p-6 rounded-[var(--r-l)] border-2 border-[var(--wa)]/30 bg-white hover:border-[var(--wa)]/50 hover:shadow-[var(--sh-sm)] transition-all">
+                <span className="inline-flex h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-[var(--wa-lite)] text-[var(--wa)] items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+                  <UserCheck className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={2} />
+                </span>
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-black mb-2 text-[var(--wa)]">
                   {animatedStats.qualified.toLocaleString()}+
                 </div>
-                <div className="text-gray-300 font-semibold text-xs xs:text-sm">Qualified Leads Delivered</div>
-                <div className="text-xs text-gray-500 mt-1">Human-Verified</div>
+                <div className="text-[var(--ink)] font-bold text-sm sm:text-base">Qualified Leads Delivered</div>
+                <div className="text-xs sm:text-sm text-[var(--ink-muted)] mt-1 font-medium">Human-Verified</div>
               </div>
-              <div className="text-center">
-                <div className="text-xl xs:text-2xl sm:text-3xl lg:text-4xl font-black text-blue-400 mb-1 xs:mb-2">
+              <div className="group text-center p-5 sm:p-6 rounded-[var(--r-l)] border-2 border-[var(--blue)]/20 bg-white hover:border-[var(--blue)]/40 hover:shadow-[var(--sh-sm)] transition-all">
+                <span className="inline-flex h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+                  <Clock className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={2} />
+                </span>
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-black mb-2 text-[var(--blue)]">
                   {animatedStats.hours.toFixed(1)}K+
                 </div>
-                <div className="text-gray-300 font-semibold text-xs xs:text-sm">Hours Saved</div>
-                <div className="text-xs text-gray-500 mt-1">No Spam Meetings</div>
+                <div className="text-[var(--ink)] font-bold text-sm sm:text-base">Hours Saved</div>
+                <div className="text-xs sm:text-sm text-[var(--ink-muted)] mt-1 font-medium">No Spam Meetings</div>
               </div>
-              <div className="text-center">
-                <div className="text-xl xs:text-2xl sm:text-3xl lg:text-4xl font-black text-purple-400 mb-1 xs:mb-2">
+              <div className="group text-center p-5 sm:p-6 rounded-[var(--r-l)] border-2 border-[var(--amber)]/30 bg-white hover:border-[var(--amber)]/50 hover:shadow-[var(--sh-sm)] transition-all">
+                <span className="inline-flex h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-[var(--amber-lite)] text-[var(--amber)] items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+                  <Rocket className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={2} />
+                </span>
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-black mb-2 text-[var(--amber)]">
                   {animatedStats.clients}+
                 </div>
-                <div className="text-gray-300 font-semibold text-xs xs:text-sm">Clients Acquired</div>
-                <div className="text-xs text-gray-500 mt-1">High-Ticket Sales</div>
+                <div className="text-[var(--ink)] font-bold text-sm sm:text-base">Clients Acquired</div>
+                <div className="text-xs sm:text-sm text-[var(--ink-muted)] mt-1 font-medium">High-Ticket Sales</div>
               </div>
             </div>
           </div>
+          </SectionReveal>
         </div>
       </section>
+      <SectionDivider />
 
-      {/* How It Works Section - Ultra Responsive */}
-      <section id="how-it-works" className="py-12 xs:py-16 sm:py-20 lg:py-32 px-2 xs:px-4 sm:px-6 relative">
+      {/* How It Works – improved step cards + visual flow */}
+      <section id="how-it-works" className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 bg-[var(--white)]">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-8 xs:mb-12 sm:mb-16 lg:mb-24">
-            <div className="inline-flex items-center px-3 xs:px-4 py-1.5 xs:py-2 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-full mb-4 xs:mb-6 border border-blue-500/30">
-              <Zap className="w-3 h-3 xs:w-4 xs:h-4 mr-1.5 xs:mr-2 text-blue-400" />
-              <span className="text-xs xs:text-sm font-semibold text-blue-300">Simple 4-Step Process</span>
-            </div>
-            <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 xs:mb-6 bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent">
-              How Schedley Transforms Your Business
-            </h2>
-            <p className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl text-gray-400 max-w-4xl mx-auto">
-              Unlike traditional scheduling tools, we combine <strong className="text-white">AI technology</strong> with 
-              <strong className="text-purple-300"> human expertise</strong> to deliver qualified clients, not just organized calendars.
-            </p>
-          </div>
+          <SectionReveal effect={sectionEffectForIndex(2)}>
+          <SectionHeader
+            eyebrow="Simple 4-Step Process"
+            titleBefore="How Schedley "
+            titleAccent="Transforms Your Business"
+            subtitle="Unlike traditional scheduling tools, we combine AI technology with human expertise to deliver qualified clients, not just organized calendars."
+            className="mb-10 sm:mb-14 lg:mb-20"
+          />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 xs:gap-6 sm:gap-8">
-            {howItWorks.map((step, index) => (
-              <div key={index} className="relative">
-                {/* Connection Line - Hidden on mobile */}
-                {index < howItWorks.length - 1 && (
-                  <div className="hidden xl:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 z-10"></div>
-                )}
-                
-                <div className="bg-gradient-to-br from-white/10 via-white/5 to-transparent backdrop-blur-xl rounded-xl xs:rounded-2xl sm:rounded-3xl p-4 xs:p-6 sm:p-8 border border-white/20 hover:border-purple-500/50 transition-all duration-300 hover:scale-105 text-center relative overflow-hidden">
-                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-500"></div>
-                  
-                  <div className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 xs:mb-6 text-lg xs:text-xl sm:text-2xl font-black">
-                    {step.step}
+          <div className="relative">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 sm:gap-8">
+              {howItWorks.map((step, index) => (
+                <div key={index} className="relative z-10">
+                  <div className="group h-full rounded-[var(--r-xl)] p-5 sm:p-6 lg:p-8 border-2 border-[var(--line)] bg-[var(--surface)] hover:border-[var(--blue)]/50 hover:shadow-[var(--sh-md)] transition-all text-center relative overflow-hidden">
+                    {/* Top accent bar */}
+                    <div className="absolute top-0 left-0 right-0 h-1.5 rounded-t-[var(--r-xl)] bg-[var(--blue)]" />
+                    {/* Step number – large and bold */}
+                    {/* <div className="flex items-center justify-center gap-3 mb-4 sm:mb-5">
+                      <span className="flex h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-[var(--blue)] text-white items-center justify-center text-xl sm:text-2xl font-black shadow-[var(--sh-blue)] group-hover:scale-105 transition-transform">
+                        {step.step}
+                      </span>
+                    </div> */}
+                    {/* Icon – larger, in rounded container */}
+                    <div className="flex justify-center mb-4 sm:mb-5">
+                      <span className="flex h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center group-hover:bg-[var(--blue)]/10 transition-colors">
+                        {step.icon}
+                      </span>
+                    </div>
+                    <h3 className="font-urbanist text-lg sm:text-xl font-bold mb-3 text-[var(--ink)]">{step.title}</h3>
+                    <p className="font-urbanist text-sm sm:text-base text-[var(--ink-muted)] leading-relaxed">{step.description}</p>
                   </div>
-                  
-                  <div className="text-purple-400 mb-3 xs:mb-4 flex justify-center">
-                    {step.icon}
-                  </div>
-                  
-                  <h3 className="text-base xs:text-lg sm:text-xl font-bold mb-3 xs:mb-4 text-white">{step.title}</h3>
-                  <p className="text-xs xs:text-sm sm:text-base text-gray-400 leading-relaxed">{step.description}</p>
+                  {/* Connector between steps on xl */}
+                  {index < howItWorks.length - 1 && (
+                    <div className="hidden xl:flex absolute top-1/2 -right-5 -translate-y-1/2 z-20">
+                      <ArrowRight className="w-6 h-6 text-[var(--blue)]/40" />
+                    </div>
+                  )}
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
+          </SectionReveal>
         </div>
       </section>
+      <SectionDivider />
 
-      {/* Enhanced Features Section - Ultra Responsive */}
-      <section id="features" className="py-12 xs:py-16 sm:py-20 lg:py-32 px-2 xs:px-4 sm:px-6 relative">
+      {/* Enhanced Features Section – improved cards + larger icons & text */}
+      <section id="features" className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 bg-[var(--surface)]">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-8 xs:mb-12 sm:mb-16 lg:mb-24">
-            <div className="inline-flex items-center px-3 xs:px-4 py-1.5 xs:py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full mb-4 xs:mb-6 border border-purple-500/30">
-              <Award className="w-3 h-3 xs:w-4 xs:h-4 mr-1.5 xs:mr-2 text-purple-400" />
-              <span className="text-xs xs:text-sm font-semibold text-purple-300">What Makes Us Different</span>
-            </div>
-            <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 xs:mb-6 bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent">
-              Beyond Traditional Scheduling
-            </h2>
-            <p className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl text-gray-400 max-w-4xl mx-auto">
-              We're not just another calendar tool. We're a complete <strong className="text-white">client acquisition system</strong> 
-              that combines cutting-edge AI with dedicated human support to guarantee your success.
-            </p>
-          </div>
+          <SectionReveal effect={sectionEffectForIndex(3)}>
+          <SectionHeader
+            eyebrow="What Makes Us Different"
+            titleBefore="Beyond Traditional "
+            titleAccent="Scheduling"
+            subtitle="We're not just another calendar tool. We're a complete client acquisition system that combines cutting-edge AI with dedicated human support to guarantee your success."
+            className="mb-10 sm:mb-14 lg:mb-20"
+          />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 xs:gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
             {features.map((feature, index) => (
               <div
                 key={index}
-                className={`group relative bg-gradient-to-br from-white/10 via-white/5 to-transparent backdrop-blur-xl rounded-xl xs:rounded-2xl sm:rounded-3xl p-4 xs:p-6 sm:p-8 border border-white/20 hover:border-purple-500/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl cursor-pointer overflow-hidden ${activeFeature === index ? 'border-purple-500/50 scale-105 shadow-2xl' : ''}`}
+                className={`group relative rounded-[var(--r-xl)] p-5 sm:p-6 lg:p-8 border-2 bg-[var(--white)] cursor-pointer overflow-hidden transition-all ${activeFeature === index ? 'border-[var(--blue)] shadow-[var(--sh-md)]' : 'border-[var(--line)] hover:border-[var(--blue)]/50 hover:shadow-[var(--sh-md)]'}`}
                 onMouseEnter={() => setActiveFeature(index)}
                 onClick={() => setActiveFeature(index)}
               >
-                <div className="absolute top-0 right-0 w-12 h-12 xs:w-16 xs:h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-full blur-xl"></div>
-                
-                {/* Feature Badge */}
-                <div className="absolute top-3 xs:top-4 right-3 xs:right-4">
-                  <span className="text-xs font-bold text-emerald-400 bg-emerald-500/20 px-1.5 xs:px-2 py-0.5 xs:py-1 rounded-full border border-emerald-500/30">
+                <div className="absolute top-0 left-0 right-0 h-1.5 rounded-t-[var(--r-xl)] bg-[var(--blue)]" />
+                <div className="absolute top-4 right-4 flex items-center gap-2">
+                  <span className="text-xs font-bold text-[var(--wa)] bg-[var(--wa-ghost)] px-2.5 py-1 rounded-full border border-[var(--wa)]/30">
                     {feature.badge}
                   </span>
+                  <span className="text-xs font-bold text-[var(--blue)] bg-[var(--blue-ghost)] px-2.5 py-1 rounded-full">
+                    {feature.highlight}
+                  </span>
                 </div>
-                
-                <div className="relative z-10">
-                  <div className="flex items-center justify-between mb-4 xs:mb-6">
-                    <div className="text-purple-400 group-hover:text-purple-300 transition-colors duration-300 transform group-hover:scale-110">
-                      {feature.icon}
-                    </div>
-                    <div className="text-xs font-bold text-purple-400 bg-purple-500/20 px-2 xs:px-3 py-0.5 xs:py-1 rounded-full">
-                      {feature.highlight}
-                    </div>
-                  </div>
-                  
-                  <h3 className="text-base xs:text-lg sm:text-xl font-bold mb-3 xs:mb-4 text-white group-hover:text-purple-200 transition-colors duration-300">
+                <div className="relative z-10 pt-2">
+                  <span className="inline-flex h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center mb-4 sm:mb-5 group-hover:scale-105 transition-all">
+                    {feature.icon}
+                  </span>
+                  <h3 className="font-urbanist text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-[var(--ink)] group-hover:text-[var(--blue)] transition-colors pr-24">
                     {feature.title}
                   </h3>
-                  
-                  <p className="text-xs xs:text-sm sm:text-base text-gray-400 group-hover:text-gray-300 transition-colors duration-300 leading-relaxed">
+                  <p className="font-urbanist text-sm sm:text-base text-[var(--ink-muted)] leading-relaxed">
                     {feature.description}
                   </p>
-                  
-                  <div className="mt-4 xs:mt-6 flex items-center text-purple-400 group-hover:text-purple-300 font-semibold text-xs xs:text-sm">
-                    Learn More 
-                    <ArrowRight className="ml-2 w-3 h-3 xs:w-4 xs:h-4 group-hover:translate-x-1 transition-transform" />
+                  <div className="mt-5 sm:mt-6 flex items-center text-[var(--blue)] font-semibold text-sm sm:text-base">
+                    Learn More
+                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </div>
               </div>
             ))}
           </div>
+          </SectionReveal>
         </div>
       </section>
 
-      {/* Guarantee Section - Ultra Responsive */}
-      <section id="guarantee" className="py-12 xs:py-16 sm:py-20 lg:py-32 px-2 xs:px-4 sm:px-6 relative">
-        <div className="max-w-7xl mx-auto">
-          <div className="bg-gradient-to-br from-emerald-500/20 via-green-500/15 to-emerald-500/20 backdrop-blur-2xl rounded-xl xs:rounded-2xl sm:rounded-3xl p-6 xs:p-8 sm:p-12 lg:p-20 border border-emerald-500/30 shadow-2xl text-center">
-            <div className="inline-flex items-center px-4 xs:px-6 py-2 xs:py-3 bg-gradient-to-r from-emerald-400/20 to-green-400/20 rounded-full mb-4 xs:mb-6 sm:mb-8 border border-emerald-400/40">
-              <Shield className="w-3 h-3 xs:w-4 xs:h-4 sm:w-5 sm:h-5 mr-2 xs:mr-3 text-emerald-400" />
-              <span className="text-xs xs:text-sm font-bold text-emerald-300">ZERO-RISK GUARANTEE</span>
+      {/* Guarantee – elevated UI, same copy */}
+      <section
+        id="guarantee"
+        className="relative py-16 sm:py-20 lg:py-24 px-4 sm:px-6 bg-[var(--ink)] overflow-hidden"
+      >
+        {/* ambient */}
+        <div
+          className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[min(90vw,720px)] h-[320px] rounded-full bg-[var(--blue)]/15 blur-3xl"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute bottom-0 right-0 w-1/2 max-w-md h-64 bg-[var(--blue)]/5 rounded-full blur-3xl"
+          aria-hidden
+        />
+
+        <div className="relative max-w-3xl mx-auto text-center">
+          <SectionReveal effect="zoom-in" className="px-6 py-10 sm:px-10 sm:py-12">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full mb-8 border border-[var(--blue)]/40 bg-[var(--blue)]/10 shadow-[0_0_20px_-5px_rgba(59,130,246,0.4)]">
+              <Shield className="w-5 h-5 text-[var(--blue)] shrink-0" strokeWidth={2} />
+              <span className="text-xs sm:text-sm font-bold text-white uppercase tracking-[0.2em]">
+                Zero-Risk Guarantee
+              </span>
             </div>
-            
-            <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 xs:mb-6 sm:mb-8 bg-gradient-to-r from-white to-emerald-200 bg-clip-text text-transparent">
-              Get Your First High-Ticket Client in 7 Days
+
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.5rem] font-black mb-3 sm:mb-4 text-white leading-tight tracking-tight">
+              Get your first{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--blue)] to-sky-400">
+                high-ticket client booked in 7 days
+              </span>
             </h2>
-            
-            <p className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold text-emerald-300 mb-4 xs:mb-6 sm:mb-8">
+            <p className="text-lg sm:text-xl md:text-2xl font-semibold text-[var(--blue)] mb-6 sm:mb-8">
               Or Pay Nothing. Guaranteed.
             </p>
-            
-            <p className="text-sm xs:text-base sm:text-lg md:text-xl text-gray-300 mb-8 xs:mb-10 sm:mb-12 max-w-4xl mx-auto leading-relaxed">
-              We're so confident in our system that we offer the strongest guarantee in the market. 
-              If Schedley doesn't bring you a qualified client booking in your first 7 days, 
-              we provide a <strong className="text-white">100% refund with no questions asked</strong>.
+            <p className="text-base sm:text-lg text-white/85 mb-10 sm:mb-12 max-w-2xl mx-auto leading-relaxed">
+              AI + human expertise eliminate spam and deliver{" "}
+              <strong className="text-white font-semibold">revenue-ready prospects</strong> directly to your
+              calendar. If we don&apos;t bring you a qualified client booking in 7 days, we provide a{" "}
+              <strong className="text-white font-semibold">100% refund with no questions asked</strong>.
             </p>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 xs:gap-6 sm:gap-8 mb-8 xs:mb-10 sm:mb-12">
-              <div className="bg-white/10 rounded-xl xs:rounded-2xl p-4 xs:p-6 border border-white/20">
-                <CheckCircle className="w-8 h-8 xs:w-10 xs:h-10 sm:w-12 sm:h-12 text-emerald-400 mx-auto mb-3 xs:mb-4" />
-                <h3 className="text-sm xs:text-base sm:text-lg font-bold text-white mb-2">No Questions Asked</h3>
-                <p className="text-xs xs:text-sm text-gray-300">Simple refund process within 7 days</p>
-              </div>
-              <div className="bg-white/10 rounded-xl xs:rounded-2xl p-4 xs:p-6 border border-white/20">
-                <RefreshCw className="w-8 h-8 xs:w-10 xs:h-10 sm:w-12 sm:h-12 text-emerald-400 mx-auto mb-3 xs:mb-4" />
-                <h3 className="text-sm xs:text-base sm:text-lg font-bold text-white mb-2">Quick Processing</h3>
-                <p className="text-xs xs:text-sm text-gray-300">Refunds processed within 7-10 business days</p>
-              </div>
-              <div className="bg-white/10 rounded-xl xs:rounded-2xl p-4 xs:p-6 border border-white/20">
-                <Lock className="w-8 h-8 xs:w-10 xs:h-10 sm:w-12 sm:h-12 text-emerald-400 mx-auto mb-3 xs:mb-4" />
-                <h3 className="text-sm xs:text-base sm:text-lg font-bold text-white mb-2">100% Secure</h3>
-                <p className="text-xs xs:text-sm text-gray-300">No hidden clauses or fine print</p>
-              </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 mb-10 sm:mb-12">
+              {[
+                { icon: <CheckCircle className="w-7 h-7 sm:w-8 sm:h-8" strokeWidth={2} />, title: "No Questions Asked", desc: "Simple refund process within 7 days" },
+                { icon: <RefreshCw className="w-7 h-7 sm:w-8 sm:h-8" strokeWidth={2} />, title: "Quick Processing", desc: "Refunds processed within 7-10 business days" },
+                { icon: <Lock className="w-7 h-7 sm:w-8 sm:h-8" strokeWidth={2} />, title: "100% Secure", desc: "No hidden clauses or fine print" },
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  className="rounded-2xl border border-white/10 bg-white/[0.06] p-5 sm:p-6 flex flex-col items-center text-center hover:border-[var(--blue)]/35 hover:bg-white/[0.08] transition-all duration-300"
+                >
+                  <span className="flex h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-white/10 text-[var(--blue)] items-center justify-center mb-4 ring-1 ring-[var(--blue)]/30 shadow-inner">
+                    {item.icon}
+                  </span>
+                  <h3 className="text-sm sm:text-base font-bold text-white mb-2">{item.title}</h3>
+                  <p className="text-xs sm:text-sm text-white/65 leading-snug">{item.desc}</p>
+                </div>
+              ))}
             </div>
-            
-            <div className="flex flex-col sm:flex-row gap-3 xs:gap-4 justify-center items-center">
-              <button className="group bg-gradient-to-r from-emerald-600 via-emerald-500 to-green-500 px-6 xs:px-8 sm:px-12 py-3 xs:py-4 sm:py-5 rounded-full text-base xs:text-lg sm:text-xl font-black hover:from-emerald-700 hover:to-green-600 transition-all duration-300 transform hover:scale-110 hover:shadow-2xl flex items-center shadow-emerald-500/25 shadow-2xl w-full sm:w-auto justify-center" onClick={() => navigate(AUTH_ROUTES.SIGN_IN)}>
-                <DollarSign className="mr-2 xs:mr-3 w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6" />
-                <span className="xs:hidden">Claim Guarantee</span>
-                <span className="hidden xs:inline">Claim Your Guarantee Now</span>
-                <ArrowRight className="ml-2 xs:ml-3 w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform" />
-              </button>
-              
-              <button 
-                onClick={handleBookDemo}
-                className="group bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 px-4 xs:px-6 sm:px-8 py-3 xs:py-4 sm:py-5 rounded-full text-base xs:text-lg font-bold transition-all duration-300 transform hover:scale-110 hover:shadow-2xl flex items-center shadow-blue-500/25 shadow-2xl w-full sm:w-auto justify-center"
-              >
-                <Play className="mr-2 xs:mr-3 w-4 h-4 xs:w-5 xs:h-5" />
-                <span className="xs:hidden">Demo</span>
-                <span className="hidden xs:inline">See How It Works</span>
-                <ExternalLink className="ml-2 xs:ml-3 w-3 h-3 xs:w-4 xs:h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </div>
-          </div>
+
+            <button
+              type="button"
+              onClick={handleBookDemo}
+              className="group inline-flex items-center justify-center gap-3 px-8 sm:px-10 py-4 rounded-xl text-base sm:text-lg font-bold text-white bg-gradient-to-b from-[var(--blue)] to-[var(--blue-dark)] hover:brightness-110 border border-white/10 shadow-[0_8px_32px_-8px_rgba(59,130,246,0.55)] hover:shadow-[0_12px_40px_-8px_rgba(59,130,246,0.65)] transition-all w-full sm:w-auto active:scale-[0.98]"
+            >
+              <Play className="w-5 h-5 sm:w-6 sm:h-6 fill-current" />
+              <span className="sm:hidden">Demo</span>
+              <span className="hidden sm:inline">Watch Demo</span>
+              <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5 opacity-90 group-hover:translate-x-0.5 transition-transform" />
+            </button>
+          </SectionReveal>
         </div>
       </section>
 
-      {/* Benefits Section - Ultra Responsive */}
-      <section className="py-12 xs:py-16 sm:py-20 lg:py-32 px-2 xs:px-4 sm:px-6 relative">
+      {/* Benefits + Client Success Dashboard – light theme, improved visuals */}
+      <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 bg-[var(--white)]">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 xs:gap-12 lg:gap-20 items-center">
-            <div className="order-2 lg:order-1">
-              <div className="inline-flex items-center px-3 xs:px-4 py-1.5 xs:py-2 bg-gradient-to-r from-emerald-500/20 to-green-500/20 rounded-full mb-4 xs:mb-6 border border-emerald-500/30">
-                <TrendingUp className="w-3 h-3 xs:w-4 xs:h-4 mr-1.5 xs:mr-2 text-emerald-400" />
-                <span className="text-xs xs:text-sm font-semibold text-emerald-300">Proven Results</span>
-              </div>
-              
-              <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 xs:mb-6 sm:mb-8 bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent">
-                More Than Just a Scheduling Tool
-              </h2>
-              
-              <p className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl text-gray-400 mb-8 xs:mb-10 sm:mb-12 leading-relaxed">
-                Experience the power of <strong className="text-white">intelligent client acquisition</strong>. 
-                We eliminate the guesswork and deliver <strong className="text-emerald-300">qualified prospects</strong> 
-                ready to do business with you.
-              </p>
-              
-              <div className="space-y-4 xs:space-y-6">
+          <SectionReveal effect="slide-right">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+            <div>
+              <SectionHeader
+                eyebrow="Proven Results"
+                titleBefore="More Than Just a "
+                titleAccent="Scheduling Tool"
+                subtitle="Experience the power of intelligent client acquisition. We eliminate the guesswork and deliver qualified prospects ready to do business with you."
+                className="mb-8 text-left max-w-none"
+              />
+              <ul className="space-y-4 sm:space-y-5">
                 {benefits.map((benefit, index) => (
-                  <div
-                    key={index}
-                    className="flex items-start space-x-3 xs:space-x-4 group hover:translate-x-3 transition-all duration-300 bg-gradient-to-r from-transparent hover:from-white/5 hover:to-transparent rounded-xl p-2 xs:p-3 -ml-2 xs:-ml-3"
-                  >
-                    <div className="w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 xs:mt-1 shadow-lg transform group-hover:scale-110 transition-transform duration-300">
+                  <li key={index} className="flex items-start gap-4 group">
+                    <span className="flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 rounded-xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center group-hover:scale-105 transition-transform">
                       {benefit.icon}
-                    </div>
-                    <span className="text-sm xs:text-base sm:text-lg text-gray-300 group-hover:text-white transition-colors duration-300 font-medium">
+                    </span>
+                    <span className="text-base sm:text-lg text-[var(--ink)] font-medium pt-1.5">
                       {benefit.text}
                     </span>
-                  </div>
+                  </li>
                 ))}
-              </div>
-              
-              <div className="mt-8 xs:mt-10 sm:mt-12 p-4 xs:p-6 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl xs:rounded-2xl border border-purple-500/20">
-                <div className="flex items-center mb-3 xs:mb-4">
-                  <Users className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6 text-purple-400 mr-2 xs:mr-3" />
-                  <span className="text-base xs:text-lg font-bold text-white">Dedicated Human Support</span>
+              </ul>
+            </div>
+
+            <div className="flex flex-col gap-6 sm:gap-8">
+              <div className="rounded-[var(--r-xl)] p-5 sm:p-6 lg:p-8 border-2 border-[var(--line)] bg-[var(--surface)] shadow-[var(--sh-md)]">
+                <h3 className="text-lg sm:text-xl font-bold text-[var(--ink)] mb-6 text-center">Client Success Dashboard</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-4 rounded-[var(--r-m)] border-2 border-[var(--blue)]/20 bg-white">
+                    <div className="flex items-center gap-3">
+                      <span className="flex h-11 w-11 rounded-xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center">
+                        <Shield className="w-6 h-6" strokeWidth={2} />
+                      </span>
+                      <span className="font-bold text-[var(--ink)] text-sm sm:text-base">Spam Eliminated</span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-xl sm:text-2xl font-black text-[var(--blue)]">100%</span>
+                      <div className="text-xs sm:text-sm text-[var(--ink-muted)]">Zero fake bookings</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between p-4 rounded-[var(--r-m)] border-2 border-[var(--blue)]/20 bg-white">
+                    <div className="flex items-center gap-3">
+                      <span className="flex h-11 w-11 rounded-xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center">
+                        <UserCheck className="w-6 h-6" strokeWidth={2} />
+                      </span>
+                      <span className="font-bold text-[var(--ink)] text-sm sm:text-base">Lead Quality</span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-xl sm:text-2xl font-black text-[var(--blue)]">98.5%</span>
+                      <div className="text-xs sm:text-sm text-[var(--ink-muted)]">Verified prospects</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between p-4 rounded-[var(--r-m)] border-2 border-[var(--blue)]/20 bg-white">
+                    <div className="flex items-center gap-3">
+                      <span className="flex h-11 w-11 rounded-xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center">
+                        <DollarSign className="w-6 h-6" strokeWidth={2} />
+                      </span>
+                      <span className="font-bold text-[var(--ink)] text-sm sm:text-base">Success Rate</span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-xl sm:text-2xl font-black text-[var(--blue)]">94.2%</span>
+                      <div className="text-xs sm:text-sm text-[var(--ink-muted)]">7-day guarantee met</div>
+                    </div>
+                  </div>
+                  <div className="p-4 rounded-[var(--r-m)] border-2 border-[var(--blue)]/20 bg-white">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-bold text-[var(--ink)] text-sm sm:text-base">Client Satisfaction</span>
+                      <span className="text-xl sm:text-2xl font-black text-[var(--blue)]">4.9/5</span>
+                    </div>
+                    <div className="flex gap-0.5 mb-2">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--amber)] fill-current" />
+                      ))}
+                    </div>
+                    <p className="text-sm text-[var(--ink-muted)]">"Finally found clients, not just appointments"</p>
+                  </div>
                 </div>
-                <p className="text-xs xs:text-sm sm:text-base text-gray-300 leading-relaxed">
-                  Unlike pure software solutions, each client gets a dedicated account manager who works 
-                  alongside your team to optimize results and ensure your success.
+              </div>
+              <div className="p-5 sm:p-6 rounded-[var(--r-l)] border-2 border-[var(--blue)]/20 bg-[var(--blue-lite)]/30">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="flex h-10 w-10 rounded-xl bg-[var(--blue)] text-white items-center justify-center">
+                    <Users className="w-5 h-5" strokeWidth={2} />
+                  </span>
+                  <span className="text-lg font-bold text-[var(--ink)]">Dedicated Human Support</span>
+                </div>
+                <p className="text-sm sm:text-base text-[var(--ink-muted)] leading-relaxed">
+                  Unlike pure software solutions, each client gets a dedicated account manager who works alongside your team to optimize results and ensure your success.
                 </p>
               </div>
             </div>
-            
-            <div className="relative order-1 lg:order-2">
-              <div className="bg-gradient-to-br from-white/15 via-white/10 to-white/5 backdrop-blur-2xl rounded-xl xs:rounded-2xl sm:rounded-3xl p-4 xs:p-6 sm:p-8 border border-white/30 shadow-2xl">
-                <h3 className="text-base xs:text-lg sm:text-xl font-bold text-white mb-4 xs:mb-6 text-center">Client Success Dashboard</h3>
-                <div className="space-y-4 xs:space-y-6">
-                  <div className="flex items-center justify-between p-3 xs:p-4 bg-gradient-to-r from-red-500/20 to-pink-500/20 rounded-xl xs:rounded-2xl border border-red-500/30">
-                    <div className="flex items-center space-x-2 xs:space-x-3">
-                      <Shield className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6 text-red-400" />
-                      <span className="font-bold text-white text-sm xs:text-base">Spam Eliminated</span>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-lg xs:text-xl sm:text-2xl font-black text-red-400">100%</span>
-                      <div className="text-xs text-red-300">Zero fake bookings</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between p-3 xs:p-4 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-xl xs:rounded-2xl border border-blue-500/30">
-                    <div className="flex items-center space-x-2 xs:space-x-3">
-                      <UserCheck className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6 text-blue-400" />
-                      <span className="font-bold text-white text-sm xs:text-base">Lead Quality</span>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-lg xs:text-xl sm:text-2xl font-black text-blue-400">98.5%</span>
-                      <div className="text-xs text-blue-300">Verified prospects</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between p-3 xs:p-4 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-xl xs:rounded-2xl border border-green-500/30">
-                    <div className="flex items-center space-x-2 xs:space-x-3">
-                      <DollarSign className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6 text-green-400" />
-                      <span className="font-bold text-white text-sm xs:text-base">Success Rate</span>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-lg xs:text-xl sm:text-2xl font-black text-green-400">94.2%</span>
-                      <div className="text-xs text-green-300">7-day guarantee met</div>
-                    </div>
-                  </div>
-                  
-                  <div className="p-3 xs:p-4 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-xl xs:rounded-2xl border border-purple-500/30">
-                    <div className="flex items-center justify-between mb-2 xs:mb-3">
-                      <span className="font-bold text-white text-sm xs:text-base">Client Satisfaction</span>
-                      <span className="text-lg xs:text-xl sm:text-2xl font-black text-purple-400">4.9/5</span>
-                    </div>
-                    <div className="flex space-x-1 mb-2">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-3 h-3 xs:w-4 xs:h-4 text-yellow-400 fill-current" />
-                      ))}
-                    </div>
-                    <p className="text-xs xs:text-sm text-gray-300">"Finally found clients, not just appointments"</p>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
+          </SectionReveal>
         </div>
       </section>
+      <SectionDivider />
 
-      {/* Use Cases Section - Ultra Responsive */}
-      <section className="py-8 xs:py-12 sm:py-16 lg:py-24 px-2 xs:px-4 sm:px-6 relative">
+      {/* Use Cases – light theme, larger icons & text */}
+      <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 bg-[var(--surface)]">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-8 xs:mb-12 sm:mb-16">
-            <h2 className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 xs:mb-6 bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
-              Perfect For Revenue-Focused Professionals
-            </h2>
-            <p className="text-sm xs:text-base sm:text-lg lg:text-xl text-gray-400 max-w-3xl mx-auto">
-              Join industry leaders.. who transformed their business with guaranteed client acquisition
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 xs:gap-6">
+          <SectionReveal effect="slide-left">
+          <SectionHeader
+            eyebrow="Who it's for"
+            titleBefore="Perfect For "
+            titleAccent="Revenue-Focused Professionals"
+            subtitle="Join industry leaders who transformed their business with guaranteed client acquisition."
+            className="mb-10 sm:mb-14"
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 sm:gap-6">
             {useCases.map((useCase, index) => (
-              <div key={index} className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-xl xs:rounded-2xl p-4 xs:p-6 border border-white/20 hover:border-purple-500/50 transition-all duration-300 hover:scale-105 text-center">
-                <div className="text-purple-400 mb-3 xs:mb-4 flex justify-center">
+              <div
+                key={index}
+                className="group text-center p-5 sm:p-6 rounded-[var(--r-xl)] border-2 border-[var(--line)] bg-[var(--white)] hover:border-[var(--blue)]/40 hover:shadow-[var(--sh-md)] transition-all"
+              >
+                <span className="inline-flex h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center mb-4 group-hover:scale-105 transition-transform">
                   {useCase.icon}
-                </div>
-                <h3 className="text-base xs:text-lg font-bold mb-2 xs:mb-3 text-white">{useCase.title}</h3>
-                <p className="text-gray-400 text-xs xs:text-sm">{useCase.description}</p>
+                </span>
+                <h3 className="text-lg sm:text-xl font-bold mb-2 text-[var(--ink)]">{useCase.title}</h3>
+                <p className="text-sm sm:text-base text-[var(--ink-muted)] leading-relaxed">{useCase.description}</p>
               </div>
             ))}
           </div>
+          </SectionReveal>
         </div>
       </section>
+      <SectionDivider />
 
-      {/* Testimonials Section - Ultra Responsive */}
-      <section className="py-8 xs:py-12 sm:py-16 lg:py-24 px-2 xs:px-4 sm:px-6 relative">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-8 xs:mb-12 sm:mb-16">
-            <h2 className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 xs:mb-6 bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
-              Real Results from Real Clients
-            </h2>
-            <p className="text-sm xs:text-base sm:text-lg text-gray-400">Success stories from professionals who got their guarantee fulfilled</p>
-          </div>
-
-          <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-xl xs:rounded-2xl sm:rounded-3xl p-4 xs:p-6 sm:p-8 border border-white/20">
+      {/* Testimonials – light theme, larger quote & clearer hierarchy */}
+      <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 bg-[var(--white)]">
+        <div className="max-w-4xl mx-auto">
+          <SectionReveal effect="tilt-up">
+          <SectionHeader
+            eyebrow="Testimonials"
+            titleBefore="Real Results from "
+            titleAccent="Real Clients"
+            subtitle="Success stories from professionals who got their guarantee fulfilled."
+            className="mb-10 sm:mb-12"
+          />
+          <div className="rounded-[var(--r-xl)] p-6 sm:p-8 lg:p-10 border-2 border-[var(--line)] bg-[var(--surface)] shadow-[var(--sh-sm)]">
             <div className="text-center">
-              <div className="flex justify-center mb-3 xs:mb-4">
+              {/* Client image */}
+              <div className="flex justify-center mb-5">
+                <img
+                  src={testimonials[currentTestimonial].image}
+                  alt={testimonials[currentTestimonial].name}
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover ring-2 ring-[var(--blue)]/20"
+                />
+              </div>
+              <div className="flex justify-center gap-0.5 mb-5">
                 {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6 text-yellow-400 fill-current" />
+                  <Star key={i} className="w-6 h-6 sm:w-7 sm:h-7 text-[var(--amber)] fill-current" />
                 ))}
               </div>
-              
-              <blockquote className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-4 xs:mb-6 sm:mb-8 italic leading-relaxed">
+              <blockquote className="text-lg sm:text-xl lg:text-2xl text-[var(--ink)] mb-6 sm:mb-8 italic leading-relaxed font-medium">
                 "{testimonials[currentTestimonial].content}"
               </blockquote>
-              
-              <div className="mb-4 xs:mb-6">
-                <div className="font-bold text-white text-base xs:text-lg">{testimonials[currentTestimonial].name}</div>
-                <div className="text-purple-300 text-sm xs:text-base">{testimonials[currentTestimonial].role}</div>
-                <div className="text-gray-400 text-xs xs:text-sm">{testimonials[currentTestimonial].company}</div>
-                <div className="text-emerald-400 font-bold text-xs xs:text-sm mt-2 bg-emerald-500/20 px-2 xs:px-3 py-0.5 xs:py-1 rounded-full inline-block">
-                  ✅ {testimonials[currentTestimonial].result}
+              <div className="mb-5">
+                <div className="font-bold text-[var(--ink)] text-base sm:text-lg">{testimonials[currentTestimonial].name}</div>
+                <div className="text-[var(--blue)] text-sm sm:text-base font-medium">{testimonials[currentTestimonial].role}</div>
+                <div className="text-[var(--ink-muted)] text-sm">{testimonials[currentTestimonial].company}</div>
+                <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--wa-lite)] text-[var(--wa-dark)] font-bold text-sm sm:text-base">
+                  <CheckCircle className="w-4 h-4" />
+                  {testimonials[currentTestimonial].result}
                 </div>
               </div>
-              
-              <div className="flex justify-center space-x-2">
+              <div className="flex justify-center gap-2">
                 {testimonials.map((_, index) => (
                   <button
                     key={index}
+                    type="button"
                     onClick={() => setCurrentTestimonial(index)}
-                    className={`w-2 h-2 xs:w-3 xs:h-3 rounded-full transition-all duration-300 ${
-                      index === currentTestimonial ? 'bg-purple-500' : 'bg-gray-600'
+                    className={`h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full transition-all ${
+                      index === currentTestimonial ? 'bg-[var(--blue)] scale-125' : 'bg-[var(--line-strong)] hover:bg-[var(--blue)]/50'
                     }`}
+                    aria-label={`Go to testimonial ${index + 1}`}
                   />
                 ))}
               </div>
             </div>
           </div>
+          </SectionReveal>
         </div>
       </section>
-
       {/* Enhanced Floating Chat Button - Ultra Responsive */}
-      {!isChatOpen && (
+      {/* {!isChatOpen && (
         <button
           onClick={() => setIsChatOpen(true)}
           className="fixed bottom-3 xs:bottom-4 sm:bottom-6 right-3 xs:right-4 sm:right-6 z-50 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-full p-3 xs:p-4 shadow-2xl transform hover:scale-110 transition-all duration-300 animate-pulse hover:animate-none"
         >
           <MessageCircle className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6 text-white" />
         </button>
-      )}
+      )} */}
 
       {/* Enhanced Chat Interface - Ultra Responsive */}
       {isChatOpen && (
@@ -1137,130 +1103,7 @@ any question asked which is not in our context directely tell that i am not auth
         </div>
       )}
 
-       {/* Footer - Ultra Responsive */}
-       <footer className="py-8 xs:py-12 sm:py-16 px-2 xs:px-4 sm:px-6 border-t border-white/10 bg-gradient-to-r from-slate-900/50 to-purple-900/50">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 xs:gap-8 mb-8 xs:mb-12">
-            {/* Brand Section */}
-            <div className="sm:col-span-2">
-              <div className="flex items-center space-x-3 xs:space-x-4 mb-4 xs:mb-6">
-                <div className="w-10 h-10 xs:w-12 xs:h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden flex items-center justify-center bg-white shadow-2xl">
-                  <img
-                    src={mylogo}
-                    alt="Schedley - Intelligent Scheduling & Client Acquisition Platform"
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <span className="text-xl xs:text-2xl sm:text-3xl font-bold bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
-                  Schedley
-                </span>
-              </div>
-              <p className="text-gray-400 leading-relaxed mb-4 xs:mb-6 max-w-md text-xs xs:text-sm">
-                The world's first intelligent scheduling and client acquisition platform. 
-                AI-powered spam protection plus human-driven lead generation with guaranteed results.
-              </p>
-              <div className="flex space-x-3 xs:space-x-4">
-                <a 
-                  href="https://www.linkedin.com/company/schedley-com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="w-8 h-8 xs:w-10 xs:h-10 sm:w-12 sm:h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
-                >
-                  <Linkedin className="w-3 h-3 xs:w-4 xs:h-4 sm:w-5 sm:h-5" />
-                </a>
-              </div>
-            </div>
-            
-            {/* Platform Links */}
-            <div>
-              <h3 className="font-bold text-white mb-3 xs:mb-4 text-sm xs:text-base">Platform</h3>
-              <div className="space-y-2 xs:space-y-3">
-                <button 
-                  onClick={() => navigate('/carrer')} 
-                  className="block text-gray-400 hover:text-white transition-colors duration-300 py-1 xs:py-2 text-left text-xs xs:text-sm"
-                >
-                  Careers
-                </button>
-                <a href="#features" className="block text-gray-400 hover:text-white transition-colors duration-300 py-1 xs:py-2 text-xs xs:text-sm">Features</a>
-                <a href="#how-it-works" className="block text-gray-400 hover:text-white transition-colors duration-300 py-1 xs:py-2 text-xs xs:text-sm">How It Works</a>
-                <a href="#guarantee" className="block text-gray-400 hover:text-white transition-colors duration-300 py-1 xs:py-2 text-xs xs:text-sm">Guarantee</a>
-                <button onClick={handleBookDemo} className="block text-gray-400 hover:text-white transition-colors duration-300 text-left flex items-center py-1 xs:py-2 text-xs xs:text-sm">
-                  Book Demo <ExternalLink className="w-2 h-2 xs:w-3 xs:h-3 ml-1" />
-                </button>
-                <button onClick={handleSetupAI} className="block text-gray-400 hover:text-white transition-colors duration-300 text-left py-1 xs:py-2 text-xs xs:text-sm">Set Up AI</button>
-              </div>
-            </div>
-            
-            {/* Legal */}
-            <div>
-              <h3 className="font-bold text-white mb-3 xs:mb-4 text-sm xs:text-base">Legal</h3>
-              <div className="space-y-2 xs:space-y-3">
-                <button onClick={() => navigate('/privacy')} className="block text-gray-400 hover:text-white transition-colors duration-300 text-left py-1 xs:py-2 text-xs xs:text-sm">Privacy Policy</button>
-                <button onClick={() => navigate('/terms')} className="block text-gray-400 hover:text-white transition-colors duration-300 text-left py-1 xs:py-2 text-xs xs:text-sm">Terms of Service</button>
-                <a href="mailto:notifications@schedley.com" className="block text-gray-400 hover:text-white transition-colors duration-300 py-1 xs:py-2 text-xs xs:text-sm">Support</a>
-              </div>
-            </div>
-          </div>
-          
-          <div className="flex flex-col sm:flex-row justify-between items-center pt-6 xs:pt-8 border-t border-white/10 space-y-3 xs:space-y-4 sm:space-y-0">
-            <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 lg:space-x-8 text-gray-400 text-xs xs:text-sm">
-              <span>© 2024 Schedley.com - All rights reserved</span>
-              <span className="hidden sm:block">•</span>
-              <span className="hidden lg:inline">Intelligent Scheduling & Client Acquisition Platform</span>
-              <span className="lg:hidden">AI Scheduling Platform</span>
-              <span className="hidden sm:block">•</span>
-              <span>notification@schedley.com</span>
-            </div>
-            
-            <div className="flex items-center space-x-3 xs:space-x-4 text-gray-400 text-xs xs:text-sm">
-              <div className="flex items-center">
-                <div className="w-1.5 h-1.5 xs:w-2 xs:h-2 bg-green-500 rounded-full mr-1.5 xs:mr-2 animate-pulse"></div>
-                <span className="hidden xs:inline">7-Day Guarantee Active</span>
-                <span className="xs:hidden">Guarantee Active</span>
-              </div>
-            </div>
-          </div>
-          
-          {/* Enhanced SEO Footer Content */}
-          <div className="mt-6 xs:mt-8 pt-6 xs:pt-8 border-t border-white/10 text-xs text-gray-500 leading-relaxed">
-            <p className="mb-4">
-              <strong>Schedley</strong> - The World's First Intelligent Scheduling & Client Acquisition Platform | 
-              AI-Powered Spam Protection | Real-Time Email Validation | Done-For-You Lead Generation | 
-              Dedicated Account Management | 7-Day Client Guarantee | Professional Meeting Management | 
-              Human-Powered Outreach | Qualified Lead Delivery | Corporate Email Filtering | 
-              Google Meet Integration | Calendar Sync | Zero-Risk Growth | High-Ticket Client Acquisition | 
-              Enterprise Security | GDPR Compliant | Personal Account Manager | 100% Money-Back Guarantee | 
-              Business Productivity | Revenue Optimization | Client Success Platform
-            </p>
-            
-            {/* Additional SEO Content for Better Rankings */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 text-xs">
-              <div>
-                <h4 className="font-semibold text-gray-400 mb-2">Core Features</h4>
-                <p>Advanced AI spam filtering, real-time email validation, automated booking management, professional event creation, Google Calendar integration, corporate email verification</p>
-              </div>
-              <div>
-                <h4 className="font-semibold text-gray-400 mb-2">Lead Generation</h4>
-                <p>Human-powered prospecting, qualified lead delivery, ideal client profiling, outreach automation, meeting scheduling, revenue-focused targeting</p>
-              </div>
-              <div>
-                <h4 className="font-semibold text-gray-400 mb-2">Success Guarantee</h4>
-                <p>7-day money-back guarantee, first client booking promise, zero-risk trial, dedicated account management, 24/7 support, proven ROI results</p>
-              </div>
-            </div>
-            
-            {/* Schema.org structured data would be added here in real implementation */}
-            <div className="mt-4 text-xs opacity-50">
-              Keywords: AI scheduling software, client acquisition platform, spam-free booking system, qualified lead generation, 
-              automated meeting scheduling, business productivity tools, revenue optimization software, 
-              professional appointment booking, enterprise scheduling solution, guaranteed client acquisition, 
-              smart calendar management, lead qualification system, corporate meeting platform, 
-              AI-powered business growth, automated prospecting tools, high-ticket client booking, 
-              professional scheduling assistant, business development automation, meeting optimization software
-            </div>
-          </div>
-        </div>
-      </footer>
+       {/* Footer rendered by BaseLayout; props set via useFooter above */}
 
       {/* SEO Structured Data - Would be implemented in document head */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{
@@ -1303,7 +1146,7 @@ export default ScheduleyLanding;
 
 
 // import { useState, useEffect, useRef } from 'react';
-// import { Calendar, Shield, Linkedin, CheckCircle, ArrowRight, Zap, Users, Menu, X, Star, Award, TrendingUp, Rocket, Target, BarChart, Lock, MessageCircle, UserCheck, Mail, Phone, DollarSign, Headphones, RefreshCw, Play, Settings, ExternalLink, Send, Bot, Minimize2, Maximize2 } from 'lucide-react';
+// import { Calendar, Shield, Linkedin, CheckCircle, ArrowRight, Zap, Users, X, Star, Award, TrendingUp, Rocket, Target, BarChart, Lock, MessageCircle, UserCheck, Mail, Phone, DollarSign, Headphones, RefreshCw, Play, Settings, ExternalLink, Send, Bot, Minimize2, Maximize2 } from 'lucide-react';
 // import { useNavigate } from "react-router-dom";
 // import { Groq } from 'groq-sdk';
 

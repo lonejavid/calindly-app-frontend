@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Check, ChevronRight, Menu, X } from "lucide-react";
+import SectionReveal from "@/components/SectionReveal";
 
 const TALENT_FORM_ID = "talent-form";
 
@@ -156,6 +157,7 @@ export default function TalentHiringPage() {
 
       {/* 2. HERO SECTION */}
       <section className="pt-32 pb-20 px-6 max-w-6xl mx-auto">
+        <SectionReveal effect="fade-up">
         <div className="flex flex-col lg:flex-row gap-12 items-center">
           <div className="flex-1">
             <div className="inline-block px-4 py-2 rounded-full bg-gradient-to-r from-purple-900/30 to-cyan-900/20 border border-purple-500/20 text-gray-300 text-sm font-medium mb-6">
@@ -231,10 +233,12 @@ export default function TalentHiringPage() {
             </div>
           </div>
         </div>
+        </SectionReveal>
       </section>
 
       {/* 3. PROBLEM SECTION */}
       <section className="py-20 px-6 bg-gradient-to-b from-transparent via-slate-900/30 to-transparent">
+        <SectionReveal effect="slide-left">
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-5xl font-black mb-4 text-white">Hiring Engineers Is Slow and Expensive</h2>
           <p className="text-xl text-gray-400 mb-12">The traditional hiring process breaks down at scale</p>
@@ -262,6 +266,7 @@ export default function TalentHiringPage() {
             </p>
           </div>
         </div>
+        </SectionReveal>
       </section>
 
       {/* 4. SOLUTION SECTION */}

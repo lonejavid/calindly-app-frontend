@@ -2,25 +2,18 @@ import { useEffect } from "react";
 import { useStore } from "@/store/store";
 
 const useAuthExpiration = () => {
-  const {
-    accessToken,
-    expiresAt,
-    clearAccessToken,
-    clearUser,
-    clearExpiresAt,
-  } = useStore();
+  const { accessToken, expiresAt, clearAuth } = useStore();
 
   useEffect(() => {
     const handleLogout = () => {
       console.log("Token expired, logging out...");
-      clearUser();
-      clearAccessToken();
-      clearExpiresAt();
+      clearAuth();
     };
 
     if (accessToken && expiresAt) {
-      const currentTime = Date.now();
-      const timeUntilExpiration = expiresAt - currentTime;
+      // Backend returns expiresAt as Unix timestamp in seconds
+      const expiryMs = expiresAt * 1000;
+      const timeUntilExpiration = expiryMs - Date.now();
 
       if (timeUntilExpiration <= 0) {
         // Token is already expired
@@ -32,7 +25,7 @@ const useAuthExpiration = () => {
         return () => clearTimeout(timer);
       }
     }
-  }, [accessToken, clearAccessToken, clearExpiresAt, clearUser, expiresAt]);
+  }, [accessToken, clearAuth, expiresAt]);
 };
 
 export default useAuthExpiration;

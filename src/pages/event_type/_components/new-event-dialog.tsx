@@ -1345,7 +1345,7 @@ const Demo = () => {
       <div >
         <button
           onClick={() => setIsOpen(true)}
-          className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2"
+          className="px-4 py-3 bg-[var(--blue)] cursor-pointer text-white rounded-sm shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2"
         >
           <Plus className="h-4 w-4" />
           <span>Create Event</span>

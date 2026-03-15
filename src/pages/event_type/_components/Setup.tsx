@@ -571,27 +571,16 @@
 // export default Setup;
 
 
-import React, { useState} from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useStore } from "@/store/store";
+import { PROTECTED_ROUTES } from "@/routes/common/routePaths";
+import { setupComplete } from "@/lib/api";
 
 const Setup = () => {
-  const navigate = (path) => {
-    console.log(`Navigating to: ${path}`);
-    if (path === "https://www.schedley.com/") {
-      window.location.href = path;
-    } else {
-      alert(`Would navigate to: ${path}`);
-    }
-  };
-
-  const setUser = (user) => {
-    console.log("Setting user in store:", user);
-  };
-
-  const setAccessToken = (token) => {
-    console.log("Setting access token:", token);
-  };
-
-  const user = { id: 1, name: "Test User" }; // Simulated user
+  const navigate = useNavigate();
+  const user = useStore((s) => s.user);
+  const setUser = useStore((s) => s.setUser);
 
   const [currentStep, setCurrentStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -658,39 +647,13 @@ const Setup = () => {
     }));
   };
 
-  const onLogout = () => {
-    setUser(null);
-    setAccessToken(null);
-    localStorage.removeItem("user");
-    localStorage.removeItem("userApproved");
-    navigate("https://www.schedley.com/");
-  };
-
-  const updateUserApprovalStatus = async (userData) => {
-    try {
-      setIsLoading(true);
-      
-      // Simulate API call to update user's approval status
-      const updatedUser = {
-        ...user,
-        ...userData,
-        isApproved: false, // Changed to false since it needs manual approval
-        setupCompleted: true,
-        pendingApproval: true,
-        updatedAt: new Date().toISOString()
-      };
-
-      setUser(updatedUser);
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-
-      console.log("✅ User setup completed, pending approval:", updatedUser);
-      return updatedUser;
-    } catch (error) {
-      console.error("❌ Failed to update user setup:", error);
-      throw error;
-    } finally {
-      setIsLoading(false);
+  const updateUserApprovalStatus = async () => {
+    const res = await setupComplete();
+    if (res?.user) {
+      setUser(res.user);
+      return res.user;
     }
+    throw new Error("Setup complete failed");
   };
 
   const handleNext = async () => {
@@ -698,14 +661,16 @@ const Setup = () => {
       setCurrentStep(currentStep + 1);
     } else {
       try {
-        await updateUserApprovalStatus(formData);
+        setIsLoading(true);
+        await updateUserApprovalStatus();
         setShowSuccess(true);
-        // Auto logout after 8 seconds
         setTimeout(() => {
-          onLogout();
-        }, 3000);
+          navigate(PROTECTED_ROUTES.EVENT_TYPES, { replace: true });
+        }, 2000);
       } catch (error) {
         console.error("Setup completion error:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -757,30 +722,11 @@ const Setup = () => {
               Setup Complete! 🎉
             </h1>
             
-            {/* Approval Message */}
+            {/* Success message */}
             <div className="max-w-2xl mx-auto bg-white/90 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-xl border border-white/20 mb-8">
-              <div className="flex items-start gap-4 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div className="text-left">
-                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">
-                    Account Under Review
-                  </h2>
-                  <p className="text-gray-700 text-base sm:text-lg leading-relaxed mb-4">
-                    Your profile will be processed by our <span className="font-semibold text-blue-600">AI system</span> and reviewed by our <span className="font-semibold text-purple-600">dedicated team</span>. 
-                  </p>
-                  <p className="text-gray-700 text-base sm:text-lg leading-relaxed mb-4">
-                    Your account will be approved and you will be <span className="font-semibold text-green-600">notified via email</span> once the review is complete.
-                  </p>
-                  <p className="text-gray-600 text-sm sm:text-base">
-                    Until then, please wait and explore our platform to learn more about Schedley's features.
-                  </p>
-                </div>
-              </div>
-              
+              <p className="text-gray-700 text-base sm:text-lg leading-relaxed">
+                You’re all set. Redirecting to your dashboard…
+              </p>
               {/* Features Preview */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-200">
                 <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -798,26 +744,20 @@ const Setup = () => {
               </div>
             </div>
             
-            {/* Countdown and Logout */}
             <div className="space-y-6">
               <div className="flex items-center justify-center space-x-2 text-blue-600">
                 <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
                 <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                 <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
-                <span className="ml-2 font-medium">Redirecting to homepage in a few seconds...</span>
+                <span className="ml-2 font-medium">Redirecting to dashboard…</span>
               </div>
               
-              {/* Manual logout button */}
               <button
-                onClick={onLogout}
+                onClick={() => navigate(PROTECTED_ROUTES.EVENT_TYPES, { replace: true })}
                 className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-full font-medium hover:shadow-lg transition-all duration-300 hover:scale-105"
               >
-                Continue to Homepage
+                Continue to Dashboard
               </button>
-              
-              <p className="text-sm text-gray-500 max-w-md mx-auto">
-                You'll receive an email notification once your account is approved. Thank you for your patience!
-              </p>
             </div>
           </div>
         </div>

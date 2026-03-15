@@ -8,7 +8,17 @@ export const AUTH_ROUTES = {
   SIGN_UP: "/sign-up",
   SETUPAI: "/setup",
   TALENT: "/talent",
+  PROFILE: "/profile",
 };
+
+export const SERVICE_ROUTES = {
+  B2B_APPOINTMENT_SCHEDULING: "/services/b2b-appointment-scheduling",
+  B2B_LEAD_GENERATION: "/services/b2b-lead-generation",
+  RECRUITING_TALENT: "/services/recruiting-talent",
+  SCHEDLEY_MANAGEMENT: "/services/schedley-management",
+};
+
+export const CONTACT_ROUTE = "/contact";
 
 export const PROTECTED_ROUTES = {
   EVENT_TYPES: "/app/event_types",

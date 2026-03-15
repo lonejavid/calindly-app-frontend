@@ -1,0 +1,3201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Schedley — Schedule Smart. Convert Fast.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    /* ─────────────────────────────────────────
+   DESIGN TOKENS
+───────────────────────────────────────── */
+    :root {
+      /* Brand - blue #007aff, WhatsApp green for landing CTAs */
+      --white: #FFFFFF;
+      --blue: #007aff;
+      --blue-dark: #0066DD;
+      --blue-deep: #0052C2;
+      --blue-mid: #5AC8FA;
+      --blue-lite: #E8F4FD;
+      --blue-ghost: rgba(0, 122, 255, 0.06);
+      --blue-glow: rgba(0, 122, 255, 0.18);
+      /* WhatsApp green - landing page CTAs & accents */
+      --wa: #25D366;
+      --wa-dark: #1DA851;
+      --wa-lite: #DCF8C6;
+      --wa-ghost: rgba(37, 211, 102, 0.08);
+      --wa-glow: rgba(37, 211, 102, 0.25);
+      --amber: #FFB300;
+      --amber-dark: #E65100;
+      --amber-deep: #F57F17;
+      --amber-lite: #FFF8E1;
+      --amber-ghost: rgba(255, 179, 0, 0.08);
+      --amber-glow: rgba(255, 179, 0, 0.25);
+
+      /* Neutrals */
+      --ink: #0A1628;
+      --ink-mid: #1E3A5F;
+      --ink-soft: #3D5A7A;
+      --ink-muted: #6B8BAD;
+      --surface: #F5F8FD;
+      --surface-2: #EBF2FC;
+      --line: rgba(0, 122, 255, 0.1);
+      --line-strong: rgba(0, 122, 255, 0.2);
+
+      /* Effects */
+      --sh-xs: 0 1px 4px rgba(10, 22, 40, 0.06);
+      --sh-sm: 0 2px 16px rgba(10, 22, 40, 0.08);
+      --sh-md: 0 8px 40px rgba(10, 22, 40, 0.10);
+      --sh-lg: 0 24px 80px rgba(10, 22, 40, 0.12);
+      --sh-blue: 0 8px 32px rgba(0, 122, 255, 0.28);
+      --sh-wa: 0 8px 32px rgba(37, 211, 102, 0.28);
+      --sh-amber: 0 8px 32px rgba(255, 179, 0, 0.30);
+
+      /* Radii */
+      --r-s: 8px;
+      --r-m: 14px;
+      --r-l: 20px;
+      --r-xl: 28px;
+      --r-2xl: 36px;
+    }
+
+    /* ─────────────────────────────────────────
+   RESET & BASE
+───────────────────────────────────────── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Sora', sans-serif;
+      background: var(--white);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    /* ─────────────────────────────────────────
+   TYPOGRAPHY
+───────────────────────────────────────── */
+    .display {
+      font-family: 'Lora', serif;
+      font-weight: 700;
+      line-height: 1.06;
+      letter-spacing: -0.025em;
+    }
+
+    .display-xl {
+      font-size: clamp(3rem, 5.5vw, 5rem);
+    }
+
+    .display-lg {
+      font-size: clamp(2.4rem, 4vw, 3.6rem);
+    }
+
+    .display-md {
+      font-size: clamp(2rem, 3vw, 2.8rem);
+    }
+
+    .display-sm {
+      font-size: clamp(1.6rem, 2.5vw, 2rem);
+    }
+
+    .label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    /* ─────────────────────────────────────────
+   LAYOUT
+───────────────────────────────────────── */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 5%;
+    }
+
+    .container-wide {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 0 5%;
+    }
+
+    /* ─────────────────────────────────────────
+   BUTTONS
+───────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Sora', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.8rem 1.8rem;
+      border-radius: var(--r-s);
+      border: 2px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+      white-space: nowrap;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.12);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover::after {
+      opacity: 1;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: var(--white);
+      border-color: var(--blue);
+      box-shadow: var(--sh-blue);
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-dark);
+      border-color: var(--blue-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0, 122, 255, 0.38);
+    }
+
+    .btn-amber {
+      background: var(--amber);
+      color: var(--ink);
+      border-color: var(--amber);
+      box-shadow: var(--sh-amber);
+    }
+
+    .btn-amber:hover {
+      background: var(--amber-deep);
+      border-color: var(--amber-deep);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(255, 179, 0, 0.42);
+    }
+
+    .btn-wa {
+      background: var(--wa);
+      color: var(--white);
+      border-color: var(--wa);
+      box-shadow: var(--sh-wa);
+    }
+
+    .btn-wa:hover {
+      background: var(--wa-dark);
+      border-color: var(--wa-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(37, 211, 102, 0.38);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--blue);
+      border-color: var(--line-strong);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--blue);
+      background: var(--blue-ghost);
+      transform: translateY(-2px);
+    }
+
+    .btn-ghost-white {
+      background: transparent;
+      color: var(--white);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-ghost-white:hover {
+      border-color: var(--white);
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .btn-lg {
+      padding: 1rem 2.2rem;
+      font-size: 1rem;
+      border-radius: var(--r-m);
+    }
+
+    .btn .arrow {
+      transition: transform 0.2s;
+      display: inline-block;
+    }
+
+    .btn:hover .arrow {
+      transform: translateX(4px);
+    }
+
+    /* ─────────────────────────────────────────
+   PILL / BADGE / CHIP
+───────────────────────────────────────── */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 1rem;
+      border-radius: 100px;
+      font-weight: 600;
+    }
+
+    .pill-amber {
+      background: var(--amber-lite);
+      border: 1.5px solid rgba(255, 179, 0, 0.35);
+      color: var(--amber-deep);
+    }
+
+    .pill-blue {
+      background: var(--blue-lite);
+      border: 1.5px solid rgba(37, 211, 102, 0.2);
+      color: var(--blue-dark);
+    }
+
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      animation: pulse-dot 2s infinite;
+    }
+
+    .pill-dot-amber {
+      background: var(--amber);
+    }
+
+    .pill-dot-blue {
+      background: var(--blue);
+    }
+
+    @keyframes pulse-dot {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: .4;
+        transform: scale(1.6);
+      }
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .eyebrow-line {
+      width: 32px;
+      height: 3px;
+      border-radius: 2px;
+      background: var(--amber);
+    }
+
+    .eyebrow-text {
+      font-size: 0.73rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--blue);
+    }
+
+    /* ─────────────────────────────────────────
+   NAVBAR
+───────────────────────────────────────── */
+    #navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 999;
+      height: 68px;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(24px) saturate(180%);
+      border-bottom: 1px solid var(--line);
+      transition: box-shadow 0.3s;
+    }
+
+    #navbar.shadow {
+      box-shadow: 0 4px 32px rgba(10, 22, 40, 0.08);
+    }
+
+    .nav-wrap {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: 'Lora', serif;
+      font-weight: 700;
+      font-size: 1.65rem;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: -0.025em;
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+    }
+
+    .nav-logo-accent {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--amber);
+      margin-bottom: 3px;
+      margin-left: 1px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--ink-soft);
+      text-decoration: none;
+      transition: color 0.18s;
+    }
+
+    .nav-links a:hover {
+      color: var(--blue);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .nav-signin {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--ink-soft);
+      text-decoration: none;
+      padding: 0.45rem 0.8rem;
+      transition: color 0.18s;
+    }
+
+    .nav-signin:hover {
+      color: var(--blue);
+    }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--ink);
+      border-radius: 2px;
+      transition: 0.25s;
+    }
+
+    /* Mobile nav */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 68px;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      border-bottom: 3px solid var(--amber);
+      box-shadow: var(--sh-md);
+      z-index: 998;
+      padding: 1.5rem 5%;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .mobile-nav.open {
+      display: flex;
+    }
+
+    .mobile-nav a {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--ink);
+      text-decoration: none;
+      padding: 0.9rem 0;
+      border-bottom: 1px solid var(--surface);
+      transition: color 0.18s;
+    }
+
+    .mobile-nav a:last-child {
+      border-bottom: none;
+    }
+
+    .mobile-nav a:hover {
+      color: var(--blue);
+    }
+
+    /* ─────────────────────────────────────────
+   HERO
+───────────────────────────────────────── */
+    .hero {
+      padding-top: 68px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      background: var(--white);
+    }
+
+    /* Decorative blobs */
+    .hero-blob {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-blob-1 {
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, var(--blue-lite) 0%, transparent 72%);
+      top: -300px;
+      right: -200px;
+    }
+
+    .hero-blob-2 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--amber-lite) 0%, transparent 72%);
+      bottom: -150px;
+      left: -100px;
+    }
+
+    .hero-blob-3 {
+      width: 180px;
+      height: 180px;
+      background: var(--amber);
+      opacity: 0.06;
+      top: 160px;
+      left: 42%;
+      transform: rotate(30deg);
+      border-radius: var(--r-xl);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      padding: 6rem 0 5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Left */
+    .hero-pill {
+      margin-bottom: 1.75rem;
+      animation: up 0.7s ease both;
+    }
+
+    .hero-h1 {
+      margin-bottom: 1.5rem;
+      color: var(--ink);
+      animation: up 0.7s 0.08s ease both;
+    }
+
+    .hero-h1 .blue {
+      color: var(--wa);
+    }
+
+    .hero-h1 .underline-wrap {
+      position: relative;
+      display: inline-block;
+      color: var(--wa);
+    }
+
+    .hero-h1 .underline-wrap::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, var(--wa), var(--wa-dark));
+      border-radius: 3px;
+      transform-origin: left;
+      animation: grow-line 0.9s 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes grow-line {
+      from {
+        transform: scaleX(0)
+      }
+
+      to {
+        transform: scaleX(1)
+      }
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--ink-soft);
+      line-height: 1.78;
+      font-weight: 300;
+      max-width: 500px;
+      margin-bottom: 2.5rem;
+      animation: up 0.7s 0.16s ease both;
+    }
+
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+      animation: up 0.7s 0.24s ease both;
+    }
+
+    .hero-trust {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      animation: up 0.7s 0.32s ease both;
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+      font-weight: 500;
+    }
+
+    .trust-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--blue-lite);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: var(--blue);
+    }
+
+    .hero-trust .trust-icon {
+      background: var(--wa-lite);
+      color: var(--wa);
+    }
+
+    @keyframes up {
+      from {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Hero Right – App Preview */
+    .hero-app {
+      animation: up 0.9s 0.12s ease both;
+      position: relative;
+    }
+
+    .app-window {
+      background: var(--white);
+      border-radius: var(--r-2xl);
+      box-shadow: var(--sh-lg), 0 0 0 1px var(--line);
+      overflow: hidden;
+    }
+
+    .app-titlebar {
+      background: var(--ink);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .titlebar-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .titlebar-dots i {
+      display: block;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+
+    .td-r {
+      background: #FF5F57;
+    }
+
+    .td-y {
+      background: #FFBD2E;
+    }
+
+    .td-g {
+      background: #28CA41;
+    }
+
+    .td-wa {
+      background: #25D366;
+    }
+
+    .titlebar-label {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.45);
+      font-weight: 500;
+    }
+
+    .titlebar-live {
+      background: var(--amber);
+      color: var(--ink);
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 0.15rem 0.6rem;
+      border-radius: 100px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .app-body {
+      padding: 1.5rem;
+    }
+
+    .app-kpis {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-m);
+      padding: 1rem;
+      text-align: center;
+      transition: 0.2s;
+    }
+
+    .kpi-card:hover {
+      border-color: var(--blue);
+      background: var(--blue-ghost);
+    }
+
+    .kpi-n {
+      font-family: 'Lora', serif;
+      font-size: 1.9rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.2rem;
+    }
+
+    .kpi-n.c-blue {
+      color: var(--blue);
+    }
+
+    .kpi-n.c-amber {
+      color: var(--amber-deep);
+    }
+
+    .kpi-n.c-ink {
+      color: var(--ink);
+    }
+
+    .kpi-l {
+      font-size: 0.68rem;
+      color: var(--ink-muted);
+      font-weight: 500;
+    }
+
+    .section-micro {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .booking-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--line);
+      border-radius: var(--r-s);
+      margin-bottom: 0.55rem;
+      background: var(--white);
+      transition: 0.18s;
+    }
+
+    .booking-card:hover {
+      border-color: var(--blue);
+      background: var(--blue-ghost);
+    }
+
+    .bc-l {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .bc-av {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .av1 {
+      background: linear-gradient(135deg, #25D366, #5CDB94);
+    }
+
+    .av2 {
+      background: linear-gradient(135deg, #FFB300, #FF6F00);
+    }
+
+    .av3 {
+      background: linear-gradient(135deg, #00897B, #004D40);
+    }
+
+    .bc-name {
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .bc-meta {
+      font-size: 0.7rem;
+      color: var(--ink-muted);
+    }
+
+    .tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      border-radius: 6px;
+      padding: 0.2rem 0.6rem;
+      white-space: nowrap;
+    }
+
+    .tag-green {
+      background: #E8F5E9;
+      color: #2E7D32;
+    }
+
+    .tag-blue {
+      background: var(--blue-lite);
+      color: var(--blue-dark);
+    }
+
+    .tag-amber {
+      background: var(--amber-lite);
+      color: var(--amber-deep);
+    }
+
+    /* Floating chips */
+    .chip {
+      position: absolute;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--r-m);
+      padding: 0.7rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: var(--sh-md);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--ink);
+      z-index: 2;
+    }
+
+    .chip-icon {
+      font-size: 1.1rem;
+    }
+
+    .chip-tl {
+      top: -20px;
+      right: 20px;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .chip-br {
+      bottom: -20px;
+      left: 20px;
+      animation: float 4s ease-in-out -2s infinite;
+    }
+
+    .chip-rt {
+      right: -24px;
+      top: 38%;
+      animation: float 4s ease-in-out -1s infinite;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    /* ─────────────────────────────────────────
+   STATS BAR
+───────────────────────────────────────── */
+    .stats-bar {
+      background: var(--ink);
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stats-bar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--blue) 0%, var(--amber) 50%, var(--blue) 100%);
+    }
+
+    .stats-inner {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+
+    .stat-block {
+      padding: 3rem 2rem;
+      text-align: center;
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      transition: 0.25s;
+    }
+
+    .stat-block:last-child {
+      border-right: none;
+    }
+
+    .stat-block:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .stat-n {
+      font-family: 'Lora', serif;
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-n .accent {
+      color: var(--amber);
+    }
+
+    .stat-l {
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.4);
+      font-weight: 400;
+    }
+
+    /* ─────────────────────────────────────────
+   TRIAL SECTION
+───────────────────────────────────────── */
+    .trial {
+      padding: 9rem 0;
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .trial::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      left: 0;
+      right: 0;
+      height: 100px;
+      background: var(--surface);
+      clip-path: polygon(0 100%, 100% 0, 100% 100%);
+    }
+
+    .trial::after {
+      content: '';
+      position: absolute;
+      bottom: -50px;
+      left: 0;
+      right: 0;
+      height: 100px;
+      background: var(--white);
+      clip-path: polygon(0 0, 100% 100%, 0 100%);
+      z-index: 1;
+    }
+
+    .trial-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Steps timeline */
+    .steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 2rem;
+      position: relative;
+    }
+
+    .steps-list::before {
+      content: '';
+      position: absolute;
+      left: 22px;
+      top: 28px;
+      bottom: 28px;
+      width: 2px;
+      background: linear-gradient(180deg, var(--blue) 0%, var(--amber) 100%);
+    }
+
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+      padding: 1.25rem 0;
+    }
+
+    .step-num {
+      width: 46px;
+      height: 46px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Lora', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
+    }
+
+    .sn-blue {
+      background: var(--blue);
+      color: white;
+      box-shadow: 0 0 0 5px rgba(37, 211, 102, 0.12);
+    }
+
+    .sn-mid {
+      background: var(--blue-lite);
+      color: var(--blue);
+      box-shadow: 0 0 0 5px rgba(37, 211, 102, 0.06);
+    }
+
+    .sn-amber {
+      background: var(--amber);
+      color: var(--ink);
+      box-shadow: 0 0 0 5px rgba(255, 179, 0, 0.15);
+    }
+
+    .step-text {
+      padding-top: 0.6rem;
+    }
+
+    .step-text h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 0.3rem;
+    }
+
+    .step-text p {
+      font-size: 0.85rem;
+      color: var(--ink-soft);
+      line-height: 1.65;
+      font-weight: 300;
+    }
+
+    /* Price card */
+    .price-card {
+      background: var(--white);
+      border-radius: var(--r-2xl);
+      box-shadow: var(--sh-lg), 0 0 0 1px var(--line);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Ribbon */
+    .ribbon {
+      position: absolute;
+      top: 28px;
+      right: -36px;
+      background: var(--amber);
+      color: var(--ink);
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.4rem 3.5rem;
+      transform: rotate(45deg);
+    }
+
+    .pc-header {
+      background: var(--blue);
+      padding: 2.5rem 2rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pc-header::before {
+      content: '';
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      right: -80px;
+      top: -80px;
+    }
+
+    .pc-header::after {
+      content: '';
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: rgba(255, 179, 0, 0.12);
+      left: -50px;
+      bottom: -60px;
+    }
+
+    .pc-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(255, 255, 255, 0.55);
+      margin-bottom: 1rem;
+    }
+
+    .pc-price {
+      display: flex;
+      align-items: baseline;
+      gap: 0.3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .pc-amount {
+      font-family: 'Lora', serif;
+      font-size: 5.5rem;
+      font-weight: 700;
+      color: white;
+      line-height: 1;
+    }
+
+    .pc-period {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.9rem;
+      font-weight: 400;
+    }
+
+    .pc-sub {
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 0.85rem;
+      font-weight: 300;
+    }
+
+    .pc-sub strong {
+      color: var(--amber);
+      font-weight: 700;
+    }
+
+    .pc-body {
+      padding: 2rem;
+    }
+
+    .feat-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    .feat-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      font-size: 0.88rem;
+      color: var(--ink);
+    }
+
+    .feat-check {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--blue-lite);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .feat-check svg {
+      width: 11px;
+      height: 11px;
+    }
+
+    .pc-cta-note {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+      margin-top: 0.8rem;
+    }
+
+    /* ─────────────────────────────────────────
+   SERVICES
+───────────────────────────────────────── */
+    .services {
+      padding: 9rem 0;
+      background: var(--white);
+      position: relative;
+      z-index: 2;
+    }
+
+    .tabs-nav {
+      display: inline-flex;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-m);
+      padding: 0.4rem;
+      margin: 2.5rem 0 4rem;
+      gap: 0.25rem;
+    }
+
+    .tab-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      background: transparent;
+      border-radius: var(--r-s);
+      font-family: 'Sora', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--ink-soft);
+      cursor: pointer;
+      transition: all 0.22s;
+    }
+
+    .tab-btn .t-num {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(37, 211, 102, 0.1);
+      color: var(--blue);
+      font-size: 0.62rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.22s;
+    }
+
+    .tab-btn:hover:not(.active) {
+      background: var(--blue-ghost);
+      color: var(--blue);
+    }
+
+    .tab-btn.active {
+      background: var(--blue);
+      color: white;
+      box-shadow: var(--sh-blue);
+    }
+
+    .tab-btn.active .t-num {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+
+    /* Tab content */
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.on {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+      animation: panelIn 0.4s ease;
+    }
+
+    @keyframes panelIn {
+      from {
+        opacity: 0;
+        transform: translateY(14px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .panel-icon-box {
+      width: 60px;
+      height: 60px;
+      border-radius: var(--r-m);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .pib-blue {
+      background: var(--blue-lite);
+    }
+
+    .pib-amber {
+      background: var(--amber-lite);
+    }
+
+    .pib-ink {
+      background: var(--surface);
+    }
+
+    .panel-h {
+      color: var(--ink);
+      margin-bottom: 1rem;
+    }
+
+    .panel-h em {
+      font-style: italic;
+      color: var(--blue);
+    }
+
+    .panel-p {
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+      line-height: 1.8;
+      font-weight: 300;
+      margin-bottom: 1.75rem;
+    }
+
+    .panel-feats {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .panel-feats li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-size: 0.875rem;
+      color: var(--ink);
+    }
+
+    .pf-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
+
+    .pf-blue {
+      background: var(--blue);
+    }
+
+    .pf-amber {
+      background: var(--amber);
+    }
+
+    /* Panel visual cards */
+    .p-visual {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--r-xl);
+      box-shadow: var(--sh-md);
+      overflow: hidden;
+      position: sticky;
+      top: 88px;
+    }
+
+    .pv-head {
+      background: var(--ink);
+      padding: 1.1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .pv-head-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--r-s);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .pv-title {
+      color: white;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .pv-sub {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 0.7rem;
+    }
+
+    .pv-body {
+      padding: 1.5rem;
+    }
+
+    /* Hiring visual */
+    .cand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--line);
+      border-radius: var(--r-s);
+      margin-bottom: 0.55rem;
+      transition: 0.18s;
+    }
+
+    .cand-row:hover {
+      border-color: var(--blue);
+      background: var(--blue-ghost);
+    }
+
+    .cr-l {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .cr-av {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .cr-av-a {
+      background: linear-gradient(135deg, #25D366, #5CDB94);
+    }
+
+    .cr-av-b {
+      background: linear-gradient(135deg, #FFB300, #FF6F00);
+    }
+
+    .cr-av-c {
+      background: linear-gradient(135deg, #26A69A, #004D40);
+    }
+
+    .cr-av-d {
+      background: linear-gradient(135deg, #7B1FA2, #4A148C);
+    }
+
+    .cr-name {
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .cr-role {
+      font-size: 0.7rem;
+      color: var(--ink-muted);
+    }
+
+    .pill-sm {
+      font-size: 0.68rem;
+      font-weight: 700;
+      border-radius: 100px;
+      padding: 0.18rem 0.6rem;
+    }
+
+    .ps-green {
+      background: #E8F5E9;
+      color: #2E7D32;
+    }
+
+    .ps-blue {
+      background: var(--blue-lite);
+      color: var(--blue);
+    }
+
+    .ps-amber {
+      background: var(--amber-lite);
+      color: var(--amber-deep);
+    }
+
+    .ps-ink {
+      background: var(--surface);
+      color: var(--ink-soft);
+    }
+
+    .progress-section {
+      margin-top: 1.25rem;
+    }
+
+    .pr-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .pr-label {
+      font-size: 0.73rem;
+      color: var(--ink-soft);
+      font-weight: 500;
+      min-width: 88px;
+    }
+
+    .pr-bar {
+      flex: 1;
+      height: 5px;
+      background: var(--surface);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .pr-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 1s ease;
+    }
+
+    .pr-count {
+      font-size: 0.73rem;
+      font-weight: 700;
+      color: var(--ink);
+      min-width: 24px;
+      text-align: right;
+    }
+
+    /* Domain filter visual */
+    .domain-section {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-m);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .ds-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+      margin-bottom: 0.6rem;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .d-chip {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .d-block {
+      background: #FFEBEE;
+      color: #C62828;
+      border: 1px solid #FFCDD2;
+    }
+
+    .d-allow {
+      background: #E8F5E9;
+      color: #2E7D32;
+      border: 1px solid #C8E6C9;
+    }
+
+    .lead-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      border-radius: var(--r-s);
+      margin-bottom: 0.5rem;
+      border: 1px solid;
+    }
+
+    .lr-ok {
+      background: #F1F8E9;
+      border-color: #C8E6C9;
+    }
+
+    .lr-blocked {
+      background: #FFF3F3;
+      border-color: #FFCDD2;
+      opacity: 0.8;
+    }
+
+    .lr-name {
+      font-size: 0.84rem;
+      font-weight: 600;
+    }
+
+    .lr-ok .lr-name {
+      color: var(--ink);
+    }
+
+    .lr-blocked .lr-name {
+      color: #C62828;
+      text-decoration: line-through;
+    }
+
+    .lr-email {
+      font-size: 0.7rem;
+      color: var(--ink-muted);
+    }
+
+    /* Funnel visual */
+    .funnel-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.9rem 1rem;
+      border: 1px solid var(--line);
+      border-radius: var(--r-s);
+      margin-bottom: 0.5rem;
+      background: var(--white);
+      transition: 0.18s;
+    }
+
+    .funnel-row:hover {
+      border-color: var(--blue);
+    }
+
+    .fr-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .fr-info {
+      flex: 1;
+    }
+
+    .fr-title {
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .fr-sub {
+      font-size: 0.68rem;
+      color: var(--ink-muted);
+    }
+
+    .fr-bar {
+      width: 72px;
+      height: 4px;
+      background: var(--surface);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .fr-fill {
+      height: 100%;
+      border-radius: 2px;
+    }
+
+    .fr-n {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--ink);
+      min-width: 26px;
+      text-align: right;
+    }
+
+    .kpis-mini {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+      margin-top: 0.75rem;
+    }
+
+    .km-box {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-m);
+      padding: 0.85rem;
+      text-align: center;
+    }
+
+    .km-n {
+      font-family: 'Lora', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .km-n.c-blue {
+      color: var(--blue);
+    }
+
+    .km-n.c-amber {
+      color: var(--amber-deep);
+    }
+
+    .km-l {
+      font-size: 0.65rem;
+      color: var(--ink-muted);
+      margin-top: 0.15rem;
+    }
+
+    /* ─────────────────────────────────────────
+   HOW IT WORKS
+───────────────────────────────────────── */
+    .hiw {
+      padding: 9rem 0;
+      background: var(--ink);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hiw::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 70% at 85% 15%, rgba(37, 211, 102, 0.18) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 50% at 15% 85%, rgba(255, 179, 0, 0.08) 0%, transparent 55%);
+    }
+
+    .hiw-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hiw-header {
+      text-align: center;
+      margin-bottom: 5rem;
+    }
+
+    .hiw-eyebrow {
+      color: var(--amber);
+      margin-bottom: 0.75rem;
+    }
+
+    .hiw-h {
+      color: white;
+    }
+
+    .hiw-h em {
+      font-style: italic;
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    .steps-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      position: relative;
+    }
+
+    .steps-row::before {
+      content: '';
+      position: absolute;
+      top: 34px;
+      left: 12.5%;
+      right: 12.5%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--blue) 0%, var(--amber) 100%);
+      opacity: 0.3;
+    }
+
+    .step-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: var(--r-xl);
+      padding: 2rem 1.5rem 1.75rem;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      transition: all 0.28s;
+    }
+
+    .step-card:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-6px);
+    }
+
+    .step-ring {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-family: 'Lora', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .sr-blue {
+      background: var(--blue);
+      color: white;
+      box-shadow: 0 0 0 5px rgba(37, 211, 102, 0.2);
+    }
+
+    .sr-ghost {
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .sr-amber {
+      background: var(--amber);
+      color: var(--ink);
+      box-shadow: 0 0 0 5px rgba(255, 179, 0, 0.2);
+    }
+
+    .step-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.65rem;
+    }
+
+    .step-desc {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.42);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* ─────────────────────────────────────────
+   TESTIMONIALS
+───────────────────────────────────────── */
+    .testi {
+      padding: 9rem 0;
+      background: var(--surface);
+    }
+
+    .testi-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .t-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--r-xl);
+      padding: 2rem;
+      box-shadow: var(--sh-sm);
+      transition: all 0.28s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .t-card::before {
+      content: '\201C';
+      position: absolute;
+      top: -12px;
+      right: 1.25rem;
+      font-family: 'Lora', serif;
+      font-size: 9rem;
+      font-weight: 700;
+      color: var(--blue-lite);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .t-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--sh-md);
+      border-color: rgba(37, 211, 102, 0.22);
+    }
+
+    .t-card.featured {
+      border-color: var(--amber);
+      border-width: 1.5px;
+    }
+
+    .t-card.featured::before {
+      color: var(--amber-lite);
+    }
+
+    .t-stars {
+      color: var(--amber);
+      font-size: 0.88rem;
+      letter-spacing: 3px;
+      margin-bottom: 1rem;
+    }
+
+    .t-quote {
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      line-height: 1.82;
+      font-weight: 300;
+      font-style: italic;
+      margin-bottom: 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .t-author {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .t-av {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .t-name {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .t-role {
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+    }
+
+    .t-metrics {
+      display: flex;
+      gap: 0.75rem;
+      padding-top: 1.25rem;
+      margin-top: 1.25rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .tm {
+      flex: 1;
+      text-align: center;
+    }
+
+    .tm-n {
+      font-family: 'Lora', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--blue);
+    }
+
+    .tm-n.a {
+      color: var(--amber-deep);
+    }
+
+    .tm-l {
+      font-size: 0.65rem;
+      color: var(--ink-muted);
+      margin-top: 0.15rem;
+    }
+
+    /* ─────────────────────────────────────────
+   FINAL CTA
+───────────────────────────────────────── */
+    .cta-band {
+      padding: 9rem 0;
+      background: var(--wa);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-band::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 80% at 50% -10%, rgba(255, 255, 255, 0.07) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 50% at 20% 110%, rgba(0, 0, 0, 0.12) 0%, transparent 55%);
+    }
+
+    /* Decorative rings */
+    .cta-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      pointer-events: none;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .cta-ring-1 {
+      width: 600px;
+      height: 600px;
+    }
+
+    .cta-ring-2 {
+      width: 380px;
+      height: 380px;
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .cta-ring-3 {
+      width: 200px;
+      height: 200px;
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+
+    .cta-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .cta-eyebrow {
+      color: var(--amber);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+    }
+
+    .cta-eyebrow span {
+      width: 28px;
+      height: 2px;
+      background: var(--amber);
+      border-radius: 1px;
+    }
+
+    .cta-h {
+      font-family: 'Lora', serif;
+      font-size: clamp(3rem, 5.5vw, 4.8rem);
+      font-weight: 700;
+      line-height: 1.06;
+      letter-spacing: -0.03em;
+      color: white;
+      margin-bottom: 1.25rem;
+    }
+
+    .cta-h em {
+      font-style: italic;
+      color: var(--amber);
+    }
+
+    .cta-body {
+      color: rgba(255, 255, 255, 0.68);
+      font-size: 1.05rem;
+      line-height: 1.75;
+      font-weight: 300;
+      margin-bottom: 2.5rem;
+    }
+
+    .cta-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .cta-note {
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    .cta-note strong {
+      color: var(--amber);
+      font-weight: 600;
+    }
+
+    /* ─────────────────────────────────────────
+   FOOTER
+───────────────────────────────────────── */
+    footer {
+      background: var(--ink);
+      padding: 5rem 0 2.5rem;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 4rem;
+    }
+
+    .f-logo {
+      font-family: 'Lora', serif;
+      font-weight: 700;
+      font-size: 1.7rem;
+      color: white;
+      letter-spacing: -0.025em;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 2px;
+      margin-bottom: 1rem;
+      text-decoration: none;
+    }
+
+    .f-logo-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--amber);
+      margin-bottom: 3px;
+      margin-left: 1px;
+      display: inline-block;
+    }
+
+    .f-amber-bar {
+      width: 36px;
+      height: 3px;
+      background: var(--amber);
+      border-radius: 2px;
+      margin-bottom: 1rem;
+    }
+
+    .f-tagline {
+      color: rgba(255, 255, 255, 0.38);
+      font-size: 0.84rem;
+      line-height: 1.7;
+      font-weight: 300;
+      max-width: 240px;
+    }
+
+    .f-col-h {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(255, 255, 255, 0.38);
+      margin-bottom: 1.25rem;
+    }
+
+    .f-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .f-links a {
+      color: rgba(255, 255, 255, 0.52);
+      text-decoration: none;
+      font-size: 0.84rem;
+      transition: color 0.18s;
+    }
+
+    .f-links a:hover {
+      color: white;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      font-size: 0.76rem;
+      color: rgba(255, 255, 255, 0.25);
+    }
+
+    .footer-bottom a {
+      color: rgba(255, 255, 255, 0.38);
+      text-decoration: none;
+      transition: color 0.18s;
+    }
+
+    .footer-bottom a:hover {
+      color: white;
+    }
+
+    .fb-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    /* ─────────────────────────────────────────
+   SCROLL REVEAL
+───────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(26px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .hero-grid {
+        gap: 2.5rem;
+      }
+
+      .trial-grid {
+        gap: 3rem;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        padding: 5rem 0 4rem;
+      }
+
+      .hero-app {
+        display: none;
+      }
+
+      .trial-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tab-panel.on {
+        grid-template-columns: 1fr;
+      }
+
+      .steps-row {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .steps-row::before {
+        display: none;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .stats-inner {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .footer-top {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .nav-links,
+      .nav-right {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .steps-row {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-top {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-inner {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .tabs-nav {
+        flex-wrap: wrap;
+      }
+
+      .tab-btn {
+        font-size: 0.78rem;
+        padding: 0.6rem 1rem;
+      }
+
+      .hero-h1 .display-xl {
+        font-size: 2.6rem;
+      }
+
+      .cta-h {
+        font-size: 2.8rem;
+      }
+
+      .chip {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══════════ NAVBAR ══════════ -->
+  <header id="navbar">
+    <div class="container-wide nav-wrap">
+      <a class="nav-logo" href="#">
+        Schedley<span class="nav-logo-accent"></span>
+      </a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#services">Services</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="#trial">Pricing</a></li>
+          <li><a href="#testimonials">Reviews</a></li>
+        </ul>
+      </nav>
+      <div class="nav-right">
+        <a href="#" class="nav-signin">Sign In</a>
+        <a href="#trial" class="btn btn-wa">Start Free Trial <span class="arrow">→</span></a>
+      </div>
+      <button class="hamburger" id="ham" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="#services" onclick="closeMobile()">Services</a>
+    <a href="#how-it-works" onclick="closeMobile()">How It Works</a>
+    <a href="#trial" onclick="closeMobile()">Pricing</a>
+    <a href="#testimonials" onclick="closeMobile()">Reviews</a>
+    <a href="#trial" onclick="closeMobile()" style="color:var(--wa)">Start Free Trial →</a>
+  </div>
+
+
+  <!-- ══════════ HERO ══════════ -->
+  <section class="hero">
+    <div class="hero-blob hero-blob-1"></div>
+    <div class="hero-blob hero-blob-2"></div>
+    <div class="hero-blob hero-blob-3"></div>
+
+    <div class="container">
+      <div class="hero-grid">
+
+        <!-- Left copy -->
+        <div>
+          <div class="hero-pill">
+            <span class="pill pill-amber label">
+              <span class="pill-dot pill-dot-amber"></span>
+              7-Day Free Trial — No Credit Card
+            </span>
+          </div>
+
+          <h1 class="display display-xl hero-h1">
+            Book smarter.<br>
+            Convert <span class="underline-wrap">leads</span><br>
+            before you pay.
+          </h1>
+
+          <p class="hero-sub">
+            Schedley is the B2B scheduling platform that handles talent hiring, shared lead management with spam
+            filtering, and client acquisition — in one elegant workspace. Start free. Pay only when you convert.
+          </p>
+
+          <div class="hero-ctas">
+            <a href="#trial" class="btn btn-wa btn-lg">
+              Start Free for 7 Days <span class="arrow">→</span>
+            </a>
+            <a href="#" class="btn btn-ghost btn-lg">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none" />
+              </svg>
+              Book a Demo
+            </a>
+          </div>
+
+          <div class="hero-trust">
+            <div class="trust-item"><span class="trust-icon">✓</span> No setup fees</div>
+            <div class="trust-item"><span class="trust-icon">✓</span> Cancel anytime</div>
+            <div class="trust-item"><span class="trust-icon">⚡</span> Live in 10 minutes</div>
+            <div class="trust-item"><span class="trust-icon">🛡</span> GDPR compliant</div>
+          </div>
+        </div>
+
+        <!-- Right: App Preview -->
+        <div class="hero-app">
+          <div class="chip chip-tl">
+            <span class="chip-icon">🚫</span> Spam lead blocked
+          </div>
+          <div class="chip chip-rt">
+            <span class="chip-icon">⭐</span> 4.9 / 5 rating
+          </div>
+          <div class="chip chip-br">
+            <span class="chip-icon">🎯</span> New client converted!
+          </div>
+
+          <div class="app-window">
+            <div class="app-titlebar">
+              <div class="titlebar-dots">
+                <i class="td-r"></i><i class="td-y"></i><i class="td-g"></i><i class="td-wa"></i>
+              </div>
+              <span class="titlebar-label">Schedley Dashboard</span>
+              <span class="titlebar-live">LIVE</span>
+            </div>
+            <div class="app-body">
+              <div class="app-kpis">
+                <div class="kpi-card">
+                  <div class="kpi-n c-blue">24</div>
+                  <div class="kpi-l">Bookings Today</div>
+                </div>
+                <div class="kpi-card">
+                  <div class="kpi-n c-amber">87%</div>
+                  <div class="kpi-l">Show Rate</div>
+                </div>
+                <div class="kpi-card">
+                  <div class="kpi-n c-ink">$4.8k</div>
+                  <div class="kpi-l">Pipeline Value</div>
+                </div>
+              </div>
+
+              <div class="section-micro">Upcoming Calls Today</div>
+
+              <div class="booking-card">
+                <div class="bc-l">
+                  <div class="bc-av av1">JM</div>
+                  <div>
+                    <div class="bc-name">Julia Marsh</div>
+                    <div class="bc-meta">10:00 AM · Discovery Call</div>
+                  </div>
+                </div>
+                <span class="tag tag-green">Confirmed</span>
+              </div>
+              <div class="booking-card">
+                <div class="bc-l">
+                  <div class="bc-av av2">AR</div>
+                  <div>
+                    <div class="bc-name">Alex Rivera</div>
+                    <div class="bc-meta">11:30 AM · Interview Rd.1</div>
+                  </div>
+                </div>
+                <span class="tag tag-blue">Upcoming</span>
+              </div>
+              <div class="booking-card">
+                <div class="bc-l">
+                  <div class="bc-av av3">TK</div>
+                  <div>
+                    <div class="bc-name">Tom Klein</div>
+                    <div class="bc-meta">2:00 PM · Onboarding</div>
+                  </div>
+                </div>
+                <span class="tag tag-amber">Pending</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════ STATS BAR ══════════ -->
+  <div class="stats-bar">
+    <div class="container">
+      <div class="stats-inner">
+        <div class="stat-block reveal">
+          <div class="stat-n">500<span class="accent">+</span></div>
+          <div class="stat-l">B2B Teams Active</div>
+        </div>
+        <div class="stat-block reveal" style="transition-delay:0.08s">
+          <div class="stat-n">94<span class="accent">%</span></div>
+          <div class="stat-l">Lead Quality Rate</div>
+        </div>
+        <div class="stat-block reveal" style="transition-delay:0.16s">
+          <div class="stat-n">3<span class="accent">×</span></div>
+          <div class="stat-l">Faster Hiring Cycles</div>
+        </div>
+        <div class="stat-block reveal" style="transition-delay:0.24s">
+          <div class="stat-n">4.9<span class="accent">★</span></div>
+          <div class="stat-l">Average Rating</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════ 7-DAY TRIAL ══════════ -->
+  <section class="trial" id="trial">
+    <div class="container">
+      <div class="trial-grid">
+
+        <!-- Left -->
+        <div>
+          <div class="eyebrow reveal">
+            <span class="eyebrow-line"></span>
+            <span class="eyebrow-text">Risk-Free Trial</span>
+          </div>
+          <h2 class="display display-lg reveal" style="color:var(--ink);margin-bottom:1.25rem">
+            7 days free.<br>
+            Pay only when<br>
+            you <em style="font-style:italic;color:var(--wa)">convert</em> a lead.
+          </h2>
+          <p class="reveal"
+            style="font-size:1rem;color:var(--ink-soft);line-height:1.8;font-weight:300;margin-bottom:2.5rem;max-width:480px">
+            We earn your trust before we earn your money. Start your full-featured trial today. You only pay after a
+            real conversion happens — so your first win is proof it works.
+          </p>
+
+          <div class="steps-list">
+            <div class="step-item reveal">
+              <div class="step-num sn-blue">1</div>
+              <div class="step-text">
+                <h4>Sign up in 60 seconds</h4>
+                <p>No credit card. No setup fees. Your scheduling pages are live the moment you confirm your email.</p>
+              </div>
+            </div>
+            <div class="step-item reveal" style="transition-delay:0.1s">
+              <div class="step-num sn-mid">2</div>
+              <div class="step-text">
+                <h4>Use every feature, completely free</h4>
+                <p>Hiring pipelines, domain spam filtering, shared lead routing, and client acquisition flows — all
+                  fully unlocked from day one.</p>
+              </div>
+            </div>
+            <div class="step-item reveal" style="transition-delay:0.2s">
+              <div class="step-num sn-amber">3</div>
+              <div class="step-text">
+                <h4>Pay only after a lead converts</h4>
+                <p>When a lead turns into a paying client during your trial, billing begins. Zero risk to explore — you
+                  pay for real results only.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Price Card -->
+        <div class="reveal" style="transition-delay:0.12s">
+          <div class="price-card">
+            <div class="ribbon">Most Popular</div>
+            <div class="pc-header">
+              <div class="pc-label">Starter Plan</div>
+              <div class="pc-price">
+                <span class="pc-amount">$0</span>
+                <span class="pc-period">/ first 7 days</span>
+              </div>
+              <div class="pc-sub">Then <strong>pay per conversion</strong> — never per seat</div>
+            </div>
+            <div class="pc-body">
+              <ul class="feat-list">
+                <li><span class="feat-check"><svg viewBox="0 0 12 12" fill="none">
+                      <path d="M2 6l3 3 5-5" stroke="#25D366" stroke-width="1.8" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg></span>Unlimited scheduling pages</li>
+                <li><span class="feat-check"><svg viewBox="0 0 12 12" fill="none">
+                      <path d="M2 6l3 3 5-5" stroke="#25D366" stroke-width="1.8" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg></span>Talent hiring pipeline (multi-stage)</li>
+                <li><span class="feat-check"><svg viewBox="0 0 12 12" fill="none">
+                      <path d="M2 6l3 3 5-5" stroke="#25D366" stroke-width="1.8" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg></span>Shared lead management &amp; smart routing</li>
+                <li><span class="feat-check"><svg viewBox="0 0 12 12" fill="none">
+                      <path d="M2 6l3 3 5-5" stroke="#25D366" stroke-width="1.8" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg></span>Domain filter &amp; spam booking blocker</li>
+                <li><span class="feat-check"><svg viewBox="0 0 12 12" fill="none">
+                      <path d="M2 6l3 3 5-5" stroke="#25D366" stroke-width="1.8" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg></span>Client acquisition workflows</li>
+                <li><span class="feat-check"><svg viewBox="0 0 12 12" fill="none">
+                      <path d="M2 6l3 3 5-5" stroke="#25D366" stroke-width="1.8" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg></span>Google &amp; Outlook calendar sync</li>
+                <li><span class="feat-check"><svg viewBox="0 0 12 12" fill="none">
+                      <path d="M2 6l3 3 5-5" stroke="#25D366" stroke-width="1.8" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg></span>Team collaboration — up to 5 users</li>
+                <li><span class="feat-check"><svg viewBox="0 0 12 12" fill="none">
+                      <path d="M2 6l3 3 5-5" stroke="#25D366" stroke-width="1.8" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg></span>Conversion analytics &amp; reporting</li>
+              </ul>
+              <a href="#" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;">
+                Start Free Trial <span class="arrow">→</span>
+              </a>
+              <p class="pc-cta-note">No card required · Cancel anytime · 100% risk-free</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════ SERVICES ══════════ -->
+  <section class="services" id="services">
+    <div class="container">
+
+      <div class="eyebrow reveal">
+        <span class="eyebrow-line"></span>
+        <span class="eyebrow-text">Platform Features</span>
+      </div>
+      <h2 class="display display-lg reveal" style="color:var(--ink);margin-bottom:1rem">
+        One platform.<br>Three <em style="font-style:italic;color:var(--wa)">revenue engines.</em>
+      </h2>
+      <p class="reveal"
+        style="font-size:1rem;color:var(--ink-soft);line-height:1.8;font-weight:300;max-width:540px;margin-bottom:0">
+        Every B2B scheduling workflow — from sourcing talent to closing clients — lives in one beautifully unified
+        workspace.
+      </p>
+
+      <div class="tabs-nav reveal" style="transition-delay:0.1s">
+        <button class="tab-btn active" onclick="switchTab('hiring')">
+          <span class="t-num">1</span> Talent Hiring
+        </button>
+        <button class="tab-btn" onclick="switchTab('leads')">
+          <span class="t-num">2</span> Lead Management
+        </button>
+        <button class="tab-btn" onclick="switchTab('clients')">
+          <span class="t-num">3</span> Client Acquisition
+        </button>
+      </div>
+
+      <!-- ── TAB: Hiring ── -->
+      <div class="tab-panel on" id="tp-hiring">
+        <div>
+          <div class="panel-icon-box pib-blue">👥</div>
+          <h3 class="display display-sm panel-h">
+            Fill roles faster with <em>automated</em> interview scheduling.
+          </h3>
+          <p class="panel-p">
+            Let candidates self-book at every stage of your pipeline. No email back-and-forth. No ghost interviews.
+            Streamlined scheduling that saves your team hours every week and helps you close top talent before
+            competitors can.
+          </p>
+          <ul class="panel-feats">
+            <li><span class="pf-dot pf-blue"></span>Multi-stage pipeline with auto-scheduling triggers at each step</li>
+            <li><span class="pf-dot pf-blue"></span>Round-robin distribution across all hiring managers</li>
+            <li><span class="pf-dot pf-amber"></span>Custom intake forms and pre-screening questionnaires</li>
+            <li><span class="pf-dot pf-amber"></span>Automated reminders that reduce no-shows by up to 70%</li>
+            <li><span class="pf-dot pf-blue"></span>Native ATS integrations: Greenhouse, Lever, Ashby, Workday</li>
+          </ul>
+          <a href="#trial" class="btn btn-primary">Explore Hiring Tools <span class="arrow">→</span></a>
+        </div>
+        <div>
+          <div class="p-visual">
+            <div class="pv-head">
+              <div class="pv-head-icon pib-blue" style="border-radius:var(--r-s)">👥</div>
+              <div>
+                <div class="pv-title">Interview Pipeline</div>
+                <div class="pv-sub">6 candidates in progress</div>
+              </div>
+            </div>
+            <div class="pv-body">
+              <div class="cand-row">
+                <div class="cr-l">
+                  <div class="cr-av cr-av-a">SR</div>
+                  <div>
+                    <div class="cr-name">Sarah Romano</div>
+                    <div class="cr-role">Sr. Product Designer</div>
+                  </div>
+                </div>
+                <span class="pill-sm ps-green">Interview Today</span>
+              </div>
+              <div class="cand-row">
+                <div class="cr-l">
+                  <div class="cr-av cr-av-b">MP</div>
+                  <div>
+                    <div class="cr-name">Marcus Park</div>
+                    <div class="cr-role">Head of Engineering</div>
+                  </div>
+                </div>
+                <span class="pill-sm ps-amber">Under Review</span>
+              </div>
+              <div class="cand-row">
+                <div class="cr-l">
+                  <div class="cr-av cr-av-c">LW</div>
+                  <div>
+                    <div class="cr-name">Lena Wu</div>
+                    <div class="cr-role">Growth Manager</div>
+                  </div>
+                </div>
+                <span class="pill-sm ps-blue">Round 2 Booked</span>
+              </div>
+              <div class="cand-row">
+                <div class="cr-l">
+                  <div class="cr-av cr-av-d">DK</div>
+                  <div>
+                    <div class="cr-name">David Köhler</div>
+                    <div class="cr-role">Sales Director</div>
+                  </div>
+                </div>
+                <span class="pill-sm ps-ink">Final Round</span>
+              </div>
+              <div class="progress-section">
+                <div class="section-micro" style="margin-bottom:0.75rem">Pipeline Stage Breakdown</div>
+                <div class="pr-row">
+                  <span class="pr-label">Screening</span>
+                  <div class="pr-bar">
+                    <div class="pr-fill" style="width:100%;background:var(--blue)"></div>
+                  </div>
+                  <span class="pr-count">18</span>
+                </div>
+                <div class="pr-row">
+                  <span class="pr-label">Interviews</span>
+                  <div class="pr-bar">
+                    <div class="pr-fill" style="width:67%;background:var(--amber)"></div>
+                  </div>
+                  <span class="pr-count">12</span>
+                </div>
+                <div class="pr-row">
+                  <span class="pr-label">Final Round</span>
+                  <div class="pr-bar">
+                    <div class="pr-fill" style="width:33%;background:var(--blue-mid)"></div>
+                  </div>
+                  <span class="pr-count">6</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── TAB: Leads ── -->
+      <div class="tab-panel" id="tp-leads">
+        <div>
+          <div class="panel-icon-box pib-amber">🛡️</div>
+          <h3 class="display display-sm panel-h">
+            Shared lead routing with <em>intelligent</em> spam filtering.
+          </h3>
+          <p class="panel-p">
+            Your team shares one smart lead pool with fair round-robin distribution. Domain filtering automatically
+            blocks personal email addresses and spam domains — so only real, qualified business leads get through.
+          </p>
+          <ul class="panel-feats">
+            <li><span class="pf-dot pf-amber"></span>Shared team booking pages with intelligent round-robin routing</li>
+            <li><span class="pf-dot pf-amber"></span>Domain blocklist: block @gmail, @yahoo, @hotmail and any custom
+              domain</li>
+            <li><span class="pf-dot pf-blue"></span>Require verified business email to book any meeting</li>
+            <li><span class="pf-dot pf-blue"></span>Lead scoring and automatic qualification workflows</li>
+            <li><span class="pf-dot pf-amber"></span>CRM sync: Salesforce, HubSpot, Pipedrive — real-time</li>
+          </ul>
+          <a href="#trial" class="btn btn-amber">Explore Lead Tools <span class="arrow">→</span></a>
+        </div>
+        <div>
+          <div class="p-visual">
+            <div class="pv-head" style="background:var(--ink-mid)">
+              <div class="pv-head-icon" style="background:var(--amber-lite)">🛡️</div>
+              <div>
+                <div class="pv-title">Domain Filter</div>
+                <div class="pv-sub">Blocking spam · Allowing quality</div>
+              </div>
+            </div>
+            <div class="pv-body">
+              <div class="domain-section">
+                <div class="ds-label">Blocked Domains</div>
+                <div class="chip-row">
+                  <span class="d-chip d-block">@gmail.com</span>
+                  <span class="d-chip d-block">@yahoo.com</span>
+                  <span class="d-chip d-block">@hotmail.com</span>
+                  <span class="d-chip d-block">@outlook.com</span>
+                </div>
+              </div>
+              <div class="domain-section" style="margin-bottom:1.25rem">
+                <div class="ds-label">Allowed Patterns</div>
+                <div class="chip-row">
+                  <span class="d-chip d-allow">*.com (corporate)</span>
+                  <span class="d-chip d-allow">*.io</span>
+                  <span class="d-chip d-allow">*.co</span>
+                </div>
+              </div>
+              <div class="section-micro" style="margin-bottom:0.6rem">Live Booking Requests</div>
+              <div class="lead-row lr-ok">
+                <div>
+                  <div class="lr-name">Emma Schmidt</div>
+                  <div class="lr-email">emma@acmecorp.com</div>
+                </div>
+                <span class="pill-sm ps-green">✓ Allowed</span>
+              </div>
+              <div class="lead-row lr-blocked">
+                <div>
+                  <div class="lr-name">john.doe1982</div>
+                  <div class="lr-email">john.doe1982@gmail.com</div>
+                </div>
+                <span class="pill-sm" style="background:#FFEBEE;color:#C62828">🚫 Blocked</span>
+              </div>
+              <div class="lead-row lr-ok">
+                <div>
+                  <div class="lr-name">Carlos Vega</div>
+                  <div class="lr-email">c.vega@techventures.io</div>
+                </div>
+                <span class="pill-sm ps-green">✓ Allowed</span>
+              </div>
+              <div class="lead-row lr-blocked">
+                <div>
+                  <div class="lr-name">user8823x</div>
+                  <div class="lr-email">user8823x@hotmail.com</div>
+                </div>
+                <span class="pill-sm" style="background:#FFEBEE;color:#C62828">🚫 Blocked</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── TAB: Clients ── -->
+      <div class="tab-panel" id="tp-clients">
+        <div>
+          <div class="panel-icon-box pib-ink">📈</div>
+          <h3 class="display display-sm panel-h">
+            Turn discovery calls into signed <em>clients</em> — on autopilot.
+          </h3>
+          <p class="panel-p">
+            Design high-converting booking flows purpose-built for your sales team. Automated follow-ups, proposal
+            scheduling, and contract workflows keep prospects moving through your funnel without any manual effort.
+          </p>
+          <ul class="panel-feats">
+            <li><span class="pf-dot pf-blue"></span>Branded booking pages with custom intake forms and conditional logic
+            </li>
+            <li><span class="pf-dot pf-blue"></span>Automated nurture email sequences triggered post-booking</li>
+            <li><span class="pf-dot pf-amber"></span>Proposal and contract scheduling with e-signature integration</li>
+            <li><span class="pf-dot pf-amber"></span>Full conversion attribution and revenue tracking dashboard</li>
+            <li><span class="pf-dot pf-blue"></span>Embed anywhere: website, landing pages, or LinkedIn profile</li>
+          </ul>
+          <a href="#trial" class="btn btn-primary">Explore Client Tools <span class="arrow">→</span></a>
+        </div>
+        <div>
+          <div class="p-visual">
+            <div class="pv-head" style="background:var(--ink-mid)">
+              <div class="pv-head-icon" style="background:var(--blue-lite)">📈</div>
+              <div>
+                <div class="pv-title">Acquisition Funnel</div>
+                <div class="pv-sub">This month · 142 leads entered</div>
+              </div>
+            </div>
+            <div class="pv-body">
+              <div class="funnel-row">
+                <div class="fr-dot" style="background:var(--blue)"></div>
+                <div class="fr-info">
+                  <div class="fr-title">Discovery Calls</div>
+                  <div class="fr-sub">Booked this month</div>
+                </div>
+                <div class="fr-bar">
+                  <div class="fr-fill" style="width:100%;background:var(--blue)"></div>
+                </div>
+                <div class="fr-n">142</div>
+              </div>
+              <div class="funnel-row">
+                <div class="fr-dot" style="background:#7E57C2"></div>
+                <div class="fr-info">
+                  <div class="fr-title">Proposals Sent</div>
+                  <div class="fr-sub">Follow-up scheduled</div>
+                </div>
+                <div class="fr-bar">
+                  <div class="fr-fill" style="width:73%;background:#7E57C2"></div>
+                </div>
+                <div class="fr-n">104</div>
+              </div>
+              <div class="funnel-row">
+                <div class="fr-dot" style="background:var(--amber)"></div>
+                <div class="fr-info">
+                  <div class="fr-title">Contract Reviews</div>
+                  <div class="fr-sub">Awaiting signature</div>
+                </div>
+                <div class="fr-bar">
+                  <div class="fr-fill" style="width:47%;background:var(--amber)"></div>
+                </div>
+                <div class="fr-n">67</div>
+              </div>
+              <div class="funnel-row">
+                <div class="fr-dot" style="background:#43A047"></div>
+                <div class="fr-info">
+                  <div class="fr-title">Closed Won</div>
+                  <div class="fr-sub">New clients this month</div>
+                </div>
+                <div class="fr-bar">
+                  <div class="fr-fill" style="width:28%;background:#43A047"></div>
+                </div>
+                <div class="fr-n">40</div>
+              </div>
+              <div class="kpis-mini">
+                <div class="km-box">
+                  <div class="km-n c-amber">28%</div>
+                  <div class="km-l">Discovery → Close Rate</div>
+                </div>
+                <div class="km-box">
+                  <div class="km-n c-blue">$12.4k</div>
+                  <div class="km-l">Avg. Contract Value</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ══════════ HOW IT WORKS ══════════ -->
+  <section class="hiw" id="how-it-works">
+    <div class="container hiw-inner">
+      <div class="hiw-header">
+        <div class="label hiw-eyebrow">Simple Setup</div>
+        <h2 class="display display-lg hiw-h">
+          Live in under <em>10 minutes.</em>
+        </h2>
+      </div>
+      <div class="steps-row">
+        <div class="step-card reveal">
+          <div class="step-ring sr-blue">01</div>
+          <h3 class="step-title">Create your account</h3>
+          <p class="step-desc">Sign up with your work email. Instant access, no credit card. Your 7-day trial starts the
+            moment you confirm your email.</p>
+        </div>
+        <div class="step-card reveal" style="transition-delay:0.1s">
+          <div class="step-ring sr-ghost">02</div>
+          <h3 class="step-title">Connect your calendar</h3>
+          <p class="step-desc">Sync Google or Outlook in one click. Schedley reads your live availability and keeps
+            everything in perfect sync — automatically.</p>
+        </div>
+        <div class="step-card reveal" style="transition-delay:0.2s">
+          <div class="step-ring sr-ghost">03</div>
+          <h3 class="step-title">Configure your flows</h3>
+          <p class="step-desc">Set up hiring pipelines, domain filters, lead routing rules, and client pages with our
+            no-code workflow builder.</p>
+        </div>
+        <div class="step-card reveal" style="transition-delay:0.3s">
+          <div class="step-ring sr-amber">04</div>
+          <h3 class="step-title">Share &amp; convert</h3>
+          <p class="step-desc">Share your booking link. Watch qualified leads roll in. Pay only when a lead converts to
+            a paying client.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════ TESTIMONIALS ══════════ -->
+  <section class="testi" id="testimonials">
+    <div class="container">
+      <div class="testi-header">
+        <div class="eyebrow reveal" style="justify-content:center">
+          <span class="eyebrow-line"></span>
+          <span class="eyebrow-text">Customer Stories</span>
+          <span class="eyebrow-line"></span>
+        </div>
+        <h2 class="display display-lg reveal" style="color:var(--ink);margin-top:0.75rem">
+          Trusted by B2B teams<br>
+          who <em style="font-style:italic;color:var(--wa)">move fast.</em>
+        </h2>
+      </div>
+
+      <div class="cards-grid">
+
+        <div class="t-card featured reveal">
+          <div class="t-stars">★★★★★</div>
+          <p class="t-quote">"We cut our time-to-interview by 60% in the first month alone. The round-robin hiring
+            feature saves our HR team 8 hours a week. The domain spam filter is a complete game-changer — zero fake
+            leads."</p>
+          <div class="t-author">
+            <div class="t-av" style="background:linear-gradient(135deg,#25D366,#5CDB94)">KP</div>
+            <div>
+              <div class="t-name">Katie Park</div>
+              <div class="t-role">Head of People, NovaTech</div>
+            </div>
+          </div>
+          <div class="t-metrics">
+            <div class="tm">
+              <div class="tm-n">60%</div>
+              <div class="tm-l">Faster hiring</div>
+            </div>
+            <div class="tm">
+              <div class="tm-n">8h</div>
+              <div class="tm-l">Saved / week</div>
+            </div>
+            <div class="tm">
+              <div class="tm-n">0</div>
+              <div class="tm-l">Spam leads</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="t-card reveal" style="transition-delay:0.1s">
+          <div class="t-stars">★★★★★</div>
+          <p class="t-quote">"The pay-on-conversion model was exactly what we needed as a growing startup. We tested it
+            risk-free for a week and closed 3 enterprise clients during the trial. Then happily started paying."</p>
+          <div class="t-author">
+            <div class="t-av" style="background:linear-gradient(135deg,#FFB300,#E65100)">RS</div>
+            <div>
+              <div class="t-name">Rodrigo Silva</div>
+              <div class="t-role">CEO, Meridian SaaS</div>
+            </div>
+          </div>
+          <div class="t-metrics">
+            <div class="tm">
+              <div class="tm-n a">3</div>
+              <div class="tm-l">Clients closed</div>
+            </div>
+            <div class="tm">
+              <div class="tm-n a">7d</div>
+              <div class="tm-l">During free trial</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="t-card reveal" style="transition-delay:0.2s">
+          <div class="t-stars">★★★★★</div>
+          <p class="t-quote">"We have a 15-person sales team and the shared lead management is flawless. Domain
+            filtering blocks the noise — our qualified booking rate jumped from 34% to 78% in six weeks."</p>
+          <div class="t-author">
+            <div class="t-av" style="background:linear-gradient(135deg,#26A69A,#004D40)">MO</div>
+            <div>
+              <div class="t-name">Miranda O'Brien</div>
+              <div class="t-role">VP Sales, ScalePath</div>
+            </div>
+          </div>
+          <div class="t-metrics">
+            <div class="tm">
+              <div class="tm-n">78%</div>
+              <div class="tm-l">Qualified bookings</div>
+            </div>
+            <div class="tm">
+              <div class="tm-n">+44pp</div>
+              <div class="tm-l">vs. before</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════ CTA ══════════ -->
+  <section class="cta-band">
+    <div class="cta-ring cta-ring-1"></div>
+    <div class="cta-ring cta-ring-2"></div>
+    <div class="cta-ring cta-ring-3"></div>
+    <div class="container cta-inner">
+      <div class="cta-eyebrow label">
+        <span></span> Get Started Today <span></span>
+      </div>
+      <h2 class="display display-xl cta-h">
+        Your next hire, lead<br>&amp; client are one<br>
+        <em>booking away.</em>
+      </h2>
+      <p class="cta-body">
+        Start your 7-day free trial. Every feature unlocked. No credit card. Zero risk.<br>You only pay after a lead
+        converts — your first win is all the proof you need.
+      </p>
+      <div class="cta-btns">
+        <a href="#" class="btn btn-wa btn-lg">Start Free for 7 Days <span class="arrow">→</span></a>
+        <a href="#" class="btn btn-ghost-white btn-lg">Book a 15-min Demo</a>
+      </div>
+      <p class="cta-note">No setup fees · No credit card · <strong>Pay only after you convert</strong></p>
+    </div>
+  </section>
+
+
+  <!-- ══════════ FOOTER ══════════ -->
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <div>
+          <a class="f-logo" href="#">Schedley<span class="f-logo-dot"></span></a>
+          <div class="f-amber-bar"></div>
+          <p class="f-tagline">The B2B scheduling platform built for teams that close. Hire talent, qualify leads, and
+            acquire clients — all in one place.</p>
+        </div>
+        <div>
+          <div class="f-col-h">Product</div>
+          <ul class="f-links">
+            <li><a href="#">Talent Hiring</a></li>
+            <li><a href="#">Lead Management</a></li>
+            <li><a href="#">Client Acquisition</a></li>
+            <li><a href="#">Integrations</a></li>
+            <li><a href="#">Pricing</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="f-col-h">Company</div>
+          <ul class="f-links">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Press</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="f-col-h">Legal</div>
+          <ul class="f-links">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">GDPR</a></li>
+            <li><a href="#">Cookies</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 Schedley, Inc. All rights reserved.</span>
+        <div class="fb-links">
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <a href="#">Status</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  <script>
+    /* ── Navbar shadow on scroll ── */
+    const nb = document.getElementById('navbar');
+    window.addEventListener('scroll', () => nb.classList.toggle('shadow', scrollY > 20));
+
+    /* ── Mobile menu ── */
+    const ham = document.getElementById('ham');
+    const mobileNav = document.getElementById('mobile-nav');
+    ham.addEventListener('click', () => mobileNav.classList.toggle('open'));
+    function closeMobile() { mobileNav.classList.remove('open'); }
+
+    /* ── Tab switching ── */
+    function switchTab(name) {
+      const map = { hiring: 'tp-hiring', leads: 'tp-leads', clients: 'tp-clients' };
+      const btnOrder = ['hiring', 'leads', 'clients'];
+
+      document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', btnOrder[i] === name);
+      });
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('on'));
+      document.getElementById(map[name]).classList.add('on');
+    }
+
+    /* ── Scroll reveal ── */
+    const revealObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08, rootMargin: '0px 0px -48px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+    /* ── Staggered child reveals ── */
+    const childObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.querySelectorAll('.step-card, .t-card, .stat-block, .kpi-card, .funnel-row, .booking-card, .cand-row').forEach((el, i) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(22px)';
+            el.style.transition = `opacity 0.55s ${i * 0.09}s ease, transform 0.55s ${i * 0.09}s ease`;
+            setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }, 60 + i * 90);
+          });
+        }
+      });
+    }, { threshold: 0.05 });
+
+    document.querySelectorAll('.steps-row, .cards-grid, .stats-inner, .app-body').forEach(el => childObs.observe(el));
+  </script>
+
+</body>
+
+</html>

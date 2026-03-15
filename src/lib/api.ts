@@ -1,5 +1,4 @@
-
-
+import { ENV } from "./get-env";
 import {
   AvailabilityType,
   CreateEventPayloadType,
@@ -20,6 +19,27 @@ import {
 import { API, PublicAPI } from "./axios-client";
 import { IntegrationAppType, VideoConferencingPlatform } from "./types";
 
+/** Check if the local backend is reachable (for connection verification). */
+export async function checkBackendConnection(): Promise<{
+  ok: boolean;
+  message?: string;
+}> {
+  const base = ENV.VITE_API_BASE_URL ?? "";
+  if (!base) return { ok: false, message: "No API URL configured" };
+  // Backend root is GET / (no /api prefix); strip /api for health check to avoid 404
+  const healthUrl = base.replace(/\/api\/?$/, "") || "http://localhost:8000";
+  try {
+    const res = await fetch(healthUrl, { method: "GET", mode: "cors" });
+    return { ok: res.ok };
+  } catch {
+    return {
+      ok: false,
+      message:
+        "Backend unreachable. Ensure the backend is running (e.g. port 8000) and CORS allows this origin.",
+    };
+  }
+}
+
 export const loginMutationFn = async (
   data: loginType
 ): Promise<LoginResponseType> => {
@@ -27,8 +47,35 @@ export const loginMutationFn = async (
   return response.data;
 };
 
-export const registerMutationFn = async (data: registerType) =>
-  await API.post("/auth/register", data);
+export const registerMutationFn = async (
+  data: registerType
+): Promise<LoginResponseType> => {
+  const response = await API.post("/auth/register", data);
+  return response.data;
+};
+
+/** GET /auth/me – restore session (user) when we have a token (e.g. after refresh). */
+export type AuthMeResponseType = {
+  user: {
+    id: string;
+    name: string;
+    username: string;
+    email: string;
+    timezone?: string;
+    imageUrl?: string | null;
+    isApproved?: boolean;
+  } | null;
+};
+export async function getAuthMe(): Promise<AuthMeResponseType> {
+  const response = await API.get("/auth/me");
+  return response.data;
+}
+
+/** POST /auth/setup-complete – mark onboarding as done (first-time setup). */
+export async function setupComplete(): Promise<AuthMeResponseType> {
+  const response = await API.post("/auth/setup-complete");
+  return response.data;
+}
 
 //*********** */ EVENT APIS
 export const CreateEventMutationFn = async (data: CreateEventPayloadType) =>
@@ -142,3 +189,18 @@ export const scheduleMeetingMutationFn = async (data: CreateMeetingType) => {
   const response = await API.post("/meeting/public/create", data);
   return response.data;
 };
+
+/** Contact form submission – no auth required. Backend: POST /api/contact. */
+export type ContactFormPayload = {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+};
+
+export async function submitContactForm(
+  data: ContactFormPayload
+): Promise<{ message?: string }> {
+  const response = await PublicAPI.post("/contact", data);
+  return response.data;
+}

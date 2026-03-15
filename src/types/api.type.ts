@@ -8,6 +8,7 @@ export type LoginResponseType = {
     name: string;
     username: string;
     email: string;
+    imageUrl?: string | null;
     isApproved?: boolean;
   };
   accessToken: string;

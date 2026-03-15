@@ -80,7 +80,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         ${!isCollapsed ? "w-[280px]" : "w-[70px]"} 
         transition-all duration-300 ease-in-out
         !bg-gradient-to-b !from-slate-50 !to-white
-        !border-r !border-slate-200/60
+        !border-r-[5px] border-[#007aff]
         shadow-xl shadow-slate-200/40
         backdrop-blur-sm
       `}
@@ -278,7 +278,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       pointer-events-none" />
       </SidebarContent>
 
-      <SidebarRail className="!bg-slate-200/60" />
+      <SidebarRail className="!bg-transparent" />
 
       {/* Custom Styles */}
       <style >{`

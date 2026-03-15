@@ -1,4 +1,30 @@
-# React + TypeScript + Vite
+# Schedley Frontend
+
+React + TypeScript + Vite app for Schedley (scheduling & client acquisition).
+
+## Connecting to the local backend
+
+Auth and API use the **backed_end_schedley** NestJS backend.
+
+1. **Start the backend** (from repo root):
+   ```bash
+   cd backed_end_schedley && npm install && npm run start:dev
+   ```
+   By default it runs on **http://localhost:8000**.
+
+2. **Frontend env** – copy `.env.example` to `.env` and keep defaults for local dev:
+   - `VITE_API_BASE_URL=http://localhost:8000/api`
+   - `VITE_APP_ORIGIN=http://localhost:5173` (Vite dev server)
+
+3. **Backend CORS** – in `backed_end_schedley` set `FRONTEND_ORIGIN=http://localhost:5173` in `.env` so the backend allows requests from the Vite dev server.
+
+4. **Run the frontend**:
+   ```bash
+   npm install && npm run dev
+   ```
+   Then open http://localhost:5173. Sign in and Sign up use `POST /api/auth/login` and `POST /api/auth/register`; Google OAuth uses `GET /api/auth/google` and redirects back to `/oauth-success`.
+
+---
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

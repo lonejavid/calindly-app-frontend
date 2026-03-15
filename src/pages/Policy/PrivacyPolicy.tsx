@@ -1,205 +1,291 @@
+import { Link } from "react-router-dom";
+import {
+  Shield,
+  Lock,
+  Eye,
+  UserCheck,
+  Mail,
+  Cookie,
+  Database,
+  ShieldCheck,
+  FileText,
+  ChevronRight,
+  ArrowLeft,
+  Share2,
+  Trash2,
+  Download,
+  BellOff,
+  Hand,
+  Server,
+  Fingerprint,
+  Calendar,
+} from "lucide-react";
+import { LandingHeader } from "@/components/LandingHeader";
+import SectionReveal from "@/components/SectionReveal";
 
-import { Shield, Lock, Eye, UserCheck, Mail } from 'lucide-react';
-import mylogo from "../../../mylogo.png";
+const containerClass = "max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8";
+
+const policySections = [
+  {
+    id: "introduction",
+    icon: Eye,
+    title: "Introduction",
+    content: `Schedley ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our intelligent scheduling, email filtering, and calendar management services, including our website, applications, and related offerings. Please read this policy carefully. By using Schedley, you consent to the practices described herein.`,
+  },
+  {
+    id: "information-we-collect",
+    icon: UserCheck,
+    title: "Information We Collect",
+    items: [
+      {
+        icon: UserCheck,
+        heading: "Personal Information",
+        text: "When you sign up or use our services, we may collect: your name and email address (e.g., via Google OAuth), profile picture if provided, calendar data and scheduling preferences, email filtering settings and rules, and contact details you provide for support or demos.",
+      },
+      {
+        icon: Database,
+        heading: "Usage & Technical Information",
+        text: "We automatically collect: device and browser type, IP address and general location, usage patterns and feature interactions, performance and error logs, and cookies and similar technologies data.",
+      },
+      {
+        icon: Calendar,
+        heading: "Meeting & Scheduling Data",
+        text: "To provide scheduling and appointment-setting services, we process: meeting titles and participants, availability and time zones, booking links and calendar integrations, and communication related to scheduling (e.g., email threads we analyze for spam or relevance).",
+      },
+    ],
+  },
+  {
+    id: "how-we-use",
+    icon: Lock,
+    title: "How We Use Your Information",
+    list: [
+      "Provide, maintain, and improve our scheduling, email filtering, and calendar services",
+      "Authenticate your identity and manage your account",
+      "Filter spam or unwanted bookings and validate meeting requests",
+      "Send service-related notifications, updates, and security alerts",
+      "Develop new features and improve user experience",
+      "Ensure security, prevent fraud, and comply with legal obligations",
+      "Communicate with you about support, feedback, or marketing (where permitted)",
+    ],
+  },
+  {
+    id: "sharing",
+    icon: Share2,
+    title: "Information Sharing & Disclosure",
+    list: [
+      "We do not sell, trade, or rent your personal information to third parties.",
+      "We may share information with your explicit consent or at your direction.",
+      "We may disclose information to comply with laws, court orders, or legal process.",
+      "We may share with trusted service providers who assist our operations under strict confidentiality and data-processing agreements.",
+      "In connection with a merger, acquisition, or sale of assets, we may transfer information as part of that transaction.",
+    ],
+  },
+  {
+    id: "security",
+    icon: ShieldCheck,
+    title: "Data Security",
+    list: [
+      "Encryption in transit (TLS/HTTPS) and at rest where applicable",
+      "Regular security assessments and monitoring",
+      "Access controls, authentication, and principle of least privilege",
+      "Secure, reputable infrastructure and data centers",
+    ],
+  },
+  {
+    id: "your-rights",
+    icon: Hand,
+    title: "Your Rights & Choices",
+    items: [
+      { icon: Eye, heading: "Access & portability", text: "You may request access to your personal information and, where feasible, receive a portable copy." },
+      { icon: FileText, heading: "Correction", text: "You may update or correct your account and profile information through our services or by contacting us." },
+      { icon: Trash2, heading: "Deletion", text: "You may request deletion of your account and associated personal data, subject to legal retention requirements." },
+      { icon: Download, heading: "Export", text: "You may request an export of your data in a machine-readable format where technically possible." },
+      { icon: BellOff, heading: "Opt-out", text: "You may opt out of non-essential marketing communications at any time via the link in our emails or in your account settings." },
+      { icon: Hand, heading: "Withdraw consent", text: "Where processing is based on consent, you may withdraw consent at any time without affecting the lawfulness of prior processing." },
+    ],
+  },
+  {
+    id: "cookies",
+    icon: Cookie,
+    title: "Cookies & Tracking",
+    content: `We use cookies and similar technologies to operate our services, remember your preferences, analyze usage, and improve performance. You can control many cookies through your browser settings. Some features may depend on cookies; disabling them may limit functionality.`,
+  },
+  {
+    id: "retention",
+    icon: Server,
+    title: "Data Retention",
+    content: `We retain your information for as long as your account is active or as needed to provide services and fulfill the purposes described in this policy. After account deletion, we will delete or anonymize your personal information within a reasonable period (e.g., within 30 days), except where we must retain data for legal, regulatory, or legitimate business purposes.`,
+  },
+  {
+    id: "international",
+    icon: Fingerprint,
+    title: "International Transfers",
+    content: `Your information may be processed in countries other than your country of residence. We ensure appropriate safeguards (e.g., standard contractual clauses or adequacy decisions) are in place where required by applicable law.`,
+  },
+  {
+    id: "contact",
+    icon: Mail,
+    title: "Contact Us",
+    content: `For privacy-related questions, requests, or complaints, please contact us:`,
+    contact: {
+      name: "Schedley Privacy Team",
+      email: "notification@schedley.com",
+      note: "We will respond to your request within a reasonable period and in accordance with applicable law.",
+    },
+  },
+  {
+    id: "updates",
+    icon: FileText,
+    title: "Policy Updates",
+    content: `We may update this Privacy Policy from time to time. We will post the revised policy on this page and update the "Last updated" date. Material changes may be communicated via email or a prominent notice in our services. Your continued use of Schedley after changes constitutes acceptance of the updated policy. We encourage you to review this page periodically.`,
+  },
+];
+
 export default function PrivacyPolicy() {
+  const lastUpdated = "March 13, 2026";
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Header */}
-      <nav className="relative z-50 p-4 sm:p-6">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          {/* <div className="flex items-center space-x-2 sm:space-x-3">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-              <Calendar className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
-            </div>
-            <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
-              Schedley
-            </span>
-          </div> */}
-             <div className="flex items-center space-x-3 sm:space-x-4">
-  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg overflow-hidden flex items-center justify-center bg-white shadow-lg">
-    <img
-      src={mylogo}
-      alt="Schedley Logo"
-      className="w-full h-full object-contain"
-    />
-  </div>
-  <span className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
-    Schedley
-  </span>
-</div>
-          <a 
-            href="/" 
-            className="text-gray-300 hover:text-white transition-colors duration-300"
+    <div className="min-h-screen bg-[var(--white)] b2b-page">
+      <LandingHeader />
+
+      <main className="pt-8 sm:pt-12 pb-16 sm:pb-24">
+        {/* Breadcrumb / Back */}
+        <div className={containerClass}>
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-sm font-medium text-[var(--ink-muted)] hover:text-[var(--blue)] transition-colors mb-8"
           >
+            <ArrowLeft className="w-4 h-4" />
             Back to Home
-          </a>
+          </Link>
         </div>
-      </nav>
 
-      {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-6 sm:p-8 border border-white/10">
-          {/* Title */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mb-4">
-              <Shield className="w-8 h-8 text-white" />
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">Privacy Policy</h1>
-            <p className="text-gray-300">Last updated: {new Date().toLocaleDateString()}</p>
+        {/* Hero */}
+        <section className="relative bg-[var(--ink)] text-white py-16 sm:py-20 overflow-hidden">
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-[var(--blue)] blur-[120px]" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-[var(--blue-mid)] blur-[100px]" />
           </div>
-
-          {/* Content */}
-          <div className="prose prose-invert max-w-none">
-            <div className="space-y-8 text-gray-300">
-              
-              {/* Introduction */}
-              <section>
-                <h2 className="text-2xl font-semibold text-white mb-4 flex items-center">
-                  <Eye className="w-6 h-6 mr-2 text-purple-400" />
-                  Introduction
-                </h2>
-                <p className="leading-relaxed">
-                  At Schedley, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our smart email filtering and calendar management service. Please read this privacy policy carefully.
+          <div className={`${containerClass} relative z-10`}>
+            <SectionReveal effect="fade-up">
+              <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
+                <span className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--blue)]/30 border border-[var(--blue)]/50 text-[var(--blue-mid)] mb-6">
+                  <Shield className="w-8 h-8" strokeWidth={2} />
+                </span>
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+                  Privacy Policy
+                </h1>
+                <p className="text-white/80 text-base sm:text-lg leading-relaxed">
+                  How we collect, use, and protect your information when you use Schedley.
                 </p>
-              </section>
-
-              {/* Information We Collect */}
-              <section>
-                <h2 className="text-2xl font-semibold text-white mb-4 flex items-center">
-                  <UserCheck className="w-6 h-6 mr-2 text-purple-400" />
-                  Information We Collect
-                </h2>
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-xl font-medium text-white mb-2">Personal Information</h3>
-                    <p className="leading-relaxed">When you sign up for Schedley, we collect:</p>
-                    <ul className="list-disc list-inside mt-2 space-y-1 ml-4">
-                      <li>Name and email address (via Google OAuth)</li>
-                      <li>Profile picture (if provided through Google)</li>
-                      <li>Calendar data and scheduling preferences</li>
-                      <li>Email filtering settings and rules</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-medium text-white mb-2">Usage Information</h3>
-                    <p className="leading-relaxed">We automatically collect:</p>
-                    <ul className="list-disc list-inside mt-2 space-y-1 ml-4">
-                      <li>Device information and browser type</li>
-                      <li>IP address and location data</li>
-                      <li>Usage patterns and feature interactions</li>
-                      <li>Performance and error logs</li>
-                    </ul>
-                  </div>
-                </div>
-              </section>
-
-              {/* How We Use Your Information */}
-              <section>
-                <h2 className="text-2xl font-semibold text-white mb-4 flex items-center">
-                  <Lock className="w-6 h-6 mr-2 text-purple-400" />
-                  How We Use Your Information
-                </h2>
-                <p className="leading-relaxed mb-4">We use your information to:</p>
-                <ul className="list-disc list-inside space-y-2 ml-4">
-                  <li>Provide and maintain our scheduling and email filtering services</li>
-                  <li>Authenticate your identity and manage your account</li>
-                  <li>Filter spam bookings and validate meeting requests</li>
-                  <li>Send you important service notifications and updates</li>
-                  <li>Improve our services and develop new features</li>
-                  <li>Ensure security and prevent fraud</li>
-                  <li>Comply with legal obligations</li>
-                </ul>
-              </section>
-
-              {/* Information Sharing */}
-              <section>
-                <h2 className="text-2xl font-semibold text-white mb-4">Information Sharing</h2>
-                <p className="leading-relaxed mb-4">We do not sell, trade, or rent your personal information. We may share your information only in these limited circumstances:</p>
-                <ul className="list-disc list-inside space-y-2 ml-4">
-                  <li>With your explicit consent</li>
-                  <li>To comply with legal requirements or court orders</li>
-                  <li>To protect our rights, privacy, safety, or property</li>
-                  <li>With trusted service providers who assist in our operations (under strict confidentiality agreements)</li>
-                  <li>In connection with a business transfer or acquisition</li>
-                </ul>
-              </section>
-
-              {/* Data Security */}
-              <section>
-                <h2 className="text-2xl font-semibold text-white mb-4">Data Security</h2>
-                <p className="leading-relaxed mb-4">We implement industry-standard security measures to protect your information:</p>
-                <ul className="list-disc list-inside space-y-2 ml-4">
-                  <li>Encryption in transit and at rest</li>
-                  <li>Regular security audits and monitoring</li>
-                  <li>Access controls and authentication protocols</li>
-                  <li>Secure data centers and infrastructure</li>
-                </ul>
-              </section>
-
-              {/* Your Rights */}
-              <section>
-                <h2 className="text-2xl font-semibold text-white mb-4">Your Rights</h2>
-                <p className="leading-relaxed mb-4">You have the right to:</p>
-                <ul className="list-disc list-inside space-y-2 ml-4">
-                  <li>Access and review your personal information</li>
-                  <li>Update or correct your information</li>
-                  <li>Delete your account and associated data</li>
-                  <li>Export your data in a portable format</li>
-                  <li>Opt-out of non-essential communications</li>
-                  <li>Withdraw consent for data processing</li>
-                </ul>
-              </section>
-
-              {/* Cookies and Tracking */}
-              <section>
-                <h2 className="text-2xl font-semibold text-white mb-4">Cookies and Tracking</h2>
-                <p className="leading-relaxed">
-                  We use cookies and similar technologies to enhance your experience, remember your preferences, and analyze usage patterns. You can control cookie settings through your browser preferences.
+                <p className="text-white/60 text-sm mt-4">
+                  Last updated: {lastUpdated}
                 </p>
-              </section>
+              </div>
+            </SectionReveal>
+          </div>
+        </section>
 
-              {/* Data Retention */}
-              <section>
-                <h2 className="text-2xl font-semibold text-white mb-4">Data Retention</h2>
-                <p className="leading-relaxed">
-                  We retain your information for as long as your account is active or as needed to provide services. When you delete your account, we will delete your personal information within 30 days, except where retention is required by law.
-                </p>
-              </section>
+        {/* Content */}
+        <div className={containerClass}>
+          <div className="relative -mt-6 sm:-mt-8 space-y-6 sm:space-y-8">
+            {policySections.map((section, index) => {
+              const Icon = section.icon;
+              return (
+                <SectionReveal key={section.id} effect={index % 2 === 0 ? "slide-right" : "slide-left"}>
+                  <article
+                    id={section.id}
+                    className="bg-[var(--white)] rounded-[var(--r-l)] border border-[var(--line)] shadow-[var(--sh-sm)] overflow-hidden hover:shadow-[var(--sh-md)] transition-shadow"
+                  >
+                    <div className="p-6 sm:p-8">
+                      <div className="flex items-start gap-4 sm:gap-5">
+                        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[var(--blue-lite)] text-[var(--blue)]">
+                          <Icon className="w-6 h-6" strokeWidth={2} />
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <h2 className="text-xl sm:text-2xl font-bold text-[var(--ink)] mb-4 flex items-center gap-2">
+                            {section.title}
+                            <ChevronRight className="w-5 h-5 text-[var(--ink-muted)] shrink-0" />
+                          </h2>
 
-              {/* Contact Us */}
-              <section>
-                <h2 className="text-2xl font-semibold text-white mb-4 flex items-center">
-                  <Mail className="w-6 h-6 mr-2 text-purple-400" />
-                  Contact Us
-                </h2>
-                <p className="leading-relaxed">
-                  If you have questions about this Privacy Policy or our data practices, please contact us:
-                </p>
-                <div className="mt-4 p-4 bg-white/5 rounded-lg border border-white/10">
-                  <p className="font-medium text-white">Schedley Privacy Team</p>
-                  <p>Email: notification@schedley.com</p>
-                 
-                </div>
-              </section>
+                          {"content" in section && section.content && (
+                            <p className="text-[var(--ink-muted)] leading-relaxed">{section.content}</p>
+                          )}
 
-              {/* Updates */}
-              <section>
-                <h2 className="text-2xl font-semibold text-white mb-4">Policy Updates</h2>
-                <p className="leading-relaxed">
-                  We may update this Privacy Policy from time to time. We will notify you of any material changes by posting the new policy on this page and updating the "Last updated" date. Your continued use of Schedley after any changes constitutes acceptance of the updated policy.
-                </p>
-              </section>
-            </div>
+                          {"list" in section && section.list && (
+                            <ul className="space-y-2">
+                              {section.list.map((item, i) => (
+                                <li key={i} className="flex items-start gap-3 text-[var(--ink-muted)]">
+                                  <span className="flex h-5 w-5 shrink-0 mt-0.5 rounded-full bg-[var(--blue)]/20 items-center justify-center">
+                                    <ChevronRight className="w-3 h-3 text-[var(--blue)]" strokeWidth={2.5} />
+                                  </span>
+                                  {item}
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+
+                          {"items" in section && section.items && (
+                            <div className="space-y-6">
+                              {section.items.map((item) => {
+                                const ItemIcon = item.icon;
+                                return (
+                                  <div key={item.heading} className="pl-0 sm:pl-0">
+                                    <div className="flex items-start gap-3">
+                                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--surface)] text-[var(--blue)]">
+                                        <ItemIcon className="w-4 h-4" strokeWidth={2} />
+                                      </span>
+                                      <div>
+                                        <h3 className="font-semibold text-[var(--ink)] mb-1">{item.heading}</h3>
+                                        <p className="text-[var(--ink-muted)] text-sm leading-relaxed">{item.text}</p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
+
+                          {"contact" in section && section.contact && (
+                            <div className="mt-4 p-5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--line)]">
+                              <p className="font-semibold text-[var(--ink)]">{section.contact.name}</p>
+                              <a
+                                href={`mailto:${section.contact.email}`}
+                                className="text-[var(--blue)] hover:underline mt-1 inline-flex items-center gap-2"
+                              >
+                                <Mail className="w-4 h-4" />
+                                {section.contact.email}
+                              </a>
+                              {section.contact.note && (
+                                <p className="text-sm text-[var(--ink-muted)] mt-3">{section.contact.note}</p>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                </SectionReveal>
+              );
+            })}
           </div>
         </div>
-      </div>
 
-      {/* Footer */}
-      <footer className="py-8 px-4 sm:px-6 border-t border-white/10 mt-12">
-        <div className="max-w-7xl mx-auto text-center">
-          <p className="text-gray-400">© 2025 Schedley. All rights reserved.</p>
+        {/* CTA back to home */}
+        <div className={containerClass}>
+          <SectionReveal effect="fade-up">
+            <div className="mt-12 sm:mt-16 text-center">
+              <Link
+                to="/"
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-m)] font-semibold text-[var(--blue)] border-2 border-[var(--blue)] hover:bg-[var(--blue-ghost)] transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                Back to Home
+              </Link>
+            </div>
+          </SectionReveal>
         </div>
-      </footer>
+      </main>
     </div>
   );
 }

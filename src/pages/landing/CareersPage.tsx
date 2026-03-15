@@ -16,7 +16,8 @@ import {
   Heart,
   TrendingUp
 } from 'lucide-react';
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import SectionReveal from '@/components/SectionReveal';
 
 const CareersPage = () => {
      const navigate = useNavigate();
@@ -191,6 +192,7 @@ const CareersPage = () => {
         </div>
         
         <div className="relative z-10 pt-16 pb-20 px-6">
+          <SectionReveal effect="fade-up">
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full mb-6 border border-white/20">
               <Briefcase className="w-4 h-4 mr-2 text-purple-400" />
@@ -228,12 +230,14 @@ const CareersPage = () => {
               </div>
             </div>
           </div>
+          </SectionReveal>
         </div>
       </div>
 
       {/* Benefits Section */}
       <section className="py-12 px-6">
         <div className="max-w-7xl mx-auto">
+          <SectionReveal effect="slide-left">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
               Why Work at Schedley?
@@ -254,12 +258,14 @@ const CareersPage = () => {
               </div>
             ))}
           </div>
+          </SectionReveal>
         </div>
       </section>
 
       {/* Job Listings */}
       <section className="py-12 px-6 bg-gradient-to-r from-slate-800/50 to-purple-800/30">
         <div className="max-w-7xl mx-auto">
+          <SectionReveal effect="fade-up">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
               Open Positions
@@ -323,6 +329,7 @@ const CareersPage = () => {
               </div>
             ))}
           </div>
+          </SectionReveal>
         </div>
       </section>
 

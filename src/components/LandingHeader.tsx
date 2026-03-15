@@ -1,0 +1,360 @@
+import { useState, useRef } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import {
+  CalendarCheck,
+  Target,
+  Briefcase,
+  UserPlus,
+  LayoutGrid,
+  ChevronDown,
+  Play,
+  ExternalLink,
+  Menu,
+  X,
+  Linkedin,
+} from "lucide-react";
+import { ProfileMenu } from "@/components/ProfileMenu";
+import { useStore } from "@/store/store";
+import { AUTH_ROUTES, PROTECTED_ROUTES, SERVICE_ROUTES } from "@/routes/common/routePaths";
+
+import mylogo from "../../mylogo.png";
+
+const SERVICES_MENU = [
+  {
+    icon: CalendarCheck,
+    title: "B2B Appointment Scheduling",
+    description: "Targeted, results-driven outreach",
+    iconBg: "bg-emerald-500",
+    iconColor: "text-white",
+    path: SERVICE_ROUTES.B2B_APPOINTMENT_SCHEDULING,
+  },
+  {
+    icon: Target,
+    title: "B2B Lead Generation",
+    description: "Qualified business sales leads",
+    iconBg: "bg-amber-500",
+    iconColor: "text-white",
+    path: SERVICE_ROUTES.B2B_LEAD_GENERATION,
+  },
+  {
+    icon: Briefcase,
+    title: "Sales as a Service",
+    description: "End-to-End sales expertise",
+    iconBg: "bg-blue-500",
+    iconColor: "text-white",
+  },
+  {
+    icon: UserPlus,
+    title: "Recruiting Talent",
+    description: "Scale your team with top talent",
+    iconBg: "bg-violet-500",
+    iconColor: "text-white",
+    path: SERVICE_ROUTES.RECRUITING_TALENT,
+  },
+  {
+    icon: LayoutGrid,
+    title: "Schedley Management",
+    description: "Smart scheduling & calendar control",
+    iconBg: "bg-sky-500",
+    iconColor: "text-white",
+    path: SERVICE_ROUTES.SCHEDLEY_MANAGEMENT,
+  },
+];
+
+const DEMO_URL =
+  "https://www.schedley.com/lonejavida829/schedley-demo-see-how-client-acquisition-works-9040";
+
+type LandingHeaderProps = {
+  /** When false, header uses transition (e.g. -translate-y-10 opacity-0). Default true. */
+  isVisible?: boolean;
+};
+
+export function LandingHeader({ isVisible = true }: LandingHeaderProps) {
+  const navigate = useNavigate();
+  const { user, clearAuth } = useStore();
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const servicesTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleBookDemo = () => {
+    window.open(DEMO_URL, "_blank");
+  };
+
+  return (
+    <nav
+      className={`relative z-50 bg-white border-b border-[var(--line)] shadow-[var(--sh-xs)] transition-all duration-1000 ${
+        isVisible ? "translate-y-0 opacity-100" : "-translate-y-10 opacity-0"
+      }`}
+      style={{ fontFamily: "Inter, sans-serif" }}
+    >
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 py-4">
+        <button
+          type="button"
+          onClick={() => navigate("/")}
+          className="flex items-center space-x-2 xs:space-x-3 sm:space-x-4 cursor-pointer"
+        >
+          <div className="w-10 h-10 xs:w-11 xs:h-11 sm:w-12 sm:h-12 rounded-xl overflow-hidden flex items-center justify-center bg-[var(--surface)] border border-[var(--line)]">
+            <img src={mylogo} alt="Schedley" className="w-full h-full object-contain" />
+          </div>
+          <span className="text-xl xs:text-2xl sm:text-3xl font-bold text-[var(--ink)]">
+            Schedley
+          </span>
+        </button>
+
+        <div className="hidden xl:flex items-center gap-2 lg:gap-3">
+          <div
+            className="relative"
+            onMouseEnter={() => {
+              if (servicesTimeoutRef.current) clearTimeout(servicesTimeoutRef.current);
+              setServicesOpen(true);
+            }}
+            onMouseLeave={() => {
+              servicesTimeoutRef.current = setTimeout(() => setServicesOpen(false), 120);
+            }}
+          >
+            <button
+              type="button"
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-sm text-base font-medium text-[var(--ink)] hover:text-[var(--blue)] hover:bg-[var(--blue-ghost)] transition-colors cursor-pointer"
+            >
+              Service
+              <ChevronDown
+                className={`w-4 h-4 transition-transform ${servicesOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+            {servicesOpen && (
+              <div className="absolute left-0 top-full pt-2 z-[100]">
+                <div className="w-[650px] rounded-xl bg-white border border-[var(--line)] shadow-[var(--sh-lg)] p-5 grid grid-cols-2 gap-x-8 gap-y-4">
+                  {SERVICES_MENU.map(
+                    ({ icon: Icon, title, description, iconBg, iconColor, path }) => {
+                      const className =
+                        "flex items-start gap-4 p-3.5 rounded-lg hover:bg-[var(--surface)] transition-colors group cursor-pointer";
+                      const content = (
+                        <>
+                          <div
+                            className={`w-12 h-12 rounded-lg flex items-center justify-center shrink-0 ${iconBg} ${iconColor}`}
+                          >
+                            <Icon className="w-6 h-6" strokeWidth={2} />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="font-semibold text-base text-[var(--ink)] group-hover:text-[var(--blue)]">
+                              {title}
+                            </div>
+                            <div className="text-sm text-[var(--ink-muted)] mt-1">
+                              {description}
+                            </div>
+                          </div>
+                        </>
+                      );
+                      return path ? (
+                        <Link
+                          key={title}
+                          to={path}
+                          className={className}
+                          onClick={() => setServicesOpen(false)}
+                        >
+                          {content}
+                        </Link>
+                      ) : (
+                        <a key={title} href="/#features" className={className}>
+                          {content}
+                        </a>
+                      );
+                    }
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => navigate("/carrer")}
+            className="px-4 py-2.5 rounded-sm text-base font-medium text-[var(--ink)] hover:text-[var(--blue)] hover:bg-[var(--blue-ghost)] transition-colors cursor-pointer"
+          >
+            Careers
+          </button>
+          <a
+            href="/#features"
+            className="px-4 py-2.5 rounded-sm text-base font-medium text-[var(--ink)] hover:text-[var(--blue)] hover:bg-[var(--blue-ghost)] transition-colors cursor-pointer"
+          >
+            Features
+          </a>
+
+          <button
+            type="button"
+            onClick={handleBookDemo}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-sm text-base font-semibold text-white transition-all duration-200 cursor-pointer hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]"
+            style={{ background: "var(--blue)", boxShadow: "var(--sh-blue)" }}
+          >
+            <Play className="w-4 h-4" />
+            <span className="hidden lg:inline">Book</span> Demo
+            <ExternalLink className="w-3.5 h-3.5 opacity-80" />
+          </button>
+
+          <a
+            href="https://www.linkedin.com/company/schedley-com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2.5 rounded-md text-[var(--ink-muted)] hover:text-[var(--blue)] hover:bg-[var(--blue-ghost)] transition-colors cursor-pointer"
+          >
+            <Linkedin className="w-5 h-5" />
+          </a>
+
+          {user ? (
+            <ProfileMenu
+              user={user}
+              variant="landing"
+              onProfileClick={() => navigate(AUTH_ROUTES.PROFILE)}
+              onDashboardClick={() => navigate(PROTECTED_ROUTES.EVENT_TYPES)}
+              onLogout={() => {
+                clearAuth();
+                navigate(AUTH_ROUTES.SIGN_IN);
+              }}
+            />
+          ) : (
+            <Link
+              to={AUTH_ROUTES.SIGN_IN}
+              className="px-5 py-2.5 rounded-sm text-base font-semibold text-[var(--blue)] border-2 border-[var(--blue)] hover:bg-[var(--blue-ghost)] transition-colors cursor-pointer inline-block"
+            >
+              Login
+            </Link>
+          )}
+        </div>
+
+        <button
+          type="button"
+          className="xl:hidden p-2 text-[var(--ink)] hover:bg-[var(--surface)] rounded-md cursor-pointer"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </div>
+
+      {mobileMenuOpen && (
+        <div className="xl:hidden absolute top-full left-0 right-0 bg-white border-t border-[var(--line)] shadow-[var(--sh-md)] p-4 max-h-[80vh] overflow-y-auto">
+          <div className="flex flex-col gap-1">
+            <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-[var(--ink-muted)]">
+              Services
+            </div>
+            {SERVICES_MENU.map(({ icon: Icon, title, description, iconBg, path }) => {
+              const content = (
+                <>
+                  <div
+                    className={`w-9 h-9 rounded-lg flex items-center justify-center ${iconBg} text-white`}
+                  >
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-[var(--ink)]">{title}</div>
+                    <div className="text-xs text-[var(--ink-muted)]">{description}</div>
+                  </div>
+                </>
+              );
+              const onClick = () => setMobileMenuOpen(false);
+              return path ? (
+                <Link
+                  key={title}
+                  to={path}
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-[var(--surface)] cursor-pointer"
+                  onClick={onClick}
+                >
+                  {content}
+                </Link>
+              ) : (
+                <a
+                  key={title}
+                  href="/#features"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-[var(--surface)] cursor-pointer"
+                  onClick={onClick}
+                >
+                  {content}
+                </a>
+              );
+            })}
+            <div className="border-t border-[var(--line)] my-2" />
+            <button
+              type="button"
+              onClick={() => {
+                navigate("/carrer");
+                setMobileMenuOpen(false);
+              }}
+              className="px-3 py-2.5 text-left font-medium text-[var(--ink)] rounded-lg hover:bg-[var(--surface)] cursor-pointer"
+            >
+              Careers
+            </button>
+            <a
+              href="/#features"
+              className="px-3 py-2.5 font-medium text-[var(--ink)] rounded-lg hover:bg-[var(--surface)] cursor-pointer"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Features
+            </a>
+            <button
+              type="button"
+              onClick={() => {
+                handleBookDemo();
+                setMobileMenuOpen(false);
+              }}
+              className="flex items-center justify-center gap-2 w-full py-3 rounded-lg font-semibold text-white mt-2 cursor-pointer"
+              style={{ background: "var(--blue)" }}
+            >
+              <Play className="w-4 h-4" /> Book Demo
+            </button>
+            <a
+              href="https://www.linkedin.com/company/schedley-com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-2.5 flex items-center gap-2 text-[var(--ink)] cursor-pointer"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <Linkedin className="w-5 h-5" /> LinkedIn
+            </a>
+            {user ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigate(AUTH_ROUTES.PROFILE);
+                    setMobileMenuOpen(false);
+                  }}
+                  className="px-3 py-2.5 text-left font-medium text-[var(--ink)] cursor-pointer"
+                >
+                  Profile
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigate(PROTECTED_ROUTES.EVENT_TYPES);
+                    setMobileMenuOpen(false);
+                  }}
+                  className="px-3 py-2.5 text-left font-medium text-[var(--ink)] cursor-pointer"
+                >
+                  Dashboard
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    clearAuth();
+                    navigate(AUTH_ROUTES.SIGN_IN);
+                    setMobileMenuOpen(false);
+                  }}
+                  className="px-3 py-2.5 text-left font-medium text-red-600 cursor-pointer"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Link
+                to={AUTH_ROUTES.SIGN_IN}
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-4 py-2.5 rounded-lg font-semibold text-[var(--blue)] border-2 border-[var(--blue)] mt-2 cursor-pointer inline-block text-center"
+              >
+                Login
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+}
