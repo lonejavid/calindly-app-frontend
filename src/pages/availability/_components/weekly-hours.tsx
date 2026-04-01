@@ -1254,23 +1254,21 @@ const WeeklyHoursRow = ({
   // Handle timezone loading state - don't show error for fallback
   if (isLoadingTimezones) {
     return (
-      <div className="bg-gradient-to-br from-white via-gray-50/50 to-white dark:from-gray-900 dark:via-gray-800/30 dark:to-gray-900 rounded-2xl border border-gray-200/60 dark:border-gray-700/60 shadow-xl backdrop-blur-sm overflow-hidden p-8">
-        <div className="flex items-center justify-center space-y-4">
-          <div className="flex items-center gap-3">
-            <Loader />
-            <span className="text-gray-600 dark:text-gray-400">Loading timezones...</span>
-          </div>
+      <div className="b2b-page flex min-h-[200px] m-4 items-center justify-center rounded-[var(--r-xl)] border-2 border-[var(--line)] bg-[var(--surface)]/60 p-8">
+        <div className="flex items-center gap-3">
+          <Loader />
+          <span className="text-sm font-medium text-[var(--ink-muted)]">Loading timezones…</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-gradient-to-br from-white via-gray-50/50 to-white dark:from-gray-900 dark:via-gray-800/30 dark:to-gray-900 rounded-2xl border border-gray-200/60 dark:border-gray-700/60 shadow-xl backdrop-blur-sm overflow-hidden">
+    <div className="b2b-page w-full">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           {/* Timezone Selector */}
-          <div className="p-8 pb-4">
+          <div className="border-b border-[var(--line)] p-4 pb-4 sm:p-5 sm:pb-5 mb-0">
             <FormField
               name="timezone"
               control={form.control}
@@ -1278,14 +1276,14 @@ const WeeklyHoursRow = ({
                 <FormItem>
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                        <Globe className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                      <div className="rounded-[var(--r-m)] bg-[var(--blue-lite)] p-2 text-[var(--blue)]">
+                        <Globe className="h-5 w-5" strokeWidth={2} />
                       </div>
-                      <Label className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-                        Select Your Timezone
+                      <Label className="text-base font-semibold text-[var(--ink)] sm:text-lg">
+                        Select your timezone
                       </Label>
                     </div>
-                    
+
                     <FormControl>
                       <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
                         <PopoverTrigger asChild>
@@ -1293,10 +1291,8 @@ const WeeklyHoursRow = ({
                             variant="outline"
                             role="combobox"
                             className={cn(
-                              "justify-between w-full h-14 px-4 rounded-lg border-2 border-gray-200 dark:border-gray-700",
-                              "hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all duration-200",
-                              "bg-white dark:bg-gray-800",
-                              !field.value && "text-muted-foreground"
+                              "h-14 w-full justify-between rounded-[var(--r-m)] border-2 border-[var(--line)] bg-[var(--white)] px-4 transition-all hover:border-[var(--blue)]/40 hover:shadow-[var(--sh-sm)]",
+                              !field.value && "text-[var(--ink-muted)]",
                             )}
                           >
                             <div className="flex items-center gap-3 text-left flex-1">
@@ -1304,26 +1300,26 @@ const WeeklyHoursRow = ({
                                 <>
                                   <span className="text-xl">{selectedTimezoneInfo.country}</span>
                                   <div className="flex flex-col">
-                                    <span className="font-semibold text-gray-800 dark:text-gray-200">
+                                    <span className="font-semibold text-[var(--ink)]">
                                       {selectedTimezoneInfo.label}
                                     </span>
-                                    <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">
+                                    <span className="font-mono text-xs text-[var(--ink-muted)]">
                                       {selectedTimezoneInfo.value}
                                     </span>
                                   </div>
                                 </>
                               ) : (
                                 <>
-                                  <Globe className="h-5 w-5 text-gray-400" />
-                                  <span className="font-medium text-gray-600 dark:text-gray-400">
-                                    Select your timezone...
+                                  <Globe className="h-5 w-5 text-[var(--ink-muted)]" />
+                                  <span className="font-medium text-[var(--ink-muted)]">
+                                    Select your timezone…
                                   </span>
                                 </>
                               )}
                             </div>
                             <div className="flex items-center gap-2">
                               {selectedTimezoneInfo && (
-                                <div className="px-2 py-1 bg-green-100 dark:bg-green-900/30 rounded text-xs font-mono text-green-700 dark:text-green-400">
+                                <div className="rounded border border-[var(--line)] bg-[var(--surface)] px-2 py-1 font-mono text-xs font-semibold text-[var(--blue-deep)]">
                                   {getCurrentTimeInTimezone(selectedTimezoneInfo.value)}
                                 </div>
                               )}
@@ -1374,16 +1370,14 @@ const WeeklyHoursRow = ({
                     
                     {/* Timezone Info */}
                     {selectedTimezoneInfo && (
-                      <div className="bg-gradient-to-r from-blue-50/50 to-indigo-50/50 dark:from-blue-900/10 dark:to-indigo-900/10 p-3 rounded-lg border border-blue-200/30 dark:border-blue-700/30">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-blue-700 dark:text-blue-300 font-medium">
-                            Current Time in Your Selected Zone
-                          </span>
+                      <div className="rounded-[var(--r-m)] border border-[var(--line)] bg-[var(--blue-lite)]/50 p-3">
+                        <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
+                          <span className="font-medium text-[var(--ink)]">Current time in selected zone</span>
                           <div className="flex items-center gap-2">
-                            <span className="font-mono font-bold text-blue-800 dark:text-blue-200">
+                            <span className="font-mono font-bold text-[var(--blue-deep)]">
                               {getCurrentTimeInTimezone(selectedTimezoneInfo.value)}
                             </span>
-                            <span className="text-xs text-blue-600 dark:text-blue-400">
+                            <span className="text-xs text-[var(--ink-muted)]">
                               {new Date().toLocaleDateString('en-US', { 
                                 timeZone: selectedTimezoneInfo.value,
                                 weekday: 'short',
@@ -1402,24 +1396,24 @@ const WeeklyHoursRow = ({
           </div>
 
           {/* Time Gap Input */}
-          <div className="px-8">
+          <div className="border-b border-[var(--line)] px-4 py-4 sm:px-5 mb-0">
             <FormField
               name="timeGap"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <div className="bg-gradient-to-r from-purple-50/50 to-pink-50/50 dark:from-purple-900/10 dark:to-pink-900/10 p-4 rounded-lg border border-purple-200/30 dark:border-purple-700/30">
-                    <div className="flex items-center justify-between">
+                  <div className="rounded-[var(--r-l)] border-2 border-[var(--line)] bg-[var(--surface)]/80 p-4 sm:p-5">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                          <Clock className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                        <div className="rounded-[var(--r-m)] bg-[var(--amber-lite)] p-2 text-[var(--amber-dark)]">
+                          <Clock className="h-5 w-5" strokeWidth={2} />
                         </div>
                         <div>
-                          <Label className="text-base font-semibold text-gray-800 dark:text-gray-200">
-                            Time Gap Between Appointments
+                          <Label className="text-base font-semibold text-[var(--ink)]">
+                            Time gap between appointments
                           </Label>
-                          <p className="text-xs text-gray-600 dark:text-gray-400">
-                            Buffer time to prepare for your next meeting
+                          <p className="text-xs text-[var(--ink-muted)]">
+                            Buffer before your next booking slot
                           </p>
                         </div>
                       </div>
@@ -1429,7 +1423,7 @@ const WeeklyHoursRow = ({
                             <Input
                               {...field}
                               type="number"
-                              className="w-[80px] h-10 text-center font-semibold rounded-lg border border-purple-200 dark:border-purple-600 focus:border-purple-400 dark:focus:border-purple-500 bg-white dark:bg-gray-800"
+                              className="h-10 w-[80px] rounded-[var(--r-s)] border-2 border-[var(--line)] bg-[var(--white)] text-center font-semibold focus:border-[var(--blue)]"
                               value={field.value || ""}
                               min="1"
                               onChange={(e) => {
@@ -1444,9 +1438,7 @@ const WeeklyHoursRow = ({
                                 }
                               }}
                             />
-                            <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                              minutes
-                            </span>
+                            <span className="text-sm font-medium text-[var(--ink-muted)]">minutes</span>
                           </div>
                         </FormControl>
                         <FormMessage className="absolute top-full left-0 mt-1 whitespace-nowrap text-red-500 text-xs" />
@@ -1461,10 +1453,10 @@ const WeeklyHoursRow = ({
                           type="button"
                           onClick={() => form.setValue("timeGap", minutes)}
                           className={cn(
-                            "px-3 py-1 rounded text-xs font-medium transition-all duration-200",
+                            "rounded-full px-3 py-1 text-xs font-semibold transition-all",
                             field.value === minutes
-                              ? "bg-purple-500 text-white shadow-sm"
-                              : "bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-600 hover:bg-purple-50 dark:hover:bg-purple-900/20"
+                              ? "border-2 border-[var(--blue)] bg-[var(--blue-lite)] text-[var(--blue-deep)]"
+                              : "border-2 border-[var(--line)] bg-[var(--white)] text-[var(--ink-mid)] hover:border-[var(--blue)]/30",
                           )}
                         >
                           {minutes}m
@@ -1478,23 +1470,21 @@ const WeeklyHoursRow = ({
           </div>
 
           {/* Days Availability */}
-          <div className="px-8">
+          <div className="px-4 py-4 sm:px-5">
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
-                  <Calendar className="h-5 w-5 text-green-600 dark:text-green-400" />
+                <div className="rounded-[var(--r-m)] bg-[var(--blue-lite)] p-2 text-[var(--blue)]">
+                  <Calendar className="h-5 w-5" strokeWidth={2} />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-                    Weekly Schedule
-                  </h3>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">
-                    Set your availability for each day of the week in your selected timezone
+                  <h3 className="text-lg font-semibold text-[var(--ink)]">Weekly schedule</h3>
+                  <p className="text-xs text-[var(--ink-muted)]">
+                    Toggle days and set hours in your selected timezone
                   </p>
                 </div>
               </div>
-              
-              <div className="bg-gradient-to-br from-green-50/30 to-blue-50/30 dark:from-green-900/5 dark:to-blue-900/5 p-4 rounded-lg border border-gray-200/40 dark:border-gray-700/40">
+
+              <div className="rounded-[var(--r-l)] border-2 border-[var(--line)] bg-[var(--surface)]/60 p-3 sm:p-4">
                 <div className="space-y-2">
                   {form.watch("days").map((day, index) => (
                     <div key={day.day} className="transform transition-all duration-200 hover:scale-[1.01]">
@@ -1517,15 +1507,14 @@ const WeeklyHoursRow = ({
           </div>
 
           {/* Submit Button */}
-          <div className="p-8 pt-6">
-            <Button 
-              disabled={isPending} 
-              type="submit" 
+          <div className="border-t border-[var(--line)] bg-[var(--surface)]/40 px-5 py-5 sm:px-6">
+            <Button
+              disabled={isPending}
+              type="submit"
               className={cn(
-                "w-full h-12 text-base font-semibold rounded-lg transition-all duration-300",
-                "bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700",
-                "shadow-md hover:shadow-lg transform hover:scale-[1.01] active:scale-[0.99]",
-                "disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                "h-12 w-full rounded-[var(--r-m)] border-2 border-[var(--blue)] bg-[var(--blue)] text-base font-semibold text-white shadow-[var(--sh-blue)] transition-all",
+                "hover:bg-[var(--blue-dark)] hover:border-[var(--blue-dark)]",
+                "disabled:cursor-not-allowed disabled:opacity-50",
               )}
             >
               {isPending ? (
@@ -1543,8 +1532,8 @@ const WeeklyHoursRow = ({
             
             {/* Additional Info */}
             <div className="mt-3 text-center">
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                Your schedule will be saved in your selected timezone ({form.watch("timezone")})
+              <p className="text-xs text-[var(--ink-muted)]">
+                Saved in {form.watch("timezone") || "your timezone"}
               </p>
             </div>
           </div>

@@ -12,10 +12,14 @@ export const AUTH_ROUTES = {
 };
 
 export const SERVICE_ROUTES = {
-  B2B_APPOINTMENT_SCHEDULING: "/services/b2b-appointment-scheduling",
-  B2B_LEAD_GENERATION: "/services/b2b-lead-generation",
-  RECRUITING_TALENT: "/services/recruiting-talent",
-  SCHEDLEY_MANAGEMENT: "/services/schedley-management",
+  /** AI-powered personalized email outreach & follow-ups */
+  AI_OUTREACH: "/services/ai-outreach",
+  /** Qualified B2B leads & pipeline through targeted outreach systems */
+  PIPELINE_GENERATION: "/services/pipeline-generation",
+  /** Find, screen & hire — hiring infrastructure for growing teams */
+  HIRING_INFRASTRUCTURE: "/services/hiring-infrastructure",
+  /** Stop spam bookings — domain rules, lead quality, calendar you trust */
+  CALENDAR_INTELLIGENCE: "/services/calendar-intelligence",
 };
 
 export const CONTACT_ROUTE = "/contact";

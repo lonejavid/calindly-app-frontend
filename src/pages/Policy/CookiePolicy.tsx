@@ -14,8 +14,7 @@ import {
 } from "lucide-react";
 import { LandingHeader } from "@/components/LandingHeader";
 import SectionReveal from "@/components/SectionReveal";
-
-const containerClass = "max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8";
+import { LANDING_PAGE_CONTAINER_CLASS } from "@/lib/landingLayout";
 
 const cookieSections = [
   {
@@ -115,7 +114,7 @@ export default function CookiePolicy() {
       <LandingHeader />
 
       <main className="pt-8 sm:pt-12 pb-16 sm:pb-24">
-        <div className={containerClass}>
+        <div className={LANDING_PAGE_CONTAINER_CLASS}>
           <Link
             to="/"
             className="inline-flex items-center gap-2 text-sm font-medium text-[var(--ink-muted)] hover:text-[var(--blue)] transition-colors mb-8"
@@ -130,7 +129,7 @@ export default function CookiePolicy() {
             <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-[var(--blue)] blur-[120px]" />
             <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-[var(--blue-mid)] blur-[100px]" />
           </div>
-          <div className={`${containerClass} relative z-10`}>
+          <div className={`${LANDING_PAGE_CONTAINER_CLASS} relative z-10`}>
             <SectionReveal effect="fade-up">
               <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
                 <span className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--blue)]/30 border border-[var(--blue)]/50 text-[var(--blue-mid)] mb-6">
@@ -148,7 +147,7 @@ export default function CookiePolicy() {
           </div>
         </section>
 
-        <div className={containerClass}>
+        <div className={LANDING_PAGE_CONTAINER_CLASS}>
           <div className="relative -mt-6 sm:-mt-8 space-y-6 sm:space-y-8">
             {cookieSections.map((section, index) => {
               const Icon = section.icon;
@@ -232,7 +231,7 @@ export default function CookiePolicy() {
           </div>
         </div>
 
-        <div className={containerClass}>
+        <div className={LANDING_PAGE_CONTAINER_CLASS}>
           <SectionReveal effect="fade-up">
             <div className="mt-12 sm:mt-16 text-center">
               <Link

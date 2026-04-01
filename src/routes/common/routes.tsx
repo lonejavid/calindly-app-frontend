@@ -20,6 +20,7 @@ import SchedleyManagementPage from "@/pages/landing/SchedleyManagementPage";
 import ProfilePage from "@/pages/ProfilePage";
 import ContactUsPage from "@/pages/landing/ContactUsPage";
 import Setup from "@/pages/event_type/_components/Setup";
+import { Navigate } from "react-router-dom";
 import { SERVICE_ROUTES } from "./routePaths";
 
 export const authenticationRoutePaths = [
@@ -30,10 +31,26 @@ export const authenticationRoutePaths = [
   { path: "/carrer", element: <CareersPage /> },
   { path: AUTH_ROUTES.TALENT, element: <TalentHiringPage /> },
   { path: AUTH_ROUTES.PROFILE, element: <ProfilePage /> },
-  { path: SERVICE_ROUTES.B2B_APPOINTMENT_SCHEDULING, element: <B2BAppointmentSchedulingPage /> },
-  { path: SERVICE_ROUTES.B2B_LEAD_GENERATION, element: <B2BLeadGenerationPage /> },
-  { path: SERVICE_ROUTES.RECRUITING_TALENT, element: <RecruitingTalentPage /> },
-  { path: SERVICE_ROUTES.SCHEDLEY_MANAGEMENT, element: <SchedleyManagementPage /> },
+  {
+    path: "/services/b2b-appointment-scheduling",
+    element: <Navigate to={SERVICE_ROUTES.AI_OUTREACH} replace />,
+  },
+  { path: SERVICE_ROUTES.AI_OUTREACH, element: <B2BAppointmentSchedulingPage /> },
+  {
+    path: "/services/b2b-lead-generation",
+    element: <Navigate to={SERVICE_ROUTES.PIPELINE_GENERATION} replace />,
+  },
+  { path: SERVICE_ROUTES.PIPELINE_GENERATION, element: <B2BLeadGenerationPage /> },
+  {
+    path: "/services/recruiting-talent",
+    element: <Navigate to={SERVICE_ROUTES.HIRING_INFRASTRUCTURE} replace />,
+  },
+  { path: SERVICE_ROUTES.HIRING_INFRASTRUCTURE, element: <RecruitingTalentPage /> },
+  {
+    path: "/services/schedley-management",
+    element: <Navigate to={SERVICE_ROUTES.CALENDAR_INTELLIGENCE} replace />,
+  },
+  { path: SERVICE_ROUTES.CALENDAR_INTELLIGENCE, element: <SchedleyManagementPage /> },
   { path: CONTACT_ROUTE, element: <ContactUsPage /> },
   { path: AUTH_ROUTES.SIGN_IN, element: <SignIn /> },
   { path: AUTH_ROUTES.SIGN_UP, element: <SignUp /> },

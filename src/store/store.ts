@@ -10,6 +10,8 @@ type UserType = {
   email: string;
   imageUrl?: string | null;
   isApproved?: boolean;
+  /** Setup wizard step 0..4 (4 = completed). Used to resume after refresh. */
+  setupStep?: number;
 };
 
 type AuthState = {

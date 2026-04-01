@@ -85,7 +85,7 @@ export default function ProfilePage() {
 
           {/* Hero card */}
           <SectionReveal effect="fade-up">
-            <div className="rounded-[var(--r-xl)] border border-[var(--line)] bg-[var(--surface)] overflow-hidden shadow-[var(--sh-sm)]">
+            <div className="rounded-[var(--r-m)] border border-[var(--line)] bg-[var(--surface)] overflow-hidden shadow-[var(--sh-sm)]">
               <div className="bg-[var(--ink)] text-white px-6 sm:px-8 py-8 sm:py-10">
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
                   <Avatar className="w-24 h-24 sm:w-28 sm:h-28 ring-4 ring-[var(--blue)] shrink-0">
@@ -165,7 +165,7 @@ export default function ProfilePage() {
 
           {/* Delete Account section */}
           <SectionReveal effect="fade-up">
-            <div className="mt-10 rounded-[var(--r-xl)] border border-red-200 bg-red-50/50 overflow-hidden">
+            <div className="mt-10 rounded-[var(--r-m)] border border-red-200 bg-red-50/50 overflow-hidden">
               <div className="p-6 sm:p-8">
                 <div className="flex items-start gap-4">
                   <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-red-100 text-red-600">

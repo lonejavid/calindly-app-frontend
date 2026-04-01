@@ -64,10 +64,17 @@ export type AuthMeResponseType = {
     timezone?: string;
     imageUrl?: string | null;
     isApproved?: boolean;
+    setupStep?: number;
   } | null;
 };
 export async function getAuthMe(): Promise<AuthMeResponseType> {
   const response = await API.get("/auth/me");
+  return response.data;
+}
+
+/** POST /auth/setup-progress – save current setup step so user can resume after refresh. */
+export async function updateSetupProgress(step: number): Promise<{ step: number }> {
+  const response = await API.post("/auth/setup-progress", { step });
   return response.data;
 }
 

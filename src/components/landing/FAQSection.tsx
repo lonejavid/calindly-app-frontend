@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { ChevronDown, ChevronUp, HelpCircle } from "lucide-react";
 import { SectionHeader } from "@/components/SectionHeader";
 import SectionReveal, { type SectionRevealEffect } from "@/components/SectionReveal";

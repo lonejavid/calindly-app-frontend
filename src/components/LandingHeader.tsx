@@ -3,7 +3,6 @@ import { useNavigate, Link } from "react-router-dom";
 import {
   CalendarCheck,
   Target,
-  Briefcase,
   UserPlus,
   LayoutGrid,
   ChevronDown,
@@ -18,46 +17,40 @@ import { useStore } from "@/store/store";
 import { AUTH_ROUTES, PROTECTED_ROUTES, SERVICE_ROUTES } from "@/routes/common/routePaths";
 
 import mylogo from "../../mylogo.png";
+import { LANDING_PAGE_CONTAINER_CLASS } from "@/lib/landingLayout";
 
 const SERVICES_MENU = [
   {
     icon: CalendarCheck,
-    title: "B2B Appointment Scheduling",
-    description: "Targeted, results-driven outreach",
+    title: "AI Outreach",
+    description: "Personalized email sequences that scale",
     iconBg: "bg-emerald-500",
     iconColor: "text-white",
-    path: SERVICE_ROUTES.B2B_APPOINTMENT_SCHEDULING,
+    path: SERVICE_ROUTES.AI_OUTREACH,
   },
   {
     icon: Target,
-    title: "B2B Lead Generation",
-    description: "Qualified business sales leads",
+    title: "Pipeline Generation",
+    description: "Consistent qualified B2B leads through targeted outreach",
     iconBg: "bg-amber-500",
     iconColor: "text-white",
-    path: SERVICE_ROUTES.B2B_LEAD_GENERATION,
-  },
-  {
-    icon: Briefcase,
-    title: "Sales as a Service",
-    description: "End-to-End sales expertise",
-    iconBg: "bg-blue-500",
-    iconColor: "text-white",
+    path: SERVICE_ROUTES.PIPELINE_GENERATION,
   },
   {
     icon: UserPlus,
-    title: "Recruiting Talent",
-    description: "Scale your team with top talent",
+    title: "Hiring Infrastructure",
+    description: "Find, screen, and hire the right people—faster",
     iconBg: "bg-violet-500",
     iconColor: "text-white",
-    path: SERVICE_ROUTES.RECRUITING_TALENT,
+    path: SERVICE_ROUTES.HIRING_INFRASTRUCTURE,
   },
   {
     icon: LayoutGrid,
-    title: "Schedley Management",
-    description: "Smart scheduling & calendar control",
+    title: "Calendar Intelligence",
+    description: "Block spam bookings—only high-value calls get through",
     iconBg: "bg-sky-500",
     iconColor: "text-white",
-    path: SERVICE_ROUTES.SCHEDLEY_MANAGEMENT,
+    path: SERVICE_ROUTES.CALENDAR_INTELLIGENCE,
   },
 ];
 
@@ -87,13 +80,15 @@ export function LandingHeader({ isVisible = true }: LandingHeaderProps) {
       }`}
       style={{ fontFamily: "Inter, sans-serif" }}
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 py-4">
+      <div
+        className={`${LANDING_PAGE_CONTAINER_CLASS} flex items-center justify-between py-3`}
+      >
         <button
           type="button"
           onClick={() => navigate("/")}
           className="flex items-center space-x-2 xs:space-x-3 sm:space-x-4 cursor-pointer"
         >
-          <div className="w-10 h-10 xs:w-11 xs:h-11 sm:w-12 sm:h-12 rounded-xl overflow-hidden flex items-center justify-center bg-[var(--surface)] border border-[var(--line)]">
+          <div className="w-10 h-10 xs:w-11 xs:h-11 sm:w-12 sm:h-12 rounded-sm overflow-hidden flex items-center justify-center bg-[var(--surface)] border border-[var(--line)]">
             <img src={mylogo} alt="Schedley" className="w-full h-full object-contain" />
           </div>
           <span className="text-xl xs:text-2xl sm:text-3xl font-bold text-[var(--ink)]">
@@ -317,7 +312,7 @@ export function LandingHeader({ isVisible = true }: LandingHeaderProps) {
                     navigate(AUTH_ROUTES.PROFILE);
                     setMobileMenuOpen(false);
                   }}
-                  className="px-3 py-2.5 text-left font-medium text-[var(--ink)] cursor-pointer"
+                  className="w-full rounded-lg border-2 border-transparent px-3 py-2.5 text-left font-medium text-[var(--ink)] transition-colors hover:border-[var(--blue)]/40 hover:bg-[var(--surface)] cursor-pointer"
                 >
                   Profile
                 </button>

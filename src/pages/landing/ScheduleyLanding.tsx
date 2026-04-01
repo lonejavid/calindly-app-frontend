@@ -1,28 +1,327 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Calendar, Shield, Linkedin, CheckCircle, ArrowRight, Users, X, Star, TrendingUp, Rocket, Target, BarChart, Lock, MessageCircle, UserCheck, Mail, Phone, DollarSign, Headphones, RefreshCw, Play, ExternalLink, Send, Bot, Minimize2, Maximize2, Clock } from 'lucide-react';
-import { useNavigate } from "react-router-dom";
+import { Calendar, Shield, CheckCircle, ArrowRight, Users, X, Star, StarHalf, TrendingUp, Rocket, Target, BarChart, Lock, MessageCircle, UserCheck, Mail, Phone, DollarSign, Headphones, RefreshCw, Play, ExternalLink, Send, Bot, Minimize2, Maximize2, Clock, Quote, Zap } from 'lucide-react';
 import { Groq } from 'groq-sdk';
 
 import mylogo from "../../../mylogo.png";
+import heroSectionImage from "@/assets/hero-section-image.png";
 import { ENV } from '@/lib/get-env';
 
 const hasGroqKey = Boolean(ENV.VITE_GROQ_API_KEY);
 
-import { AUTH_ROUTES } from "@/routes/common/routePaths";
 import { LandingHeader } from "@/components/LandingHeader";
 import { SectionHeader } from "@/components/SectionHeader";
 import SectionDivider from "@/components/SectionDivider";
 import SectionReveal, { sectionEffectForIndex } from "@/components/SectionReveal";
 import { useFooter } from "@/contexts/FooterContext";
+import type { LucideIcon } from "lucide-react";
+
+function ProblemCard({
+  icon: Icon,
+  title,
+  content,
+  accent = "blue",
+}: {
+  icon: LucideIcon;
+  title: string;
+  content: string;
+  accent?: "blue" | "amber";
+}) {
+  const iconWrap =
+    accent === "amber"
+      ? "bg-[var(--amber-lite)] text-[var(--amber)]"
+      : "bg-[var(--blue-lite)] text-[var(--blue)]";
+  return (
+    <div className="group relative h-full flex flex-col rounded-[var(--r-l)] border-2 border-[var(--line)] bg-[var(--white)] p-4 sm:p-5 text-center shadow-[var(--sh-sm)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--blue)] hover:shadow-[var(--sh-md)]">
+      <div
+        className={`mx-auto mb-3 sm:mb-3.5 inline-flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-xl ${iconWrap} shadow-[var(--sh-xs)] transition-transform duration-300 group-hover:scale-105`}
+        aria-hidden
+      >
+        <Icon className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2} />
+      </div>
+      <h3 className="font-bold text-[var(--ink)] text-[15px] sm:text-base mb-2 leading-snug">{title}</h3>
+      <p className="text-sm sm:text-[15px] text-[var(--ink-muted)] leading-relaxed flex-1">{content}</p>
+    </div>
+  );
+}
+
+const PROBLEM_ITEMS: { icon: LucideIcon; title: string; content: string; accent?: "blue" | "amber" }[] = [
+  {
+    icon: BarChart,
+    title: "Leads are inconsistent",
+    content:
+      "Good months hide weak quarters. Without a steady flow of qualified conversations, revenue targets slip and your team burns cycles chasing random inbound.",
+  },
+  {
+    icon: Send,
+    title: "Outreach doesn’t convert",
+    content:
+      "More emails and LinkedIn touches don’t help if messaging, timing, and follow-up aren’t aligned. Prospects go cold while your pipeline looks busy on paper.",
+  },
+  {
+    icon: Clock,
+    title: "Hiring is slow",
+    accent: "amber",
+    content:
+      "Every growth push needs more hands—SDRs, coordinators, ops. Traditional hiring timelines can’t keep pace with how fast you need pipeline and coverage.",
+  },
+  {
+    icon: Phone,
+    title: "Too many low-quality calls",
+    content:
+      "Spam, tire-kickers, and bad-fit meetings eat the calendar slots that should go to real enterprise opportunities—wasting senior time and morale.",
+  },
+];
+
+const WHAT_SCHEDLEY_DOES: {
+  step: number;
+  title: string;
+  tagline: string;
+  detail: string;
+  bullets: readonly string[];
+  icon: LucideIcon;
+  accent?: "blue" | "amber";
+}[] = [
+  {
+    step: 1,
+    title: "Lead Generation",
+    tagline: "brings clients",
+    detail:
+      "Outbound and inbound motion tuned to your ICP so new conversations start with buyers who can actually buy—not random form fills.",
+    bullets: [
+      "Targeting aligned to your ideal customer and deal size",
+      "Touches that mirror how your team sells today",
+      "Clear handoff when someone is ready to talk",
+    ],
+    icon: Target,
+  },
+  {
+    step: 2,
+    title: "AI Email",
+    tagline: "converts leads",
+    detail:
+      "Inbox intelligence that separates signal from noise so reps spend time on threads that move revenue, not on sorting junk.",
+    bullets: [
+      "Filters spam, vendors, and low-intent noise automatically",
+      "Surfaces replies that deserve a human response",
+      "Keeps context so follow-ups stay on-message",
+    ],
+    icon: Bot,
+  },
+  {
+    step: 3,
+    title: "Hiring",
+    tagline: "builds your team",
+    detail:
+      "Recruiting workflows that run alongside revenue—so you add capacity without pausing the quarter to “figure out hiring.”",
+    bullets: [
+      "Role scorecards tied to how you actually sell",
+      "Pipeline for candidates, not scattered spreadsheets",
+      "Faster time-to-ramp for new revenue hires",
+    ],
+    icon: Users,
+    accent: "amber",
+  },
+  {
+    step: 4,
+    title: "Calendar Control",
+    tagline: "filters bad calls",
+    detail:
+      "Scheduling rules and verification so only serious, qualified prospects book time—protecting senior calendars and morale.",
+    bullets: [
+      "Block bad-fit domains and tire-kickers before they book",
+      "Enforce the meeting types that match your motion",
+      "Fewer no-shows and “just exploring” calls",
+    ],
+    icon: Calendar,
+  },
+];
+
+const HOW_IT_WORKS_JOURNEY_STEPS = [
+  {
+    title: "We understand your business",
+    blurb: "We map your ICP, offer, and sales motion so every touchpoint matches how you actually win.",
+  },
+  {
+    title: "We set up systems",
+    blurb: "Outreach, AI email filtering, scheduling, and hiring workflows—configured as one connected playbook.",
+  },
+  {
+    title: "You start getting meetings",
+    blurb: "Qualified prospects land on your calendar while spam and bad-fit requests stay out of your day.",
+  },
+  {
+    title: "We help you scale",
+    blurb: "We tune the system as you grow—more pipeline, better clients, and less time lost to manual chaos.",
+  },
+] as const;
+
+const RESULTS_OUTCOMES: {
+  label: string;
+  detail: string;
+  icon: LucideIcon;
+  iconTone?: "blue" | "gold";
+}[] = [
+  {
+    label: "More meetings",
+    detail: "Your week fills with real conversations—not empty slots or “maybe later” follow-ups.",
+    icon: Calendar,
+  },
+  {
+    label: "Better clients",
+    detail: "Tighter qualification means you talk to buyers who match budget, authority, and fit.",
+    icon: Star,
+    iconTone: "gold",
+  },
+  {
+    label: "Faster hiring",
+    detail: "Grow revenue capacity without a six-month recruiting project for every new seat.",
+    icon: TrendingUp,
+  },
+  {
+    label: "Less wasted time",
+    detail: "Fewer junk calls, fewer tool tabs, and fewer hours lost to coordination and rework.",
+    icon: Clock,
+  },
+];
+
+/** Classic rating star color (gold), not brand blue */
+const STAR_RATING_GOLD = "#eab308";
+const STAR_RATING_GOLD_FILL = "#facc15";
+
+/** Floating chips around hero art — positions: top-center-right, mid-left, bottom-left, mid-right, bottom-right */
+const HERO_FLOAT_CHIPS: {
+  Icon: LucideIcon;
+  label: string;
+  className: string;
+  delay: string;
+}[] = [
+  {
+    Icon: Zap,
+    label: "Live sync",
+    className:
+      "absolute left-[52%] top-[2%] z-20 -translate-x-1/2 -translate-y-2 sm:left-[56%] sm:top-[4%] sm:-translate-y-3 lg:left-[58%]",
+    delay: "0s",
+  },
+  {
+    Icon: Bot,
+    label: "AI smart",
+    className: "absolute top-[60%] -left-1 z-20 sm:left-0 sm:top-[28%] lg:top-[20%] lg:left-[1%]",
+    delay: "0.6s",
+  },
+  {
+    Icon: Calendar,
+    label: "Book fast",
+    className: "absolute bottom-[14%] left-[0%] z-20 sm:bottom-[5%] sm:left-[14%] lg:bottom-[5%]",
+    delay: "0.6s",
+  },
+  {
+    Icon: Shield,
+    label: "Zero spam",
+    className:
+      "absolute top-[36%] -right-1 z-20 sm:right-[-6%] sm:top-[38%] lg:right-[-10%] lg:top-[40%]",
+    delay: "1.8s",
+  },
+  {
+    Icon: TrendingUp,
+    label: "Pipeline",
+    className: "absolute bottom-[4%] -right-1 z-20 sm:bottom-[0%] sm:right-[0%] lg:right-[2%]",
+    delay: "2.4s",
+  },
+];
+
+function TestimonialStarRow({ rating }: { rating: number }) {
+  const full = Math.floor(rating);
+  const hasHalf = rating % 1 >= 0.5;
+  const empty = Math.max(0, 5 - full - (hasHalf ? 1 : 0));
+  return (
+    <div className="flex items-center gap-0.5 shrink-0" aria-label={`${rating} out of 5 stars`}>
+      {Array.from({ length: full }).map((_, i) => (
+        <Star
+          key={`f-${i}`}
+          className="w-4 h-4 sm:w-[18px] sm:h-[18px]"
+          style={{ color: STAR_RATING_GOLD, fill: STAR_RATING_GOLD_FILL }}
+          strokeWidth={0}
+        />
+      ))}
+      {hasHalf ? (
+        <StarHalf
+          className="w-4 h-4 sm:w-[18px] sm:h-[18px]"
+          style={{ color: STAR_RATING_GOLD, fill: STAR_RATING_GOLD_FILL }}
+          strokeWidth={0}
+        />
+      ) : null}
+      {Array.from({ length: empty }).map((_, i) => (
+        <Star
+          key={`e-${i}`}
+          className="w-4 h-4 sm:w-[18px] sm:h-[18px] text-[var(--line-strong)]"
+          fill="none"
+          strokeWidth={2}
+        />
+      ))}
+    </div>
+  );
+}
+
+function WhatSchedleyDoesCard({
+  title,
+  tagline,
+  detail,
+  bullets,
+  icon: Icon,
+  accent = "blue",
+}: {
+  title: string;
+  tagline: string;
+  detail: string;
+  bullets: readonly string[];
+  icon: LucideIcon;
+  accent?: "blue" | "amber";
+}) {
+  const iconWrap =
+    accent === "amber"
+      ? "bg-[var(--amber-lite)] text-[var(--amber)]"
+      : "bg-[var(--blue-lite)] text-[var(--blue)]";
+  const bulletAccent = accent === "amber" ? "text-[var(--amber)]" : "text-[var(--blue)]";
+  return (
+    <div className="group relative flex h-full min-h-[300px] flex-col rounded-[var(--r-xl)] border-2 border-[var(--line)] bg-[var(--white)] p-5 shadow-[var(--sh-sm)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--blue)] hover:shadow-[var(--sh-md)] sm:min-h-[320px] sm:p-6 lg:min-h-[360px]">
+      <div className="mb-4 flex items-center justify-center">
+        <span
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${iconWrap} shadow-[var(--sh-xs)] transition-transform duration-300 group-hover:scale-105`}
+          aria-hidden
+        >
+          <Icon className="h-8 w-8 sm:h-10 sm:w-10" strokeWidth={2} />
+        </span>
+      </div>
+      <h3 className="text-base font-bold leading-snug text-[var(--ink)] sm:text-lg">
+        {title}
+        <span className="font-semibold text-[var(--ink-muted)]"> — </span>
+        <span
+          className={
+            accent === "amber" ? "font-semibold text-[var(--amber-deep)]" : "font-semibold text-[var(--blue)]"
+          }
+        >
+          {tagline}
+        </span>
+      </h3>
+      <p className="mt-3 flex-1 text-sm leading-relaxed text-[var(--ink-muted)] sm:text-[15px]">{detail}</p>
+      <ul className="mt-4 space-y-2.5 border-t border-[var(--line)] pt-4" aria-label={`${title} highlights`}>
+        {bullets.map((line) => (
+          <li key={line} className="flex gap-2.5 text-left text-[13px] leading-snug text-[var(--ink)] sm:text-sm">
+            <CheckCircle className={`mt-0.5 h-4 w-4 shrink-0 ${bulletAccent}`} strokeWidth={2.25} aria-hidden />
+            <span>{line}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 const ScheduleyLanding = () => {
-  const navigate = useNavigate();
   const { setFooter } = useFooter();
   const [isVisible, setIsVisible] = useState(false);
   const [activeFeature, setActiveFeature] = useState(0);
   const [animatedStats, setAnimatedStats] = useState({ blocked: 0, qualified: 0, hours: 0, clients: 0 });
-  const [currentTestimonial, setCurrentTestimonial] = useState(0);
-  
+
   // Enhanced chatbot states
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -191,20 +490,18 @@ any question asked which is not in our context directely tell that i am not auth
 
     setTimeout(() => clearInterval(statsInterval), 3000);
 
-    // Auto-rotate testimonials
-    const testimonialInterval = setInterval(() => {
-      setCurrentTestimonial(prev => (prev + 1) % testimonials.length);
-    }, 6000);
-
     return () => {
       clearInterval(statsInterval);
-      clearInterval(testimonialInterval);
     };
   }, []);
 
   // Handle external demo booking (stable ref to avoid infinite loop in useEffect below)
   const handleBookDemo = useCallback(() => {
     window.open('https://www.schedley.com/lonejavida829/schedley-demo-see-how-client-acquisition-works-9040', '_blank');
+  }, []);
+
+  const scrollToHowItWorks = useCallback(() => {
+    document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
   // Provide footer props to shared Footer (logo + Book Demo handler)
@@ -271,35 +568,62 @@ any question asked which is not in our context directely tell that i am not auth
     { text: "Risk-free growth with money-back guarantee", icon: <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2} /> }
   ];
 
-  // Updated testimonials to reflect actual value (image: client photo or avatar URL)
+  /** Grid testimonials (6) — pravatar URLs */
   const testimonials = [
     {
       name: "David Chen",
       role: "Sales Director",
       company: "TechCorp Solutions",
-      content: "Schedley didn't just organize my calendar - they filled it with qualified leads. Got 3 high-value clients in the first week. The human touch makes all the difference.",
+      content:
+        "Schedley didn't just organize my calendar—they filled it with qualified leads. Three high-value clients in the first week. The human touch makes all the difference.",
       rating: 5,
-      result: "3 clients in 7 days",
-      image: "https://i.pravatar.cc/300?img=11"
+      image: "https://i.pravatar.cc/300?img=11",
     },
     {
       name: "Maria Rodriguez",
       role: "Business Consultant",
       company: "Growth Partners LLC",
-      content: "Finally, a scheduling platform that actually brings me clients! The AI filtering is incredible - zero spam, only serious prospects. My productivity has doubled.",
+      content:
+        "Finally, a platform that actually brings me clients. The AI filtering is incredible—zero spam, only serious prospects. My productivity has doubled.",
       rating: 5,
-      result: "$45K in new contracts",
-      image: "https://i.pravatar.cc/300?img=5"
+      image: "https://i.pravatar.cc/300?img=5",
     },
     {
       name: "James Thompson",
       role: "Founder",
       company: "StartupLabs",
-      content: "The guarantee sold me, but the results keep me. My account manager understands my business better than most of my employees. This is partnership, not just software.",
+      content:
+        "The guarantee sold me, but the results keep me. My account manager understands our business—this is partnership, not just software.",
       rating: 5,
-      result: "ROI: 340%",
-      image: "https://i.pravatar.cc/300?img=12"
-    }
+      image: "https://i.pravatar.cc/300?img=12",
+    },
+    {
+      name: "Sarah Okonkwo",
+      role: "VP Revenue",
+      company: "Northbridge SaaS",
+      content:
+        "We went from chaotic outreach to a single system: leads, email quality, and booking in one place. Pipeline finally feels predictable.",
+      rating: 5,
+      image: "https://i.pravatar.cc/300?img=47",
+    },
+    {
+      name: "Alex R.",
+      role: "Product Manager",
+      company: "Brightline Apps",
+      content:
+        "Step-by-step support on setup and messaging. Bad-fit calls dropped sharply; the calendar is full of real conversations now.",
+      rating: 4.5,
+      image: "https://i.pravatar.cc/300?img=33",
+    },
+    {
+      name: "Michael Patel",
+      role: "Head of Growth",
+      company: "Vertex Digital",
+      content:
+        "Hiring and outbound used to compete for the same bandwidth. Schedley gave us structure—faster hires and more qualified demos.",
+      rating: 5,
+      image: "https://i.pravatar.cc/300?img=68",
+    },
   ];
 
   // How it works steps
@@ -311,7 +635,7 @@ any question asked which is not in our context directely tell that i am not auth
       icon: <Calendar className="w-8 h-8 sm:w-9 sm:h-9" strokeWidth={2} />
     },
     {
-      step: "2",
+      step: "2", 
       title: "AI Validates Every Request",
       description: "Our advanced AI filters out spam, fake emails, and public domains in real-time. Only verified professional leads get through.",
       icon: <Shield className="w-8 h-8 sm:w-9 sm:h-9" strokeWidth={2} />
@@ -354,155 +678,439 @@ any question asked which is not in our context directely tell that i am not auth
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--white)] text-[var(--ink)] overflow-hidden font-urbanist">
+    <div className="b2b-page min-h-screen overflow-hidden bg-[var(--white)] text-[var(--ink)] antialiased">
       <LandingHeader isVisible={isVisible} />
 
-      {/* Hero Section – dark bg var(--ink), all text clearly visible */}
-      <section className="relative bg-[var(--ink)] z-10 pt-6 sm:pt-10 lg:pt-16 pb-8 sm:pb-12 lg:pb-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-5xl mx-auto">
-          <div className={`text-center transition-all duration-700 delay-200 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`}>
-            <div
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5 sm:mb-6 border border-[var(--amber)]/60 bg-[var(--amber)]/10"
-              style={{ boxShadow: 'var(--sh-amber)' }}
-            >
-              <CheckCircle className="w-4 h-4 text-[var(--amber)] shrink-0" />
-              <span className="text-xs sm:text-sm font-semibold text-white">
-                <span className="sm:hidden">7-Day Guarantee • Risk-Free</span>
-                <span className="hidden sm:inline">7-Day Client Guarantee • 100% Money-Back • Zero Risk</span>
-              </span>
-              <Shield className="w-4 h-4 text-[var(--amber)] shrink-0" />
+      {/*
+        Flow (top → bottom): Hero → Problem → What Schedley does → How it works → Results
+        → Live activity → Performance → How Schedley transforms → Features → Benefits & dashboard
+        → Use cases → Testimonials → Guarantee → Final CTA
+      */}
+      {/* Hero — dark theme, full viewport, floating chips on illustration */}
+      <section className="relative z-10 flex min-h-[calc(100vh-120px)] flex-col justify-center overflow-x-clip overflow-y-visible border-b border-white/[0.06] bg-[var(--ink)]">
+        <div
+          className="pointer-events-none absolute -top-32 left-1/2 h-[420px] w-[min(100%,720px)] -translate-x-1/2 rounded-full opacity-40 blur-[100px]"
+          style={{ background: "radial-gradient(ellipse at center, var(--blue) 0%, transparent 70%)" }}
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute top-24 -right-24 h-64 w-64 rounded-full bg-[var(--blue-mid)] opacity-25 blur-[80px]"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute bottom-0 left-0 h-48 w-48 rounded-full bg-[var(--amber)] opacity-20 blur-[70px]"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-transparent"
+          aria-hidden
+        />
+
+        <div className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
+          <div
+            className={`grid grid-cols-1 items-center gap-6 transition-all duration-700 ease-out delay-100 sm:gap-8 lg:grid-cols-2 lg:gap-10 xl:gap-12 ${
+              isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+            }`}
+          >
+            <div className="text-center lg:text-left">
+              <div className="mx-auto mb-4 inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3.5 py-1.5 shadow-[0_0_0_1px_rgba(255,255,255,0.04)_inset] backdrop-blur-md sm:mb-5 sm:px-4 sm:py-2 lg:mx-0">
+                <Target className="h-3.5 w-3.5 shrink-0 text-[var(--blue-mid)] sm:h-4 sm:w-4" />
+                <span className="text-[10px] font-semibold uppercase tracking-wide text-white/90 sm:text-xs">
+                  <span className="sm:hidden">Enterprise B2B • High-ticket</span>
+                  <span className="hidden sm:inline">
+                    Growth hacking for enterprise • High-ticket client acquisition
+                  </span>
+                </span>
+                <TrendingUp className="h-3.5 w-3.5 shrink-0 text-[var(--blue-mid)] sm:h-4 sm:w-4" />
+              </div>
+
+              <h1 className="mx-auto max-w-xl font-black leading-[1.08] tracking-[-0.02em] text-[1.75rem] sm:mx-auto sm:text-4xl md:text-5xl lg:mx-0 lg:max-w-none lg:text-[2.65rem] xl:text-5xl">
+                <span className="block text-white drop-shadow-sm">Scale Your B2B Growth</span>
+                <div className="mt-1 flex justify-center sm:mt-2 lg:justify-start">
+                  <div className="inline-flex flex-col items-center">
+                    <span className="bg-gradient-to-r from-[var(--blue-mid)] via-[var(--blue)] to-[var(--blue-mid)] bg-clip-text text-center text-transparent">
+                      Without Hiring Chaos
+                    </span>
+                    <div className="mt-3 h-1 w-20 rounded-full bg-gradient-to-r from-transparent via-[var(--blue)]/90 to-transparent opacity-90 sm:mt-4 sm:w-28" aria-hidden />
+                  </div>
+                </div>
+              </h1>
+
+              <p className="mx-auto mb-6 mt-4 max-w-xl text-base font-medium leading-[1.65] text-white/85 sm:mb-8 sm:mt-5 sm:text-lg md:text-xl lg:mx-0">
+                Schedley helps you get clients, automate outreach, hire talent, and control your calendar—all in one
+                system.
+              </p>
+
+              <div className="mb-4 flex w-full flex-row flex-nowrap items-center justify-center gap-2 sm:mb-5 sm:gap-3 lg:justify-start">
+                <button
+                  type="button"
+                  onClick={handleBookDemo}
+                  className="group relative inline-flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-sm border border-[var(--blue)] bg-[var(--blue)] px-4 py-4 text-[11px] font-bold text-white transition-all duration-200 hover:border-[var(--blue-dark)] hover:bg-[var(--blue-dark)] active:scale-[0.98] sm:flex-none sm:px-5 sm:py-4 sm:text-xs md:py-[1.125rem]"
+                  style={{ boxShadow: "var(--sh-blue)" }}
+                >
+                  <span
+                    className="pointer-events-none absolute inset-0 rounded-sm bg-gradient-to-b from-white/12 to-transparent opacity-40"
+                    aria-hidden
+                  />
+                  <Calendar className="relative h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
+                  <span className="relative text-left text-[15px] leading-tight sm:text-base">
+                    Book a Growth Strategy Call
+                  </span>
+                  <ExternalLink className="relative hidden h-3 w-3 shrink-0 opacity-90 min-[400px]:block sm:h-3.5 sm:w-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={scrollToHowItWorks}
+                  className="inline-flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-sm border border-white/35 bg-white/[0.08] px-4 py-4 text-[11px] font-bold text-white backdrop-blur-sm transition-all duration-200 hover:border-white/45 hover:bg-white/14 active:scale-[0.98] sm:flex-none sm:px-5 sm:py-4 sm:text-xs md:py-[1.125rem]"
+                >
+                  <Play className="h-3.5 w-3.5 shrink-0 fill-current sm:h-4 sm:w-4" />
+                  <span className="whitespace-nowrap text-[15px] leading-tight sm:text-base">See How It Works</span>
+                </button>
+              </div>
+
+              <p className="mx-auto mb-6 max-w-md px-2 text-[12px] leading-snug tracking-wide text-white/45 sm:mb-7 sm:text-[13px] lg:mx-0 lg:px-0">
+                Get your first high-ticket client booked in 7 days Or Pay Nothing. Guaranteed with our 100% money-back
+                guarantee.
+              </p>
+
+              <div className="mx-auto flex max-w-xl flex-wrap justify-center gap-2 sm:gap-3 lg:mx-0 lg:max-w-none lg:justify-start">
+                {[
+                  { Icon: Target, label: "Enterprise-focused outreach" },
+                  { Icon: DollarSign, label: "High-ticket pipeline", iconClass: "text-[var(--amber)]" },
+                  { Icon: Shield, label: "Spam-free calendar" },
+                  { Icon: Users, label: "Human + automated growth" },
+                ].map(({ Icon, label, iconClass }) => (
+                  <div
+                    key={label}
+                    className="inline-flex items-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.05] px-3.5 py-2 text-[11px] text-white/85 shadow-sm backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.08] sm:px-4 sm:py-2.5 sm:text-xs"
+                  >
+                    <Icon
+                      className={`h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4 ${iconClass ?? "text-[var(--blue-mid)]"}`}
+                    />
+                    <span className="font-medium">{label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-3 sm:mb-4 leading-[1.1] tracking-tight">
-              <span className="text-white/90 block">The World's First</span>
-              <span className="text-[var(--blue-mid)] block">Intelligent Scheduling</span>
-              <span className="text-[var(--blue)] block">& Client Acquisition</span>
-              <span className="text-[var(--amber)] block">Platform</span>
-            </h1>
-
-            <p className="text-base sm:text-lg text-white/80 mb-6 sm:mb-8 max-w-xl mx-auto">
-              One platform. Real meetings. Real results.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
-              <button
-                type="button"
-                onClick={handleBookDemo}
-                className="group inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 rounded-[var(--r-m)] text-base sm:text-lg font-bold text-white bg-[var(--blue)] border-2 border-[var(--blue)] hover:bg-[var(--blue-dark)] hover:border-[var(--blue-dark)] transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] w-full sm:w-auto"
-                style={{ boxShadow: 'var(--sh-blue)' }}
-              >
-                <Play className="w-5 h-5 shrink-0" />
-                <span className="sm:hidden">Watch Demo</span>
-                <span className="hidden sm:inline">Watch Live Demo</span>
-                <ExternalLink className="w-4 h-4 shrink-0 group-hover:translate-x-0.5 transition-transform" />
-              </button>
-            </div>
-
-            <p className="text-xs text-white/70 mb-8">7-Day Success Guarantee • First client or 100% refund</p>
-
-            <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-4 text-xs sm:text-sm text-white/90">
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10">
-                <Shield className="w-4 h-4 text-[var(--blue-mid)] shrink-0" />
-                <span>AI spam protection</span>
-              </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10">
-                <Users className="w-4 h-4 text-[var(--blue-mid)] shrink-0" />
-                <span>Human lead gen</span>
-              </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10">
-                <DollarSign className="w-4 h-4 text-[var(--amber)] shrink-0" />
-                <span>Guaranteed results</span>
-              </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10">
-                <Headphones className="w-4 h-4 text-[var(--blue-mid)] shrink-0" />
-                <span>Personal support</span>
+            <div className="relative flex justify-center overflow-visible lg:justify-end">
+              <div className="relative w-full max-w-[min(100%,420px)] overflow-visible lg:max-w-none lg:pl-2 lg:pr-2">
+                <div
+                  className="pointer-events-none absolute -inset-4 rounded-3xl bg-gradient-to-br from-[var(--blue)]/25 via-transparent to-[var(--amber)]/10 blur-2xl opacity-70 sm:-inset-5"
+                  aria-hidden
+                />
+                {HERO_FLOAT_CHIPS.map(({ Icon, label, className, delay }) => (
+                  <div
+                    key={label}
+                    className={`motion-reduce:animate-none flex scale-[0.92] animate-hero-float items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.08] px-2 py-1 shadow-[0_8px_32px_rgba(0,0,0,0.35)] backdrop-blur-md sm:scale-100 sm:gap-2 sm:px-2.5 sm:py-1.5 md:px-3 md:py-2 ${className}`}
+                    style={{ animationDelay: delay }}
+                  >
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[var(--blue)]/25 text-[var(--blue-mid)] sm:h-8 sm:w-8">
+                      <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={2} />
+                    </span>
+                    <span className="max-w-[5.5rem] text-left text-[10px] font-bold leading-tight text-white/95 sm:max-w-none sm:text-[11px]">
+                      {label}
+                    </span>
+                  </div>
+                ))}
+                <img
+                  src={heroSectionImage}
+                  alt="B2B growth: analytics, team network, automation, and scheduling in one system"
+                  className="relative w-full select-none object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.45)]"
+                  width={500}
+                  height={500}
+                  loading="eager"
+                  decoding="async"
+                />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Section 1: High-value meetings – visual with icons + scroll reveal */}
-      <section className="relative z-10 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 bg-[var(--surface)]">
-        <div className="max-w-5xl mx-auto">
+      {/* The problem */}
+      <section
+        id="problem"
+        className="relative z-10 border-t border-[var(--line)] bg-[var(--surface)] py-8 sm:py-12 lg:py-14 px-4 sm:px-6"
+        aria-labelledby="problem-section-title"
+      >
+        <div className="relative max-w-6xl mx-auto">
           <SectionReveal effect="fade-up">
-          {/* Icon strip – calendar, handshake, target */}
-          <div className="flex justify-center gap-6 sm:gap-10 mb-8 sm:mb-10">
-            <div className="flex flex-col items-center gap-2">
-              <span className="flex h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center shadow-[var(--sh-sm)]">
-                <Calendar className="w-7 h-7 sm:w-8 sm:h-8" strokeWidth={2} />
-              </span>
-              <span className="text-xs font-semibold text-[var(--ink-muted)] uppercase tracking-wider">Schedule</span>
+            <SectionHeader
+              eyebrow="The problem"
+              titleBefore="Why Most Companies Struggle to "
+              titleAccent="Scale"
+              headingId="problem-section-title"
+              compact
+              className="mb-4 sm:mb-5"
+            />
+            <div className="max-w-xl mx-auto text-center mb-6 sm:mb-8">
+              <p className="text-sm sm:text-[15px] text-[var(--ink-muted)] leading-snug">
+                You don&apos;t need more tools.
+              </p>
+              <p className="mt-1 font-bold text-lg sm:text-xl text-[var(--ink)] tracking-tight">
+                <span className="text-[var(--blue)]">You need a system.</span>
+              </p>
+              <div
+                className="mt-3 flex justify-center"
+                aria-hidden
+              >
+                <span className="b2b-eyebrow-line w-10 sm:w-12" />
+              </div>
             </div>
-            <span className="flex items-center text-[var(--line-strong)] self-center">
-              <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 hidden sm:block" />
-            </span>
-            <div className="flex flex-col items-center gap-2">
-              <span className="flex h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center shadow-[var(--sh-sm)]">
-                <UserCheck className="w-7 h-7 sm:w-8 sm:h-8" strokeWidth={2} />
-              </span>
-              <span className="text-xs font-semibold text-[var(--ink-muted)] uppercase tracking-wider">High-value</span>
-            </div>
-            <span className="flex items-center text-[var(--line-strong)] self-center">
-              <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 hidden sm:block" />
-            </span>
-            <div className="flex flex-col items-center gap-2">
-              <span className="flex h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-[var(--amber-lite)] text-[var(--amber)] items-center justify-center shadow-[var(--sh-sm)]">
-                <Target className="w-7 h-7 sm:w-8 sm:h-8" strokeWidth={2} />
-              </span>
-              <span className="text-xs font-semibold text-[var(--ink-muted)] uppercase tracking-wider">Meetings</span>
-            </div>
-          </div>
-          <SectionHeader
-            titleBefore="We don't just manage your schedule — "
-            titleAccent="we help you book high-value meetings."
-            className="max-w-4xl"
-          />
-          </SectionReveal>
-        </div>
-      </section>
-      <SectionDivider />
 
-      {/* Section 2: AI + Human = Results – three pillars with larger text & icons */}
-      <section className="relative z-10 py-12 sm:py-16 lg:py-24 px-4 sm:px-6 bg-[var(--white)]">
-        <div className="max-w-6xl mx-auto">
-          <SectionReveal effect={sectionEffectForIndex(0)}>
-          <SectionHeader
-            eyebrow="How we deliver"
-            titleBefore="AI + human expertise"
-            titleAccent=" = guaranteed results"
-            subtitle="Three pillars that make Schedley different from traditional scheduling tools."
-            className="mb-10 sm:mb-14"
-          />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
-            <div className="group text-center p-8 sm:p-10 rounded-[var(--r-xl)] border-2 border-[var(--line)] bg-[var(--surface)] hover:border-[var(--blue)] hover:shadow-[var(--sh-md)] transition-all duration-300">
-              <div className="inline-flex h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center mb-5 sm:mb-6 group-hover:scale-105 transition-all duration-300">
-                <Shield className="w-8 h-8 sm:w-10 sm:h-10" strokeWidth={2} />
-              </div>
-              <h3 className="font-bold text-[var(--ink)] text-xl sm:text-2xl mb-3">AI-powered spam protection</h3>
-              <p className="text-base sm:text-lg text-[var(--ink-muted)] leading-relaxed">Block fake emails and public domains so only serious prospects reach your calendar.</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 lg:gap-5">
+              {PROBLEM_ITEMS.map((item) => (
+                <ProblemCard
+                  key={item.title}
+                  icon={item.icon}
+                  title={item.title}
+                  content={item.content}
+                  accent={item.accent}
+                />
+              ))}
             </div>
-            <div className="group text-center p-8 sm:p-10 rounded-[var(--r-xl)] border-2 border-[var(--line)] bg-[var(--surface)] hover:border-[var(--blue)] hover:shadow-[var(--sh-md)] transition-all duration-300">
-              <div className="inline-flex h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center mb-5 sm:mb-6 group-hover:scale-105 transition-all duration-300">
-                <Users className="w-8 h-8 sm:w-10 sm:h-10" strokeWidth={2} />
-              </div>
-              <h3 className="font-bold text-[var(--ink)] text-xl sm:text-2xl mb-3">Dedicated client acquisition</h3>
-              <p className="text-base sm:text-lg text-[var(--ink-muted)] leading-relaxed">Human experts find and qualify leads, then deliver them to your calendar.</p>
-            </div>
-            <div className="group text-center p-8 sm:p-10 rounded-[var(--r-xl)] border-2 border-[var(--line)] bg-[var(--surface)] hover:border-[var(--blue)] hover:shadow-[var(--sh-md)] transition-all duration-300">
-              <div className="inline-flex h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-[var(--amber-lite)] text-[var(--amber)] items-center justify-center mb-5 sm:mb-6 group-hover:scale-105 transition-all duration-300">
-                <DollarSign className="w-8 h-8 sm:w-10 sm:h-10" strokeWidth={2} />
-              </div>
-              <h3 className="font-bold text-[var(--ink)] text-xl sm:text-2xl mb-3">Guaranteed results</h3>
-              <p className="text-base sm:text-lg text-[var(--ink-muted)] leading-relaxed">Our combination of AI and human expertise delivers revenue-ready outcomes.</p>
-            </div>
+          </SectionReveal>
           </div>
-          <p className="text-center mt-8 sm:mt-10 text-lg sm:text-xl text-[var(--ink-soft)] font-semibold">
-            <span className="text-[var(--blue)]">AI-powered spam protection</span> + <span className="text-[var(--blue)]">dedicated client acquisition</span> = <span className="text-[var(--amber)]">guaranteed results</span>
-          </p>
+      </section>
+
+      {/* What Schedley does — full-viewport four pillars */}
+      <section
+        id="what-schedley-does"
+        className="relative z-10 flex min-h-screen flex-col overflow-hidden border-t border-[var(--line)] bg-[var(--white)] px-4 py-10 sm:px-6 sm:py-12 lg:py-14"
+        aria-labelledby="what-schedley-does-title"
+      >
+        <div
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,var(--blue-lite)_0%,transparent_38%,var(--amber-lite)_120%)] opacity-40"
+          aria-hidden
+        />
+        <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col min-h-0 py-4 sm:py-6 lg:py-8">
+          <SectionReveal effect="fade-up" className="flex min-h-0 flex-1 flex-col">
+            <div className="flex min-h-0 flex-1 flex-col justify-between gap-10 sm:gap-12 lg:gap-14">
+              <div>
+                <SectionHeader
+                  eyebrow="What Schedley does"
+                  titleBefore="One System That "
+                  titleAccent="Solves Everything"
+                  headingId="what-schedley-does-title"
+                  subtitle="Lead gen, inbox intelligence, hiring, and calendar protection—designed as one stack so nothing falls between tools."
+                  className="mb-8 sm:mb-10"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 items-stretch gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4 lg:gap-5">
+                {WHAT_SCHEDLEY_DOES.map((item) => (
+                  <WhatSchedleyDoesCard
+                    key={item.step}
+                    title={item.title}
+                    tagline={item.tagline}
+                    detail={item.detail}
+                    bullets={item.bullets}
+                    icon={item.icon}
+                    accent={item.accent}
+                  />
+                ))}
+              </div>
+
+              <div className="rounded-[var(--r-xl)] border border-[var(--line)] bg-[var(--surface)] px-5 py-6 text-center shadow-[var(--sh-sm)] sm:px-8 sm:py-8">
+                <p className="mx-auto max-w-3xl text-sm font-semibold leading-relaxed text-[var(--ink)] sm:text-base">
+                  Everything connects: leads become conversations, conversations become meetings, and hiring keeps pace
+                  with growth—without you stitching five vendors together.
+                </p>
+                <p className="mx-auto mt-3 max-w-2xl text-xs leading-relaxed text-[var(--ink-muted)] sm:text-sm">
+                  Whether you start with calendar control or full outbound, each pillar plugs into the same system so
+                  reporting, ownership, and iteration stay clear.
+                </p>
+              </div>
+            </div>
           </SectionReveal>
         </div>
       </section>
+
+      {/* How it works — full-viewport journey pipeline */}
+      <section
+        id="how-it-works"
+        className="relative z-10 flex min-h-screen flex-col overflow-hidden border-t border-white/10 bg-[var(--ink)] px-4 py-10 sm:px-6 sm:py-12 lg:py-14"
+        aria-labelledby="how-it-works-title"
+      >
+        <div
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_35%,var(--blue)_0%,transparent_65%)] opacity-25"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute -top-24 left-1/2 h-72 w-[min(100%,560px)] -translate-x-1/2 rounded-full opacity-35 blur-[90px]"
+          style={{ background: "radial-gradient(ellipse at center, var(--blue), transparent 70%)" }}
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute bottom-0 right-0 h-48 w-48 rounded-full opacity-25 blur-[70px] bg-[var(--amber)]"
+          aria-hidden
+        />
+
+        <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col min-h-0 py-4 sm:py-6 lg:py-8">
+          <SectionReveal effect="fade-up" className="flex min-h-0 flex-1 flex-col">
+            <div className="flex min-h-0 flex-1 flex-col justify-between gap-10 sm:gap-12 lg:gap-14">
+            <div className="text-center">
+              <span className="mb-4 inline-flex rounded-full border border-white/35 bg-white/[0.06] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.22em] text-white/90 sm:mb-5 sm:text-[11px]">
+                How it works
+              </span>
+              <h2
+                id="how-it-works-title"
+                className="font-urbanist text-3xl font-black leading-[1.1] tracking-tight text-white sm:text-4xl lg:text-5xl xl:text-[3.25rem]"
+              >
+                How It{" "}
+                <span className="bg-gradient-to-r from-[var(--blue-mid)] to-[var(--blue)] bg-clip-text text-transparent">
+                  Works
+                </span>
+              </h2>
+            </div>
+
+            {/* Mobile / tablet: stacked glass rows */}
+            <div className="mx-auto max-w-lg space-y-3 lg:hidden">
+              {HOW_IT_WORKS_JOURNEY_STEPS.map((step, i) => (
+                <div
+                  key={step.title}
+                  className="rounded-[var(--r-l)] border border-white/12 bg-white/[0.06] px-4 py-4 shadow-[0_8px_32px_rgba(0,0,0,0.2)] backdrop-blur-md sm:px-5 sm:py-5"
+                >
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--blue)] text-sm font-black text-white shadow-[var(--sh-blue)] ring-1 ring-white/20">
+                      {i + 1}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-[15px] font-semibold leading-snug text-white/95 sm:text-base">{step.title}</p>
+                      <p className="mt-2 text-sm leading-relaxed text-white/65">{step.blurb}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop: horizontal pipeline with arrows */}
+            <div className="mx-auto hidden max-w-6xl items-stretch justify-center gap-1 lg:flex xl:gap-2">
+              {HOW_IT_WORKS_JOURNEY_STEPS.map((step, i) => (
+                <div key={step.title} className="flex min-w-0 flex-1 items-stretch max-w-[220px] xl:max-w-none">
+                  <div className="flex w-full min-w-0 flex-col items-center">
+                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full border-2 border-[var(--blue-mid)] bg-[var(--blue)]/20 text-sm font-black text-white shadow-[var(--sh-blue)] backdrop-blur-sm">
+                      {i + 1}
+                    </div>
+                    <div className="flex min-h-[200px] w-full flex-1 flex-col justify-center rounded-[var(--r-l)] border border-white/12 bg-white/[0.07] px-3 py-5 text-center shadow-[0_12px_40px_rgba(0,0,0,0.25)] backdrop-blur-md xl:min-h-[220px] xl:px-4 xl:py-6">
+                      <p className="text-[14px] font-semibold leading-snug text-white/95 xl:text-[15px]">{step.title}</p>
+                      <p className="mt-3 text-left text-[12px] leading-relaxed text-white/65 xl:text-[13px]">{step.blurb}</p>
+                    </div>
+                  </div>
+                  {i < HOW_IT_WORKS_JOURNEY_STEPS.length - 1 && (
+                    <div
+                      className="flex w-9 shrink-0 flex-col items-center justify-center self-stretch pt-12 xl:w-11"
+                      aria-hidden
+                    >
+                      <ArrowRight
+                        className="h-6 w-6 text-[var(--blue-mid)] drop-shadow-[0_0_10px_var(--blue-glow)] xl:h-7 xl:w-7"
+                        strokeWidth={2.5}
+                      />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <div className="rounded-[var(--r-xl)] border border-white/10 bg-white/[0.04] px-5 py-6 text-center backdrop-blur-sm sm:px-8 sm:py-8">
+              <p className="text-sm font-semibold text-white/90 sm:text-base">
+                From kickoff to scale—one partner, one playbook. You stay focused on closing; we keep the machine
+                running behind you.
+              </p>
+              <p className="mt-3 text-xs text-white/50 sm:text-sm">
+                Typical engagement: strategy session → systems configured → meetings on calendar → iterate weekly or
+                biweekly.
+              </p>
+            </div>
+            </div>
+          </SectionReveal>
+        </div>
+      </section>
+
+      {/* Results — full-viewport outcome tiles */}
+      <section
+        id="results"
+        className="relative z-10 flex min-h-screen flex-col overflow-hidden border-t border-[var(--line)] bg-[var(--white)] px-4 py-10 sm:px-6 sm:py-12 lg:py-14"
+        aria-labelledby="results-section-title"
+      >
+        <div
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,var(--blue-lite)_0%,transparent_42%,var(--amber-lite)_100%)] opacity-35"
+          aria-hidden
+        />
+        <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col min-h-0 py-4 sm:py-6 lg:py-8">
+          <SectionReveal effect="fade-up" className="flex min-h-0 flex-1 flex-col">
+            <div className="flex min-h-0 flex-1 flex-col justify-between gap-10 sm:gap-12 lg:gap-14">
+            <div className="text-center">
+              <span className="mb-4 inline-flex rounded-full border border-[var(--blue)]/30 bg-[var(--blue-lite)] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--blue)] sm:mb-5 sm:text-[11px]">
+                Results
+              </span>
+              <h2
+                id="results-section-title"
+                className="font-urbanist text-3xl font-black leading-[1.1] tracking-tight text-[var(--ink)] sm:text-4xl lg:text-5xl xl:text-[3.25rem]"
+              >
+                Real{" "}
+                <span className="text-[var(--blue)]">Results</span>
+              </h2>
+              <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-[var(--ink-muted)] sm:mt-5 sm:text-lg">
+                Outcomes teams feel in the first weeks: cleaner pipeline, sharper meetings, and hours back every week.
+                Here’s what we optimize for together.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4 lg:gap-5">
+              {RESULTS_OUTCOMES.map(({ label, detail, icon: Icon, iconTone = "blue" }) => (
+                <div
+                  key={label}
+                  className="group relative flex min-h-[220px] flex-col rounded-[var(--r-xl)] border-2 border-transparent bg-[var(--surface)] p-5 shadow-[var(--sh-sm)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--blue)] hover:shadow-[var(--sh-md)] sm:min-h-[240px] sm:p-6"
+                >
+                  <div className="mb-4 flex items-center justify-between gap-2">
+                    <span
+                      className={`flex h-11 w-11 items-center justify-center rounded-xl shadow-[var(--sh-xs)] transition-transform group-hover:scale-105 ${
+                        iconTone === "gold"
+                          ? "bg-amber-50 ring-1 ring-amber-200/90 text-amber-500"
+                          : "bg-[var(--blue-lite)] text-[var(--blue)]"
+                      }`}
+                    >
+                      <Icon
+                        className={`h-5 w-5 sm:h-6 sm:w-6 ${iconTone === "gold" ? "fill-amber-400 text-amber-500" : ""}`}
+                        strokeWidth={iconTone === "gold" ? 1.5 : 2}
+                      />
+                    </span>
+                    <CheckCircle className="h-6 w-6 shrink-0 text-[var(--wa)] opacity-90 sm:h-7 sm:w-7" strokeWidth={2.25} />
+                  </div>
+                  <p className="text-base font-bold leading-snug text-[var(--ink)] sm:text-lg">{label}</p>
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-[var(--ink-muted)]">{detail}</p>
+                  <div
+                    className="mt-4 h-1 w-10 rounded-full bg-gradient-to-r from-[var(--wa)] to-[var(--blue)] opacity-70 transition-all duration-300 group-hover:w-14"
+                    aria-hidden
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-col items-center justify-between gap-4 rounded-[var(--r-xl)] border border-[var(--line)] bg-[var(--surface)] px-5 py-6 shadow-[var(--sh-sm)] sm:flex-row sm:px-8 sm:py-7">
+              <p className="max-w-xl text-center text-sm leading-relaxed text-[var(--ink-muted)] sm:text-left sm:text-base">
+                Built for B2B teams that sell with intent—whether you’re filling the calendar for AEs or scaling a
+                recruiting engine alongside revenue.
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                {["Enterprise B2B", "High-ticket motion", "Human + AI"].map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full border border-[var(--blue)]/25 bg-[var(--blue-lite)] px-3 py-1.5 text-xs font-semibold text-[var(--blue)]"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+            </div>
+          </SectionReveal>
+        </div>
+      </section>
+
+      <SectionDivider />
 
       {/* Live Platform Activity – SectionHeader + scroll reveal (not tied to hero isVisible) */}
       <section className="relative z-10 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 bg-[var(--ink)]">
@@ -532,11 +1140,11 @@ any question asked which is not in our context directely tell that i am not auth
                     <span className="flex h-10 w-10 rounded-xl bg-red-100 text-red-600 items-center justify-center group-hover:scale-105 transition-transform">
                       <Shield className="w-5 h-5" strokeWidth={2} />
                     </span>
-                  </div>
+                    </div>
                   <p className="text-sm font-mono text-[var(--ink)] break-all mb-2">spam@gmail.com</p>
                   <span className="inline-block text-xs font-medium text-red-700 bg-red-100 px-2.5 py-1 rounded-lg">Public domain detected</span>
-                </div>
-
+                  </div>
+                  
                 {/* QUALIFYING */}
                 <div className="relative z-10 group rounded-[var(--r-l)] p-4 sm:p-5 lg:p-6 border-2 border-[var(--amber)]/40 bg-white hover:border-[var(--amber)]/60 hover:shadow-[var(--sh-sm)] transition-all">
                   <div className="flex items-center justify-between mb-3">
@@ -547,11 +1155,11 @@ any question asked which is not in our context directely tell that i am not auth
                     <span className="flex h-10 w-10 rounded-xl bg-[var(--amber-lite)] text-[var(--amber)] items-center justify-center group-hover:scale-105 transition-transform">
                       <Users className="w-5 h-5" strokeWidth={2} />
                     </span>
-                  </div>
+                      </div>
                   <p className="text-sm font-mono text-[var(--ink)] break-all mb-2">lead@enterprise.co</p>
                   <span className="inline-block text-xs font-medium text-[var(--amber-deep)] bg-[var(--amber-ghost)] px-2.5 py-1 rounded-lg">Human verification...</span>
-                </div>
-
+                  </div>
+                  
                 {/* OUTREACH */}
                 <div className="relative z-10 group rounded-[var(--r-l)] p-4 sm:p-5 lg:p-6 border-2 border-[var(--blue)]/30 bg-white hover:border-[var(--blue)]/50 hover:shadow-[var(--sh-sm)] transition-all">
                   <div className="flex items-center justify-between mb-3">
@@ -562,11 +1170,11 @@ any question asked which is not in our context directely tell that i am not auth
                     <span className="flex h-10 w-10 rounded-xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center group-hover:scale-105 transition-transform">
                       <Phone className="w-5 h-5" strokeWidth={2} />
                     </span>
-                  </div>
+                      </div>
                   <p className="text-sm text-[var(--ink)] mb-2">Contacting prospects</p>
                   <span className="inline-block text-xs font-medium text-[var(--blue)] bg-[var(--blue-ghost)] px-2.5 py-1 rounded-lg">AI + Human team</span>
-                </div>
-
+                  </div>
+                  
                 {/* BOOKED */}
                 <div className="relative z-10 group rounded-[var(--r-l)] p-4 sm:p-5 lg:p-6 border-2 border-[var(--wa)]/40 bg-white hover:border-[var(--wa)]/60 hover:shadow-[var(--sh-sm)] transition-all">
                   <div className="flex items-center justify-between mb-3">
@@ -577,12 +1185,12 @@ any question asked which is not in our context directely tell that i am not auth
                     <span className="flex h-10 w-10 rounded-xl bg-[var(--wa-lite)] text-[var(--wa)] items-center justify-center group-hover:scale-105 transition-transform">
                       <CheckCircle className="w-5 h-5" strokeWidth={2} />
                     </span>
-                  </div>
+                      </div>
                   <p className="text-sm font-mono text-[var(--ink)] break-all mb-2">cto@techfirm.com</p>
                   <span className="inline-block text-xs font-medium text-[var(--wa-dark)] bg-[var(--wa-ghost)] px-2.5 py-1 rounded-lg">High-value prospect</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
           </SectionReveal>
         </div>
       </section>
@@ -646,12 +1254,12 @@ any question asked which is not in our context directely tell that i am not auth
       </section>
       <SectionDivider />
 
-      {/* How It Works – improved step cards + visual flow */}
-      <section id="how-it-works" className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 bg-[var(--white)]">
+      {/* Platform steps (detailed) — anchor: #how-schedley-platform */}
+      <section id="how-schedley-platform" className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 bg-[var(--white)]">
         <div className="max-w-7xl mx-auto">
           <SectionReveal effect={sectionEffectForIndex(2)}>
           <SectionHeader
-            eyebrow="Simple 4-Step Process"
+            eyebrow="Steps Process"
             titleBefore="How Schedley "
             titleAccent="Transforms Your Business"
             subtitle="Unlike traditional scheduling tools, we combine AI technology with human expertise to deliver qualified clients, not just organized calendars."
@@ -660,7 +1268,7 @@ any question asked which is not in our context directely tell that i am not auth
 
           <div className="relative">
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 sm:gap-8">
-              {howItWorks.map((step, index) => (
+            {howItWorks.map((step, index) => (
                 <div key={index} className="relative z-10">
                   <div className="group h-full rounded-[var(--r-xl)] p-5 sm:p-6 lg:p-8 border-2 border-[var(--line)] bg-[var(--surface)] hover:border-[var(--blue)]/50 hover:shadow-[var(--sh-md)] transition-all text-center relative overflow-hidden">
                     {/* Top accent bar */}
@@ -668,27 +1276,27 @@ any question asked which is not in our context directely tell that i am not auth
                     {/* Step number – large and bold */}
                     {/* <div className="flex items-center justify-center gap-3 mb-4 sm:mb-5">
                       <span className="flex h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-[var(--blue)] text-white items-center justify-center text-xl sm:text-2xl font-black shadow-[var(--sh-blue)] group-hover:scale-105 transition-transform">
-                        {step.step}
+                    {step.step}
                       </span>
                     </div> */}
                     {/* Icon – larger, in rounded container */}
                     <div className="flex justify-center mb-4 sm:mb-5">
                       <span className="flex h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center group-hover:bg-[var(--blue)]/10 transition-colors">
-                        {step.icon}
+                    {step.icon}
                       </span>
-                    </div>
-                    <h3 className="font-urbanist text-lg sm:text-xl font-bold mb-3 text-[var(--ink)]">{step.title}</h3>
-                    <p className="font-urbanist text-sm sm:text-base text-[var(--ink-muted)] leading-relaxed">{step.description}</p>
                   </div>
+                    <h3 className="mb-3 text-lg font-semibold text-[var(--ink)] sm:text-xl">{step.title}</h3>
+                    <p className="text-sm leading-relaxed text-[var(--ink-muted)] sm:text-base">{step.description}</p>
+                </div>
                   {/* Connector between steps on xl */}
                   {index < howItWorks.length - 1 && (
                     <div className="hidden xl:flex absolute top-1/2 -right-5 -translate-y-1/2 z-20">
                       <ArrowRight className="w-6 h-6 text-[var(--blue)]/40" />
                     </div>
                   )}
-                </div>
-              ))}
-            </div>
+              </div>
+            ))}
+          </div>
           </div>
           </SectionReveal>
         </div>
@@ -721,100 +1329,27 @@ any question asked which is not in our context directely tell that i am not auth
                     {feature.badge}
                   </span>
                   <span className="text-xs font-bold text-[var(--blue)] bg-[var(--blue-ghost)] px-2.5 py-1 rounded-full">
-                    {feature.highlight}
+                      {feature.highlight}
                   </span>
-                </div>
+                    </div>
                 <div className="relative z-10 pt-2">
                   <span className="inline-flex h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center mb-4 sm:mb-5 group-hover:scale-105 transition-all">
                     {feature.icon}
                   </span>
-                  <h3 className="font-urbanist text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-[var(--ink)] group-hover:text-[var(--blue)] transition-colors pr-24">
+                  <h3 className="mb-3 pr-24 text-lg font-semibold text-[var(--ink)] transition-colors group-hover:text-[var(--blue)] sm:mb-4 sm:text-xl">
                     {feature.title}
                   </h3>
-                  <p className="font-urbanist text-sm sm:text-base text-[var(--ink-muted)] leading-relaxed">
+                  <p className="text-sm leading-relaxed text-[var(--ink-muted)] sm:text-base">
                     {feature.description}
                   </p>
                   <div className="mt-5 sm:mt-6 flex items-center text-[var(--blue)] font-semibold text-sm sm:text-base">
-                    Learn More
+                    Learn More 
                     <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </div>
               </div>
             ))}
           </div>
-          </SectionReveal>
-        </div>
-      </section>
-
-      {/* Guarantee – elevated UI, same copy */}
-      <section
-        id="guarantee"
-        className="relative py-16 sm:py-20 lg:py-24 px-4 sm:px-6 bg-[var(--ink)] overflow-hidden"
-      >
-        {/* ambient */}
-        <div
-          className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[min(90vw,720px)] h-[320px] rounded-full bg-[var(--blue)]/15 blur-3xl"
-          aria-hidden
-        />
-        <div
-          className="pointer-events-none absolute bottom-0 right-0 w-1/2 max-w-md h-64 bg-[var(--blue)]/5 rounded-full blur-3xl"
-          aria-hidden
-        />
-
-        <div className="relative max-w-3xl mx-auto text-center">
-          <SectionReveal effect="zoom-in" className="px-6 py-10 sm:px-10 sm:py-12">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full mb-8 border border-[var(--blue)]/40 bg-[var(--blue)]/10 shadow-[0_0_20px_-5px_rgba(59,130,246,0.4)]">
-              <Shield className="w-5 h-5 text-[var(--blue)] shrink-0" strokeWidth={2} />
-              <span className="text-xs sm:text-sm font-bold text-white uppercase tracking-[0.2em]">
-                Zero-Risk Guarantee
-              </span>
-            </div>
-
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.5rem] font-black mb-3 sm:mb-4 text-white leading-tight tracking-tight">
-              Get your first{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--blue)] to-sky-400">
-                high-ticket client booked in 7 days
-              </span>
-            </h2>
-            <p className="text-lg sm:text-xl md:text-2xl font-semibold text-[var(--blue)] mb-6 sm:mb-8">
-              Or Pay Nothing. Guaranteed.
-            </p>
-            <p className="text-base sm:text-lg text-white/85 mb-10 sm:mb-12 max-w-2xl mx-auto leading-relaxed">
-              AI + human expertise eliminate spam and deliver{" "}
-              <strong className="text-white font-semibold">revenue-ready prospects</strong> directly to your
-              calendar. If we don&apos;t bring you a qualified client booking in 7 days, we provide a{" "}
-              <strong className="text-white font-semibold">100% refund with no questions asked</strong>.
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 mb-10 sm:mb-12">
-              {[
-                { icon: <CheckCircle className="w-7 h-7 sm:w-8 sm:h-8" strokeWidth={2} />, title: "No Questions Asked", desc: "Simple refund process within 7 days" },
-                { icon: <RefreshCw className="w-7 h-7 sm:w-8 sm:h-8" strokeWidth={2} />, title: "Quick Processing", desc: "Refunds processed within 7-10 business days" },
-                { icon: <Lock className="w-7 h-7 sm:w-8 sm:h-8" strokeWidth={2} />, title: "100% Secure", desc: "No hidden clauses or fine print" },
-              ].map((item, i) => (
-                <div
-                  key={i}
-                  className="rounded-2xl border border-white/10 bg-white/[0.06] p-5 sm:p-6 flex flex-col items-center text-center hover:border-[var(--blue)]/35 hover:bg-white/[0.08] transition-all duration-300"
-                >
-                  <span className="flex h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-white/10 text-[var(--blue)] items-center justify-center mb-4 ring-1 ring-[var(--blue)]/30 shadow-inner">
-                    {item.icon}
-                  </span>
-                  <h3 className="text-sm sm:text-base font-bold text-white mb-2">{item.title}</h3>
-                  <p className="text-xs sm:text-sm text-white/65 leading-snug">{item.desc}</p>
-                </div>
-              ))}
-            </div>
-
-            <button
-              type="button"
-              onClick={handleBookDemo}
-              className="group inline-flex items-center justify-center gap-3 px-8 sm:px-10 py-4 rounded-xl text-base sm:text-lg font-bold text-white bg-gradient-to-b from-[var(--blue)] to-[var(--blue-dark)] hover:brightness-110 border border-white/10 shadow-[0_8px_32px_-8px_rgba(59,130,246,0.55)] hover:shadow-[0_12px_40px_-8px_rgba(59,130,246,0.65)] transition-all w-full sm:w-auto active:scale-[0.98]"
-            >
-              <Play className="w-5 h-5 sm:w-6 sm:h-6 fill-current" />
-              <span className="sm:hidden">Demo</span>
-              <span className="hidden sm:inline">Watch Demo</span>
-              <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5 opacity-90 group-hover:translate-x-0.5 transition-transform" />
-            </button>
           </SectionReveal>
         </div>
       </section>
@@ -844,8 +1379,8 @@ any question asked which is not in our context directely tell that i am not auth
                   </li>
                 ))}
               </ul>
-            </div>
-
+              </div>
+              
             <div className="flex flex-col gap-6 sm:gap-8">
               <div className="rounded-[var(--r-xl)] p-5 sm:p-6 lg:p-8 border-2 border-[var(--line)] bg-[var(--surface)] shadow-[var(--sh-md)]">
                 <h3 className="text-lg sm:text-xl font-bold text-[var(--ink)] mb-6 text-center">Client Success Dashboard</h3>
@@ -906,11 +1441,11 @@ any question asked which is not in our context directely tell that i am not auth
                     <Users className="w-5 h-5" strokeWidth={2} />
                   </span>
                   <span className="text-lg font-bold text-[var(--ink)]">Dedicated Human Support</span>
-                </div>
+            </div>
                 <p className="text-sm sm:text-base text-[var(--ink-muted)] leading-relaxed">
                   Unlike pure software solutions, each client gets a dedicated account manager who works alongside your team to optimize results and ensure your success.
                 </p>
-              </div>
+          </div>
             </div>
           </div>
           </SectionReveal>
@@ -948,62 +1483,189 @@ any question asked which is not in our context directely tell that i am not auth
       </section>
       <SectionDivider />
 
-      {/* Testimonials – light theme, larger quote & clearer hierarchy */}
-      <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 bg-[var(--white)]">
-        <div className="max-w-4xl mx-auto">
-          <SectionReveal effect="tilt-up">
-          <SectionHeader
-            eyebrow="Testimonials"
-            titleBefore="Real Results from "
-            titleAccent="Real Clients"
-            subtitle="Success stories from professionals who got their guarantee fulfilled."
-            className="mb-10 sm:mb-12"
-          />
-          <div className="rounded-[var(--r-xl)] p-6 sm:p-8 lg:p-10 border-2 border-[var(--line)] bg-[var(--surface)] shadow-[var(--sh-sm)]">
-            <div className="text-center">
-              {/* Client image */}
-              <div className="flex justify-center mb-5">
-                <img
-                  src={testimonials[currentTestimonial].image}
-                  alt={testimonials[currentTestimonial].name}
-                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover ring-2 ring-[var(--blue)]/20"
-                />
-              </div>
-              <div className="flex justify-center gap-0.5 mb-5">
-                {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
-                  <Star key={i} className="w-6 h-6 sm:w-7 sm:h-7 text-[var(--amber)] fill-current" />
-                ))}
-              </div>
-              <blockquote className="text-lg sm:text-xl lg:text-2xl text-[var(--ink)] mb-6 sm:mb-8 italic leading-relaxed font-medium">
-                "{testimonials[currentTestimonial].content}"
-              </blockquote>
-              <div className="mb-5">
-                <div className="font-bold text-[var(--ink)] text-base sm:text-lg">{testimonials[currentTestimonial].name}</div>
-                <div className="text-[var(--blue)] text-sm sm:text-base font-medium">{testimonials[currentTestimonial].role}</div>
-                <div className="text-[var(--ink-muted)] text-sm">{testimonials[currentTestimonial].company}</div>
-                <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--wa-lite)] text-[var(--wa-dark)] font-bold text-sm sm:text-base">
-                  <CheckCircle className="w-4 h-4" />
-                  {testimonials[currentTestimonial].result}
-                </div>
-              </div>
-              <div className="flex justify-center gap-2">
-                {testimonials.map((_, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    onClick={() => setCurrentTestimonial(index)}
-                    className={`h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full transition-all ${
-                      index === currentTestimonial ? 'bg-[var(--blue)] scale-125' : 'bg-[var(--line-strong)] hover:bg-[var(--blue)]/50'
-                    }`}
-                    aria-label={`Go to testimonial ${index + 1}`}
-                  />
-                ))}
-              </div>
+      {/* Testimonials — 3×2 grid: blue border on hover only; gold star ratings */}
+      <section
+        className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 bg-[var(--surface)]"
+        aria-labelledby="testimonials-section-title"
+      >
+        <div className="max-w-6xl mx-auto">
+          <SectionReveal effect="fade-up">
+            <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10 lg:mb-12">
+              <span className="inline-flex rounded-full border border-[var(--blue)]/25 bg-[var(--blue-lite)] px-4 py-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--blue)] mb-4 sm:mb-5">
+                What people say
+              </span>
+              <h2
+                id="testimonials-section-title"
+                className="font-urbanist font-bold text-2xl sm:text-3xl lg:text-4xl text-[var(--ink)] tracking-tight leading-[1.15] mb-3 sm:mb-4"
+              >
+                Real feedback from people using{" "}
+                <span className="text-[var(--blue)]">Schedley</span>
+              </h2>
+              <p className="text-sm sm:text-base text-[var(--ink-muted)] leading-relaxed">
+                See how teams get qualified meetings, cleaner inboxes, and a single system for growth—without the chaos.
+              </p>
             </div>
-          </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
+              {testimonials.map((t) => (
+                <article
+                  key={t.name + t.company}
+                  className="flex flex-col rounded-[var(--r-xl)] border-2 border-transparent bg-[var(--white)] p-5 sm:p-6 shadow-[var(--sh-xs)] transition-all duration-300 hover:border-[var(--blue)] hover:shadow-[var(--sh-sm)]"
+                >
+                  <div className="flex items-start justify-between gap-3 mb-4">
+                    <Quote
+                      className="w-8 h-8 sm:w-9 sm:h-9 text-[var(--blue)] opacity-90 shrink-0"
+                      strokeWidth={1.5}
+                      aria-hidden
+                    />
+                    <TestimonialStarRow rating={t.rating} />
+                  </div>
+                  <blockquote className="text-sm sm:text-[15px] text-[var(--ink-muted)] italic leading-relaxed text-left flex-1 mb-5">
+                    {t.content}
+                  </blockquote>
+                  <footer className="flex items-center gap-3 mt-auto pt-1 border-t border-[var(--line)]/80">
+                    <img
+                      src={t.image}
+                      alt={t.name}
+                      width={40}
+                      height={40}
+                      className="h-10 w-10 rounded-full object-cover ring-2 ring-[var(--blue-lite)]"
+                    />
+                    <div className="min-w-0 text-left">
+                      <div className="font-bold text-[var(--ink)] text-sm sm:text-base truncate">{t.name}</div>
+                      <div className="text-xs sm:text-sm text-[var(--ink-muted)] truncate">
+                        {t.role}
+                        {t.company ? ` · ${t.company}` : ""}
+                      </div>
+                    </div>
+                  </footer>
+                </article>
+              ))}
+            </div>
           </SectionReveal>
         </div>
       </section>
+
+      {/* Guarantee — risk reversal immediately before primary CTA */}
+      <section
+        id="guarantee"
+        className="relative py-16 sm:py-20 lg:py-24 px-4 sm:px-6 bg-[var(--ink)] overflow-hidden"
+      >
+        <div
+          className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[min(90vw,720px)] h-[320px] rounded-full bg-[var(--blue)]/15 blur-3xl"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute bottom-0 right-0 w-1/2 max-w-md h-64 bg-[var(--blue)]/5 rounded-full blur-3xl"
+          aria-hidden
+        />
+
+        <div className="relative max-w-3xl mx-auto text-center">
+          <SectionReveal effect="zoom-in" className="px-6 py-10 sm:px-10 sm:py-12">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full mb-8 border border-[var(--blue)]/40 bg-[var(--blue)]/10 shadow-[0_0_20px_-5px_rgba(59,130,246,0.4)]">
+              <Shield className="w-5 h-5 text-[var(--blue)] shrink-0" strokeWidth={2} />
+              <span className="text-xs sm:text-sm font-bold text-white uppercase tracking-[0.2em]">
+                Zero-Risk Guarantee
+              </span>
+            </div>
+
+            <h2 className="b2b-display mb-3 text-2xl leading-tight text-white sm:mb-4 sm:text-3xl md:text-4xl lg:text-[2.35rem]">
+              Get your first{" "}
+              <span className="bg-gradient-to-r from-[var(--blue)] to-sky-400 bg-clip-text text-transparent">
+                high-ticket client booked in 7 days
+              </span>
+            </h2>
+            <p className="text-lg sm:text-xl md:text-2xl font-semibold text-[var(--blue)] mb-6 sm:mb-8">
+              Or Pay Nothing. Guaranteed.
+            </p>
+            <p className="text-base sm:text-lg text-white/85 mb-10 sm:mb-12 max-w-2xl mx-auto leading-relaxed">
+              AI + human expertise eliminate spam and deliver{" "}
+              <strong className="text-white font-semibold">revenue-ready prospects</strong> directly to your
+              calendar. If we don&apos;t bring you a qualified client booking in 7 days, we provide a{" "}
+              <strong className="text-white font-semibold">100% refund with no questions asked</strong>.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 mb-10 sm:mb-12">
+              {[
+                { icon: <CheckCircle className="w-7 h-7 sm:w-8 sm:h-8" strokeWidth={2} />, title: "No Questions Asked", desc: "Simple refund process within 7 days" },
+                { icon: <RefreshCw className="w-7 h-7 sm:w-8 sm:h-8" strokeWidth={2} />, title: "Quick Processing", desc: "Refunds processed within 7-10 business days" },
+                { icon: <Lock className="w-7 h-7 sm:w-8 sm:h-8" strokeWidth={2} />, title: "100% Secure", desc: "No hidden clauses or fine print" },
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  className="rounded-2xl border border-white/10 bg-white/[0.06] p-5 sm:p-6 flex flex-col items-center text-center hover:border-[var(--blue)]/35 hover:bg-white/[0.08] transition-all duration-300"
+                >
+                  <span className="flex h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-white/10 text-[var(--blue)] items-center justify-center mb-4 ring-1 ring-[var(--blue)]/30 shadow-inner">
+                    {item.icon}
+                  </span>
+                  <h3 className="text-sm sm:text-base font-bold text-white mb-2">{item.title}</h3>
+                  <p className="text-xs sm:text-sm text-white/65 leading-snug">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <button
+              type="button"
+              onClick={handleBookDemo}
+              className="group inline-flex items-center justify-center gap-3 px-8 sm:px-10 py-4 rounded-xl text-base sm:text-lg font-bold text-white bg-gradient-to-b from-[var(--blue)] to-[var(--blue-dark)] hover:brightness-110 border border-white/10 shadow-[0_8px_32px_-8px_rgba(59,130,246,0.55)] hover:shadow-[0_12px_40px_-8px_rgba(59,130,246,0.65)] transition-all w-full sm:w-auto active:scale-[0.98]"
+            >
+              <Play className="w-5 h-5 sm:w-6 sm:h-6 fill-current" />
+              <span className="sm:hidden">Demo</span>
+              <span className="hidden sm:inline">Watch Demo</span>
+              <ExternalLink className="w-4 h-4 sm:w-5 sm:w-5 opacity-90 group-hover:translate-x-0.5 transition-transform" />
+            </button>
+          </SectionReveal>
+        </div>
+      </section>
+
+      {/* Final CTA — white band + card (after proof & testimonials) */}
+      <section
+        id="final-cta"
+        className="relative z-10 overflow-hidden border-t border-[var(--line)] bg-[var(--white)] py-10 sm:py-14 lg:py-16 px-4 sm:px-6"
+        aria-labelledby="final-cta-title"
+      >
+        <div
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,var(--blue-lite)_0%,transparent_45%)] opacity-50"
+          aria-hidden
+        />
+        <div className="relative mx-auto max-w-3xl">
+          <SectionReveal effect="fade-up">
+            <div className="relative rounded-[var(--r-2xl)] border border-[var(--line)] bg-[var(--white)] p-8 text-center shadow-[var(--sh-md)] sm:p-10 lg:p-12 ring-1 ring-[var(--blue)]/10">
+              <div
+                className="pointer-events-none absolute inset-0 rounded-[var(--r-2xl)] bg-gradient-to-br from-[var(--blue-lite)]/40 via-transparent to-[var(--amber-lite)]/30 opacity-60"
+                aria-hidden
+              />
+              <div className="relative z-10">
+                <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--blue)] sm:text-[11px]">
+                  Get started
+                </p>
+                <h2
+                  id="final-cta-title"
+                  className="mb-8 text-2xl font-black leading-tight tracking-tight text-[var(--ink)] sm:mb-10 sm:text-3xl lg:text-4xl"
+                >
+                  Ready to{" "}
+                  <span className="text-[var(--blue)]">Grow Faster?</span>
+                </h2>
+                <button
+                  type="button"
+                  onClick={handleBookDemo}
+                  className="group relative inline-flex items-center justify-center gap-2.5 px-8 sm:px-10 py-3.5 sm:py-4 rounded-2xl text-base sm:text-lg font-bold text-white bg-[var(--blue)] border-2 border-[var(--blue)] transition-all duration-300 hover:bg-[var(--blue-dark)] hover:border-[var(--blue-dark)] hover:shadow-[0_0_48px_-10px_var(--blue-glow)] hover:-translate-y-0.5 active:translate-y-0"
+                  style={{ boxShadow: "var(--sh-blue)" }}
+                >
+                  <span
+                    className="absolute inset-0 rounded-2xl bg-gradient-to-b from-white/15 to-transparent opacity-40 pointer-events-none"
+                    aria-hidden
+                  />
+                  <Calendar className="relative w-5 h-5 shrink-0" />
+                  <span className="relative">Book a Strategy Call</span>
+                  <ExternalLink className="relative w-4 h-4 shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </button>
+              </div>
+            </div>
+          </SectionReveal>
+        </div>
+      </section>
+
       {/* Enhanced Floating Chat Button - Ultra Responsive */}
       {/* {!isChatOpen && (
         <button

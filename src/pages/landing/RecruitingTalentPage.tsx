@@ -22,6 +22,8 @@ import {
   ClipboardList,
   CheckCircle,
   FolderKanban,
+  AlertTriangle,
+  Zap,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { LandingHeader } from "@/components/LandingHeader";
@@ -31,79 +33,96 @@ import SectionReveal from "@/components/SectionReveal";
 import { WhatClientsSay } from "@/components/WhatClientsSay";
 import { FAQSection } from "@/components/landing/FAQSection";
 import { GrowthExpertCTA } from "@/components/landing/GrowthExpertCTA";
-import leadGenHeroImage from "@/assets/Lead-Generation.webp";
+import leadGenHeroImage from "@/assets/talent.png";
 
 const DEMO_URL =
   "https://www.schedley.com/lonejavida829/schedley-demo-see-how-client-acquisition-works-9040";
 
-/** Bullet points for the Vetted talent pool (highlight) card */
+/** Bullet points for the hiring infrastructure highlight card */
 const VETTED_BULLETS = [
-  { label: "Skills verified", icon: CheckCircle },
-  { label: "Experience vetted", icon: CheckCircle },
-  { label: "Culture fit assessed", icon: CheckCircle },
-  { label: "Shortlists in 24–48 hours", icon: Clock },
-  { label: "Reference checks", icon: CheckCircle },
-  { label: "Onboarding support", icon: CheckCircle },
-  { label: "500+ professionals placed", icon: UserCheck },
-  { label: "Trusted by 50+ companies", icon: Users },
+  { label: "Role briefs & scorecards aligned with hiring managers", icon: ClipboardList },
+  { label: "Sourcing, outreach, and structured first screens", icon: Users },
+  { label: "Interview loops coordinated with your calendar", icon: Clock },
+  { label: "Shortlists in 24–48 hours for most roles", icon: Sparkles },
+  { label: "References, checks, and offer support", icon: ShieldCheck },
+  { label: "Onboarding handoffs so day-one is smooth", icon: CheckCircle },
+  { label: "500+ successful placements", icon: UserCheck },
+  { label: "Trusted by 50+ growing teams", icon: Users },
 ];
 
 /**
- * Recruiting Talent page – distinct UI from B2B Lead Gen / Appointment pages.
+ * Hiring Infrastructure service page (route: /services/hiring-infrastructure).
  * Theme: src/theme/theme.css
  */
 const RecruitingTalentPage = () => {
   const handleContact = () => window.open(DEMO_URL, "_blank");
 
   const testimonials = [
-    { quote: "Schedley understood our urgency and delivered a shortlist of three strong candidates within 48 hours. We made an offer to one of them and they've been a key hire for our team.", name: "Head of Growth", role: "B2B SaaS Company", avatar: "https://i.pravatar.cc/80?img=5" },
-    { quote: "We needed senior engineering talent fast. Schedley sent us a shortlist in under 48 hours and we hired two people. The quality and fit were exactly what we needed.", name: "VP Engineering", role: "Product company", avatar: "https://i.pravatar.cc/80?img=12" },
-    { quote: "From brief to offer in two weeks. The candidates were pre-vetted and ready to talk. Our team was impressed with how smooth the process was.", name: "Chief People Officer", role: "Scale-up", avatar: "https://i.pravatar.cc/80?img=9" },
-    { quote: "We use Schedley for both full-time and contract roles. One point of contact, clear timelines, and candidates who actually match the brief. Highly recommend.", name: "Director of Operations", role: "Tech consultancy", avatar: "https://i.pravatar.cc/80?img=20" },
+    { quote: "Our hiring was stuck in endless back-and-forth. Schedley gave us real infrastructure—rubrics, coordinated screens, and a shortlist in two days. We filled a critical role and finally got velocity back.", name: "Head of Growth", role: "B2B SaaS Company", avatar: "https://i.pravatar.cc/80?img=5" },
+    { quote: "They didn’t just send résumés. They ran the pipeline: sourcing, first screens, scheduling, and scorecards our VPs could trust. Two senior engineers hired in one sprint.", name: "VP Engineering", role: "Product company", avatar: "https://i.pravatar.cc/80?img=12" },
+    { quote: "From role definition to offer in under three weeks. Having one team own find-screen-hire coordination cut our time-to-fill dramatically without lowering the bar.", name: "Chief People Officer", role: "Scale-up", avatar: "https://i.pravatar.cc/80?img=9" },
+    { quote: "We plug Schedley in for full-time and contract spikes. Same process, same quality bar—whether we’re hiring one PM or five. It’s become core hiring infrastructure for us.", name: "Director of Operations", role: "Tech consultancy", avatar: "https://i.pravatar.cc/80?img=20" },
   ];
 
   const containerClass = "max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8";
 
   const stats = [
-    { value: "500+", label: "Talents Placed", detail: "Professionals matched to roles", icon: UserCheck },
-    { value: "50+", label: "Happy Clients", detail: "Companies that trust us to scale", icon: Smile },
-    { value: "98%", label: "Retention Rate", detail: "Candidates who stay and perform", icon: TrendingUp },
-    { value: "24hr", label: "Avg Time to Shortlist", detail: "First candidates in a day", icon: Clock },
+    { value: "24–48h", label: "To first shortlist", detail: "Typical turnaround for active roles", icon: Clock },
+    { value: "500+", label: "Placements", detail: "Candidates moved through our process", icon: UserCheck },
+    { value: "50+", label: "Teams supported", detail: "Companies using our hiring stack", icon: Smile },
+    { value: "94%", label: "Offer accept rate", detail: "When both sides align on the brief", icon: TrendingUp },
   ];
 
   const bentoItems = [
-    { title: "Vetted talent pool", desc: "Pre-screened professionals ready to join your team from day one. We verify skills, experience, and culture fit so you only meet candidates who clear your bar.", icon: ShieldCheck, highlight: true },
-    { title: "Flexible engagement", desc: "Full-time, contract, or project-based—we match your needs. Scale up for launches or keep a lean team with on-demand talent.", icon: Link2 },
-    { title: "Dedicated support", desc: "A single point of contact for smooth onboarding. From offer to day one, we coordinate so your new hire ramps fast and your team stays focused.", icon: Users },
-    { title: "Fast turnaround", desc: "Shortlists in 24–48 hours so you keep momentum. No long waits—we prioritize your roles and keep the pipeline moving.", icon: Sparkles },
+    {
+      title: "End-to-end hiring infrastructure",
+      desc: "We don’t just forward CVs. You get sourcing, structured screening, interview coordination, and hiring-manager-ready packets—so every stage runs on rails instead of ad-hoc threads and spreadsheets.",
+      icon: ShieldCheck,
+      highlight: true,
+    },
+    {
+      title: "Flexible operating model",
+      desc: "Embedded recruiting sprints, fractional TA support, or full-cycle search for priority roles. Scale the pod up for launch hiring and dial back when the backlog clears.",
+      icon: Link2,
+    },
+    {
+      title: "Dedicated hiring pod",
+      desc: "One accountable lead plus coordinators who own the pipeline, stakeholder updates, and handoffs to your ATS or people team—fewer dropped balls and clearer SLAs.",
+      icon: Users,
+    },
+    {
+      title: "Speed without corner-cutting",
+      desc: "Parallel sourcing, tight feedback loops, and calendar-aware scheduling keep momentum. You stay focused on decisions; we keep candidates warm and moving.",
+      icon: Sparkles,
+    },
   ];
 
   const howItWorksSteps = [
     {
-      title: "Share Your Brief",
-      desc: "Tell us your role, skills, and culture fit. We align on must-haves and nice-to-haves so we target the right candidates.",
+      title: "Define the role & bar",
+      desc: "We workshop the brief with you: outcomes, must-have skills, culture signals, and compensation band. Everyone agrees on what “great” looks like before we open the top of funnel.",
       icon: ClipboardList,
       variant: "light" as const,
       extras: [
-        { icon: CheckCircle, text: "Clear brief doc" },
-        { icon: CheckCircle, text: "Aligned must-haves" },
-        { icon: CheckCircle, text: "Kickoff call" },
+        { icon: CheckCircle, text: "Scorecard & rubric" },
+        { icon: CheckCircle, text: "Aligned hiring manager" },
+        { icon: CheckCircle, text: "Kickoff & SLA" },
       ],
     },
     {
-      title: "We Search & Screen",
-      desc: "We tap our network and screen for skills, experience, and fit. You get a curated shortlist, often within 24–48 hours.",
+      title: "We find & screen",
+      desc: "Outbound, inbound, and network sourcing—then structured phone or async screens against your bar. You receive ranked shortlists with notes, not raw inboxes.",
       icon: Users,
       variant: "light" as const,
       extras: [
         { icon: CheckCircle, text: "Curated shortlist" },
-        { icon: CheckCircle, text: "24–48 hr turnaround" },
-        { icon: CheckCircle, text: "Profile summaries" },
+        { icon: CheckCircle, text: "Screening notes" },
+        { icon: CheckCircle, text: "24–48h typical" },
       ],
     },
     {
-      title: "Interview & Hire",
-      desc: "Meet candidates on your schedule. We coordinate feedback and support through offer and onboarding so they ramp fast.",
+      title: "You interview & hire",
+      desc: "We schedule loops, gather feedback, and support debriefs, references, and offers. Stronger signal, faster decisions, and a smoother path from “yes” to day one.",
       icon: UserCheck,
       variant: "dark" as const,
       extras: undefined,
@@ -126,10 +145,26 @@ const RecruitingTalentPage = () => {
   ];
 
   const faqs = [
-    { q: "What types of roles do you recruit for?", a: "We support sales, engineering, product, design, marketing, data, customer success, operations, and executive roles. Tell us your open role and we’ll confirm fit and timeline." },
-    { q: "How quickly can you deliver shortlists?", a: "For most roles we deliver a first shortlist within 24–48 hours. Niche or senior roles may take a few extra days. We’ll set expectations in the kickoff." },
-    { q: "Do you offer contract and full-time?", a: "Yes. We help with full-time hires, contractors, and project-based engagements so you can scale up or down as needed." },
-    { q: "How do you vet candidates?", a: "We screen for skills, experience, and culture fit using structured interviews and, where relevant, work samples or assessments. You see only candidates we’re confident in." },
+    {
+      q: "What is “hiring infrastructure” vs. traditional recruiting?",
+      a: "Infrastructure means we own the repeatable systems: sourcing channels, screening rubrics, interview scheduling, stakeholder updates, and handoffs to your tools. You get a pipeline that runs whether you’re hiring one role or ten—not a one-off CV drop.",
+    },
+    {
+      q: "What types of roles do you support?",
+      a: "We cover sales, engineering, product, design, marketing, data, customer success, operations, HR, and leadership. Share the level and location model and we’ll confirm fit, timeline, and the right pod size.",
+    },
+    {
+      q: "How fast can we expect a shortlist?",
+      a: "For most active roles, first qualified shortlists land within 24–48 hours after kickoff. Highly niche or executive searches may need a few extra days; we align on milestones upfront.",
+    },
+    {
+      q: "Do you work with our ATS and hiring managers?",
+      a: "Yes. We plug into your ATS where you use one, and we run hiring-manager syncs, scorecards, and debriefs so decisions stay fast and documented.",
+    },
+    {
+      q: "Full-time, contract, or project hiring?",
+      a: "All of the above. Use us for a single critical hire, a hiring sprint, or ongoing fractional support—same process, adjusted capacity.",
+    },
   ];
 
   return (
@@ -144,16 +179,16 @@ const RecruitingTalentPage = () => {
             <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
               <div className="relative z-10">
                 <p className="inline-block text-xs font-bold uppercase tracking-widest text-[var(--blue)] mb-4 px-4 py-2 rounded-[var(--r-s)] border border-[var(--blue)] bg-[var(--ink)]/80">
-                  Recruiting & Talent
+                  Hiring Infrastructure
                 </p>
                 <h1 className="b2b-display text-white text-3xl sm:text-4xl lg:text-5xl mb-4 leading-tight">
-                  Scale Your Team With Top Talent
+                  Hire Faster and Better
                 </h1>
                 <p className="text-lg text-white/90 leading-relaxed mb-4">
-                  We connect you with vetted professionals so you can hire faster and build teams that deliver. From sales to engineering to operations—we find the right fit.
+                  Build the operating system for hiring: structured sourcing and screening, coordinated interviews, and hiring-manager-ready shortlists—so you fill roles without burning out your team.
                 </p>
                 <p className="text-white/80 text-sm mb-6">
-                  Trusted by growing companies to fill critical roles with quality candidates, on time.
+                  Outcome: stronger teams, shorter cycles, and predictable growth—not another overflowing inbox of unvetted applicants.
                 </p>
                 <div className="flex flex-wrap gap-4">
                   <button
@@ -176,12 +211,68 @@ const RecruitingTalentPage = () => {
                 <div className="relative rounded-[var(--r-2xl)] overflow-hidden shadow-[var(--sh-lg)] w-full max-w-lg aspect-[4/3] lg:aspect-[5/4]">
                   <img
                     src={leadGenHeroImage}
-                    alt="Recruiting talent – scale your team with vetted professionals"
+                    alt="Hiring infrastructure – find, screen, and hire the right candidates faster"
                     className="w-full h-full object-cover object-center"
                   />
                 </div>
               </div>
             </div>
+            </SectionReveal>
+          </div>
+        </section>
+        <SectionDivider />
+
+        {/* Problem → Solution → Result */}
+        <section className="py-14 sm:py-16 lg:py-20 bg-[var(--surface)]">
+          <div className={containerClass}>
+            <SectionReveal effect="fade-up">
+              <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+                <div className="rounded-[var(--r-l)] border border-[var(--line)] bg-[var(--white)] p-6 sm:p-8 shadow-[var(--sh-sm)] hover:border-[var(--blue)]/20 transition-colors">
+                  <span className="inline-flex h-12 w-12 rounded-xl bg-amber-500/15 text-amber-600 items-center justify-center mb-4">
+                    <AlertTriangle className="w-6 h-6" strokeWidth={2} />
+                  </span>
+                  <p className="text-xs font-bold uppercase tracking-widest text-[var(--ink-muted)] mb-2">Problem</p>
+                  <h2 className="text-xl font-bold text-[var(--ink)] mb-3 leading-tight">Hiring is slow and inefficient</h2>
+                  <p className="text-sm text-[var(--ink-muted)] leading-relaxed mb-4">
+                    Open reqs stall when sourcing, screening, and scheduling live in scattered tools and DMs. Hiring managers lose context, candidates go cold, and “we’ll review next week” becomes the default.
+                  </p>
+                  <ul className="space-y-2 text-sm text-[var(--ink-soft)]">
+                    <li className="flex gap-2"><span className="text-amber-600 shrink-0">•</span> Long time-to-fill and interview no-shows</li>
+                    <li className="flex gap-2"><span className="text-amber-600 shrink-0">•</span> Inconsistent bar across interviewers</li>
+                    <li className="flex gap-2"><span className="text-amber-600 shrink-0">•</span> Leaders pulled into admin instead of decisions</li>
+                  </ul>
+                </div>
+                <div className="rounded-[var(--r-l)] border border-[var(--blue)]/30 bg-[var(--blue-lite)]/40 p-6 sm:p-8 shadow-[var(--sh-sm)] ring-1 ring-[var(--blue)]/10">
+                  <span className="inline-flex h-12 w-12 rounded-xl bg-[var(--blue)]/20 text-[var(--blue)] items-center justify-center mb-4">
+                    <Zap className="w-6 h-6" strokeWidth={2} />
+                  </span>
+                  <p className="text-xs font-bold uppercase tracking-widest text-[var(--blue)] mb-2">Solution</p>
+                  <h2 className="text-xl font-bold text-[var(--ink)] mb-3 leading-tight">We help you find, screen, and hire the right candidates</h2>
+                  <p className="text-sm text-[var(--ink-muted)] leading-relaxed mb-4">
+                    Schedley runs the full top and middle of funnel: targeted outreach, structured screens, scorecards, and calendar-backed interview loops—aligned to the bar you set on day one.
+                  </p>
+                  <ul className="space-y-2 text-sm text-[var(--ink-soft)]">
+                    <li className="flex gap-2"><CheckCircle className="w-4 h-4 shrink-0 text-[var(--blue)] mt-0.5" /> Rubrics and packets hiring managers actually use</li>
+                    <li className="flex gap-2"><CheckCircle className="w-4 h-4 shrink-0 text-[var(--blue)] mt-0.5" /> Ranked shortlists with screening rationale</li>
+                    <li className="flex gap-2"><CheckCircle className="w-4 h-4 shrink-0 text-[var(--blue)] mt-0.5" /> One pod accountable for pipeline health</li>
+                  </ul>
+                </div>
+                <div className="rounded-[var(--r-l)] border border-[var(--line)] bg-[var(--white)] p-6 sm:p-8 shadow-[var(--sh-sm)] hover:border-[var(--blue)]/20 transition-colors">
+                  <span className="inline-flex h-12 w-12 rounded-xl bg-emerald-500/15 text-emerald-600 items-center justify-center mb-4">
+                    <TrendingUp className="w-6 h-6" strokeWidth={2} />
+                  </span>
+                  <p className="text-xs font-bold uppercase tracking-widest text-[var(--ink-muted)] mb-2">Result</p>
+                  <h2 className="text-xl font-bold text-[var(--ink)] mb-3 leading-tight">Stronger team and faster growth</h2>
+                  <p className="text-sm text-[var(--ink-muted)] leading-relaxed mb-4">
+                    When hiring runs like infrastructure, you compound: better hires, higher offer accept rates, and leaders free to build product and revenue instead of chasing scheduling links.
+                  </p>
+                  <ul className="space-y-2 text-sm text-[var(--ink-soft)]">
+                    <li className="flex gap-2"><span className="text-emerald-600 shrink-0">•</span> Predictable pipeline and clearer forecasts</li>
+                    <li className="flex gap-2"><span className="text-emerald-600 shrink-0">•</span> Higher quality of hire and retention signal</li>
+                    <li className="flex gap-2"><span className="text-emerald-600 shrink-0">•</span> Capacity to scale headcount with the business</li>
+                  </ul>
+                </div>
+              </div>
             </SectionReveal>
           </div>
         </section>
@@ -208,7 +299,7 @@ const RecruitingTalentPage = () => {
         </section>
         <SectionDivider />
 
-        {/* Why Schedley Talent – bento grid, outcome-led */}
+        {/* Why hiring infrastructure – bento grid, outcome-led */}
         <section className="py-16 sm:py-20 lg:py-24 bg-[var(--white)] relative overflow-hidden">
           {/* Subtle gradient orbs for depth */}
           <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full bg-[var(--blue-lite)]/50 blur-[120px] pointer-events-none -translate-y-1/2 translate-x-1/2" aria-hidden />
@@ -216,10 +307,10 @@ const RecruitingTalentPage = () => {
           <div className={containerClass} style={{ position: "relative" }}>
             <SectionReveal effect="slide-right">
             <SectionHeader
-              eyebrow="Why Schedley Talent"
-              titleBefore="Partner with us to build "
-              titleAccent="your team"
-              subtitle="Rigorous vetting and flexible engagement—so you get the right people, in the right format, without the usual hiring friction."
+              eyebrow="Why Hiring Infrastructure"
+              titleBefore="A system for "
+              titleAccent="how you hire"
+              subtitle="Process, people, and tooling in one layer—so every req moves with clarity from sourcing to signed offer, without reinventing the wheel each time."
               className="mb-12 lg:mb-14"
             />
             <div className="grid grid-cols-1 md:grid-cols-2 md:grid-rows-3 gap-4 lg:gap-5 auto-rows-fr md:auto-rows-fr">
@@ -275,7 +366,7 @@ const RecruitingTalentPage = () => {
                         </ul>
                         <div className="mt-4 flex items-center gap-3 rounded-xl bg-white/10 px-4 py-3">
                           <UserCheck className="w-5 h-5 text-[var(--blue-mid)] shrink-0" />
-                          <span className="text-sm font-medium text-white/95">500+ professionals placed</span>
+                          <span className="text-sm font-medium text-white/95">500+ candidates hired through our process</span>
                         </div>
                         <p className="mt-6 text-xs font-semibold uppercase tracking-widest text-[var(--blue-mid)]">
                           Trusted by 50+ companies
@@ -297,9 +388,9 @@ const RecruitingTalentPage = () => {
             <SectionReveal effect="slide-left">
             <SectionHeader
               eyebrow="How It Works"
-              titleBefore="From brief to hire in "
-              titleAccent="three clear steps"
-              subtitle="We handle sourcing and screening so you focus on choosing the right fit."
+              titleBefore="From role brief to "
+              titleAccent="signed offer"
+              subtitle="You set the bar; we run the machinery—find, screen, coordinate, and hand off so your team spends time on decisions, not logistics."
               className="mb-12"
             />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
@@ -361,9 +452,9 @@ const RecruitingTalentPage = () => {
             <SectionReveal effect="slide-right">
             <SectionHeader
               eyebrow="Roles We Fill"
-              titleBefore="We help you hire "
-              titleAccent="across functions"
-              subtitle="From individual contributors to leadership—we source and screen so you get a shortlist that fits your bar and culture. Tell us the role and we'll align on must-haves, then deliver vetted candidates on your timeline."
+              titleBefore="Infrastructure for every "
+              titleAccent="function you scale"
+              subtitle="IC to executive, technical and commercial—we map competencies to your scorecard, run consistent screens, and keep stakeholders aligned whether you’re backfilling or opening a new pod."
               className="mb-10"
             />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
@@ -415,7 +506,7 @@ const RecruitingTalentPage = () => {
           eyebrow="FAQ"
           titleBefore="Frequently asked "
           titleAccent="questions"
-          subtitle="Quick answers about our recruiting and talent process."
+          subtitle="How our hiring infrastructure works, timelines, and how we plug into your team."
           items={faqs}
           scrollEffect="fade-up"
         />
@@ -425,20 +516,20 @@ const RecruitingTalentPage = () => {
           containerClass={containerClass}
           sectionClassName="py-16 sm:py-20 lg:py-24 bg-[var(--blue)] text-white"
           eyebrow="Get Started"
-          titleBefore="Ready to "
-          titleAccent="hire?"
-          subtitle="Tell us about your open role and we'll get back with a plan and timeline."
-          buttonText="Talk to Talent Team"
+          titleBefore="Ready for "
+          titleAccent="hiring infrastructure?"
+          subtitle="Share your open roles, hiring volume, and timeline—we’ll propose a pod, milestones, and how we integrate with your managers and tools."
+          buttonText="Talk to our hiring team"
           onButtonClick={handleContact}
           buttonIcon={<UserPlus className="w-5 h-5" />}
           privacySlot={null}
           middleSlot={
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 text-left items-stretch">
               {[
-                { icon: Clock, title: "Fast shortlist", desc: "First candidates within 24–48 hours." },
-                { icon: ShieldCheck, title: "Vetted candidates", desc: "Pre-screened for fit and skills." },
-                { icon: Briefcase, title: "Flexible engagement", desc: "Full-time, contract, or project-based." },
-                { icon: MessageCircle, title: "One point of contact", desc: "Dedicated coordinator for your roles." },
+                { icon: Clock, title: "Time-to-shortlist", desc: "First qualified candidates typically within 24–48 hours after kickoff." },
+                { icon: ShieldCheck, title: "Structured screening", desc: "Rubrics, notes, and scorecards—not raw résumé dumps." },
+                { icon: Briefcase, title: "Flexible pods", desc: "Sprints, fractional TA, or dedicated search—matched to your hiring load." },
+                { icon: MessageCircle, title: "Single owner", desc: "One accountable lead across sourcing, screens, and scheduling." },
               ].map(({ icon: Icon, title, desc }) => (
                 <div
                   key={title}

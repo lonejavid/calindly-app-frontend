@@ -1,650 +1,148 @@
-
-
-// import React, { useState} from "react";
-
-// const Setup = () => {
-//   const navigate = (path) => {
-//     console.log(`Navigating to: ${path}`);
-//     alert(`Would navigate to: ${path}`);
-//   };
-
-//   const setUser = (user) => {
-//     console.log("Setting user in store:", user);
-//   };
-
-//   const user = { id: 1, name: "Test User" }; // Simulated user
-
-//   const setAccessToken = (token) => {
-//     console.log("Setting access token:", token);
-//   };
-
-//   const [currentStep, setCurrentStep] = useState(0);
-//   const [isLoading, setIsLoading] = useState(false);
-//   const [formData, setFormData] = useState({
-//     sellingMethod: "",
-//     icp: "",
-//     productDescription: "",
-//     pricing: "",
-//     currency: "USD"
-//   });
-
-//   const steps = [
-//     {
-//       title: "How are you currently selling your product?",
-//       subtitle: "Your responses will help us tailor your experience to your needs.",
-//       field: "sellingMethod",
-//       type: "cards",
-//       options: [
-//         { value: "Direct Sales", icon: "👤", label: "Direct Sales" },
-//         { value: "Resellers/Partners", icon: "🤝", label: "With partners" },
-//         { value: "Inbound Marketing", icon: "📈", label: "Inbound Marketing" },
-//         { value: "Outbound Sales", icon: "📞", label: "Outbound Sales" },
-//         { value: "Online Marketplace", icon: "🛒", label: "Online Marketplace" },
-//         { value: "Other", icon: "⚡", label: "Other" }
-//       ]
-//     },
-//     {
-//       title: "Who is your ideal customer?",
-//       subtitle: "Understanding your target market will help us set up your first scheduling link.",
-//       field: "icp",
-//       type: "cards",
-//       options: [
-//         { value: "Small Business", icon: "🏪", label: "Small Business" },
-//         { value: "Enterprise", icon: "🏢", label: "Enterprise" },
-//         { value: "Startups", icon: "🚀", label: "Startups" },
-//         { value: "Healthcare", icon: "🏥", label: "Healthcare" },
-//         { value: "Education", icon: "🎓", label: "Education" },
-//         { value: "Other", icon: "⚡", label: "Other" }
-//       ]
-//     },
-//     {
-//       title: "What product are you selling?",
-//       subtitle: "Tell us about your product or service to personalize your experience.",
-//       field: "productDescription",
-//       type: "textarea",
-//       placeholder: "Describe your product, its key features, and what problems it solves..."
-//     },
-//     {
-//       title: "What's your pricing?",
-//       subtitle: "Help us understand your pricing structure for better recommendations.",
-//       field: "pricing",
-//       type: "pricing",
-//       placeholder: "Enter amount"
-//     }
-//   ];
-
-//   const [showSuccess, setShowSuccess] = useState(false);
-
-//   const handleInputChange = (value) => {
-//     const currentField = steps[currentStep].field;
-//     setFormData(prev => ({
-//       ...prev,
-//       [currentField]: value
-//     }));
-//   };
-
-//   const updateUserApprovalStatus = async (userData) => {
-//     try {
-//       setIsLoading(true);
-      
-//       // Simulate API call to update user's approval status
-//       const updatedUser = {
-//         ...user,
-//         ...userData,
-//         isApproved: true,
-//         setupCompleted: true,
-//         updatedAt: new Date().toISOString()
-//       };
-
-
-//       setUser(updatedUser);
-
-
-//       localStorage.setItem("user", JSON.stringify(updatedUser));
-
-//       console.log("✅ User updated with approval status:", updatedUser);
-//       return updatedUser;
-//     } catch (error) {
-//       console.error("❌ Failed to update user approval status:", error);
-//       throw error;
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
-
-//   const handleNext = async () => {
-//     if (currentStep < steps.length - 1) {
-//       setCurrentStep(currentStep + 1);
-//     } else {
-//       try {
-
-//         await updateUserApprovalStatus(formData);
-//         setShowSuccess(true);
-//         setTimeout(() => {
-//           navigate("/app/event_types");
-//         }, 3000);
-//       } catch (error) {
-//         console.error("Setup completion error:", error);
-//       }
-//     }
-//   };
-
-//   const handlePrevious = () => {
-//     if (currentStep > 0) {
-//       setCurrentStep(currentStep - 1);
-//     }
-//   };
-
-//   const handleClose = () => {
-//     window.location.reload();
-//   };
-
-//   const isCurrentStepValid = () => {
-//     const currentField = steps[currentStep].field;
-//     const value = formData[currentField];
-//     return value && value.toString().trim() !== "";
-//   };
-
-//   const progressPercentage = ((currentStep + 1) / steps.length) * 100;
-
-//   if (showSuccess) {
-//     return (
-//       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center overflow-hidden relative px-4">
-//         {/* Animated background elements */}
-//         <div className="absolute inset-0 overflow-hidden">
-//           {[...Array(12)].map((_, i) => (
-//             <div
-//               key={i}
-//               className="absolute w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 animate-ping"
-//               style={{
-//                 left: `${Math.random() * 100}%`,
-//                 top: `${Math.random() * 100}%`,
-//                 animationDelay: `${i * 0.2}s`,
-//                 animationDuration: '2s'
-//               }}
-//             />
-//           ))}
-//         </div>
-
-//         <div className="container mx-auto max-w-7xl">
-//           <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen gap-8 lg:gap-16">
-//             {/* Left Side - Content */}
-//             <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left max-w-lg animate-fade-in-up">
-//               <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-content-center mb-6 shadow-2xl animate-bounce">
-//                 <svg className="w-8 h-8 sm:w-10 sm:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-//                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-//                 </svg>
-//               </div>
-              
-//               <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4 leading-tight">
-//                 All set! 🎉
-//               </h1>
-              
-//               <p className="text-base sm:text-lg lg:text-xl text-gray-600 leading-relaxed mb-8 max-w-md">
-//                 Setup completed successfully! Redirecting to your dashboard in 2 seconds...
-//               </p>
-              
-//               <div className="flex items-center space-x-2 text-blue-600">
-//                 <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
-//                 <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-//                 <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
-//                 <span className="ml-2 font-medium">Redirecting...</span>
-//               </div>
-              
-//               {/* Manual navigation button as backup */}
-//               <button
-//                 onClick={() => {
-//                   console.log("🔄 Manual navigation triggered");
-//                   console.log("👤 User state:", user);
-                  
-//                   // Ensure user is approved before manual navigation
-//                   const approvedUser = {
-//                     ...user,
-//                     isApproved: true,
-//                     setupCompleted: true
-//                   };
-//                   setUser(approvedUser);
-//                   localStorage.setItem("user", JSON.stringify(approvedUser));
-//                   localStorage.setItem("userApproved", "true");
-                  
-//                   console.log("✅ Manual approval set, navigating...");
-//                   navigate("/app/event_types", { replace: true });
-//                 }}
-//                 className="mt-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-full font-medium hover:shadow-lg transition-all duration-300"
-//               >
-//                 Continue to Dashboard
-//               </button>
-//             </div>
-
-//             {/* Right Side - Success Animation */}
-//             <div className="flex-1 flex justify-center items-center max-w-lg animate-fade-in-right">
-//               <div className="relative">
-//                 <div className="w-48 h-48 sm:w-64 sm:h-64 lg:w-80 lg:h-80 rounded-full bg-gradient-to-r from-blue-100 to-purple-100 flex items-center justify-center animate-spin-slow">
-//                   <div className="text-6xl sm:text-7xl lg:text-9xl animate-bounce">
-//                     🎉
-//                   </div>
-//                 </div>
-                
-//                 {/* Orbiting elements */}
-//                 {[0, 72, 144, 216, 288].map((angle, i) => (
-//                   <div
-//                     key={i}
-//                     className="absolute w-4 h-4 sm:w-6 sm:h-6 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full animate-spin-slow"
-//                     style={{
-//                       top: "50%",
-//                       left: "50%",
-//                       transformOrigin: "0 0",
-//                       transform: `rotate(${angle}deg) translate(120px, 0) rotate(-${angle}deg)`,
-//                       animationDelay: `${i * 0.2}s`,
-//                       animationDuration: '8s'
-//                     }}
-//                   />
-//                 ))}
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   const currentStepData = steps[currentStep];
-
-//   return (
-//     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
-//       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-12 min-h-screen flex flex-col">
-        
-//         {/* Header */}
-//         <div className="flex flex-col sm:flex-row items-center justify-between mb-6 sm:mb-8 lg:mb-12 gap-4 animate-fade-in-down">
-//           <div className="flex items-center space-x-3">
-//             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300 cursor-pointer">
-//               <span className="text-white font-bold text-base sm:text-lg lg:text-xl">S</span>
-//             </div>
-//             <span className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-//               Schedley
-//             </span>
-//           </div>
-          
-//           <div className="flex items-center space-x-3 sm:space-x-4">
-//             <span className="text-xs sm:text-sm font-medium text-gray-600 bg-white px-2 sm:px-3 py-1 rounded-full shadow-sm whitespace-nowrap">
-//               STEP {currentStep + 1} OF {steps.length}
-//             </span>
-//             <div className="flex space-x-1">
-//               {steps.map((_, index) => (
-//                 <div
-//                   key={index}
-//                   className={`h-2 rounded-full transition-all duration-500 ${
-//                     index <= currentStep 
-//                       ? "w-6 sm:w-8 lg:w-10 bg-gradient-to-r from-blue-600 to-purple-600 shadow-sm" 
-//                       : index === currentStep + 1 
-//                         ? "w-4 sm:w-6 bg-blue-300"
-//                         : "w-2 bg-gray-300"
-//                   }`}
-//                 />
-//               ))}
-//             </div>
-//           </div>
-//         </div>
-
-//         {/* Progress Bar */}
-//         <div className="mb-6 sm:mb-8">
-//           <div className="flex justify-between items-center mb-2">
-//             <span className="text-sm font-medium text-gray-700">Progress</span>
-//             <span className="text-sm font-medium text-blue-600">{Math.round(progressPercentage)}%</span>
-//           </div>
-//           <div className="w-full bg-gray-200 rounded-full h-2">
-//             <div 
-//               className="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full transition-all duration-500 ease-out"
-//               style={{ width: `${progressPercentage}%` }}
-//             ></div>
-//           </div>
-//         </div>
-
-//         {/* Main Content */}
-//         <div className="flex-1 flex flex-col lg:flex-row gap-6 lg:gap-8 xl:gap-16">
-//           {/* Left Side - Form */}
-//           <div className="flex-1 flex flex-col justify-center">
-//             <div className="space-y-6 sm:space-y-8 animate-slide-in-left">
-//               {/* Title and Subtitle */}
-//               <div className="space-y-3 sm:space-y-4">
-//                 <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 leading-tight">
-//                   {currentStepData.title}
-//                 </h1>
-//                 <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-gray-600 leading-relaxed">
-//                   {currentStepData.subtitle}
-//                 </p>
-//               </div>
-
-//               {/* Form Content */}
-//               <div className="space-y-4 sm:space-y-6">
-//                 {currentStepData.type === "cards" ? (
-//                   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
-//                     {currentStepData.options.map((option, index) => (
-//                       <button
-//                         key={index}
-//                         onClick={() => handleInputChange(option.value)}
-//                         className={`p-3 sm:p-4 lg:p-6 border-2 rounded-xl text-left transition-all duration-300 hover:scale-105 hover:shadow-lg animate-fade-in-up group ${
-//                           formData[currentStepData.field] === option.value
-//                             ? "border-blue-500 bg-gradient-to-r from-blue-50 to-purple-50 shadow-lg transform scale-105"
-//                             : "border-gray-200 bg-white hover:border-blue-300 hover:shadow-md"
-//                         }`}
-//                         style={{ animationDelay: `${index * 0.1}s` }}
-//                       >
-//                         <div className="flex items-center space-x-3">
-//                           <span className="text-xl sm:text-2xl transition-transform group-hover:scale-110">
-//                             {option.icon}
-//                           </span>
-//                           <span className="font-semibold text-gray-900 text-sm sm:text-base">
-//                             {option.label}
-//                           </span>
-//                         </div>
-//                       </button>
-//                     ))}
-//                   </div>
-//                 ) : currentStepData.type === "textarea" ? (
-//                   <div className="max-w-full lg:max-w-2xl animate-fade-in-up">
-//                     <textarea
-//                       value={formData[currentStepData.field]}
-//                       onChange={(e) => handleInputChange(e.target.value)}
-//                       placeholder={currentStepData.placeholder}
-//                       rows={4}
-//                       className="w-full p-3 sm:p-4 lg:p-6 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-gray-900 transition-all duration-300 hover:shadow-md text-sm sm:text-base"
-//                     />
-//                   </div>
-//                 ) : currentStepData.type === "pricing" ? (
-//                   <div className="max-w-full sm:max-w-md animate-fade-in-up">
-//                     <div className="flex flex-col sm:flex-row gap-3">
-//                       <select
-//                         value={formData.currency}
-//                         onChange={(e) => setFormData(prev => ({ ...prev, currency: e.target.value }))}
-//                         className="w-full sm:w-28 p-3 sm:p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 text-sm sm:text-base"
-//                       >
-//                         <option value="USD">USD</option>
-//                         <option value="EUR">EUR</option>
-//                         <option value="GBP">GBP</option>
-//                         <option value="INR">INR</option>
-//                       </select>
-//                       <input
-//                         type="number"
-//                         value={formData[currentStepData.field]}
-//                         onChange={(e) => handleInputChange(e.target.value)}
-//                         placeholder={currentStepData.placeholder}
-//                         className="flex-1 p-3 sm:p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 hover:shadow-md text-sm sm:text-base"
-//                       />
-//                     </div>
-//                   </div>
-//                 ) : null}
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* Right Side - Preview Cards (Hidden on mobile) */}
-//           <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-center relative">
-//             <div className="absolute inset-0 bg-gradient-to-br from-blue-100/50 via-purple-100/50 to-pink-100/50 rounded-3xl" />
-            
-//             {/* Calendar Preview */}
-//             <div className="relative bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl p-6 w-80 border border-white/20 animate-fade-in-right">
-//               <div className="flex items-center justify-between mb-6">
-//                 <div className="flex items-center space-x-3">
-//                   <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full animate-pulse" />
-//                   <div className="space-y-1">
-//                     <div className="w-16 h-3 bg-gray-300 rounded-full animate-pulse" />
-//                     <div className="w-20 h-2 bg-gray-200 rounded-full animate-pulse" />
-//                   </div>
-//                 </div>
-//                 <div className="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded-full animate-bounce">
-//                   Available Times
-//                 </div>
-//               </div>
-              
-//               <div className="grid grid-cols-7 gap-1 mb-4">
-//                 {Array.from({ length: 35 }, (_, i) => (
-//                   <div
-//                     key={i}
-//                     className={`h-8 flex items-center justify-center text-xs rounded transition-all hover:scale-110 cursor-pointer ${
-//                       i === 10 || i === 15 || i === 20 
-//                         ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-sm animate-pulse" 
-//                         : i > 6 && i < 28 
-//                           ? "hover:bg-blue-50 text-gray-700"
-//                           : "text-gray-300"
-//                     }`}
-//                   >
-//                     {i > 6 && i < 28 ? i - 6 : ""}
-//                   </div>
-//                 ))}
-//               </div>
-              
-//               <div className="space-y-2">
-//                 {["9:00 AM", "10:30 AM", "2:00 PM", "4:00 PM"].map((time, index) => (
-//                   <div
-//                     key={index}
-//                     className={`p-3 rounded-lg text-center text-sm font-medium transition-all hover:scale-105 cursor-pointer ${
-//                       index === 1 
-//                         ? "border-2 border-blue-500 bg-gradient-to-r from-blue-50 to-purple-50 text-blue-600" 
-//                         : "border border-gray-200 hover:border-blue-300"
-//                     }`}
-//                   >
-//                     {time}
-//                   </div>
-//                 ))}
-//               </div>
-//             </div>
-
-//             {/* Floating stats cards */}
-//             <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-4 w-48 border border-white/20 animate-fade-in-up transform rotate-3">
-//               <div className="flex items-center justify-between mb-2">
-//                 <span className="text-sm font-semibold text-gray-800">Bookings Today</span>
-//                 <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-//                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 14l3-3 3 3 7-7v4h-2V4h7v7h-4l-7 7z" />
-//                 </svg>
-//               </div>
-//               <div className="text-2xl font-bold text-green-600 animate-bounce">12</div>
-//               <div className="text-xs text-gray-500">+25% from yesterday</div>
-//             </div>
-
-//             <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-4 w-48 border border-white/20 animate-fade-in-up transform -rotate-2" style={{ animationDelay: '0.5s' }}>
-//               <div className="flex items-center justify-between mb-2">
-//                 <span className="text-sm font-semibold text-gray-800">Conversion</span>
-//                 <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-//                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-//                 </svg>
-//               </div>
-//               <div className="text-2xl font-bold text-blue-600 mb-2">78%</div>
-//               <div className="w-full h-2 bg-gray-200 rounded-full">
-//                 <div className="h-full bg-gradient-to-r from-blue-400 to-purple-400 rounded-full animate-progress" style={{ width: '78%' }} />
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-
-//         {/* Navigation Footer */}
-//         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6 sm:mt-8 lg:mt-12 animate-fade-in-up">
-//           <button
-//             onClick={handlePrevious}
-//             disabled={currentStep === 0}
-//             className={`flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium transition-all duration-300 ${
-//               currentStep === 0
-//                 ? "text-gray-400 cursor-not-allowed"
-//                 : "text-gray-700 hover:bg-white hover:shadow-md hover:scale-105"
-//             }`}
-//           >
-//             <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-//               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-//             </svg>
-//             <span className="text-sm sm:text-base">Back</span>
-//           </button>
-
-//           <button
-//             onClick={handleNext}
-//             disabled={!isCurrentStepValid() || isLoading}
-//             className={`w-full sm:w-auto px-6 sm:px-10 py-3 sm:py-4 rounded-xl font-semibold transition-all duration-300 ${
-//               isCurrentStepValid() && !isLoading
-//                 ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:shadow-lg hover:scale-105"
-//                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
-//             }`}
-//           >
-//             {isLoading ? (
-//               <div className="flex items-center justify-center space-x-2">
-//                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-//                 <span className="text-sm sm:text-base">Setting up...</span>
-//               </div>
-//             ) : (
-//               <div className="flex items-center justify-center space-x-2">
-//                 <span className="text-sm sm:text-base">{currentStep === steps.length - 1 ? "Complete Setup" : "Continue"}</span>
-//                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-//                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-//                 </svg>
-//               </div>
-//             )}
-//           </button>
-//         </div>
-//       </div>
-
-//       <style jsx>{`
-//         @keyframes fade-in-up {
-//           from { opacity: 0; transform: translateY(30px); }
-//           to { opacity: 1; transform: translateY(0); }
-//         }
-        
-//         @keyframes fade-in-down {
-//           from { opacity: 0; transform: translateY(-30px); }
-//           to { opacity: 1; transform: translateY(0); }
-//         }
-        
-//         @keyframes fade-in-left {
-//           from { opacity: 0; transform: translateX(-30px); }
-//           to { opacity: 1; transform: translateX(0); }
-//         }
-        
-//         @keyframes fade-in-right {
-//           from { opacity: 0; transform: translateX(30px); }
-//           to { opacity: 1; transform: translateX(0); }
-//         }
-        
-//         @keyframes slide-in-left {
-//           from { opacity: 0; transform: translateX(-50px); }
-//           to { opacity: 1; transform: translateX(0); }
-//         }
-        
-//         @keyframes spin-slow {
-//           from { transform: rotate(0deg); }
-//           to { transform: rotate(360deg); }
-//         }
-        
-//         @keyframes progress {
-//           from { width: 0%; }
-//           to { width: 78%; }
-//         }
-        
-//         .animate-fade-in-up {
-//           animation: fade-in-up 0.6s ease-out;
-//         }
-        
-//         .animate-fade-in-down {
-//           animation: fade-in-down 0.6s ease-out;
-//         }
-        
-//         .animate-fade-in-left {
-//           animation: fade-in-left 0.6s ease-out;
-//         }
-        
-//         .animate-fade-in-right {
-//           animation: fade-in-right 0.8s ease-out;
-//         }
-        
-//         .animate-slide-in-left {
-//           animation: slide-in-left 0.6s ease-out;
-//         }
-        
-//         .animate-spin-slow {
-//           animation: spin-slow 8s linear infinite;
-//         }
-        
-//         .animate-progress {
-//           animation: progress 2s ease-out 1s both;
-//         }
-//       `}</style>
-//     </div>
-//   );
-// };
-
-// export default Setup;
-
-
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import type { LucideIcon } from "lucide-react";
+import {
+  UserRound,
+  Handshake,
+  TrendingUp,
+  Phone,
+  ShoppingCart,
+  Zap,
+  Store,
+  Building2,
+  Rocket,
+  HeartPulse,
+  GraduationCap,
+  Sparkles,
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  CheckCircle,
+} from "lucide-react";
 import { useStore } from "@/store/store";
 import { PROTECTED_ROUTES } from "@/routes/common/routePaths";
-import { setupComplete } from "@/lib/api";
+import { setupComplete, updateSetupProgress } from "@/lib/api";
+import { cn } from "@/lib/utils";
+
+type CardOption = { value: string; label: string; Icon: LucideIcon };
+
+type Step =
+  | {
+      title: string;
+      subtitle: string;
+      field: keyof FormData;
+      type: "cards";
+      options: CardOption[];
+    }
+  | {
+      title: string;
+      subtitle: string;
+      field: keyof FormData;
+      type: "textarea";
+      placeholder: string;
+    }
+  | {
+      title: string;
+      subtitle: string;
+      field: keyof FormData;
+      type: "pricing";
+      placeholder: string;
+    };
+
+type FormData = {
+  sellingMethod: string;
+  icp: string;
+  productDescription: string;
+  pricing: string;
+  currency: string;
+};
+
+const STEPS: Step[] = [
+    {
+      title: "How are you currently selling your product?",
+    subtitle:
+      "Your responses will help us tailor your experience to your needs.",
+      field: "sellingMethod",
+      type: "cards",
+      options: [
+      { value: "Direct Sales", label: "Direct Sales", Icon: UserRound },
+      { value: "Resellers/Partners", label: "With partners", Icon: Handshake },
+      {
+        value: "Inbound Marketing",
+        label: "Inbound Marketing",
+        Icon: TrendingUp,
+      },
+      { value: "Outbound Sales", label: "Outbound Sales", Icon: Phone },
+      {
+        value: "Online Marketplace",
+        label: "Online Marketplace",
+        Icon: ShoppingCart,
+      },
+      { value: "Other", label: "Other", Icon: Zap },
+    ],
+    },
+    {
+      title: "Who is your ideal customer?",
+    subtitle:
+      "Understanding your target market will help us set up your first scheduling link.",
+      field: "icp",
+      type: "cards",
+      options: [
+      { value: "Small Business", label: "Small Business", Icon: Store },
+      { value: "Enterprise", label: "Enterprise", Icon: Building2 },
+      { value: "Startups", label: "Startups", Icon: Rocket },
+      { value: "Healthcare", label: "Healthcare", Icon: HeartPulse },
+      { value: "Education", label: "Education", Icon: GraduationCap },
+      { value: "Other", label: "Other", Icon: Sparkles },
+    ],
+    },
+    {
+      title: "What product are you selling?",
+    subtitle:
+      "Tell us about your product or service to personalize your experience.",
+      field: "productDescription",
+      type: "textarea",
+    placeholder:
+      "Describe your product, its key features, and what problems it solves…",
+    },
+    {
+      title: "What's your pricing?",
+    subtitle:
+      "Help us understand your pricing structure for better recommendations.",
+      field: "pricing",
+      type: "pricing",
+    placeholder: "Enter amount",
+  },
+];
 
 const Setup = () => {
   const navigate = useNavigate();
   const user = useStore((s) => s.user);
   const setUser = useStore((s) => s.setUser);
 
-  const [currentStep, setCurrentStep] = useState(0);
+  const savedStep = Math.min(
+    STEPS.length - 1,
+    Math.max(0, user?.setupStep ?? 0),
+  );
+  const [currentStep, setCurrentStep] = useState(savedStep);
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     sellingMethod: "",
     icp: "",
     productDescription: "",
     pricing: "",
-    currency: "USD"
+    currency: "USD",
   });
-
-  const steps = [
-    {
-      title: "How are you currently selling your product?",
-      subtitle: "Your responses will help us tailor your experience to your needs.",
-      field: "sellingMethod",
-      type: "cards",
-      options: [
-        { value: "Direct Sales", icon: "👤", label: "Direct Sales" },
-        { value: "Resellers/Partners", icon: "🤝", label: "With partners" },
-        { value: "Inbound Marketing", icon: "📈", label: "Inbound Marketing" },
-        { value: "Outbound Sales", icon: "📞", label: "Outbound Sales" },
-        { value: "Online Marketplace", icon: "🛒", label: "Online Marketplace" },
-        { value: "Other", icon: "⚡", label: "Other" }
-      ]
-    },
-    {
-      title: "Who is your ideal customer?",
-      subtitle: "Understanding your target market will help us set up your first scheduling link.",
-      field: "icp",
-      type: "cards",
-      options: [
-        { value: "Small Business", icon: "🏪", label: "Small Business" },
-        { value: "Enterprise", icon: "🏢", label: "Enterprise" },
-        { value: "Startups", icon: "🚀", label: "Startups" },
-        { value: "Healthcare", icon: "🏥", label: "Healthcare" },
-        { value: "Education", icon: "🎓", label: "Education" },
-        { value: "Other", icon: "⚡", label: "Other" }
-      ]
-    },
-    {
-      title: "What product are you selling?",
-      subtitle: "Tell us about your product or service to personalize your experience.",
-      field: "productDescription",
-      type: "textarea",
-      placeholder: "Describe your product, its key features, and what problems it solves..."
-    },
-    {
-      title: "What's your pricing?",
-      subtitle: "Help us understand your pricing structure for better recommendations.",
-      field: "pricing",
-      type: "pricing",
-      placeholder: "Enter amount"
-    }
-  ];
 
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const handleInputChange = (value) => {
-    const currentField = steps[currentStep].field;
-    setFormData(prev => ({
-      ...prev,
-      [currentField]: value
-    }));
+  useEffect(() => {
+    setCurrentStep(savedStep);
+  }, [savedStep]);
+
+  const handleInputChange = (value: string) => {
+    const field = STEPS[currentStep].field;
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const updateUserApprovalStatus = async () => {
@@ -657,8 +155,15 @@ const Setup = () => {
   };
 
   const handleNext = async () => {
-    if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
+    if (currentStep < STEPS.length - 1) {
+      const nextStep = currentStep + 1;
+      setCurrentStep(nextStep);
+      try {
+        const { step } = await updateSetupProgress(nextStep);
+        setUser(user ? { ...user, setupStep: step } : null);
+      } catch (e) {
+        console.error("Failed to save setup progress", e);
+      }
     } else {
       try {
         setIsLoading(true);
@@ -675,206 +180,195 @@ const Setup = () => {
     }
   };
 
-  const handlePrevious = () => {
+  const handlePrevious = async () => {
     if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
+      const prevStep = currentStep - 1;
+      setCurrentStep(prevStep);
+      try {
+        const { step } = await updateSetupProgress(prevStep);
+        setUser(user ? { ...user, setupStep: step } : null);
+      } catch (e) {
+        console.error("Failed to save setup progress", e);
+      }
     }
   };
 
-  const isCurrentStepValid = () => {
-    const currentField = steps[currentStep].field;
+  const currentField = STEPS[currentStep].field;
     const value = formData[currentField];
-    return value && value.toString().trim() !== "";
-  };
-
-  const progressPercentage = ((currentStep + 1) / steps.length) * 100;
+  const isCurrentStepValid = Boolean(value && String(value).trim() !== "");
+  const canContinue = isCurrentStepValid && !isLoading;
+  const currentStepData = STEPS[currentStep];
+  const progressPercent = Math.round(
+    ((currentStep + 1) / STEPS.length) * 100,
+  );
 
   if (showSuccess) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center overflow-hidden relative px-4">
-        {/* Animated background elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          {[...Array(12)].map((_, i) => (
             <div
-              key={i}
-              className="absolute w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 animate-ping"
+      // height - 100dvh - header height is min-h-12
+        className="b2b-page setup-wizard flex h-[calc(100dvh-3rem)] items-center justify-center px-4 py-8 sm:py-10"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${i * 0.2}s`,
-                animationDuration: '2s'
-              }}
-            />
-          ))}
+          background:
+            "linear-gradient(165deg, var(--white) 0%, var(--surface) 50%, var(--blue-lite) 100%)",
+        }}
+      >
+        <div className="setup-animate-in w-full max-w-lg rounded-[var(--r-xl)] border-2 border-[var(--line)] bg-[var(--white)] p-6 text-center shadow-[var(--sh-md)] sm:p-8">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--blue)] shadow-[var(--sh-blue)] sm:mb-5 sm:h-16 sm:w-16">
+            <Check className="h-8 w-8 text-white sm:h-10 sm:w-10" strokeWidth={2.5} />
         </div>
-
-        <div className="container mx-auto max-w-6xl">
-          <div className="flex flex-col items-center justify-center min-h-screen gap-8 text-center">
-            {/* Success Icon */}
-            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center mb-6 shadow-2xl animate-bounce">
-              <svg className="w-10 h-10 sm:w-12 sm:h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            
-            {/* Main Heading */}
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6 leading-tight">
-              Setup Complete! 🎉
+          <h1 className="b2b-display mb-2 text-3xl tracking-tight text-[var(--ink)] sm:text-4xl">
+            You&apos;re all set
             </h1>
-            
-            {/* Success message */}
-            <div className="max-w-2xl mx-auto bg-white/90 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-xl border border-white/20 mb-8">
-              <p className="text-gray-700 text-base sm:text-lg leading-relaxed">
-                You’re all set. Redirecting to your dashboard…
-              </p>
-              {/* Features Preview */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-200">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                  <span>AI-Powered Scheduling</span>
+          <p className="mb-5 text-base font-normal leading-relaxed text-[var(--ink-muted)] sm:mb-6 sm:text-lg">
+            Redirecting to your dashboard…
+          </p>
+          <div className="flex justify-center gap-1.5" aria-hidden>
+            {[0, 1, 2].map((i) => (
+              <span
+                key={i}
+                className="h-2 w-2 animate-bounce rounded-full bg-[var(--blue)]"
+                style={{ animationDelay: `${i * 0.15}s` }}
+              />
+            ))}
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                  <span>Smart Automation</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                  <span>Advanced Analytics</span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="space-y-6">
-              <div className="flex items-center justify-center space-x-2 text-blue-600">
-                <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
-                <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
-                <span className="ml-2 font-medium">Redirecting to dashboard…</span>
-              </div>
-              
               <button
-                onClick={() => navigate(PROTECTED_ROUTES.EVENT_TYPES, { replace: true })}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-full font-medium hover:shadow-lg transition-all duration-300 hover:scale-105"
-              >
-                Continue to Dashboard
+            type="button"
+            onClick={() =>
+              navigate(PROTECTED_ROUTES.EVENT_TYPES, { replace: true })
+            }
+            className="mt-5 inline-flex items-center justify-center gap-2 rounded-[var(--r-m)] border-2 border-[var(--blue)] bg-[var(--blue)] px-8 py-3.5 text-base font-semibold text-white transition-all duration-200 hover:scale-[1.02] hover:border-[var(--blue-dark)] hover:bg-[var(--blue-dark)] active:scale-[0.98] sm:mt-6 sm:py-4"
+          >
+            Continue to dashboard
+            <ArrowRight className="h-5 w-5" />
               </button>
-            </div>
-          </div>
         </div>
       </div>
     );
   }
 
-  const currentStepData = steps[currentStep];
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-12 min-h-screen flex flex-col">
-        
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row items-center justify-between mb-6 sm:mb-8 lg:mb-12 gap-4 animate-fade-in-down">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300 cursor-pointer">
-              <span className="text-white font-bold text-base sm:text-lg lg:text-xl">S</span>
-            </div>
-            <span className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Schedley
+    <div
+      className="b2b-page setup-wizard flex min-h-full flex-1 flex-col bg-[var(--white)] text-[var(--ink)]"
+      style={{
+        background:
+          "linear-gradient(180deg, var(--white) 0%, var(--surface) 40%, var(--surface-2) 100%)",
+      }}
+    >
+      <div className="mx-auto flex min-h-full w-full max-w-[1280px] flex-1 flex-col px-4 py-6 sm:px-6 sm:py-7 lg:min-h-0 lg:px-8 lg:pb-6">
+        <div className="flex min-h-0 flex-1 flex-col gap-7 pb-5 lg:flex-row lg:gap-10 xl:gap-12">
+          {/* Form column — fills viewport height on desktop so Continue sits at bottom */}
+          <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col lg:max-w-[52%]">
+            <div className="mb-5 flex w-full flex-col gap-3.5 rounded-[var(--r-xl)] border-2 border-[var(--line)] bg-[var(--white)] p-3.5 shadow-[var(--sh-sm)] sm:mb-6 sm:flex-row sm:items-stretch sm:gap-4 sm:p-4">
+              <button
+                type="button"
+                onClick={() => void handlePrevious()}
+                disabled={currentStep === 0}
+                className={cn(
+                  "inline-flex shrink-0 items-center justify-center gap-2 self-start rounded-[var(--r-m)] border-2 px-4 py-2.5 text-sm font-semibold transition-all duration-200 sm:self-center",
+                  currentStep === 0
+                    ? "cursor-not-allowed border-[var(--line)] bg-[var(--surface)] text-[var(--ink-muted)] opacity-50"
+                    : "border-[var(--line)] bg-[var(--surface)] text-[var(--ink)] hover:border-[var(--blue)] hover:bg-[var(--blue-lite)] hover:text-[var(--blue-deep)]",
+                )}
+              >
+                <ArrowLeft className="h-4 w-4 shrink-0" />
+                <span className="hidden sm:inline">Back</span>
+              </button>
+              <div className="flex min-w-0 flex-1 flex-col justify-center gap-1.5">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--ink-muted)] sm:text-xs">
+                    Progress
             </span>
-          </div>
-          
-          <div className="flex items-center space-x-3 sm:space-x-4">
-            <span className="text-xs sm:text-sm font-medium text-gray-600 bg-white px-2 sm:px-3 py-1 rounded-full shadow-sm whitespace-nowrap">
-              STEP {currentStep + 1} OF {steps.length}
+                  <span className="text-lg font-bold tabular-nums text-[var(--blue)]">
+                    {progressPercent}%
             </span>
-            <div className="flex space-x-1">
-              {steps.map((_, index) => (
-                <div
-                  key={index}
-                  className={`h-2 rounded-full transition-all duration-500 ${
-                    index <= currentStep 
-                      ? "w-6 sm:w-8 lg:w-10 bg-gradient-to-r from-blue-600 to-purple-600 shadow-sm" 
-                      : index === currentStep + 1 
-                        ? "w-4 sm:w-6 bg-blue-300"
-                        : "w-2 bg-gray-300"
-                  }`}
-                />
-              ))}
+                </div>
+                <div className="h-3 w-full overflow-hidden rounded-full border border-[var(--line)] bg-[var(--surface)] p-0.5 sm:h-3.5">
+                  <div
+                    className="h-full rounded-full transition-[width] duration-500 ease-out"
+                    style={{
+                      width: `${progressPercent}%`,
+                      background:
+                        "linear-gradient(90deg, var(--blue) 0%, var(--blue-mid) 100%)",
+                      boxShadow: "0 2px 12px var(--blue-glow)",
+                    }}
+                  />
             </div>
           </div>
         </div>
 
-        {/* Progress Bar */}
-        <div className="mb-6 sm:mb-8">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium text-gray-700">Progress</span>
-            <span className="text-sm font-medium text-blue-600">{Math.round(progressPercentage)}%</span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
-              className="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full transition-all duration-500 ease-out"
-              style={{ width: `${progressPercentage}%` }}
-            ></div>
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col lg:flex-row gap-6 lg:gap-8 xl:gap-16">
-          {/* Left Side - Form */}
-          <div className="flex-1 flex flex-col justify-center">
-            <div className="space-y-6 sm:space-y-8 animate-slide-in-left">
-              {/* Title and Subtitle */}
-              <div className="space-y-3 sm:space-y-4">
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 leading-tight">
+            <div className="mb-5 sm:mb-6">
+              <span className="mb-3 inline-flex rounded-full border border-[var(--blue)]/20 bg-[var(--blue-ghost)] px-3.5 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--blue)] sm:mb-3.5 sm:text-[11px]">
+                Get started
+              </span>
+              <h1 className="b2b-display text-2xl leading-tight text-[var(--ink)] sm:text-3xl lg:text-[1.85rem]">
                   {currentStepData.title}
                 </h1>
-                <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-gray-600 leading-relaxed">
+              <p className="mt-3 max-w-xl text-base font-normal leading-relaxed text-[var(--ink-muted)] sm:mt-3.5 sm:text-[1.0625rem]">
                   {currentStepData.subtitle}
                 </p>
               </div>
 
-              {/* Form Content */}
-              <div className="space-y-4 sm:space-y-6">
-                {currentStepData.type === "cards" ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
-                    {currentStepData.options.map((option, index) => (
+            <div className="flex min-h-0 flex-1 flex-col">
+              <div className="shrink-0">
+              {currentStepData.type === "cards" && (
+                <div
+                  key={currentStep}
+                  className="setup-stagger grid grid-cols-1 gap-3.5 sm:grid-cols-2 sm:gap-4 xl:grid-cols-3 xl:gap-4"
+                >
+                  {currentStepData.options.map((option) => {
+                    const selected =
+                      formData[currentStepData.field] === option.value;
+                    const { Icon } = option;
+                    return (
                       <button
-                        key={index}
+                        key={option.value}
+                        type="button"
                         onClick={() => handleInputChange(option.value)}
-                        className={`p-3 sm:p-4 lg:p-6 border-2 rounded-xl text-left transition-all duration-300 hover:scale-105 hover:shadow-lg animate-fade-in-up group ${
-                          formData[currentStepData.field] === option.value
-                            ? "border-blue-500 bg-gradient-to-r from-blue-50 to-purple-50 shadow-lg transform scale-105"
-                            : "border-gray-200 bg-white hover:border-blue-300 hover:shadow-md"
-                        }`}
-                        style={{ animationDelay: `${index * 0.1}s` }}
+                        className={cn(
+                          "group flex min-h-[108px] flex-col items-center justify-center gap-3 rounded-[var(--r-xl)] border-2 px-4 py-6 text-center transition-all duration-300 sm:min-h-[118px] sm:px-5 sm:py-6",
+                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--blue)]/30 focus-visible:ring-offset-2",
+                          selected
+                            ? "border-[var(--blue)] bg-[var(--blue-lite)] shadow-[var(--sh-md)]"
+                            : "border-[var(--line)] bg-[var(--surface)] hover:border-[var(--blue)]/50 hover:shadow-[var(--sh-sm)]",
+                        )}
                       >
-                        <div className="flex items-center space-x-3">
-                          <span className="text-xl sm:text-2xl transition-transform group-hover:scale-110">
-                            {option.icon}
+                        <span
+                          className={cn(
+                            "flex h-11 w-11 items-center justify-center rounded-xl shadow-[var(--sh-sm)] transition-all duration-300 sm:h-12 sm:w-12",
+                            selected
+                              ? "bg-[var(--blue)] text-white shadow-[var(--sh-blue)]"
+                              : "bg-[var(--blue-lite)] text-[var(--blue)] group-hover:scale-105",
+                          )}
+                        >
+                          <Icon className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={1.75} />
                           </span>
-                          <span className="font-semibold text-gray-900 text-sm sm:text-base">
+                        <span className="text-xs font-semibold text-[var(--ink)] sm:text-sm">
                             {option.label}
                           </span>
-                        </div>
                       </button>
-                    ))}
+                    );
+                  })}
                   </div>
-                ) : currentStepData.type === "textarea" ? (
-                  <div className="max-w-full lg:max-w-2xl animate-fade-in-up">
+              )}
+
+              {currentStepData.type === "textarea" && (
                     <textarea
-                      value={formData[currentStepData.field]}
+                  value={formData.productDescription}
                       onChange={(e) => handleInputChange(e.target.value)}
                       placeholder={currentStepData.placeholder}
-                      rows={4}
-                      className="w-full p-3 sm:p-4 lg:p-6 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-gray-900 transition-all duration-300 hover:shadow-md text-sm sm:text-base"
-                    />
-                  </div>
-                ) : currentStepData.type === "pricing" ? (
-                  <div className="max-w-full sm:max-w-md animate-fade-in-up">
-                    <div className="flex flex-col sm:flex-row gap-3">
+                  rows={5}
+                  className="w-full max-w-2xl resize-none rounded-[var(--r-m)] border-2 border-[var(--line)] bg-[var(--white)] px-4 py-3 text-[var(--ink)] transition-all placeholder:text-[var(--ink-muted)] focus:border-[var(--blue)] focus:outline-none focus:ring-4 focus:ring-[var(--blue)]/10 sm:px-5 sm:py-4 sm:text-base"
+                />
+              )}
+
+              {currentStepData.type === "pricing" && (
+                <div className="flex max-w-md flex-col gap-3 sm:flex-row sm:items-stretch">
                       <select
                         value={formData.currency}
-                        onChange={(e) => setFormData(prev => ({ ...prev, currency: e.target.value }))}
-                        className="w-full sm:w-28 p-3 sm:p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 text-sm sm:text-base"
+                    onChange={(e) =>
+                      setFormData((p) => ({ ...p, currency: e.target.value }))
+                    }
+                    className="min-h-[52px] rounded-[var(--r-m)] border-2 border-[var(--line)] bg-[var(--white)] px-4 py-3.5 text-[var(--ink)] focus:border-[var(--blue)] focus:outline-none focus:ring-4 focus:ring-[var(--blue)]/10 sm:w-32"
                       >
                         <option value="USD">USD</option>
                         <option value="EUR">EUR</option>
@@ -883,204 +377,171 @@ const Setup = () => {
                       </select>
                       <input
                         type="number"
-                        value={formData[currentStepData.field]}
+                    value={formData.pricing}
                         onChange={(e) => handleInputChange(e.target.value)}
                         placeholder={currentStepData.placeholder}
-                        className="flex-1 p-3 sm:p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 hover:shadow-md text-sm sm:text-base"
+                    className="min-h-[52px] flex-1 rounded-[var(--r-m)] border-2 border-[var(--line)] bg-[var(--white)] px-4 py-3.5 text-[var(--ink)] placeholder:text-[var(--ink-muted)] focus:border-[var(--blue)] focus:outline-none focus:ring-4 focus:ring-[var(--blue)]/10"
                       />
                     </div>
+              )}
                   </div>
-                ) : null}
+
+              <div className="mt-4 w-full shrink-0 sm:mt-5">
+              <button
+                type="button"
+                onClick={() => void handleNext()}
+                disabled={!canContinue}
+                className={cn(
+                  "inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-[var(--r-m)] border-2 px-8 py-3.5 text-base font-semibold transition-all duration-200 sm:min-h-14 sm:py-4",
+                  canContinue
+                    ? "border-[var(--blue)] bg-[var(--blue)] text-white shadow-[var(--sh-blue)] hover:scale-[1.02] hover:border-[var(--blue-dark)] hover:bg-[var(--blue-dark)] active:scale-[0.98]"
+                    : "cursor-not-allowed border-[var(--line)] bg-[var(--surface)] text-[var(--ink-muted)]",
+                )}
+              >
+                {isLoading ? (
+                  <>
+                    <span className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                    Setting up…
+                  </>
+                ) : (
+                  <>
+                    {currentStep === STEPS.length - 1
+                      ? "Complete setup"
+                      : "Continue"}
+                    <ArrowRight className="h-5 w-5" />
+                  </>
+                )}
+              </button>
               </div>
             </div>
           </div>
 
-          {/* Right Side - Preview Cards (Hidden on mobile) */}
-          <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-center relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-100/50 via-purple-100/50 to-pink-100/50 rounded-3xl" />
-            
-            {/* Calendar Preview */}
-            <div className="relative bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl p-6 w-80 border border-white/20 animate-fade-in-right">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full animate-pulse" />
-                  <div className="space-y-1">
-                    <div className="w-16 h-3 bg-gray-300 rounded-full animate-pulse" />
-                    <div className="w-20 h-2 bg-gray-200 rounded-full animate-pulse" />
+          {/* Preview column — desktop */}
+          <div
+            className="relative hidden min-h-[400px] flex-1 overflow-visible lg:flex lg:min-h-[calc(100dvh-14rem)] lg:max-h-[calc(100dvh-14rem)]"
+            style={{ maxWidth: "420px" }}
+          >
+            <div className="absolute inset-0 rounded-[var(--r-xl)] border-2 border-[var(--line)] bg-gradient-to-br from-violet-50/80 via-[var(--surface)] to-[var(--blue-lite)]" />
+
+            <div className="relative flex min-h-0 w-full flex-1 items-center justify-center overflow-visible p-4 pb-8 pt-10 sm:p-6">
+              {/* Main card + floating widgets positioned like reference (overlap corners) */}
+              <div className="relative mx-auto w-full max-w-[288px] shrink-0">
+                {/* Bookings today — top-right, overlaps main card */}
+                <div className="absolute right-0 top-0 z-30 w-[184px] translate-x-[20%] -translate-y-[36%] rounded-[var(--r-m)] border-2 border-[var(--line)] bg-[var(--white)] p-3.5 shadow-[var(--sh-lg)]">
+                  <div className="mb-1 flex items-center justify-between gap-2">
+                    <span className="text-xs font-semibold text-[var(--ink)]">
+                      Bookings Today
+                    </span>
+                    <CheckCircle
+                      className="h-4 w-4 shrink-0 text-emerald-500"
+                      aria-hidden
+                      strokeWidth={2.5}
+                    />
                   </div>
+                  <p className="setup-bookings-count text-3xl font-bold tabular-nums text-emerald-600">
+                    12
+                  </p>
+                  <p className="mt-0.5 text-xs text-[var(--ink-muted)]">
+                    +25% from yesterday
+                  </p>
                 </div>
-                <div className="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded-full animate-bounce">
-                  Available Times
+
+                <div className="relative z-10 mx-auto w-full rounded-[var(--r-xl)] border-2 border-[var(--line)] bg-[var(--white)] p-4 pt-3 shadow-[var(--sh-lg)] sm:p-5">
+                  <div className="mb-3 flex items-start justify-between gap-2">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div
+                        className="h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-violet-500 to-blue-600 shadow-md"
+                        aria-hidden
+                      />
+                      <div className="min-w-0 space-y-1.5 pt-0.5">
+                        <div
+                          className="h-2.5 w-14 rounded-full bg-[var(--surface-2)]"
+                          aria-hidden
+                        />
+                        <div
+                          className="h-2 w-20 rounded-full bg-[var(--line-strong)]"
+                          aria-hidden
+                        />
                 </div>
+                    </div>
+                    <span className="setup-available-badge max-w-[100px] shrink-0 rounded-full bg-[var(--blue)] px-2 py-1.5 text-center text-[8px] font-bold uppercase leading-tight tracking-wide text-white sm:max-w-none sm:px-2.5 sm:text-[9px]">
+                      Available Time
+                    </span>
               </div>
               
-              <div className="grid grid-cols-7 gap-1 mb-4">
-                {Array.from({ length: 35 }, (_, i) => (
+                  <div className="mb-3 grid grid-cols-7 gap-0.5">
+                    {Array.from({ length: 35 }, (_, i) => {
+                      const day = i > 6 && i < 28 ? i - 6 : null;
+                      const purplePick =
+                        day === 4 || day === 9 || day === 14;
+                      return (
                   <div
                     key={i}
-                    className={`h-8 flex items-center justify-center text-xs rounded transition-all hover:scale-110 cursor-pointer ${
-                      i === 10 || i === 15 || i === 20 
-                        ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-sm animate-pulse" 
-                        : i > 6 && i < 28 
-                          ? "hover:bg-blue-50 text-gray-700"
-                          : "text-gray-300"
-                    }`}
-                  >
-                    {i > 6 && i < 28 ? i - 6 : ""}
+                          className={cn(
+                            "flex h-7 items-center justify-center text-[10px] font-medium",
+                            !day && "text-transparent",
+                            day &&
+                              !purplePick &&
+                              "text-[var(--ink-soft)]",
+                            day &&
+                              purplePick &&
+                              "rounded-md bg-violet-100 font-semibold text-violet-800",
+                          )}
+                        >
+                          {day ?? ""}
                   </div>
-                ))}
+                      );
+                    })}
               </div>
               
-              <div className="space-y-2">
-                {["9:00 AM", "10:30 AM", "2:00 PM", "4:00 PM"].map((time, index) => (
+                  <div className="flex flex-col gap-1.5">
+                    {["9:00 AM", "10:30 AM", "2:00 PM", "4:00 PM"].map(
+                      (time, index) => (
                   <div
-                    key={index}
-                    className={`p-3 rounded-lg text-center text-sm font-medium transition-all hover:scale-105 cursor-pointer ${
+                          key={time}
+                          className={cn(
+                            "rounded-[var(--r-m)] py-2 text-center text-xs font-semibold transition-all sm:text-sm",
                       index === 1 
-                        ? "border-2 border-blue-500 bg-gradient-to-r from-blue-50 to-purple-50 text-blue-600" 
-                        : "border border-gray-200 hover:border-blue-300"
-                    }`}
+                              ? "border-2 border-[var(--blue)] bg-[var(--blue-lite)] text-[var(--blue-deep)] shadow-[var(--sh-sm)]"
+                              : "border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--ink-mid)]",
+                          )}
                   >
                     {time}
                   </div>
-                ))}
+                      ),
+                    )}
               </div>
             </div>
 
-            {/* Floating stats cards */}
-            <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-4 w-48 border border-white/20 animate-fade-in-up transform rotate-3">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold text-gray-800">Bookings Today</span>
-                <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 14l3-3 3 3 7-7v4h-2V4h7v7h-4l-7 7z" />
-                </svg>
+                {/* Conversion — bottom-left, overlaps main card */}
+                <div className="absolute bottom-0 left-0 z-30 w-[178px] -translate-x-[18%] translate-y-[45%] rounded-[var(--r-m)] border-2 border-[var(--line)] bg-[var(--white)] p-3.5 shadow-[var(--sh-lg)]">
+                  <div className="mb-1 flex items-center justify-between">
+                    <span className="text-xs font-semibold text-[var(--ink-mid)]">
+                      Conversion
+                    </span>
+                    <TrendingUp
+                      className="h-4 w-4 shrink-0 text-[var(--blue)]"
+                      aria-hidden
+                    />
               </div>
-              <div className="text-2xl font-bold text-green-600 animate-bounce">12</div>
-              <div className="text-xs text-gray-500">+25% from yesterday</div>
+                  <p className="mb-2 text-2xl font-bold tabular-nums text-[var(--blue)]">
+                    78%
+                  </p>
+                  <div className="h-2 overflow-hidden rounded-full bg-[var(--surface-2)]">
+                    <div
+                      className="setup-preview-progress h-full rounded-full"
+                      style={{
+                        background:
+                          "linear-gradient(90deg, var(--blue) 0%, #8b5cf6 100%)",
+                      }}
+                    />
             </div>
-
-            <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-4 w-48 border border-white/20 animate-fade-in-up transform -rotate-2" style={{ animationDelay: '0.5s' }}>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold text-gray-800">Conversion</span>
-                <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
               </div>
-              <div className="text-2xl font-bold text-blue-600 mb-2">78%</div>
-              <div className="w-full h-2 bg-gray-200 rounded-full">
-                <div className="h-full bg-gradient-to-r from-blue-400 to-purple-400 rounded-full animate-progress" style={{ width: '78%' }} />
               </div>
             </div>
           </div>
         </div>
-
-        {/* Navigation Footer */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6 sm:mt-8 lg:mt-12 animate-fade-in-up">
-          <button
-            onClick={handlePrevious}
-            disabled={currentStep === 0}
-            className={`flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium transition-all duration-300 ${
-              currentStep === 0
-                ? "text-gray-400 cursor-not-allowed"
-                : "text-gray-700 hover:bg-white hover:shadow-md hover:scale-105"
-            }`}
-          >
-            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            <span className="text-sm sm:text-base">Back</span>
-          </button>
-
-          <button
-            onClick={handleNext}
-            disabled={!isCurrentStepValid() || isLoading}
-            className={`w-full sm:w-auto px-6 sm:px-10 py-3 sm:py-4 rounded-xl font-semibold transition-all duration-300 ${
-              isCurrentStepValid() && !isLoading
-                ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:shadow-lg hover:scale-105"
-                : "bg-gray-300 text-gray-500 cursor-not-allowed"
-            }`}
-          >
-            {isLoading ? (
-              <div className="flex items-center justify-center space-x-2">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                <span className="text-sm sm:text-base">Setting up...</span>
               </div>
-            ) : (
-              <div className="flex items-center justify-center space-x-2">
-                <span className="text-sm sm:text-base">{currentStep === steps.length - 1 ? "Complete Setup" : "Continue"}</span>
-                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
-            )}
-          </button>
-        </div>
-      </div>
-
-      <style jsx>{`
-        @keyframes fade-in-up {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes fade-in-down {
-          from { opacity: 0; transform: translateY(-30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes fade-in-left {
-          from { opacity: 0; transform: translateX(-30px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        
-        @keyframes fade-in-right {
-          from { opacity: 0; transform: translateX(30px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        
-        @keyframes slide-in-left {
-          from { opacity: 0; transform: translateX(-50px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        
-        @keyframes spin-slow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        
-        @keyframes progress {
-          from { width: 0%; }
-          to { width: 78%; }
-        }
-        
-        .animate-fade-in-up {
-          animation: fade-in-up 0.6s ease-out;
-        }
-        
-        .animate-fade-in-down {
-          animation: fade-in-down 0.6s ease-out;
-        }
-        
-        .animate-fade-in-left {
-          animation: fade-in-left 0.6s ease-out;
-        }
-        
-        .animate-fade-in-right {
-          animation: fade-in-right 0.8s ease-out;
-        }
-        
-        .animate-slide-in-left {
-          animation: slide-in-left 0.6s ease-out;
-        }
-        
-        .animate-spin-slow {
-          animation: spin-slow 8s linear infinite;
-        }
-        
-        .animate-progress {
-          animation: progress 2s ease-out 1s both;
-        }
-      `}</style>
     </div>
   );
 };

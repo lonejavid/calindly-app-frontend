@@ -9,6 +9,8 @@ export const SectionHeader = ({
   subtitle,
   variant = "default",
   className = "",
+  headingId,
+  compact = false,
 }: {
   eyebrow?: string;
   titleBefore: string;
@@ -16,11 +18,19 @@ export const SectionHeader = ({
   subtitle?: string;
   variant?: "default" | "light";
   className?: string;
+  /** For aria-labelledby on parent <section> */
+  headingId?: string;
+  /** Tighter spacing and smaller type (e.g. problem section) */
+  compact?: boolean;
 }) => (
   <div className={`text-center max-w-3xl mx-auto ${className}`}>
     {eyebrow && (
       <span
-        className={`font-urbanist inline-flex rounded-full border px-4 py-1.5 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.15em] mb-6 ${
+        className={`font-urbanist inline-flex rounded-full border font-semibold uppercase tracking-[0.15em] ${
+          compact
+            ? "px-3 py-1 text-[10px] sm:text-[11px] mb-3 sm:mb-4"
+            : "px-4 py-1.5 text-[11px] sm:text-xs mb-6"
+        } ${
           variant === "light"
             ? "border-white/30 bg-white/[0.08] text-white/95"
             : "border-[var(--blue)]/20 bg-[var(--blue-ghost)] text-[var(--blue)]"
@@ -30,9 +40,12 @@ export const SectionHeader = ({
       </span>
     )}
     <h2
-      className={`font-urbanist font-bold text-3xl sm:text-4xl lg:text-5xl mb-5 tracking-tight leading-[1.12] ${
-        variant === "light" ? "text-white" : "text-[var(--ink)]"
-      }`}
+      id={headingId}
+      className={`font-urbanist font-bold tracking-tight leading-[1.12] ${
+        compact
+          ? "text-2xl sm:text-3xl lg:text-[2rem] mb-2 sm:mb-3"
+          : "text-3xl sm:text-4xl lg:text-5xl mb-5"
+      } ${variant === "light" ? "text-white" : "text-[var(--ink)]"}`}
     >
       {titleBefore}
       {titleAccent != null && titleAccent !== "" && (

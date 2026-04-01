@@ -12,10 +12,10 @@ export type FooterProps = {
 const CURRENT_YEAR = new Date().getFullYear();
 
 const serviceLinks: { label: string; path: string }[] = [
-  { label: "B2B Appointment Scheduling", path: SERVICE_ROUTES.B2B_APPOINTMENT_SCHEDULING },
-  { label: "B2B Lead Generation", path: SERVICE_ROUTES.B2B_LEAD_GENERATION },
-  { label: "Recruiting Talent", path: SERVICE_ROUTES.RECRUITING_TALENT },
-  { label: "Schedley Management", path: SERVICE_ROUTES.SCHEDLEY_MANAGEMENT },
+  { label: "AI Outreach", path: SERVICE_ROUTES.AI_OUTREACH },
+  { label: "Pipeline Generation", path: SERVICE_ROUTES.PIPELINE_GENERATION },
+  { label: "Hiring Infrastructure", path: SERVICE_ROUTES.HIRING_INFRASTRUCTURE },
+  { label: "Calendar Intelligence", path: SERVICE_ROUTES.CALENDAR_INTELLIGENCE },
 ];
 
 export function Footer(props: FooterProps) {

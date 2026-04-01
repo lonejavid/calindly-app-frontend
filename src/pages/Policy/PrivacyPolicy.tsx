@@ -22,8 +22,7 @@ import {
 } from "lucide-react";
 import { LandingHeader } from "@/components/LandingHeader";
 import SectionReveal from "@/components/SectionReveal";
-
-const containerClass = "max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8";
+import { LANDING_PAGE_CONTAINER_CLASS } from "@/lib/landingLayout";
 
 const policySections = [
   {
@@ -150,7 +149,7 @@ export default function PrivacyPolicy() {
 
       <main className="pt-8 sm:pt-12 pb-16 sm:pb-24">
         {/* Breadcrumb / Back */}
-        <div className={containerClass}>
+        <div className={LANDING_PAGE_CONTAINER_CLASS}>
           <Link
             to="/"
             className="inline-flex items-center gap-2 text-sm font-medium text-[var(--ink-muted)] hover:text-[var(--blue)] transition-colors mb-8"
@@ -166,7 +165,7 @@ export default function PrivacyPolicy() {
             <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-[var(--blue)] blur-[120px]" />
             <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-[var(--blue-mid)] blur-[100px]" />
           </div>
-          <div className={`${containerClass} relative z-10`}>
+          <div className={`${LANDING_PAGE_CONTAINER_CLASS} relative z-10`}>
             <SectionReveal effect="fade-up">
               <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
                 <span className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--blue)]/30 border border-[var(--blue)]/50 text-[var(--blue-mid)] mb-6">
@@ -181,13 +180,13 @@ export default function PrivacyPolicy() {
                 <p className="text-white/60 text-sm mt-4">
                   Last updated: {lastUpdated}
                 </p>
-              </div>
+                  </div>
             </SectionReveal>
-          </div>
-        </section>
+                </div>
+              </section>
 
         {/* Content */}
-        <div className={containerClass}>
+        <div className={LANDING_PAGE_CONTAINER_CLASS}>
           <div className="relative -mt-6 sm:-mt-8 space-y-6 sm:space-y-8">
             {policySections.map((section, index) => {
               const Icon = section.icon;
@@ -206,7 +205,7 @@ export default function PrivacyPolicy() {
                           <h2 className="text-xl sm:text-2xl font-bold text-[var(--ink)] mb-4 flex items-center gap-2">
                             {section.title}
                             <ChevronRight className="w-5 h-5 text-[var(--ink-muted)] shrink-0" />
-                          </h2>
+                </h2>
 
                           {"content" in section && section.content && (
                             <p className="text-[var(--ink-muted)] leading-relaxed">{section.content}</p>
@@ -222,7 +221,7 @@ export default function PrivacyPolicy() {
                                   {item}
                                 </li>
                               ))}
-                            </ul>
+                </ul>
                           )}
 
                           {"items" in section && section.items && (
@@ -262,8 +261,8 @@ export default function PrivacyPolicy() {
                             </div>
                           )}
                         </div>
-                      </div>
-                    </div>
+                </div>
+            </div>
                   </article>
                 </SectionReveal>
               );
@@ -272,7 +271,7 @@ export default function PrivacyPolicy() {
         </div>
 
         {/* CTA back to home */}
-        <div className={containerClass}>
+        <div className={LANDING_PAGE_CONTAINER_CLASS}>
           <SectionReveal effect="fade-up">
             <div className="mt-12 sm:mt-16 text-center">
               <Link
@@ -282,7 +281,7 @@ export default function PrivacyPolicy() {
                 <ArrowLeft className="w-5 h-5" />
                 Back to Home
               </Link>
-            </div>
+      </div>
           </SectionReveal>
         </div>
       </main>

@@ -2,7 +2,6 @@ import {
   Target,
   ArrowRight,
   BarChart3,
-  Globe,
   Laptop,
   Briefcase,
   Landmark,
@@ -21,8 +20,9 @@ import {
   Code2,
   HeartPulse,
   Monitor,
-  Handshake,
   Layers,
+  Filter,
+  TrendingUp,
 } from "lucide-react";
 import { LandingHeader } from "@/components/LandingHeader";
 import SectionDivider from "@/components/SectionDivider";
@@ -32,21 +32,17 @@ import { WhatClientsSay } from "@/components/WhatClientsSay";
 import { ServiceLinesSection } from "@/components/landing/ServiceLinesSection";
 import { FAQSection } from "@/components/landing/FAQSection";
 import { GrowthExpertCTA } from "@/components/landing/GrowthExpertCTA";
-import leadGenHeroImage from "@/assets/Lead-Generation.webp";
+import leadGenHeroImage from "@/assets/b2b.png";
 import globalLeadGenImage from "@/assets/Global-Lead-Generation-Services-1536x1118.webp";
-
-const SECTION_IMAGES = {
-  pipeline: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&q=80",
-  research: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80",
-  message: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&q=80",
-  meetings: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80",
-  hero: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&q=80",
-};
+import researchImage from "@/assets/b2b1.png";
+import messageImage from "@/assets/b2b2.png";
+import meetingsImage from "@/assets/b2b3.png";
+import heroImage from "@/assets/b2b4.png";
 
 /**
- * B2B Lead Generation page – section structure aligned with
- * https://beyondcodes.com/b2b-lead-generation-services/
- * Theme: src/theme/theme.css (same as B2BAppointmentSchedulingPage)
+ * Pipeline Generation — qualified B2B leads through a repeatable outreach system.
+ * Route: /services/pipeline-generation (legacy /services/b2b-lead-generation redirects)
+ * Theme: src/theme/theme.css
  */
 const B2BLeadGenerationPage = () => {
   const handleBookDemo = () => {
@@ -60,79 +56,144 @@ const B2BLeadGenerationPage = () => {
 
   const containerClass = "max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8";
 
-  // ─── Hero: Lead Gen → You Close ─────────────────────────────────────
-  // ─── Business Lead Generation: We Generate + 3 value cards ──────────
   const valueCards = [
     {
-      title: "Connect with High-Intent prospects",
-      desc: "Stop wasting time on unqualified leads. We pinpoint your ideal customers and streamline lead generation campaigns.",
+      title: "Stop gambling on lead quality",
+      desc: "Inconsistent volume usually means inconsistent ICP fit. We tighten targeting and qualification so every week looks like pipeline—not panic.",
+      icon: Filter,
+    },
+    {
+      title: "A system, not a one-off campaign",
+      desc: "Targeted outreach runs on a defined operating rhythm: lists, messaging, touches, and handoffs—so leads keep flowing without heroics.",
       icon: Target,
     },
     {
-      title: "Focus on closing deals",
-      desc: "Fuel your sales team's success with a consistent flow of qualified leads and appointments.",
-      icon: Handshake,
+      title: "Meetings with buyers who can buy",
+      desc: "We optimize for qualified conversations: right role, right account, right timing—so your closers spend time on deals that can move.",
+      icon: TrendingUp,
+    },
+  ];
+
+  const regions = [
+    {
+      name: "North America",
+      stat: "Pipeline programs · NA",
+      detail: "High-intent B2B outreach across technology, services, and SaaS—built for consistent SQLs and booked meetings.",
+      percent: 45,
+      ringColor: "var(--blue)",
     },
     {
-      title: "Expand into Untapped Markets",
-      desc: "Conquer new markets globally and tap into fresh customer segments with ease—our multilingual team unlocks exceptional results in international markets.",
-      icon: Globe,
+      name: "UK / EMEA",
+      stat: "Pipeline programs · EMEA",
+      detail: "Localized motion for UK and European buyers with GDPR-aware lists and messaging that respects regional nuance.",
+      percent: 35,
+      ringColor: "var(--blue-mid)",
+    },
+    {
+      name: "APAC & ANZ",
+      stat: "Pipeline programs · APAC",
+      detail: "Coverage for fast-growing APAC markets—ideal when you need qualified leads without building a regional SDR bench overnight.",
+      percent: 15,
+      ringColor: "var(--amber)",
+    },
+    {
+      name: "Global / other",
+      stat: "Pipeline programs · WW",
+      detail: "Wherever your ICP lives, we align outreach, languages, and handoffs so pipeline stays measurable across regions.",
+      percent: 5,
+      ringColor: "var(--ink-muted)",
     },
   ];
 
-  // ─── Global Reach – 4 regions with circular % (theme colors for rings) ─
-  const regions = [
-    { name: "North America", stat: "Leads Generated in North America", detail: "2K+ lead gen campaigns across major and niche industries.", percent: 45, ringColor: "var(--blue)" },
-    { name: "UK/EMEA", stat: "Leads Generated in UK/EMEA", detail: "Over 3500+ meetings generated for UK/Europe-based campaigns.", percent: 35, ringColor: "var(--blue-mid)" },
-    { name: "APAC & ANZ", stat: "Leads Generated in APAC & ANZ", detail: "B2B sales expertise spanning Singapore, ANZ, and Asia Pacific.", percent: 15, ringColor: "var(--amber)" },
-    { name: "Rest of the world", stat: "Leads Generated in Rest of the world", detail: "Helping leading B2B brands scale and expand.", percent: 5, ringColor: "var(--ink-muted)" },
-  ];
-
-  // ─── Who We Serve – 4 segments ─────────────────────────────────────────
   const whoWeServe = [
-    { title: "IT Services and Consulting Firm", desc: "Enterprise IT sales leads", icon: Laptop, tag: "IT" },
-    { title: "Software Product Engineering Company", desc: "Speed up sales cycle—2x faster to close with quality B2B meetings", icon: Layers, tag: "SPE" },
-    { title: "SaaS Product Company", desc: "Scale your user base by reaching ideal customers who need your solutions", icon: BarChart3, tag: "SaaS" },
-    { title: "BPO/BPM Companies", desc: "Optimize client acquisition and connect with businesses seeking your expertise", icon: Briefcase, tag: "BPO/BPM" },
+    {
+      title: "IT services & consulting",
+      desc: "Complex sales, long cycles—steady B2B leads and intro meetings with economic and technical buyers.",
+      icon: Laptop,
+      tag: "IT",
+    },
+    {
+      title: "Software & product engineering",
+      desc: "Engineering-led deals need precise accounts. We fill the top of funnel with qualified opportunities, not random form fills.",
+      icon: Layers,
+      tag: "SPE",
+    },
+    {
+      title: "B2B SaaS",
+      desc: "Pipeline that matches your ACV motion—from mid-market to enterprise—with messaging tied to pain and proof.",
+      icon: BarChart3,
+      tag: "SaaS",
+    },
+    {
+      title: "BPO / BPM & ops services",
+      desc: "Outreach to operations and transformation leaders who buy process, scale, and outcomes—not buzzwords.",
+      icon: Briefcase,
+      tag: "BPO",
+    },
   ];
 
-  // ─── How We Do B2B Lead Generation – 4 steps ──────────────────────────
   const howWeDoSteps = [
     {
       step: "01",
-      title: "Data-driven Research",
-      desc: "We do extensive research to identify & qualify prospects / ICPs, ensuring precise targeting of influencers and decision-makers.",
-      image: SECTION_IMAGES.research,
+      title: "ICP, accounts & intent signals",
+      desc: "We start with who actually buys, who influences, and what triggers a conversation now—not a generic industry list. Data, fit scores, and exclusion rules keep lead quality high from day one.",
+      image: researchImage,
     },
     {
       step: "02",
-      title: "Craft Your Winning Message",
-      desc: "Our expert team crafts messaging that resonates with your target audience, turning prospects into leads.",
-      image: SECTION_IMAGES.message,
+      title: "Messaging that converts attention",
+      desc: "We craft angles, proof, and CTAs for each segment so outreach feels relevant at scale. Your value prop lands in the first touch—not buried in slide fifteen.",
+      image: messageImage,
     },
     {
       step: "03",
-      title: "Call SMART Model",
-      desc: "We interact with prospects using SMART research & targeted messaging, emphasizing value proposition & better brand positioning—ensuring up to 15% increase in outreach.",
-      image: SECTION_IMAGES.hero,
+      title: "Multi-touch targeted outreach",
+      desc: "Consistent leads come from consistent execution: sequenced email, social, and call points where they make sense—always tied to outcomes and reply handling.",
+      image: heroImage,
     },
     {
       step: "04",
-      title: "Set Appointments With Decision-Makers",
-      desc: "We deliver confirmed appointments with key decision-makers, ready for minimum 30-minute meetings.",
-      image: SECTION_IMAGES.meetings,
+      title: "Qualified handoffs & meetings",
+      desc: "We don’t celebrate MQLs that go nowhere. Leads and appointments arrive with context—why they engaged, what they care about, and suggested next steps for your AE or founder-led call.",
+      image: meetingsImage,
     },
   ];
 
-  // ─── Testimonials ─────────────────────────────────────────────────────
   const testimonials = [
-    { quote: "We have been working with Schedley for several months on our marketing efforts and have been extremely impressed with their level of service and results. They have helped us create a highly effective strategy that generated a significant increase in website traffic and leads.", name: "AVP Marketing", role: "Global Leader in IT Services and Consulting", avatar: "https://i.pravatar.cc/80?img=1", rating: 5 },
-    { quote: "Schedley has been a valuable partner in helping us grow our business. Their team is highly skilled and has helped us generate a significant increase in leads, sales and revenue. We highly recommend them for demand generation and appointment setting.", name: "Chief Growth Officer", role: "Global Leader in Engineering Services", avatar: "https://i.pravatar.cc/80?img=12", rating: 5 },
-    { quote: "We have been working with Schedley on our appointment setting needs and have been extremely impressed. They have helped us schedule a large number of high-quality meetings with potential clients, which has greatly improved our sales pipeline.", name: "Associate Vice President", role: "Global Leader in Software Development", avatar: "https://i.pravatar.cc/80?img=5", rating: 5 },
-    { quote: "Schedley has been an important partner in our marketing value chain. The team has always accepted our B2B lead generation targets as its own. Their innovative approach and dedication make us reach out to them frequently.", name: "Chief Marketing Officer", role: "Global Leader in Product Engineering", avatar: "https://i.pravatar.cc/80?img=8", rating: 5 },
+    {
+      quote:
+        "Our lead quality was all over the place. Schedley put a real system behind outbound—same ICP, same reporting, and finally predictable meetings each month.",
+      name: "AVP Marketing",
+      role: "Global IT services firm",
+      avatar: "https://i.pravatar.cc/80?img=1",
+      rating: 5,
+    },
+    {
+      quote:
+        "They treat pipeline targets like their own. We’re seeing more qualified B2B leads and fewer ‘maybe someday’ conversations clogging the calendar.",
+      name: "Chief Growth Officer",
+      role: "Engineering services",
+      avatar: "https://i.pravatar.cc/80?img=12",
+      rating: 5,
+    },
+    {
+      quote:
+        "Best mix of lead gen discipline and sales empathy. Reps trust the intros because the context on each lead is actually useful.",
+      name: "Associate VP Sales",
+      role: "Software development company",
+      avatar: "https://i.pravatar.cc/80?img=5",
+      rating: 5,
+    },
+    {
+      quote:
+        "We needed volume without sacrificing fit. Pipeline is up, cost-per-qualified-meeting is down, and marketing finally speaks the same language as sales.",
+      name: "CMO",
+      role: "Product engineering leader",
+      avatar: "https://i.pravatar.cc/80?img=8",
+      rating: 5,
+    },
   ];
 
-  // ─── Industries We Have Experience (icon + label per row, theme blue) ───
   const industries = [
     { name: "Banking & Finance", icon: Landmark },
     { name: "Energy & Utilities", icon: Wind },
@@ -152,23 +213,81 @@ const B2BLeadGenerationPage = () => {
     { name: "ConsumerTech", icon: Monitor },
   ];
 
-  // ─── Campaigns (same as B2B Appointment page) ─────────────────────────
   const campaignLines = [
-    { title: "Software & Technology", items: ["Digital Experience", "Digital Transformation", "AI/ML/RPA", "Software Product Engineering", "Cyber Security & Risk Services", "Quality Engineering & Testing", "Digital Design & Development", "Intelligent Automation", "IT Governance, Risk, and Compliance"] },
-    { title: "Software Product Engineering", items: ["Digital Manufacturing", "Engineering Application Support", "Engineering Documentation", "Design & Development", "DSP & Vision Processing", "UI/UX Design Engineering", "Software Frameworks and Solutions", "Cloud Engineering"] },
-    { title: "Cloud & Infrastructure", items: ["Digital Workplace Transformation", "Data Center Services", "Cloud Engineering", "Cloud Migration (AWS, Azure, GCP)", "Cloud Security", "Mainframe Modernisation", "DevOps", "IOT services", "Cloud native Platform Engineering"] },
-    { title: "Business Process Management", items: ["Operations Services", "Customer Analytics", "Enhance Customer Experience", "Enterprise Data Management", "Site Merchandising and Updates", "Order Management Fulfillment", "Fraud Protection services", "Reputation Management", "Legal Process Services"] },
-    { title: "Data & Analytics", items: ["Data Engineering", "Data & AI", "Data Management and Governance", "Advanced Analytics – AI/ML", "Data Visualization", "Master Data Management & Big Data", "Data Integration and Mining", "Fraud Detection Solution", "Data Stack Modernization"] },
-    { title: "Others", items: ["IT & Digital Transformation Consulting", "ESG Consulting", "IT Spending Benchmark", "Software Selection Consulting", "IT Infrastructure Services Benchmark", "Supply Chain Management", "CX Transformation"] },
+    {
+      title: "Demand & pipeline plays",
+      items: [
+        "Net-new logo acquisition",
+        "Account-based target lists",
+        "Event & webinar fill programs",
+        "Reactivation of stalled opps",
+        "Partner-sourced pipeline",
+        "Territory & vertical blitzes",
+      ],
+    },
+    {
+      title: "Lead quality & qualification",
+      items: [
+        "ICP definition & scoring",
+        "BANT / MEDDPICC-aligned discovery",
+        "Disqualification rules that protect rep time",
+        "Sales-ready vs nurture routing",
+        "CRM hygiene & handoff SLAs",
+      ],
+    },
+    {
+      title: "Outbound channels",
+      items: [
+        "Email-first sequences",
+        "LinkedIn & multi-threading",
+        "Call-assisted touches where needed",
+        "Intent & trigger-based outreach",
+        "Content-led follow-up paths",
+      ],
+    },
+    {
+      title: "Revenue team alignment",
+      items: [
+        "Shared definitions of qualified leads",
+        "Weekly pipeline reviews & tuning",
+        "Message testing with sales feedback",
+        "Forecast-friendly reporting",
+        "Playbooks per segment or SKU",
+      ],
+    },
+    {
+      title: "What you measure with us",
+      items: [
+        "Qualified leads per week",
+        "Meetings held & show rate",
+        "Pipeline created & stage velocity",
+        "Cost per qualified conversation",
+        "Win rate on sourced opportunities",
+      ],
+    },
   ];
 
-  // ─── FAQ ──────────────────────────────────────────────────────────────
   const faqs = [
-    { q: "What is B2B lead generation?", a: "B2B lead generation is the process of identifying and attracting potential business customers (leads) for your products or services. It involves research, outreach, and nurturing to fill your pipeline with qualified prospects ready for sales conversations." },
-    { q: "How does lead generation differ from appointment setting?", a: "Lead generation focuses on discovering and attracting prospects into your funnel. Appointment setting goes a step further by scheduling confirmed meetings between your sales team and those qualified leads. Both work together: lead gen fills the pipeline; appointment setting converts leads into meetings." },
-    { q: "Why outsource B2B lead generation?", a: "Outsourcing lets your sales team focus on closing deals while experts handle research, targeting, and outreach. You get a steady flow of qualified leads, faster time-to-market, and scalable capacity without hiring in-house SDRs." },
-    { q: "What industries do you serve?", a: "We serve technology, consulting, SaaS, BPO/BPM, healthcare, finance, manufacturing, and many other B2B verticals. Our approach is customized to your industry, ICP, and goals." },
-    { q: "How do you ensure lead quality?", a: "We use data-driven research, ICP alignment, and qualification criteria so every lead matches your target profile. We also use SMART outreach and clear handoff processes so your team receives leads ready for meaningful conversations." },
+    {
+      q: "What is Pipeline Generation?",
+      a: "Pipeline Generation is how we describe a full-funnel B2B lead program: targeted outreach plus qualification and meeting-setting—designed so you get consistent, high-quality opportunities instead of sporadic spikes and dry weeks.",
+    },
+    {
+      q: "Why are our leads inconsistent today?",
+      a: "Usually it’s mixed ICPs, weak lists, one-off campaigns, or handoffs that drop replies. We fix the system: who you target, how you message, how many touches you run, and how sales receives each lead—so quality stabilizes.",
+    },
+    {
+      q: "How is this different from buying lead lists?",
+      a: "Lists are static data. Pipeline Generation is active: research, personalized outreach, and qualification. You get conversations with people who’ve actually engaged—not cold records that decay in a spreadsheet.",
+    },
+    {
+      q: "Do you only work with enterprise?",
+      a: "We work across mid-market and enterprise B2B. The motion scales to your ACV: tighter qualification for complex deals, faster cycles where the buying committee is smaller. Everything stays tied to your real ICP.",
+    },
+    {
+      q: "What does success look like in the first 90 days?",
+      a: "Early on you’ll see clearer ICP alignment, reply quality improving, and a steady rhythm of qualified meetings. By 90 days most teams benchmark leads-per-week, pipeline dollars influenced, and meeting-to-opportunity conversion—not just lead count.",
+    },
   ];
 
   return (
@@ -176,258 +295,258 @@ const B2BLeadGenerationPage = () => {
       <LandingHeader />
 
       <main>
-        {/* Section 1: Hero – B2B Lead Generation Services (dark banner, text left + image right) */}
-        <section className="relative bg-[var(--ink)] py-16 sm:py-20 lg:py-24 overflow-hidden">
+        <section className="relative overflow-hidden bg-[var(--ink)] py-16 sm:py-20 lg:py-24">
           <div className={containerClass}>
             <SectionReveal effect="fade-up">
-            <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-              <div className="relative z-10">
-                <p className="inline-block text-xs font-bold uppercase tracking-widest text-[var(--blue)] mb-4 px-4 py-2 rounded-[var(--r-s)] border border-[var(--blue)] bg-[var(--ink)]/80">
-                  lead generation services
-                </p>
-                <h1 className="b2b-display text-white text-3xl sm:text-4xl lg:text-5xl mb-4 leading-tight">
-                  B2B Lead Generation Services
-                </h1>
-                <p className="text-xl sm:text-2xl text-white font-semibold mb-4">
-                  Sales Leads & Qualified Appointments to grow your{" "}
-                  <span className="text-[var(--blue)]">B2B Business.</span>
-                </p>
-                <p className="text-base text-white/90 leading-relaxed mb-6">
-                  Boost your business with high-converting B2B leads. Schedley can help you generate leads and schedule appointments effectively.
-                </p>
-                <p className="text-white font-semibold mb-2">Over 1 Million Sales Meetings Booked!</p>
-                <p className="text-white/80 text-sm mb-6">Lead Generation → You Close!</p>
-                <button
-                  type="button"
-                  onClick={handleContactUs}
-                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-s)] text-base font-semibold bg-[var(--blue)] text-white border-2 border-[var(--blue)] cursor-pointer transition-all duration-200 hover:bg-[var(--blue-dark)] hover:border-[var(--blue-dark)]"
-                  style={{ boxShadow: "var(--sh-blue)" }}
-                >
-                  Schedule a Growth Call <ArrowRight className="w-5 h-5" />
-                </button>
-              </div>
-              <div className="relative z-10 flex justify-center lg:justify-end">
-                <div className="relative rounded-[var(--r-2xl)] overflow-hidden shadow-[var(--sh-lg)] w-full max-w-lg aspect-[4/3] lg:aspect-[5/4]">
-                  <img
-                    src={leadGenHeroImage}
-                    alt="B2B lead generation – sales pipeline and qualified appointments"
-                    className="w-full h-full object-cover object-center"
-                  />
+              <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+                <div className="relative z-10">
+                  <p className="mb-4 inline-block rounded-[var(--r-s)] border border-[var(--blue)] bg-[var(--ink)]/80 px-4 py-2 text-xs font-bold uppercase tracking-widest text-[var(--blue)]">
+                    Pipeline generation
+                  </p>
+                  <h1 className="b2b-display mb-4 text-3xl leading-tight text-white sm:text-4xl lg:text-5xl">
+                    Get More Qualified B2B Leads
+                  </h1>
+                  <p className="mb-4 text-base leading-relaxed text-white/90">
+                    <strong className="text-white">Problem:</strong> Leads are inconsistent and low quality.{" "}
+                    <strong className="text-white">Solution:</strong> We build a system to bring consistent leads
+                    through targeted outreach. <strong className="text-white">Result:</strong> More qualified meetings
+                    and clients—without your team living in spreadsheets and cold lists.
+                  </p>
+                  <p className="mb-6 text-sm text-white/75">
+                    Schedley combines research, messaging, and disciplined follow-through so your pipeline reflects real
+                    buyers—not vanity metrics.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleContactUs}
+                    className="inline-flex cursor-pointer items-center gap-2 rounded-[var(--r-s)] border-2 border-[var(--blue)] bg-[var(--blue)] px-6 py-3.5 text-base font-semibold text-white transition-all duration-200 hover:border-[var(--blue-dark)] hover:bg-[var(--blue-dark)]"
+                    style={{ boxShadow: "var(--sh-blue)" }}
+                  >
+                    Schedule a pipeline call <ArrowRight className="h-5 w-5" />
+                  </button>
                 </div>
-              </div>
-            </div>
-            </SectionReveal>
-          </div>
-        </section>
-        <SectionDivider />
-
-        {/* Section 2: We Generate YOU CLOSE! – centered headline + 3 feature cards (theme colors) */}
-        <section className="py-16 sm:py-20 lg:py-24 bg-[var(--surface)]">
-          <div className={containerClass}>
-            <SectionReveal effect="fade-up">
-            <div className="text-center max-w-3xl mx-auto mb-12">
-              <span className="inline-flex rounded-full border border-[var(--blue)]/20 bg-[var(--blue-ghost)] px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-[var(--blue)] mb-6">
-                Business Lead Generation
-              </span>
-              <h2 className="b2b-display mb-4">
-                <span className="text-[var(--ink)] text-3xl sm:text-4xl lg:text-5xl font-semibold block">
-                  We Generate
-                </span>
-                <span
-                  className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight block mt-1"
-                  style={{ WebkitTextStroke: "2px var(--blue)", color: "transparent" }}
-                >
-                  YOU CLOSE!
-                </span>
-              </h2>
-              <p className="text-[var(--ink-muted)] leading-relaxed text-center">
-                Let our SDRs fuel your sales pipeline with high-quality business lead generation, so your sales team can focus on closing more deals. Our targeted outbound outreach, guided by in-house Sales Ops and GTM experts, generates a steady stream of high-intent prospects.
-              </p>
-            </div>
-            <div className="grid sm:grid-cols-1 lg:grid-cols-3 gap-6">
-              {valueCards.map(({ title, desc, icon: Icon }) => (
-                <div
-                  key={title}
-                  className="p-6 rounded-[var(--r-l)] border border-[var(--line)] bg-[var(--white)] shadow-[var(--sh-sm)] hover:border-[var(--line-strong)] hover:shadow-[var(--sh-md)] transition-all text-center lg:text-left"
-                >
-                  <div className="flex justify-center lg:justify-start">
-                    <span className="flex h-14 w-14 rounded-[var(--r-m)] border-2 border-[var(--blue)] bg-[var(--white)] items-center justify-center text-[var(--blue)] mb-4">
-                      <Icon className="w-7 h-7" strokeWidth={2} />
-                    </span>
+                <div className="relative z-10 flex justify-center lg:justify-end">
+                  <div className="relative aspect-[4/3] w-full max-w-lg overflow-hidden rounded-[var(--r-2xl)] shadow-[var(--sh-lg)] lg:aspect-[5/4]">
+                    <img
+                      src={leadGenHeroImage}
+                      alt="Qualified B2B leads and pipeline growth"
+                      className="h-full w-full object-cover object-center"
+                    />
                   </div>
-                  <h3 className="font-bold text-[var(--ink)] mb-2 text-lg">{title}</h3>
-                  <p className="text-sm text-[var(--ink-muted)] leading-relaxed">{desc}</p>
                 </div>
-              ))}
-            </div>
+              </div>
             </SectionReveal>
           </div>
         </section>
         <SectionDivider />
 
-        {/* Section 4: Global Reach, Exceptional Results – dark bg, headline + CTA + illustration, then circular % by region */}
-        <section className="py-16 sm:py-20 lg:py-24 bg-[var(--ink)] text-white">
+        <section className="bg-[var(--surface)] py-16 sm:py-20 lg:py-24">
+          <div className={containerClass}>
+            <SectionReveal effect="fade-up">
+              <div className="mx-auto mb-12 max-w-3xl text-center">
+                <span className="mb-6 inline-flex rounded-full border border-[var(--blue)]/20 bg-[var(--blue-ghost)] px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-[var(--blue)]">
+                  Qualified B2B leads
+                </span>
+                <h2 className="b2b-display mb-4">
+                  <span className="block text-3xl font-semibold text-[var(--ink)] sm:text-4xl lg:text-5xl">
+                    We build pipeline
+                  </span>
+                  <span
+                    className="mt-1 block text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl"
+                    style={{ WebkitTextStroke: "2px var(--blue)", color: "transparent" }}
+                  >
+                    YOU CLOSE
+                  </span>
+                </h2>
+                <p className="leading-relaxed text-[var(--ink-muted)]">
+                  Your closers shouldn’t prospect full-time. We run the targeted outbound system—lists, sequences, and
+                  qualification—so every week delivers qualified B2B leads and real conversations, not random inbound
+                  noise.
+                </p>
+              </div>
+              <div className="grid gap-6 sm:grid-cols-1 lg:grid-cols-3">
+                {valueCards.map(({ title, desc, icon: Icon }) => (
+                  <div
+                    key={title}
+                    className="rounded-[var(--r-l)] border border-[var(--line)] bg-[var(--white)] p-6 text-center shadow-[var(--sh-sm)] transition-all hover:border-[var(--line-strong)] hover:shadow-[var(--sh-md)] lg:text-left"
+                  >
+                    <div className="flex justify-center lg:justify-start">
+                      <span className="mb-4 flex h-14 w-14 items-center justify-center rounded-[var(--r-m)] border-2 border-[var(--blue)] bg-[var(--white)] text-[var(--blue)]">
+                        <Icon className="h-7 w-7" strokeWidth={2} />
+                      </span>
+                    </div>
+                    <h3 className="mb-2 text-lg font-bold text-[var(--ink)]">{title}</h3>
+                    <p className="text-sm leading-relaxed text-[var(--ink-muted)]">{desc}</p>
+                  </div>
+                ))}
+              </div>
+            </SectionReveal>
+          </div>
+        </section>
+        <SectionDivider />
+
+        <section className="bg-[var(--ink)] py-16 text-white sm:py-20 lg:py-24">
           <div className={containerClass}>
             <SectionReveal effect="slide-left">
-            <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center mb-16">
-              <div>
-                <SectionHeader
-                  variant="light"
-                  eyebrow="Lead generation company"
-                  titleBefore="Global "
-                  titleAccent="reach, exceptional results"
-                  subtitle="Expand your reach into top B2B markets with our cross-border B2B lead generation services—connect with top B2B leads from North America, Asia-Pacific, UK/Europe, and EMEA."
-                  className="mb-6 text-left max-w-none"
-                />
-                <button
-                  type="button"
-                  onClick={handleContactUs}
-                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-s)] font-semibold bg-[var(--blue)] text-white border-2 border-[var(--blue)] hover:bg-[var(--blue-dark)] hover:border-[var(--blue-dark)] transition-all cursor-pointer"
-                  style={{ boxShadow: "var(--sh-blue)" }}
-                >
-                  Contact Us <ArrowRight className="w-5 h-5" />
-                </button>
-              </div>
-              <div className="flex justify-center lg:justify-end">
-                <div className="relative w-full max-w-lg rounded-[var(--r-2xl)] overflow-hidden shadow-[var(--sh-lg)] aspect-[1536/1118] max-h-[340px] lg:max-h-[380px]">
-                  <img
-                    src={globalLeadGenImage}
-                    alt="Global lead generation services – B2B reach across North America, UK/EMEA, APAC and beyond"
-                    className="w-full h-full object-cover object-center"
+              <div className="mb-16 grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+                <div>
+                  <SectionHeader
+                    variant="light"
+                    eyebrow="Global B2B"
+                    titleBefore="Pipeline "
+                    titleAccent="everywhere you sell"
+                    subtitle="Whether your buyers are in North America, EMEA, or APAC, we run localized, compliant outreach that still rolls up to one pipeline story your leadership can trust."
+                    className="mb-6 max-w-none text-left"
                   />
+                  <button
+                    type="button"
+                    onClick={handleContactUs}
+                    className="inline-flex cursor-pointer items-center gap-2 rounded-[var(--r-s)] border-2 border-[var(--blue)] bg-[var(--blue)] px-6 py-3.5 font-semibold text-white transition-all hover:border-[var(--blue-dark)] hover:bg-[var(--blue-dark)]"
+                    style={{ boxShadow: "var(--sh-blue)" }}
+                  >
+                    Contact us <ArrowRight className="h-5 w-5" />
+                  </button>
+                </div>
+                <div className="flex justify-center lg:justify-end">
+                  <div className="relative aspect-[1536/1118] max-h-[340px] w-full max-w-lg overflow-hidden rounded-[var(--r-2xl)] shadow-[var(--sh-lg)] lg:max-h-[380px]">
+                    <img
+                      src={globalLeadGenImage}
+                      alt="Global B2B pipeline and qualified lead programs"
+                      className="h-full w-full object-cover object-center"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
-              {regions.map(({ name, stat, detail, percent, ringColor }) => {
-                const circumference = 2 * Math.PI * 16;
-                const filled = (percent / 100) * circumference;
-                return (
-                  <div key={name} className="text-center">
-                    <h3 className="font-bold text-white text-lg mb-6">{name}</h3>
-                    <div className="relative inline-flex items-center justify-center w-36 h-36 sm:w-40 sm:h-40 mx-auto mb-6">
-                      <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36" aria-hidden>
-                        <circle cx="18" cy="18" r="16" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="3" />
-                        <circle
-                          cx="18"
-                          cy="18"
-                          r="16"
-                          fill="none"
-                          stroke={ringColor}
-                          strokeWidth="3"
-                          strokeDasharray={`${filled} ${circumference}`}
-                          strokeLinecap="round"
-                          style={{ transition: "stroke-dasharray 0.5s ease" }}
-                        />
-                      </svg>
-                      <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
-                        <span className="text-2xl sm:text-3xl font-bold text-white mb-1">{percent}%</span>
-                        <span className="text-[10px] sm:text-xs text-white/80 leading-tight max-w-[85%]">{stat}</span>
+              <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
+                {regions.map(({ name, stat, detail, percent, ringColor }) => {
+                  const circumference = 2 * Math.PI * 16;
+                  const filled = (percent / 100) * circumference;
+                  return (
+                    <div key={name} className="text-center">
+                      <h3 className="mb-6 text-lg font-bold text-white">{name}</h3>
+                      <div className="relative mx-auto mb-6 inline-flex h-36 w-36 items-center justify-center sm:h-40 sm:w-40">
+                        <svg className="h-full w-full -rotate-90" viewBox="0 0 36 36" aria-hidden>
+                          <circle cx="18" cy="18" r="16" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="3" />
+                          <circle
+                            cx="18"
+                            cy="18"
+                            r="16"
+                            fill="none"
+                            stroke={ringColor}
+                            strokeWidth="3"
+                            strokeDasharray={`${filled} ${circumference}`}
+                            strokeLinecap="round"
+                            style={{ transition: "stroke-dasharray 0.5s ease" }}
+                          />
+                        </svg>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+                          <span className="mb-1 text-2xl font-bold text-white sm:text-3xl">{percent}%</span>
+                          <span className="max-w-[85%] text-[10px] leading-tight text-white/80 sm:text-xs">{stat}</span>
+                        </div>
                       </div>
+                      <p className="mt-2 text-sm leading-relaxed text-white/80">{detail}</p>
                     </div>
-                    <p className="text-sm text-white/80 leading-relaxed mt-2">{detail}</p>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
             </SectionReveal>
           </div>
         </section>
         <SectionDivider />
 
-        {/* Section 5: Who We Serve */}
-        <section className="py-16 sm:py-20 lg:py-24 bg-[var(--surface)]">
+        <section className="bg-[var(--surface)] py-16 sm:py-20 lg:py-24">
           <div className={containerClass}>
             <SectionReveal effect="slide-right">
-            <SectionHeader
-              eyebrow="Lead generation B2B"
-              titleBefore="Who we "
-              titleAccent="serve"
-              subtitle="Are you tired of hunting leads that never convert? We bridge the gap between businesses to improve lead quality and drive success with effective sales strategies."
-              className="mb-10"
-            />
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {whoWeServe.map(({ title, desc, icon: Icon, tag }) => (
-                <div
-                  key={title}
-                  className="p-6 rounded-[var(--r-l)] border border-[var(--line)] bg-[var(--white)] hover:border-[var(--line-strong)] hover:shadow-[var(--sh-sm)] transition-all cursor-pointer"
-                  onClick={handleContactUs}
-                  onKeyDown={(e) => e.key === "Enter" && handleContactUs()}
-                  role="button"
-                  tabIndex={0}
-                >
-                  <span className="text-xs font-bold text-[var(--blue)] mb-2 block">{tag}</span>
-                  <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--blue-lite)] flex items-center justify-center text-[var(--blue)] mb-4">
-                    <Icon className="w-5 h-5" />
+              <SectionHeader
+                eyebrow="B2B segments"
+                titleBefore="Who needs "
+                titleAccent="consistent pipeline"
+                subtitle="If your revenue depends on qualified B2B conversations, we tailor outreach, qualification, and meeting-setting to how your buyers actually purchase."
+                className="mb-10"
+              />
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                {whoWeServe.map(({ title, desc, icon: Icon, tag }) => (
+                  <div
+                    key={title}
+                    role="button"
+                    tabIndex={0}
+                    className="cursor-pointer rounded-[var(--r-l)] border border-[var(--line)] bg-[var(--white)] p-6 transition-all hover:border-[var(--line-strong)] hover:shadow-[var(--sh-sm)]"
+                    onClick={handleContactUs}
+                    onKeyDown={(e) => e.key === "Enter" && handleContactUs()}
+                  >
+                    <span className="mb-2 block text-xs font-bold text-[var(--blue)]">{tag}</span>
+                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-[var(--r-m)] bg-[var(--blue-lite)] text-[var(--blue)]">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <h3 className="mb-2 font-bold text-[var(--ink)]">{title}</h3>
+                    <p className="text-sm text-[var(--ink-muted)]">{desc}</p>
                   </div>
-                  <h3 className="font-bold text-[var(--ink)] mb-2">{title}</h3>
-                  <p className="text-sm text-[var(--ink-muted)]">{desc}</p>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
             </SectionReveal>
           </div>
         </section>
         <SectionDivider />
 
-        {/* Section 7: How We Do B2B Lead Generation – 4 steps */}
-        <section className="py-16 sm:py-20 lg:py-24 bg-[var(--surface)]">
+        <section className="bg-[var(--surface)] py-16 sm:py-20 lg:py-24">
           <div className={containerClass}>
             <SectionReveal effect="slide-left">
-            <SectionHeader
-              eyebrow="How we do it"
-              titleBefore="B2B "
-              titleAccent="lead generation"
-              subtitle="Did you know 50–90% of buying decisions are complete before a buyer interacts with a sales rep? Our customized lead generation strategies help you save time by putting your sales team in front of high-intent prospects."
-              className="mb-12"
-            />
-            <div className="space-y-12 lg:space-y-16">
-              {howWeDoSteps.map(({ step, title, desc, image }, index) => (
-                <div key={step} className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-                  <div className={index % 2 === 1 ? "lg:order-2" : ""}>
-                    <div className="flex items-baseline gap-3 mb-4">
-                      <span className="text-4xl sm:text-5xl font-bold text-[var(--blue)] leading-none">{step}</span>
-                      <h3 className="font-semibold text-lg sm:text-xl text-[var(--ink)]">{title}</h3>
+              <SectionHeader
+                eyebrow="How we do it"
+                titleBefore="Your pipeline "
+                titleAccent="system"
+                subtitle="Four connected layers—from ICP to qualified meetings—so B2B leads stay consistent and your team always knows what to do next."
+                className="mb-12"
+              />
+              <div className="space-y-12 lg:space-y-16">
+                {howWeDoSteps.map(({ step, title, desc, image }, index) => (
+                  <div key={step} className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
+                    <div className={index % 2 === 1 ? "lg:order-2" : ""}>
+                      <div className="mb-4 flex items-baseline gap-3">
+                        <span className="text-4xl font-bold leading-none text-[var(--blue)] sm:text-5xl">{step}</span>
+                        <h3 className="text-lg font-semibold text-[var(--ink)] sm:text-xl">{title}</h3>
+                      </div>
+                      <p className="leading-relaxed text-[var(--ink-muted)]">{desc}</p>
                     </div>
-                    <p className="text-[var(--ink-muted)] leading-relaxed">{desc}</p>
-                  </div>
-                  <div className={index % 2 === 1 ? "lg:order-1" : ""}>
-                    <div className="rounded-[var(--r-xl)] overflow-hidden border border-[var(--line)] shadow-[var(--sh-sm)] aspect-[4/2]">
-                      <img src={image} alt={title} className="w-full h-full object-cover" />
+                    <div className={index % 2 === 1 ? "lg:order-1" : ""}>
+                      <div className="aspect-[4/2] overflow-hidden rounded-[var(--r-xl)] border border-[var(--line)] shadow-[var(--sh-sm)]">
+                        <img src={image} alt={title} className="h-full w-full object-cover" />
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
             </SectionReveal>
           </div>
         </section>
         <SectionDivider />
 
-        {/* Section 8: Industries We Have Experience – icon + label per cell (Beyond Codes style) */}
-        <section className="py-16 sm:py-20 lg:py-24 bg-[var(--white)]">
+        <section className="bg-[var(--white)] py-16 sm:py-20 lg:py-24">
           <div className={containerClass}>
             <SectionReveal effect="fade-up">
-            <SectionHeader
-              eyebrow="Top B2B lead generation company"
-              titleBefore="Industries we have experience in "
-              titleAccent="setting-up appointments"
-              subtitle="Our proven lead generation and appointment setting services propel your business towards growth. Whether you target technology, manufacturing, healthcare, finance, education, or any other sector, we customize our approach to meet your specific needs."
-              className="mb-10"
-            />
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-              {industries.map(({ name, icon: Icon }) => (
-                <div
-                  key={name}
-                  className="flex items-center gap-4 p-4 rounded-[var(--r-m)] border border-[var(--line)] bg-[var(--surface)] hover:border-[var(--blue)] hover:bg-[var(--blue-ghost)] transition-all"
-                >
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[var(--r-m)] bg-[var(--blue-lite)] text-[var(--blue)]" aria-hidden>
-                    <Icon className="w-6 h-6" strokeWidth={2} />
-                  </span>
-                  <span className="font-semibold text-[var(--ink)] text-sm sm:text-base">{name}</span>
-                </div>
-              ))}
-            </div>
+              <SectionHeader
+                eyebrow="B2B experience"
+                titleBefore="Industries we run "
+                titleAccent="pipeline for"
+                subtitle="Deep experience across regulated and fast-moving sectors—always with messaging and qualification tuned to how those buyers buy."
+                className="mb-10"
+              />
+              <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
+                {industries.map(({ name, icon: Icon }) => (
+                  <div
+                    key={name}
+                    className="flex items-center gap-4 rounded-[var(--r-m)] border border-[var(--line)] bg-[var(--surface)] p-4 transition-all hover:border-[var(--blue)] hover:bg-[var(--blue-ghost)]"
+                  >
+                    <span
+                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[var(--r-m)] bg-[var(--blue-lite)] text-[var(--blue)]"
+                      aria-hidden
+                    >
+                      <Icon className="h-6 w-6" strokeWidth={2} />
+                    </span>
+                    <span className="text-sm font-semibold text-[var(--ink)] sm:text-base">{name}</span>
+                  </div>
+                ))}
+              </div>
             </SectionReveal>
           </div>
         </section>
@@ -435,20 +554,21 @@ const B2BLeadGenerationPage = () => {
 
         <ServiceLinesSection
           containerClass={containerClass}
-          eyebrow="Lead generation campaign"
-          titleBefore="Campaigns executed across "
-          titleAccent="service lines"
+          eyebrow="Pipeline playbook"
+          titleBefore="What we execute "
+          titleAccent="for B2B teams"
           lines={campaignLines}
+          subtitle="Programs map to how you sell—from net-new demand to qualification, handoffs, and the metrics revenue leaders care about."
           scrollEffect="zoom-in"
         />
         <SectionDivider />
 
         <SectionReveal effect="zoom-in">
-         <WhatClientsSay
-          testimonials={testimonials}
-          title="Our clients say we're the #1 B2B Lead Generation Company"
-          subtitle="Client testimonials"
-        />
+          <WhatClientsSay
+            testimonials={testimonials}
+            title="Pipeline results teams actually measure"
+            subtitle="Fewer bad leads, more qualified B2B conversations, and a clearer line from outreach to revenue."
+          />
         </SectionReveal>
         <SectionDivider />
 
@@ -458,7 +578,7 @@ const B2BLeadGenerationPage = () => {
           eyebrow="FAQ"
           titleBefore="Frequently asked "
           titleAccent="questions"
-          subtitle="Quick answers about B2B lead generation and appointment setting."
+          subtitle="Qualified B2B leads, pipeline systems, and how we work with your sales team."
           items={faqs}
           cardVariant="surface"
           scrollEffect="fade-up"
@@ -467,15 +587,14 @@ const B2BLeadGenerationPage = () => {
 
         <GrowthExpertCTA
           containerClass={containerClass}
-          eyebrow="Get Started"
-          titleBefore="Connect with a growth expert "
-          titleAccent="today!"
-          subtitle="Book a call with our team to discuss your lead generation goals and see how we can help you fill your pipeline with qualified B2B leads."
+          eyebrow="Get started"
+          titleBefore="Build a pipeline of "
+          titleAccent="qualified B2B leads"
+          subtitle="Book a call—we’ll review your ICP, show how our targeted outreach system fits your motion, and map a path to consistent meetings and clients."
           buttonText="Book a meeting now"
           onButtonClick={handleBookDemo}
         />
       </main>
-      {/* Footer is rendered by BaseLayout (reusable Footer component) */}
     </div>
   );
 };

@@ -32,7 +32,7 @@ const signInSchema = z.object({
 
 type SignInFormValues = z.infer<typeof signInSchema>;
 
-export function SignInForm(_props: React.ComponentPropsWithoutRef<"div">) {
+export function SignInForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
@@ -109,7 +109,7 @@ export function SignInForm(_props: React.ComponentPropsWithoutRef<"div">) {
                 <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white">
                   Welcome back
                 </p>
-              </div>
+      </div>
               <h2 className="text-3xl md:text-[2.75rem] font-bold uppercase tracking-tight leading-tight text-white">
                 Schedley
               </h2>
@@ -211,13 +211,13 @@ export function SignInForm(_props: React.ComponentPropsWithoutRef<"div">) {
 
             <Form {...form}>
               <form id="sign-in-form" onSubmit={form.handleSubmit(onSubmit)} className="mt-6 space-y-5" autoComplete="on">
-                <FormField
-                  name="email"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
+                  <FormField
+                    name="email"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem>
                       <Label className="text-ink text-sm font-medium sr-only">Email</Label>
-                      <FormControl>
+                        <FormControl>
                         <div className="relative">
                           <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-ink-muted pointer-events-none" />
                           <Input
@@ -228,19 +228,19 @@ export function SignInForm(_props: React.ComponentPropsWithoutRef<"div">) {
                             className="pl-10 bg-surface border-border text-ink placeholder:text-ink-muted rounded-[var(--r-m)] h-12 focus-visible:ring-2 focus-visible:ring-blue focus-visible:border-blue"
                           />
                         </div>
-                      </FormControl>
+                        </FormControl>
                       <FormMessage className="text-amber-deep text-sm" />
-                    </FormItem>
-                  )}
-                />
+                      </FormItem>
+                    )}
+                  />
 
-                <FormField
-                  name="password"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
+                  <FormField
+                    name="password"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem>
                       <Label className="text-ink text-sm font-medium sr-only">Password</Label>
-                      <FormControl>
+                        <FormControl>
                         <div className="relative">
                           <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-ink-muted pointer-events-none" />
                           <Input
@@ -258,11 +258,11 @@ export function SignInForm(_props: React.ComponentPropsWithoutRef<"div">) {
                             {showPassword ? "Hide" : "Show"}
                           </button>
                         </div>
-                      </FormControl>
+                        </FormControl>
                       <FormMessage className="text-amber-deep text-sm" />
-                    </FormItem>
-                  )}
-                />
+                      </FormItem>
+                    )}
+                  />
 
                 <div className="flex items-center justify-between gap-4">
                   <label className="flex items-center gap-2 cursor-pointer select-none">
@@ -280,23 +280,23 @@ export function SignInForm(_props: React.ComponentPropsWithoutRef<"div">) {
                   </Link>
                 </div>
 
-                <Button
+                  <Button 
                   type="submit"
-                  disabled={isPending}
+                    disabled={isPending} 
                   className="auth-primary-btn w-full h-12 rounded-[var(--r-m)] font-semibold text-white border-0"
                 >
                   {isPending ? <Loader color="white" /> : "Sign in"}
-                </Button>
+                  </Button>
 
                 <div className="relative flex items-center gap-2">
                   <span className="flex-1 h-px bg-border" />
                   <span className="text-xs text-ink-muted">Or continue with</span>
                   <span className="flex-1 h-px bg-border" />
-                </div>
+                  </div>
 
-                <Button
+                  <Button
                   type="button"
-                  variant="outline"
+                        variant="outline"
                   onClick={handleGoogleSignIn}
                   className="auth-google-btn w-full h-12 rounded-[var(--r-m)] border-2 font-medium transition-all duration-200"
                 >
@@ -305,21 +305,21 @@ export function SignInForm(_props: React.ComponentPropsWithoutRef<"div">) {
                     <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                     <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                     <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                  </svg>
+                        </svg>
                   Sign in with Google
-                </Button>
+                      </Button>
 
                 <p className="text-center text-sm text-ink">
                   Don&apos;t have an account?{" "}
-                  <Link
-                    to={AUTH_ROUTES.SIGN_UP}
+                    <Link
+                      to={AUTH_ROUTES.SIGN_UP}
                     className="auth-link font-semibold"
-                  >
-                    Sign up
-                  </Link>
+                    >
+                      Sign up
+                    </Link>
                 </p>
-              </form>
-            </Form>
+            </form>
+          </Form>
 
             <p className="mt-6 text-center text-xs text-ink-muted leading-relaxed">
               By continuing, you agree to our{" "}

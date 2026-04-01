@@ -93,6 +93,15 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
       },
+      keyframes: {
+        "hero-float": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-7px)" },
+        },
+      },
+      animation: {
+        "hero-float": "hero-float 4.5s ease-in-out infinite",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

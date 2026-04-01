@@ -48,8 +48,8 @@ export function ProfileMenu({
   const isApp = variant === "app";
   const triggerCls =
     isApp
-      ? "group flex items-center gap-3 cursor-pointer p-2 rounded-xl hover:bg-slate-100/80 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-      : "flex items-center gap-2 p-1.5 rounded-lg hover:bg-[var(--surface)] transition-colors cursor-pointer";
+      ? "group flex max-w-[min(100%,320px)] cursor-pointer items-center gap-2 rounded-sm border border-[var(--line)] bg-white/60 p-2 shadow-sm transition-colors duration-200 hover:border-[var(--blue)]/40 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[var(--blue)]/25 sm:gap-3"
+      : "flex max-w-[min(100%,280px)] cursor-pointer items-center gap-2 rounded-sm border-2 border-[var(--line)] p-2 transition-all duration-200 hover:border-[var(--blue)]/40 hover:bg-[var(--surface)]";
   const avatarRingCls = isApp
     ? "w-9 h-9 ring-2 ring-[var(--blue)] group-hover:ring-[var(--blue)] shadow-sm"
     : "w-9 h-9 ring-2 ring-[var(--blue)]";
@@ -73,7 +73,7 @@ export function ProfileMenu({
     <Popover>
       <PopoverTrigger asChild>
         <button type="button" className={triggerClassName || triggerCls}>
-          <Avatar className={avatarRingCls}>
+          <Avatar className={`${avatarRingCls} shrink-0`}>
             {user.imageUrl && (
               <AvatarImage src={user.imageUrl} alt={user.name || "Profile"} />
             )}
@@ -81,7 +81,13 @@ export function ProfileMenu({
               {getInitials(user.name)}
             </AvatarFallback>
           </Avatar>
-          <ChevronDown className="w-4 h-4 text-[var(--ink-muted)]" />
+          <span
+            className={`min-w-0 truncate text-left text-base font-semibold text-[var(--ink)] ${isApp ? "max-w-[min(42vw,140px)] sm:max-w-[180px] md:max-w-[220px]" : "max-w-[200px]"}`}
+            title={user.name || "User"}
+          >
+            {user.name?.trim() || "User"}
+          </span>
+          <ChevronDown className="h-4 w-4 shrink-0 text-[var(--ink-muted)]" />
         </button>
       </PopoverTrigger>
       <PopoverContent align="end" className={contentClassName || popoverCls}>

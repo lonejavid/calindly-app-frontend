@@ -44,9 +44,9 @@ const TabPanel: FC<PropsType> = ({ period, meetings, isFetching, timezone }) => 
   };
 
   return (
-    <div className="w-full">
+    <div className="b2b-page w-full">
       {isFetching ? (
-        <div className="flex items-center justify-center min-h-[15vh]">
+        <div className="flex min-h-[200px] items-center justify-center rounded-[var(--r-l)] border border-[var(--line)] bg-[var(--surface)]/50">
           <Loader size="lg" color="black" />
         </div>
       ) : meetings?.length === 0 ? (
@@ -60,8 +60,8 @@ const TabPanel: FC<PropsType> = ({ period, meetings, isFetching, timezone }) => 
           } Meeting`}
         />
       ) : (
-        <div className="data--list">
-          <ul role="list">
+        <div className="data--list space-y-0">
+          <ul className="list-none space-y-4 p-0" role="list">
             {meetings?.map((meeting) => (
               <li key={meeting.id}>
                 <MeetingCard

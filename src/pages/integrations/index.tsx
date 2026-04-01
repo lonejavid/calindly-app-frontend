@@ -1,4 +1,3 @@
-import PageTitle from "@/components/PageTitle";
 import IntegrationCard from "./_components/integration-card";
 import { useQuery } from "@tanstack/react-query";
 import { getAllIntegrationQueryFn } from "@/lib/api";
@@ -14,41 +13,37 @@ const Integrations = () => {
   const integrations = data?.integrations || [];
 
   return (
-    <div className="flex flex-col !gap-5">
-      <PageTitle
-        title="Integrations & apps"
-        subtitle="Connect all your apps directly from here. You need to connect these apps"
-      />
-
+    <div className="b2b-page flex flex-col gap-4">
       <ErrorAlert isError={isError} error={error} />
 
-      <div className="relative flex flex-col gap-4">
-        <section className="flex flex-col gap-4 text-muted-foreground">
+      <div className="overflow-hidden bg-[var(--white)]">
+        <div className="b2b-page px-4 py-4">
           {isFetching || isError ? (
-            <div className="flex items-center justify-center min-h-[30vh]">
+            <div className="flex min-h-[40vh] items-center justify-center rounded-[var(--r-l)] border border-[var(--line)] bg-[var(--surface)]/40">
               <Loader size="lg" color="black" />
             </div>
           ) : (
-            <>
-              <div className="space-y-4">
-                {integrations.map((integration) => (
+            <ul className="m-0 list-none space-y-3 p-0 sm:space-y-4">
+              {integrations.map((integration) => (
+                <li key={integration.app_type}>
                   <IntegrationCard
-                    key={integration.app_type}
-                    isDisabled={
-                      integration.app_type === "GOOGLE_MEET_AND_CALENDAR" || integration.app_type === "MICROSOFT_TEAMS" ||
-                    integration.app_type === "ZOOM_MEETING" ||  integration.app_type ==="OUTLOOK_CALENDAR"
-                        ? false
-                        : true
-                    }
                     appType={integration.app_type}
                     title={integration.title}
                     isConnected={integration.isConnected}
+                    isDisabled={
+                      integration.app_type === "GOOGLE_MEET_AND_CALENDAR" ||
+                      integration.app_type === "MICROSOFT_TEAMS" ||
+                      integration.app_type === "ZOOM_MEETING" ||
+                      integration.app_type === "OUTLOOK_CALENDAR"
+                        ? false
+                        : true
+                    }
                   />
-                ))}
-              </div>
-            </>
+                </li>
+              ))}
+            </ul>
           )}
-        </section>
+        </div>
       </div>
     </div>
   );

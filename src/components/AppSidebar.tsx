@@ -15,9 +15,6 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarTrigger,
-  SidebarRail,
-  useSidebar,
 } from "./ui/sidebar";
 import mylogo from "../../mylogo.png";
 import { Link, useLocation } from "react-router-dom";
@@ -34,7 +31,6 @@ type ItemType = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const location = useLocation();
-  const { state } = useSidebar();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
@@ -70,94 +66,54 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     },
   ];
 
-  const isCollapsed = state === "collapsed";
-
   return (
     <Sidebar
-      collapsible="icon"
+      collapsible="none"
       variant="sidebar"
       className={`
-        ${!isCollapsed ? "w-[280px]" : "w-[70px]"} 
-        transition-all duration-300 ease-in-out
+        w-[280px] shrink-0
         !bg-gradient-to-b !from-slate-50 !to-white
-        !border-r-[5px] border-[#007aff]
-        shadow-xl shadow-slate-200/40
+        border-r border-slate-200/90
+        shadow-sm shadow-slate-200/30
         backdrop-blur-sm
       `}
       {...props}
     >
       {/* Animated Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-transparent to-purple-50/20 pointer-events-none" />
-      
+
       {/* Header with Logo */}
-      <SidebarHeader
-        className={`
-          !py-6 relative z-10
-          ${!isCollapsed ? "!px-6" : "!px-4"}
-          transition-all duration-300 ease-in-out
-        `}
-      >
+      <SidebarHeader className="!py-6 relative z-10 !px-6">
         <div className="flex h-[60px] items-center gap-3 justify-start">
           {/* Logo Container with Hover Effect */}
           <div
             className={`
-              relative flex items-center justify-center rounded-xl
-              bg-gradient-to-br from-blue-500 to-blue-600
-              shadow-lg shadow-blue-500/25
-              transition-all duration-300 ease-in-out
-              hover:shadow-xl hover:shadow-blue-500/40
-              hover:scale-105
-              ${!isCollapsed ? "w-12 h-12" : "w-10 h-10"}
+              relative flex items-center justify-center rounded-sm
+              w-12 h-12
             `}
           >
-            <img
-              src={mylogo}
-              alt="Schedley Logo"
-            
-            />
-            
-            {/* Animated Ring */}
-            <div className="absolute inset-0 rounded-xl border-2 border-blue-400/0 
-                          hover:border-blue-400/30 transition-all duration-300" />
+            <img src={mylogo} alt="Schedley Logo" />
+
           </div>
 
-          {/* Brand Name with Slide Animation */}
-          <div
-            className={`
-              grid flex-1 text-left leading-tight overflow-hidden
-              transition-all duration-300 ease-in-out
-              ${!isCollapsed ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"}
-            `}
-          >
+          {/* Brand Name */}
+          <div className="grid flex-1 min-w-0 text-left leading-tight overflow-hidden">
             <div className="flex items-center gap-2">
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 
-                           bg-clip-text text-transparent tracking-tight">
+              <h2
+                className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 
+                           bg-clip-text text-transparent tracking-tight"
+              >
                 Schedley
               </h2>
-              <div className="w-2 h-2 rounded-full bg-gradient-to-r from-green-400 to-green-500 
-                            animate-pulse shadow-sm shadow-green-400/50" />
+              <div
+                className="w-2 h-2 rounded-full bg-gradient-to-r from-green-400 to-green-500 
+                            animate-pulse shadow-sm shadow-green-400/50"
+              />
             </div>
-            <p className="text-xs text-slate-500 font-medium">Scheduling Made Simple</p>
+            <p className="text-xs text-slate-500 font-medium">
+              Scheduling Made Simple
+            </p>
           </div>
-
-          {/* Toggle Button with Enhanced Animation */}
-          <SidebarTrigger
-            className={`
-              relative p-2 rounded-lg transition-all duration-300 ease-in-out
-              hover:bg-slate-100 active:scale-95
-              ${isCollapsed ? 
-                "absolute -right-4 z-30 bg-white border border-slate-200 shadow-lg hover:shadow-xl" : 
-                "bg-transparent hover:bg-slate-100"
-              }
-            `}
-          >
-            <ChevronRight 
-              className={`
-                w-4 h-4 transition-transform duration-300 ease-in-out
-                ${isCollapsed ? "rotate-0" : "rotate-180"}
-              `}
-            />
-          </SidebarTrigger>
         </div>
       </SidebarHeader>
 
@@ -177,11 +133,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100/50
                     data-[active=true]:bg-gradient-to-r data-[active=true]:from-blue-500 data-[active=true]:to-blue-600
                     data-[active=true]:text-white data-[active=true]:shadow-lg data-[active=true]:shadow-blue-500/25
-                    ${mounted ? 'animate-slideIn' : ''}
+                    ${mounted ? "animate-slideIn" : ""}
                   `}
                   style={{
                     animationDelay: `${index * 100}ms`,
-                    animationFillMode: 'both'
+                    animationFillMode: "both",
                   }}
                   isActive={isActive}
                   asChild
@@ -194,78 +150,76 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       !text-base !p-4 min-h-[56px] rounded-xl
                       !font-semibold flex items-center gap-4
                       transition-all duration-300 ease-in-out
-                      ${isActive ? '!text-white' : '!text-slate-700 hover:!text-blue-700'}
+                      ${isActive ? "!text-white" : "!text-slate-700 hover:!text-blue-700"}
                     `}
                   >
                     {/* Icon Container with Animation */}
-                    <div className={`
+                    <div
+                      className={`
                       relative flex items-center justify-center
                       transition-all duration-300 ease-in-out
-                      ${isHovered && !isCollapsed ? 'scale-110' : 'scale-100'}
-                    `}>
-                      <item.icon 
+                      ${isHovered ? "scale-110" : "scale-100"}
+                    `}
+                    >
+                      <item.icon
                         className={`
                           !w-5 !h-5 !stroke-2 z-10 relative
                           transition-all duration-300 ease-in-out
-                          ${isActive ? 'drop-shadow-sm' : ''}
+                          ${isActive ? "drop-shadow-sm" : ""}
                         `}
                       />
-                      
+
                       {/* Animated Background Circle */}
                       {isHovered && !isActive && (
-                        <div className="absolute inset-0 w-8 h-8 -m-1.5 bg-blue-100 
-                                      rounded-lg animate-pulse opacity-50" />
+                        <div
+                          className="absolute inset-0 w-8 h-8 -m-1.5 bg-blue-100 
+                                      rounded-lg animate-pulse opacity-50"
+                        />
                       )}
                     </div>
 
-                    {/* Label with Slide Animation */}
-                    <span
-                      className={`
-                        transition-all duration-300 ease-in-out
-                        ${!isCollapsed ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'}
-                      `}
-                    >
+                    {/* Label */}
+                    <span className="min-w-0 flex-1 truncate text-left transition-all duration-300 ease-in-out">
                       {item.title}
                     </span>
 
-                    {/* Badge with Pulse Animation */}
-                    {item.badge && !isCollapsed && (
-                      <div
-                        className={`
-                          ml-auto px-2 py-1 rounded-full text-xs font-bold
-                          transition-all duration-300 ease-in-out
-                          ${isActive ? 
-                            'bg-white/20 text-white' : 
-                            'bg-blue-100 text-blue-700 group-hover:bg-blue-200'
-                          }
-                          animate-pulse
-                        `}
+                    {/* Badge + hover chevron: fixed-width cluster so layout does not shift */}
+                    <div className="flex shrink-0 items-center gap-2">
+                      {item.badge ? (
+                        <span
+                          className={`
+                              inline-flex min-h-6 min-w-6 items-center justify-center rounded-full px-2 text-xs font-bold tabular-nums
+                              transition-colors duration-200
+                              ${
+                                isActive
+                                  ? "bg-white/25 text-white"
+                                  : "bg-blue-100 text-blue-700 group-hover:bg-blue-200/90"
+                              }
+                            `}
+                        >
+                          {item.badge}
+                        </span>
+                      ) : null}
+                      <span
+                        className="flex h-4 w-4 shrink-0 items-center justify-center"
+                        aria-hidden
                       >
-                        {item.badge}
-                      </div>
-                    )}
-
-                    {/* Hover Arrow */}
-                    {isHovered && !isCollapsed && !isActive && (
-                      <ChevronRight className="ml-auto w-4 h-4 text-blue-500 
-                                             animate-bounceX opacity-70" />
-                    )}
-
-                    {/* Active Indicator */}
-                    {isActive && (
-                      <div className="absolute left-1 top-1/2 -translate-y-1/2 w-1 h-8 
-                                    bg-white rounded-full shadow-sm animate-slideInLeft" />
-                    )}
+                        {isHovered && !isActive ? (
+                          <ChevronRight className="h-4 w-4 text-blue-500 opacity-80" />
+                        ) : null}
+                      </span>
+                    </div>
                   </Link>
                 </SidebarMenuButton>
 
                 {/* Separator with Animation */}
                 {item.separator && (
-                  <div className={`
+                  <div
+                    className={`
                     my-4 mx-4 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent
-                    transition-all duration-500 ease-in-out
-                    ${!isCollapsed ? 'opacity-100' : 'opacity-0'}
-                  `} />
+                    transition-all duration-500 ease-in-out opacity-100
+                  `}
+                  />
                 )}
               </SidebarMenuItem>
             );
@@ -273,15 +227,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
 
         {/* Bottom Gradient Fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-8 
+        <div
+          className="absolute bottom-0 left-0 right-0 h-8 
                       bg-gradient-to-t from-white via-white/80 to-transparent 
-                      pointer-events-none" />
+                      pointer-events-none"
+        />
       </SidebarContent>
 
-      <SidebarRail className="!bg-transparent" />
-
       {/* Custom Styles */}
-      <style >{`
+      <style>{`
         @keyframes slideIn {
           from {
             opacity: 0;
@@ -293,36 +247,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           }
         }
 
-        @keyframes slideInLeft {
-          from {
-            opacity: 0;
-            transform: translateX(-10px) translateY(-50%);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0) translateY(-50%);
-          }
-        }
-
-        @keyframes bounceX {
-          0%, 100% {
-            transform: translateX(0);
-          }
-          50% {
-            transform: translateX(4px);
-          }
-        }
-
         .animate-slideIn {
           animation: slideIn 0.6s ease-out;
-        }
-
-        .animate-slideInLeft {
-          animation: slideInLeft 0.3s ease-out;
-        }
-
-        .animate-bounceX {
-          animation: bounceX 1s ease-in-out infinite;
         }
       `}</style>
     </Sidebar>

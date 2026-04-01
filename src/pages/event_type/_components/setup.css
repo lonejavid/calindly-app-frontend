@@ -1,0 +1,121 @@
+/* Setup wizard – global keyframes; .setup-wizard scopes application (loaded via index.css) */
+
+@keyframes setup-fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes setup-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes setup-progress-scale {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes setup-available-pulse {
+  0%,
+  100% {
+    box-shadow: 0 2px 14px rgba(0, 122, 255, 0.22);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 4px 22px rgba(0, 122, 255, 0.38);
+    transform: scale(1.02);
+  }
+}
+
+@keyframes setup-bookings-12 {
+  0% {
+    transform: scale(0.82);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.07);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.setup-wizard .setup-animate-in {
+  animation: setup-fade-in 0.5s ease-out both;
+}
+
+.setup-wizard .setup-stagger > button {
+  animation: setup-fade-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  will-change: opacity, transform;
+}
+
+.setup-wizard .setup-stagger > button:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.setup-wizard .setup-stagger > button:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.setup-wizard .setup-stagger > button:nth-child(3) {
+  animation-delay: 0.15s;
+}
+.setup-wizard .setup-stagger > button:nth-child(4) {
+  animation-delay: 0.2s;
+}
+.setup-wizard .setup-stagger > button:nth-child(5) {
+  animation-delay: 0.25s;
+}
+.setup-wizard .setup-stagger > button:nth-child(6) {
+  animation-delay: 0.3s;
+}
+
+.setup-wizard .setup-preview-progress {
+  width: 78%;
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation: setup-progress-scale 1.35s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards;
+}
+
+.setup-wizard .setup-available-badge {
+  animation: setup-available-pulse 2.4s ease-in-out infinite;
+}
+
+.setup-wizard .setup-bookings-count {
+  animation: setup-bookings-12 0.9s cubic-bezier(0.34, 1.45, 0.64, 1) 0.2s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .setup-wizard .setup-animate-in,
+  .setup-wizard .setup-stagger > button,
+  .setup-wizard .setup-preview-progress,
+  .setup-wizard .setup-available-badge,
+  .setup-wizard .setup-bookings-count {
+    animation: none !important;
+  }
+  .setup-wizard .setup-stagger > button {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+  }
+  .setup-wizard .setup-preview-progress {
+    transform: scaleX(1);
+  }
+  .setup-wizard .setup-bookings-count {
+    opacity: 1;
+    transform: none;
+  }
+}
