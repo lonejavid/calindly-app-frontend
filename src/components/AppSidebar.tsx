@@ -16,7 +16,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from "./ui/sidebar";
-import mylogo from "../../mylogo.png";
+import mylogo from "../../mylogo-light.png";
 import { Link, useLocation } from "react-router-dom";
 import { PROTECTED_ROUTES } from "@/routes/common/routePaths";
 import { useState, useEffect } from "react";
@@ -89,7 +89,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <div
             className={`
               relative flex items-center justify-center rounded-sm
-              w-12 h-12
+              w-20 h-20
             `}
           >
             <img src={mylogo} alt="Schedley Logo" />

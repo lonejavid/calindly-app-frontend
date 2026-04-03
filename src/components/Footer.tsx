@@ -28,7 +28,7 @@ export function Footer(props: FooterProps) {
   const { onBookDemo: propsOnBookDemo, logoSrc: propsLogoSrc, className = "" } = props;
   const { value: contextValue } = useFooter();
   const onBookDemo = propsOnBookDemo ?? contextValue.onBookDemo;
-  const logoSrc = propsLogoSrc ?? contextValue.logoSrc;
+  const logoSrc = propsLogoSrc ?? "../../mylogo-light.png";
   const navigate = useNavigate();
 
   const handleBookDemo = () => {
@@ -52,12 +52,12 @@ export function Footer(props: FooterProps) {
           <div className="col-span-2 min-w-0">
             <div className="flex items-center gap-3 mb-5">
               {logoSrc ? (
-                <div className="w-12 h-12 rounded-xl overflow-hidden flex items-center justify-center bg-white shadow-lg shrink-0 ring-1 ring-white/10">
+                <div className="w-16 h-16 rounded-xl overflow-hidden flex items-center justify-center">
                   <img src={logoSrc} alt="Schedley" className="w-full h-full object-contain" />
                 </div>
               ) : (
-                <div className="w-12 h-12 rounded-xl bg-[var(--blue)] flex items-center justify-center shrink-0 shadow-lg shadow-[var(--blue)]/25">
-                  <span className="text-white font-black text-xl">S</span>
+                <div className="w-16 h-16 rounded-xl overflow-hidden flex items-center justify-center">
+                  <img src={logoSrc} alt="Schedley" className="w-full h-full object-contain" />
                 </div>
               )}
               <span className="text-xl sm:text-2xl font-bold text-white tracking-tight">Schedley</span>

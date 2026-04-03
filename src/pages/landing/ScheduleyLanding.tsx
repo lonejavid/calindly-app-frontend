@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Calendar, Shield, CheckCircle, ArrowRight, Users, X, Star, StarHalf, TrendingUp, Rocket, Target, BarChart, Lock, MessageCircle, UserCheck, Mail, Phone, DollarSign, Headphones, RefreshCw, Play, ExternalLink, Send, Bot, Minimize2, Maximize2, Clock, Quote, Zap } from 'lucide-react';
 import { Groq } from 'groq-sdk';
 
-import mylogo from "../../../mylogo.png";
+import mylogo from "../../../mylogo-light.png";
 import heroSectionImage from "@/assets/hero-section-image.png";
 import { ENV } from '@/lib/get-env';
 
@@ -1813,7 +1813,7 @@ export default ScheduleyLanding;
 // import { useNavigate } from "react-router-dom";
 // import { Groq } from 'groq-sdk';
 
-// import mylogo from "../../../mylogo.png";
+// import mylogo from "../../../mylogo-light.png";
 // import { ENV } from '@/lib/get-env';
 
 // // Simple route constants

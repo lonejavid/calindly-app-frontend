@@ -4,7 +4,7 @@ import { useStore } from "@/store/store";
 import { AUTH_ROUTES, PROTECTED_ROUTES } from "@/routes/common/routePaths";
 import { SidebarTrigger } from "./ui/sidebar";
 import type { LucideIcon } from "lucide-react";
-import schedleyLogo from "../../mylogo.png";
+import schedleyLogo from "../../mylogo-light.png";
 
 type HeaderProps = {
   /** Optional page title shown in the header (e.g. "Event types") */
@@ -56,7 +56,7 @@ const Header = ({
               <img
                 src={schedleyLogo}
                 alt="Schedley"
-                className="h-8 w-auto max-h-10 shrink-0 object-contain sm:h-9"
+                className="h-12 w-auto max-h-20 shrink-0 object-contain"
               />
               <div className="flex min-w-0 flex-col">
                 <p

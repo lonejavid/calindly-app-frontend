@@ -16,7 +16,7 @@ import { ProfileMenu } from "@/components/ProfileMenu";
 import { useStore } from "@/store/store";
 import { AUTH_ROUTES, PROTECTED_ROUTES, SERVICE_ROUTES } from "@/routes/common/routePaths";
 
-import mylogo from "../../mylogo.png";
+import mylogo from "../../mylogo-light.png";
 import { LANDING_PAGE_CONTAINER_CLASS } from "@/lib/landingLayout";
 import { openBookMeeting } from "@/lib/book-meeting";
 
@@ -86,7 +86,7 @@ export function LandingHeader({ isVisible = true }: LandingHeaderProps) {
           onClick={() => navigate("/")}
           className="flex min-w-0 max-w-[min(100%,12rem)] items-center space-x-2 xs:space-x-3 sm:max-w-none sm:space-x-4 cursor-pointer"
         >
-          <div className="w-10 h-10 xs:w-11 xs:h-11 sm:w-12 sm:h-12 shrink-0 rounded-sm overflow-hidden flex items-center justify-center bg-[var(--surface)] border border-[var(--line)]">
+          <div className="w-14 h-16 xs:w-14 xs:h-14 sm:w-14 sm:h-14 shrink-0 rounded-sm overflow-hidden flex items-center justify-center">
             <img src={mylogo} alt="Schedley" className="w-full h-full object-contain" />
           </div>
           <span className="min-w-0 truncate text-lg xs:text-2xl sm:text-3xl font-bold text-[var(--ink)]">
