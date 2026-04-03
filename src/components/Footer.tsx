@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Linkedin, ExternalLink, Mail, Shield } from "lucide-react";
 import { useFooter } from "@/contexts/FooterContext";
 import { SERVICE_ROUTES } from "@/routes/common/routePaths";
+import defaultFooterLogo from "../../mylogo-light.png";
 
 export type FooterProps = {
   onBookDemo?: () => void;
@@ -25,10 +26,11 @@ const legalLinks: { label: string; path: string }[] = [
 ];
 
 export function Footer(props: FooterProps) {
-  const { onBookDemo: propsOnBookDemo, className = "" } = props;
+  const { onBookDemo: propsOnBookDemo, logoSrc: propsLogoSrc, className = "" } = props;
   const { value: contextValue } = useFooter();
   const onBookDemo = propsOnBookDemo ?? contextValue.onBookDemo;
-  const logoSrc = "../../mylogo-light.png";
+  /** Bundled URL from Vite — do not use a relative path string (breaks on nested routes in prod). */
+  const logoSrc = propsLogoSrc ?? contextValue.logoSrc ?? defaultFooterLogo;
   const navigate = useNavigate();
 
   const handleBookDemo = () => {
@@ -51,27 +53,15 @@ export function Footer(props: FooterProps) {
         <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:gap-x-8 lg:grid-cols-4 lg:gap-x-8 xl:gap-12 mb-10 sm:mb-12">
           <div className="col-span-2 min-w-0">
             <div className="flex items-center gap-3 mb-5">
-              {logoSrc ? (
-                <div className="w-16 h-16 rounded-xl overflow-hidden flex items-center justify-center">
-                  <img
-                    src={logoSrc}
-                    alt="Schedley"
-                    className="w-full h-full object-contain"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-              ) : (
-                <div className="w-16 h-16 rounded-xl overflow-hidden flex items-center justify-center">
-                  <img
-                    src={logoSrc}
-                    alt="Schedley"
-                    className="w-full h-full object-contain"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-              )}
+              <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl">
+                <img
+                  src={logoSrc}
+                  alt="Schedley"
+                  className="h-full w-full object-contain"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
               <span className="text-xl sm:text-2xl font-bold text-white tracking-tight">Schedley</span>
             </div>
             <p className="text-white/70 text-sm leading-relaxed max-w-md sm:max-w-sm mb-6">
