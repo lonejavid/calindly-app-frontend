@@ -57,6 +57,8 @@ const Header = ({
                 src={schedleyLogo}
                 alt="Schedley"
                 className="h-12 w-auto max-h-20 shrink-0 object-contain"
+                loading="eager"
+                decoding="async"
               />
               <div className="flex min-w-0 flex-col">
                 <p
@@ -102,7 +104,7 @@ const Header = ({
               user={user}
               variant="app"
               onProfileClick={() => navigate(AUTH_ROUTES.PROFILE)}
-              onHomeClick={() => navigate(PROTECTED_ROUTES.EVENT_TYPES)}
+              onHomeClick={() => navigate(AUTH_ROUTES.LANDING)}
               onLogout={onLogout}
             />
           ) : null}

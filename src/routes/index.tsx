@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import {
   authenticationRoutePaths,
@@ -9,11 +10,13 @@ import BaseLayout from "@/layout/base-layout";
 import AuthRoute from "./authRoute";
 import ProtectedRoute from "./protectedRoute";
 import ScrollToTop from "@/components/ScrollToTop";
+import { RoutePageFallback } from "@/components/route-page-fallback";
 
 function AppRoutes() {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <Suspense fallback={<RoutePageFallback />}>
       <Routes>
         <Route path="/" element={<AuthRoute />}>
           <Route element={<BaseLayout />}>
@@ -49,6 +52,7 @@ function AppRoutes() {
       
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

@@ -791,7 +791,13 @@ case 'availability':
                   >
                     <div className="flex items-center space-x-4">
                       <div className="p-2 bg-white rounded-lg shadow-sm">
-                        <img src={option.logo} alt={option.label} className="w-6 h-6" />
+                        <img
+                          src={option.logo}
+                          alt={option.label}
+                          className="w-6 h-6"
+                          loading="lazy"
+                          decoding="async"
+                        />
                       </div>
                       <div className="flex-1">
                         <h4 className="font-semibold text-gray-900">{option.label}</h4>

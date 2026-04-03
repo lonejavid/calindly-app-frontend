@@ -287,6 +287,9 @@ const B2BAppointmentSchedulingPage = () => {
                     src={leadGenHeroImage}
                     alt="AI-powered personalized email outreach at scale"
                     className="h-full w-full object-cover object-center"
+                    loading="eager"
+                    decoding="async"
+                    fetchPriority="high"
                   />
                 </div>
               </div>
@@ -367,6 +370,8 @@ const B2BAppointmentSchedulingPage = () => {
                       src={emailImage}
                       alt="Pipeline growth from automated personalized outreach"
                       className="h-full w-full object-cover"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
                 </div>
@@ -418,7 +423,13 @@ const B2BAppointmentSchedulingPage = () => {
                       </ul>
                     </div>
                     <div className="aspect-[16/10] min-h-0 w-full overflow-hidden rounded-[var(--r-xl)] border border-[var(--line)] shadow-[var(--sh-sm)] sm:aspect-[4/1.5] lg:aspect-[3/1.5]">
-                      <img src={image} alt={imageAlt} className="h-full w-full object-cover" />
+                      <img
+                        src={image}
+                        alt={imageAlt}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                      />
                     </div>
                   </div>
                 ))}
@@ -456,6 +467,8 @@ const B2BAppointmentSchedulingPage = () => {
                       src={howItWorksHeroImage}
                       alt="AI email outreach workflow"
                       className="h-full w-full object-cover object-top"
+                      loading="lazy"
+                      decoding="async"
                     />
                     <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 rounded-[var(--r-m)] border border-[var(--line)] bg-[var(--white)]/95 p-3 sm:p-4 shadow-[var(--sh-sm)] backdrop-blur-sm">
                       <p className="mb-2 text-xs font-bold uppercase tracking-wider text-[var(--ink-muted)]">

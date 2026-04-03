@@ -822,6 +822,7 @@ any question asked which is not in our context directely tell that i am not auth
                   height={500}
                   loading="eager"
                   decoding="async"
+                  fetchPriority="high"
                 />
               </div>
             </div>
@@ -1531,6 +1532,8 @@ any question asked which is not in our context directely tell that i am not auth
                       width={40}
                       height={40}
                       className="h-10 w-10 rounded-full object-cover ring-2 ring-[var(--blue-lite)]"
+                      loading="lazy"
+                      decoding="async"
                     />
                     <div className="min-w-0 text-left">
                       <div className="font-bold text-[var(--ink)] text-sm sm:text-base truncate">{t.name}</div>

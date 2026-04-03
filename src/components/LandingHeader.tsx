@@ -87,7 +87,13 @@ export function LandingHeader({ isVisible = true }: LandingHeaderProps) {
           className="flex min-w-0 max-w-[min(100%,12rem)] items-center space-x-2 xs:space-x-3 sm:max-w-none sm:space-x-4 cursor-pointer"
         >
           <div className="w-14 h-16 xs:w-14 xs:h-14 sm:w-14 sm:h-14 shrink-0 rounded-sm overflow-hidden flex items-center justify-center">
-            <img src={mylogo} alt="Schedley" className="w-full h-full object-contain" />
+            <img
+              src={mylogo}
+              alt="Schedley"
+              className="w-full h-full object-contain"
+              loading="eager"
+              decoding="async"
+            />
           </div>
           <span className="min-w-0 truncate text-lg xs:text-2xl sm:text-3xl font-bold text-[var(--ink)]">
             Schedley

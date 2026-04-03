@@ -1,28 +1,29 @@
-import { AUTH_ROUTES, CONTACT_ROUTE, PROTECTED_ROUTES, PUBLIC_ROUTES } from "./routePaths";
-import SignIn from "@/pages/auth/signin";
-import SignUp from "@/pages/auth/signup";
-import ForgotPasswordPage from "@/pages/auth/forgot-password";
-import EventType from "@/pages/event_type";
-import Meetings from "@/pages/meeting";
-import Availability from "@/pages/availability";
-import Integrations from "@/pages/integrations";
-import UserSingleEventPage from "@/pages/external_page/user-single-event";
-import ScheduleyLanding from "@/pages/landing/ScheduleyLanding";
-import OAuthSuccess from "@/pages/GoogleAothPages/OAuthSuccess";
-import TermsOfService from "@/pages/Policy/TermsOfService";
-import PrivacyPolicy from "@/pages/Policy/PrivacyPolicy";
-import CookiePolicy from "@/pages/Policy/CookiePolicy";
-import CareersPage from "@/pages/landing/CareersPage";
-import TalentHiringPage from "@/pages/landing/TalentHiringPage";
-import B2BAppointmentSchedulingPage from "@/pages/landing/B2BAppointmentSchedulingPage";
-import B2BLeadGenerationPage from "@/pages/landing/B2BLeadGenerationPage";
-import RecruitingTalentPage from "@/pages/landing/RecruitingTalentPage";
-import SchedleyManagementPage from "@/pages/landing/SchedleyManagementPage";
-import ProfilePage from "@/pages/ProfilePage";
-import ContactUsPage from "@/pages/landing/ContactUsPage";
-import Setup from "@/pages/event_type/_components/Setup";
+import { lazy } from "react";
 import { Navigate } from "react-router-dom";
-import { SERVICE_ROUTES } from "./routePaths";
+import { AUTH_ROUTES, CONTACT_ROUTE, PROTECTED_ROUTES, PUBLIC_ROUTES, SERVICE_ROUTES } from "./routePaths";
+
+const SignIn = lazy(() => import("@/pages/auth/signin"));
+const SignUp = lazy(() => import("@/pages/auth/signup"));
+const ForgotPasswordPage = lazy(() => import("@/pages/auth/forgot-password"));
+const EventType = lazy(() => import("@/pages/event_type"));
+const Meetings = lazy(() => import("@/pages/meeting"));
+const Availability = lazy(() => import("@/pages/availability"));
+const Integrations = lazy(() => import("@/pages/integrations"));
+const UserSingleEventPage = lazy(() => import("@/pages/external_page/user-single-event"));
+const ScheduleyLanding = lazy(() => import("@/pages/landing/ScheduleyLanding"));
+const OAuthSuccess = lazy(() => import("@/pages/GoogleAothPages/OAuthSuccess"));
+const TermsOfService = lazy(() => import("@/pages/Policy/TermsOfService"));
+const PrivacyPolicy = lazy(() => import("@/pages/Policy/PrivacyPolicy"));
+const CookiePolicy = lazy(() => import("@/pages/Policy/CookiePolicy"));
+const CareersPage = lazy(() => import("@/pages/landing/CareersPage"));
+const TalentHiringPage = lazy(() => import("@/pages/landing/TalentHiringPage"));
+const B2BAppointmentSchedulingPage = lazy(() => import("@/pages/landing/B2BAppointmentSchedulingPage"));
+const B2BLeadGenerationPage = lazy(() => import("@/pages/landing/B2BLeadGenerationPage"));
+const RecruitingTalentPage = lazy(() => import("@/pages/landing/RecruitingTalentPage"));
+const SchedleyManagementPage = lazy(() => import("@/pages/landing/SchedleyManagementPage"));
+const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
+const ContactUsPage = lazy(() => import("@/pages/landing/ContactUsPage"));
+const Setup = lazy(() => import("@/pages/event_type/_components/Setup"));
 
 export const authenticationRoutePaths = [
   { path: "/", element: <ScheduleyLanding /> },
@@ -59,16 +60,14 @@ export const authenticationRoutePaths = [
 ];
 
 export const protectedRoutePaths = [
- 
   { path: PROTECTED_ROUTES.EVENT_TYPES, element: <EventType /> },
-  {path:PROTECTED_ROUTES.SETUP,element:<Setup/>},
+  { path: PROTECTED_ROUTES.SETUP, element: <Setup /> },
   { path: PROTECTED_ROUTES.MEETINGS, element: <Meetings /> },
   { path: PROTECTED_ROUTES.AVAILBILITIY, element: <Availability /> },
   { path: PROTECTED_ROUTES.INTEGRATIONS, element: <Integrations /> },
 ];
 
 export const publicRoutePaths = [
-  // { path: PUBLIC_ROUTES.USER_EVENTS, element: <UserEventsPage /> },
   { path: PUBLIC_ROUTES.USER_SINGLE_EVENT, element: <UserSingleEventPage /> },
   { path: PUBLIC_ROUTES.OAUTH_SUCCESS, element: <OAuthSuccess /> },
 ];

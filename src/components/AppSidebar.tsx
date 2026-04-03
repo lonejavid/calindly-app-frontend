@@ -83,16 +83,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-transparent to-purple-50/20 pointer-events-none" />
 
       {/* Header with Logo */}
-      <SidebarHeader className="!py-6 relative z-10 !px-6">
-        <div className="flex h-[60px] items-center gap-3 justify-start">
+      <SidebarHeader className="relative z-10 !px-4 !py-2 sm:!px-5 sm:!py-2.5">
+        <div className="flex min-h-0 items-center gap-2.5 justify-start sm:gap-3">
           {/* Logo Container with Hover Effect */}
           <div
             className={`
               relative flex items-center justify-center rounded-sm
-              w-20 h-20
+              w-16 h-16
             `}
           >
-            <img src={mylogo} alt="Schedley Logo" />
+            <img src={mylogo} alt="Schedley Logo" loading="eager" decoding="async" />
 
           </div>
 

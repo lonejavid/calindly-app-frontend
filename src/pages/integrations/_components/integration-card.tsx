@@ -132,7 +132,15 @@ export const ImageWrapper: React.FC<ImageWrapperProps> = ({
         className,
       )}
     >
-      <img src={src} alt={alt} height={height} width={width} className="object-cover" />
+      <img
+        src={src}
+        alt={alt}
+        height={height}
+        width={width}
+        className="object-cover"
+        loading="lazy"
+        decoding="async"
+      />
     </div>
   );
 };

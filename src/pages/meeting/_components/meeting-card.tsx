@@ -207,6 +207,8 @@ const MeetingCard = (props: {
                       src={locationOption.logo as string}
                       alt={locationOption.label}
                       className="h-6 w-6"
+                      loading="lazy"
+                      decoding="async"
                     />
                     <span className="font-medium text-[var(--ink)]">{locationOption.label}</span>
                   </>

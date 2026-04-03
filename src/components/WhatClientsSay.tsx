@@ -103,6 +103,8 @@ export const WhatClientsSay = ({
                 src={current?.avatar}
                 alt=""
                 className="w-14 h-14 rounded-full object-cover border-2 border-white/20"
+                loading="lazy"
+                decoding="async"
               />
               <div className="min-w-0 text-left">
                 <p className="font-semibold text-white break-words">{current?.name}</p>

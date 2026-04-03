@@ -331,6 +331,9 @@ const B2BLeadGenerationPage = () => {
                       src={leadGenHeroImage}
                       alt="Qualified B2B leads and pipeline growth"
                       className="h-full w-full object-cover object-center"
+                      loading="eager"
+                      decoding="async"
+                      fetchPriority="high"
                     />
                   </div>
                 </div>
@@ -413,6 +416,8 @@ const B2BLeadGenerationPage = () => {
                       src={globalLeadGenImage}
                       alt="Global B2B pipeline and qualified lead programs"
                       className="h-full w-full object-cover object-center"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
                 </div>
@@ -512,7 +517,13 @@ const B2BLeadGenerationPage = () => {
                     </div>
                     <div className={`min-w-0 ${index % 2 === 1 ? "lg:order-1" : ""}`}>
                       <div className="aspect-[16/10] sm:aspect-[4/2] min-h-0 w-full overflow-hidden rounded-[var(--r-xl)] border border-[var(--line)] shadow-[var(--sh-sm)]">
-                        <img src={image} alt={title} className="h-full w-full object-cover" />
+                        <img
+                          src={image}
+                          alt={title}
+                          className="h-full w-full object-cover"
+                          loading="lazy"
+                          decoding="async"
+                        />
                       </div>
                     </div>
                   </div>

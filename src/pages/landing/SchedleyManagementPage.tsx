@@ -250,6 +250,9 @@ const SchedleyManagementPage = () => {
                       src={leadGenHeroImage}
                       alt="Calendar Intelligence — filter bookings by domain and lead quality"
                       className="h-full w-full object-cover object-center"
+                      loading="eager"
+                      decoding="async"
+                      fetchPriority="high"
                     />
                   </div>
                 </div>

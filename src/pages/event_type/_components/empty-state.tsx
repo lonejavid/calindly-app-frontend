@@ -34,6 +34,8 @@ const EmptyState = () => {
                   alt=""
                   className="w-12 h-12 object-contain"
                   aria-hidden
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
               <div

@@ -25,10 +25,10 @@ const legalLinks: { label: string; path: string }[] = [
 ];
 
 export function Footer(props: FooterProps) {
-  const { onBookDemo: propsOnBookDemo, logoSrc: propsLogoSrc, className = "" } = props;
+  const { onBookDemo: propsOnBookDemo, className = "" } = props;
   const { value: contextValue } = useFooter();
   const onBookDemo = propsOnBookDemo ?? contextValue.onBookDemo;
-  const logoSrc = propsLogoSrc ?? "../../mylogo-light.png";
+  const logoSrc = "../../mylogo-light.png";
   const navigate = useNavigate();
 
   const handleBookDemo = () => {
@@ -53,11 +53,23 @@ export function Footer(props: FooterProps) {
             <div className="flex items-center gap-3 mb-5">
               {logoSrc ? (
                 <div className="w-16 h-16 rounded-xl overflow-hidden flex items-center justify-center">
-                  <img src={logoSrc} alt="Schedley" className="w-full h-full object-contain" />
+                  <img
+                    src={logoSrc}
+                    alt="Schedley"
+                    className="w-full h-full object-contain"
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </div>
               ) : (
                 <div className="w-16 h-16 rounded-xl overflow-hidden flex items-center justify-center">
-                  <img src={logoSrc} alt="Schedley" className="w-full h-full object-contain" />
+                  <img
+                    src={logoSrc}
+                    alt="Schedley"
+                    className="w-full h-full object-contain"
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </div>
               )}
               <span className="text-xl sm:text-2xl font-bold text-white tracking-tight">Schedley</span>

@@ -213,6 +213,9 @@ const RecruitingTalentPage = () => {
                     src={leadGenHeroImage}
                     alt="Hiring infrastructure – find, screen, and hire the right candidates faster"
                     className="h-full w-full object-cover object-center"
+                    loading="eager"
+                    decoding="async"
+                    fetchPriority="high"
                   />
                 </div>
               </div>
