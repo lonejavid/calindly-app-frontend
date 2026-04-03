@@ -9,7 +9,8 @@ export interface TestimonialItem {
   rating?: number;
 }
 
-const CONTAINER_CLASS = "max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8";
+const CONTAINER_CLASS =
+  "max-w-[1200px] w-full min-w-0 mx-auto px-4 xs:px-5 sm:px-6 lg:px-8";
 
 export interface WhatClientsSayProps {
   testimonials: TestimonialItem[];
@@ -51,7 +52,7 @@ export const WhatClientsSay = ({
   const rating = current?.rating ?? 5;
 
   return (
-    <section className="py-16 sm:py-20 lg:py-24 bg-[var(--ink)] text-white">
+    <section className="py-12 sm:py-20 lg:py-24 bg-[var(--ink)] text-white overflow-x-hidden">
       <div className={CONTAINER_CLASS}>
         <div className="text-center mb-6">
           {eyebrow && (
@@ -72,20 +73,20 @@ export const WhatClientsSay = ({
           </p>
         )}
         {!subtitle && <div className="mb-6" />}
-        <div className="relative max-w-3xl mx-auto">
-          <div className="relative rounded-[var(--r-l)] bg-[var(--ink-mid)]/50 border border-white/10 p-8 sm:p-10 min-h-[260px] flex flex-col">
+        <div className="relative max-w-3xl w-full min-w-0 mx-auto">
+          <div className="relative rounded-[var(--r-l)] bg-[var(--ink-mid)]/50 border border-white/10 p-5 sm:p-8 md:p-10 min-h-[220px] sm:min-h-[260px] flex flex-col">
             <Quote
-              className="w-10 h-10 text-[var(--blue-mid)]/60 shrink-0 mb-4"
+              className="w-9 h-9 sm:w-10 sm:h-10 text-[var(--blue-mid)]/60 shrink-0 mb-3 sm:mb-4"
               aria-hidden
             />
             <div
-              className="absolute top-8 right-8 flex gap-0.5"
+              className="absolute top-5 right-5 sm:top-8 sm:right-8 flex gap-0.5"
               aria-label={`${rating} out of 5 stars`}
             >
               {[1, 2, 3, 4, 5].map((n) => (
                 <Star
                   key={n}
-                  className={`w-5 h-5 ${
+                  className={`w-4 h-4 sm:w-5 sm:h-5 ${
                     n <= Math.round(rating)
                       ? "text-amber-400 fill-amber-400"
                       : "text-white/20 fill-white/20"
@@ -94,18 +95,18 @@ export const WhatClientsSay = ({
                 />
               ))}
             </div>
-            <blockquote className="text-lg sm:text-xl leading-relaxed mb-6 flex-1 pr-16">
+            <blockquote className="text-base sm:text-lg md:text-xl leading-relaxed mb-5 sm:mb-6 flex-1 pr-12 sm:pr-16 min-w-0">
               {current?.quote}
             </blockquote>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col xs:flex-row items-start xs:items-center gap-3 xs:gap-4 min-w-0">
               <img
                 src={current?.avatar}
                 alt=""
                 className="w-14 h-14 rounded-full object-cover border-2 border-white/20"
               />
-              <div>
-                <p className="font-semibold text-white">{current?.name}</p>
-                <p className="text-sm text-white/70">{current?.role}</p>
+              <div className="min-w-0 text-left">
+                <p className="font-semibold text-white break-words">{current?.name}</p>
+                <p className="text-sm text-white/70 break-words">{current?.role}</p>
               </div>
             </div>
           </div>

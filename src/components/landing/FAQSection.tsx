@@ -19,7 +19,7 @@ type FAQSectionProps = {
   useScrollEffect?: boolean;
 };
 
-const defaultContainerClass = "max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8";
+const defaultContainerClass = "max-w-[1200px] w-full min-w-0 mx-auto px-4 sm:px-6 lg:px-8";
 
 export function FAQSection({
   eyebrow = "FAQ",
@@ -28,7 +28,7 @@ export function FAQSection({
   subtitle,
   items,
   containerClass = defaultContainerClass,
-  sectionClassName = "py-16 sm:py-20 lg:py-24 bg-[var(--surface)]",
+  sectionClassName = "py-12 sm:py-20 lg:py-24 bg-[var(--surface)] overflow-x-hidden",
   cardVariant = "white",
   scrollEffect = "fade-up",
   useScrollEffect = true,
@@ -58,7 +58,7 @@ export function FAQSection({
               <button
                 type="button"
                 onClick={() => setOpenIndex(isOpen ? null : index)}
-                className="w-full flex items-center justify-between gap-4 p-5 sm:p-6 text-left cursor-pointer hover:bg-[var(--blue-ghost)] transition-colors"
+                className="w-full flex items-center justify-between gap-3 sm:gap-4 p-4 sm:p-6 text-left cursor-pointer hover:bg-[var(--blue-ghost)] transition-colors"
               >
                 <span className="flex items-center gap-3 shrink-0">
                   <span className="flex h-9 w-9 rounded-[var(--r-s)] bg-[var(--blue)] text-white items-center justify-center">
@@ -66,14 +66,18 @@ export function FAQSection({
                   </span>
                   <span className="text-[var(--blue)] font-bold tabular-nums">{num}.</span>
                 </span>
-                <h3 className="font-semibold text-[var(--ink)] pr-4 flex-1 min-w-0">{q}</h3>
+                <h3 className="font-semibold text-[15px] sm:text-base text-[var(--ink)] pr-2 sm:pr-4 flex-1 min-w-0 leading-snug">
+                  {q}
+                </h3>
                 <span className="shrink-0 text-[var(--ink-muted)]">
                   {isOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                 </span>
               </button>
               {isOpen && (
-                <div className="px-5 sm:px-6 pb-5 sm:pb-6 pt-0">
-                  <p className="text-sm text-[var(--ink-muted)] leading-relaxed pl-14">{a}</p>
+                <div className="px-4 sm:px-6 pb-4 sm:pb-6 pt-0">
+                  <p className="text-sm text-[var(--ink-muted)] leading-relaxed pl-0 sm:pl-14 border-t border-[var(--line)]/60 sm:border-0 pt-4 sm:pt-0">
+                    {a}
+                  </p>
                 </div>
               )}
             </div>

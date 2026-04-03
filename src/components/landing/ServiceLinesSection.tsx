@@ -18,7 +18,7 @@ type ServiceLinesSectionProps = {
   useScrollEffect?: boolean;
 };
 
-const defaultContainerClass = "max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8";
+const defaultContainerClass = "max-w-[1200px] w-full min-w-0 mx-auto px-4 sm:px-6 lg:px-8";
 
 export function ServiceLinesSection({
   eyebrow,
@@ -28,7 +28,7 @@ export function ServiceLinesSection({
   lines,
   icon: Icon = Layers,
   containerClass = defaultContainerClass,
-  sectionClassName = "py-16 sm:py-20 lg:py-24 bg-[var(--surface)]",
+  sectionClassName = "py-12 sm:py-20 lg:py-24 bg-[var(--surface)] overflow-x-hidden",
   scrollEffect = "slide-right",
   useScrollEffect = true,
 }: ServiceLinesSectionProps) {
@@ -41,9 +41,9 @@ export function ServiceLinesSection({
         subtitle={subtitle}
         className="mb-12"
       />
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
         {lines.map(({ title, items }) => (
-          <div key={title} className="bg-[var(--white)] rounded-[var(--r-l)] p-6 border border-[var(--line)]">
+          <div key={title} className="bg-[var(--white)] rounded-[var(--r-l)] p-5 sm:p-6 border border-[var(--line)] min-w-0">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--blue-lite)] flex items-center justify-center text-[var(--blue)]">
                 <Icon className="w-5 h-5" />

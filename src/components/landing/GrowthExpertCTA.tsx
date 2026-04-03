@@ -25,7 +25,7 @@ type GrowthExpertCTAProps = {
   useScrollEffect?: boolean;
 };
 
-const defaultContainerClass = "max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8";
+const defaultContainerClass = "max-w-[1200px] w-full min-w-0 mx-auto px-4 sm:px-6 lg:px-8";
 
 const defaultPrivacySlot = (
   <p className="text-sm text-white/70 text-center">
@@ -79,13 +79,15 @@ export function GrowthExpertCTA({
   middleSlot,
   topIcons = defaultTopIcons,
   containerClass = defaultContainerClass,
-  sectionClassName = "py-16 sm:py-20 lg:py-24 bg-[var(--blue)] text-white relative overflow-hidden",
+  sectionClassName = "py-12 sm:py-20 lg:py-24 bg-[var(--blue)] text-white relative overflow-x-hidden",
   scrollEffect = "zoom-in",
   useScrollEffect = true,
 }: GrowthExpertCTAProps) {
   const content = (
     <>
-      <div className="relative z-10 flex justify-center gap-6 sm:gap-8 mb-6 flex-wrap">{topIcons}</div>
+      <div className="relative z-10 flex justify-center gap-4 xs:gap-6 sm:gap-8 mb-6 flex-wrap px-1">
+        {topIcons}
+      </div>
       <SectionHeader
         variant="light"
         eyebrow={eyebrow}
@@ -95,11 +97,11 @@ export function GrowthExpertCTA({
         className="mb-8 relative z-10"
       />
       {middleSlot && <div className="mb-8 relative z-10">{middleSlot}</div>}
-      <div className="flex justify-center mb-8 relative z-10">
+      <div className="flex justify-center mb-8 relative z-10 px-2">
         <button
           type="button"
           onClick={onButtonClick}
-          className="inline-flex items-center gap-2 px-8 py-4 rounded-[var(--r-m)] font-semibold bg-[var(--white)] text-[var(--blue)] transition-all duration-200 cursor-pointer hover:scale-105 hover:shadow-xl hover:bg-[var(--white)] active:scale-[1.02]"
+          className="inline-flex w-full max-w-md sm:w-auto items-center justify-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 rounded-[var(--r-m)] text-sm sm:text-base font-semibold bg-[var(--white)] text-[var(--blue)] transition-all duration-200 cursor-pointer hover:scale-[1.02] sm:hover:scale-105 hover:shadow-xl hover:bg-[var(--white)] active:scale-[1.02] touch-manipulation"
           style={{ boxShadow: "var(--sh-lg)" }}
         >
           {buttonIcon}
@@ -112,7 +114,7 @@ export function GrowthExpertCTA({
 
   return (
     <section className={sectionClassName}>
-      <div className={`${containerClass} relative z-10`} style={{ maxWidth: "800px" }}>
+      <div className={`${containerClass} relative z-10 max-w-[min(100%,800px)]`}>
         {/* Decorative gradient orbs for depth */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
         </div>

@@ -41,10 +41,10 @@ export const SectionHeader = ({
     )}
     <h2
       id={headingId}
-      className={`font-urbanist font-bold tracking-tight leading-[1.12] ${
+      className={`font-urbanist font-bold tracking-tight leading-[1.12] px-1 sm:px-0 ${
         compact
-          ? "text-2xl sm:text-3xl lg:text-[2rem] mb-2 sm:mb-3"
-          : "text-3xl sm:text-4xl lg:text-5xl mb-5"
+          ? "text-[1.35rem] xs:text-2xl sm:text-3xl lg:text-[2rem] mb-2 sm:mb-3"
+          : "text-[1.65rem] xs:text-3xl sm:text-4xl lg:text-5xl mb-4 sm:mb-5"
       } ${variant === "light" ? "text-white" : "text-[var(--ink)]"}`}
     >
       {titleBefore}
@@ -55,7 +55,13 @@ export const SectionHeader = ({
       )}
     </h2>
     {subtitle && (
-      <p className={`font-urbanist ${variant === "light" ? "text-white/90 text-lg leading-relaxed" : "text-[var(--ink-muted)] text-lg leading-relaxed"}`}>
+      <p
+        className={`font-urbanist max-w-2xl mx-auto px-1 sm:px-0 ${
+          variant === "light"
+            ? "text-white/90 text-[15px] sm:text-base md:text-lg leading-relaxed"
+            : "text-[var(--ink-muted)] text-[15px] sm:text-base md:text-lg leading-relaxed"
+        }`}
+      >
         {subtitle}
       </p>
     )}

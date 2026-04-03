@@ -17,6 +17,7 @@ import {
   UserMeetingsResponseType,
 } from "@/types/api.type";
 import { API, PublicAPI } from "./axios-client";
+import { useStore } from "@/store/store";
 import { IntegrationAppType, VideoConferencingPlatform } from "./types";
 
 /** Check if the local backend is reachable (for connection verification). */
@@ -53,6 +54,66 @@ export const registerMutationFn = async (
   const response = await API.post("/auth/register", data);
   return response.data;
 };
+
+/** POST /auth/signup/send-otp — email verification before account creation */
+export async function signupSendOtp(
+  data: registerType
+): Promise<{ message: string }> {
+  const response = await API.post("/auth/signup/send-otp", data);
+  return response.data;
+}
+
+/** POST /auth/signup/verify — complete signup + returns JWT */
+export async function signupVerifyOtp(
+  email: string,
+  code: string
+): Promise<LoginResponseType> {
+  const response = await API.post("/auth/signup/verify", { email, code });
+  return response.data;
+}
+
+/** POST /auth/login/send-otp */
+export async function loginSendOtp(
+  email: string
+): Promise<{ message: string; codeSent: boolean }> {
+  const response = await API.post("/auth/login/send-otp", { email });
+  return response.data;
+}
+
+/** POST /auth/login/verify-otp */
+export async function loginVerifyOtp(
+  email: string,
+  code: string
+): Promise<LoginResponseType> {
+  const response = await API.post("/auth/login/verify-otp", { email, code });
+  return response.data;
+}
+
+/** POST /auth/password/forgot/send-otp */
+export async function forgotPasswordSendOtp(email: string): Promise<{
+  message: string;
+  codeSent: boolean;
+  flow?: "google_only";
+}> {
+  const response = await API.post("/auth/password/forgot/send-otp", {
+    email,
+  });
+  return response.data;
+}
+
+/** POST /auth/password/forgot/reset */
+export async function forgotPasswordReset(
+  email: string,
+  code: string,
+  newPassword: string
+): Promise<{ message: string }> {
+  const response = await API.post("/auth/password/forgot/reset", {
+    email,
+    code,
+    newPassword,
+  });
+  return response.data;
+}
 
 /** GET /auth/me – restore session (user) when we have a token (e.g. after refresh). */
 export type AuthMeResponseType = {
@@ -197,17 +258,28 @@ export const scheduleMeetingMutationFn = async (data: CreateMeetingType) => {
   return response.data;
 };
 
-/** Contact form submission – no auth required. Backend: POST /api/contact. */
+/** Backend: POST /api/contact — send Bearer token when signed in so name/email can be omitted. */
+export const CONTACT_INQUIRY_TYPES = [
+  "General Inquiry",
+  "Technical Support",
+  "Report a Bug",
+  "Feature Request",
+] as const;
+
+export type ContactInquiryType = (typeof CONTACT_INQUIRY_TYPES)[number];
+
 export type ContactFormPayload = {
-  name: string;
-  email: string;
-  subject: string;
+  inquiryType: ContactInquiryType;
   message: string;
+  name?: string;
+  email?: string;
 };
 
 export async function submitContactForm(
   data: ContactFormPayload
 ): Promise<{ message?: string }> {
-  const response = await PublicAPI.post("/contact", data);
+  const token = useStore.getState().accessToken;
+  const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
+  const response = await PublicAPI.post("/contact", data, { headers });
   return response.data;
 }

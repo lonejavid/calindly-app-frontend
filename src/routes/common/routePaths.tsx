@@ -1,11 +1,12 @@
 export const isAuthRoute = (pathname: string): boolean => {
-  return Object.values(AUTH_ROUTES).includes(pathname);
+  return (Object.values(AUTH_ROUTES) as string[]).includes(pathname);
 };
 
 export const AUTH_ROUTES = {
   LANDING: "/",
   SIGN_IN: "/login",
   SIGN_UP: "/sign-up",
+  FORGOT_PASSWORD: "/forgot-password",
   SETUPAI: "/setup",
   TALENT: "/talent",
   PROFILE: "/profile",

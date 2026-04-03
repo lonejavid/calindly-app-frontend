@@ -29,10 +29,9 @@ import { WhatClientsSay } from "@/components/WhatClientsSay";
 import { FAQSection } from "@/components/landing/FAQSection";
 import { GrowthExpertCTA } from "@/components/landing/GrowthExpertCTA";
 import { AUTH_ROUTES, PROTECTED_ROUTES } from "@/routes/common/routePaths";
+import { openBookMeeting } from "@/lib/book-meeting";
 import leadGenHeroImage from "@/assets/spam.png";
 
-const DEMO_URL =
-  "https://www.schedley.com/lonejavida829/schedley-demo-see-how-client-acquisition-works-9040";
 
 /**
  * Calendar Intelligence service page (route: /services/calendar-intelligence).
@@ -42,11 +41,12 @@ const DEMO_URL =
 const SchedleyManagementPage = () => {
   const navigate = useNavigate();
 
-  const handleBookDemo = () => window.open(DEMO_URL, "_blank");
+  const handleBookDemo = () => openBookMeeting();
   const handleGetStarted = () => navigate(AUTH_ROUTES.SIGN_UP);
   const handleGoToApp = () => navigate(PROTECTED_ROUTES.EVENT_TYPES);
 
-  const containerClass = "max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8";
+  const containerClass =
+    "max-w-[1200px] w-full min-w-0 mx-auto px-4 xs:px-5 sm:px-6 lg:px-8";
 
   const testimonials = [
     {
@@ -204,52 +204,52 @@ const SchedleyManagementPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--white)] b2b-page">
+    <div className="min-h-[100dvh] overflow-x-hidden bg-[var(--white)] b2b-page">
       <LandingHeader />
 
-      <main>
+      <main className="min-w-0">
         {/* Hero */}
-        <section className="relative bg-[var(--ink)] py-16 sm:py-20 lg:py-24 overflow-hidden">
+        <section className="relative overflow-x-hidden bg-[var(--ink)] py-12 sm:py-20 lg:py-24">
           <div className={containerClass}>
             <SectionReveal effect="fade-up">
-              <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-                <div className="relative z-10">
-                  <p className="inline-block text-xs font-bold uppercase tracking-widest text-[var(--blue)] mb-4 px-4 py-2 rounded-[var(--r-s)] border border-[var(--blue)] bg-[var(--ink)]/80">
+              <div className="grid items-center gap-8 sm:gap-10 lg:grid-cols-2 lg:gap-14">
+                <div className="relative z-10 min-w-0 text-center lg:text-left">
+                  <p className="mb-4 inline-block rounded-[var(--r-s)] border border-[var(--blue)] bg-[var(--ink)]/80 px-4 py-2 text-[10px] xs:text-xs font-bold uppercase tracking-widest text-[var(--blue)]">
                     Calendar Intelligence
                   </p>
-                  <h1 className="font-bold text-white text-3xl sm:text-4xl lg:text-5xl mb-4 leading-tight">
+                  <h1 className="mb-4 text-[1.5rem] xs:text-3xl font-bold leading-[1.15] text-white sm:text-4xl lg:text-5xl">
                     Stop Spam Calls on Your Calendar
                   </h1>
-                  <p className="text-base sm:text-lg text-white/90 leading-relaxed mb-4">
+                  <p className="mb-4 text-sm leading-relaxed text-white/90 sm:text-base lg:text-lg">
                     Your public booking link shouldn’t be a magnet for junk intros, vendors, and unqualified holds. Put domain policy and lead-quality gates in front of every slot—so only serious conversations reserve your time.
                   </p>
-                  <p className="text-white/75 text-sm mb-6">
+                  <p className="mb-6 text-xs sm:text-sm text-white/75">
                     Outcome: a calendar full of real pipeline and partners—not spam blocks and recovery sessions.
                   </p>
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center lg:justify-start">
                     <button
                       type="button"
                       onClick={handleGetStarted}
-                      className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-s)] text-base font-semibold bg-[var(--blue)] text-white border-2 border-[var(--blue)] cursor-pointer transition-all duration-200 hover:bg-[var(--blue-dark)] hover:border-[var(--blue-dark)]"
+                      className="inline-flex w-full sm:w-auto cursor-pointer items-center justify-center gap-2 rounded-[var(--r-s)] border-2 border-[var(--blue)] bg-[var(--blue)] px-5 sm:px-6 py-3.5 text-sm sm:text-base font-semibold text-white transition-all duration-200 hover:bg-[var(--blue-dark)] hover:border-[var(--blue-dark)] touch-manipulation"
                       style={{ boxShadow: "var(--sh-blue)" }}
                     >
-                      Get started free <ArrowRight className="w-5 h-5" />
+                      Get started free <ArrowRight className="h-5 w-5 shrink-0" />
                     </button>
                     <button
                       type="button"
                       onClick={handleBookDemo}
-                      className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-s)] text-base font-semibold text-white border-2 border-white/50 hover:bg-white/10 cursor-pointer transition-all duration-200"
+                      className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-[var(--r-s)] border-2 border-white/50 px-5 sm:px-6 py-3.5 text-sm sm:text-base font-semibold text-white transition-all duration-200 hover:bg-white/10"
                     >
                       Book a demo
                     </button>
                   </div>
                 </div>
-                <div className="relative z-10 flex justify-center lg:justify-end">
-                  <div className="relative rounded-[var(--r-2xl)] overflow-hidden shadow-[var(--sh-lg)] w-full max-w-lg aspect-[4/3] lg:aspect-[5/4]">
+                <div className="relative z-10 flex min-w-0 justify-center lg:justify-end">
+                  <div className="relative aspect-[4/3] w-full max-w-lg min-h-0 overflow-hidden rounded-[var(--r-2xl)] shadow-[var(--sh-lg)] lg:aspect-[5/4]">
                     <img
                       src={leadGenHeroImage}
                       alt="Calendar Intelligence — filter bookings by domain and lead quality"
-                      className="w-full h-full object-cover object-center"
+                      className="h-full w-full object-cover object-center"
                     />
                   </div>
                 </div>
@@ -260,10 +260,10 @@ const SchedleyManagementPage = () => {
         <SectionDivider />
 
         {/* Problem → Solution → Result */}
-        <section className="py-14 sm:py-16 lg:py-20 bg-[var(--surface)]">
+        <section className="overflow-x-hidden bg-[var(--surface)] py-12 sm:py-16 lg:py-20">
           <div className={containerClass}>
             <SectionReveal effect="fade-up">
-              <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3 lg:gap-8">
                 <div className="rounded-[var(--r-l)] border border-[var(--line)] bg-[var(--white)] p-6 sm:p-8 shadow-[var(--sh-sm)] hover:border-[var(--blue)]/20 transition-colors">
                   <span className="inline-flex h-12 w-12 rounded-xl bg-amber-500/15 text-amber-600 items-center justify-center mb-4">
                     <AlertTriangle className="w-6 h-6" strokeWidth={2} />
@@ -337,10 +337,10 @@ const SchedleyManagementPage = () => {
         <SectionDivider />
 
         {/* Stats */}
-        <section className="py-14 sm:py-16 bg-[var(--ink)]">
+        <section className="overflow-x-hidden bg-[var(--ink)] py-12 sm:py-16">
           <div className={containerClass}>
             <SectionReveal effect="fade-up">
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
+              <div className="grid grid-cols-1 gap-8 xs:grid-cols-2 sm:gap-10 lg:grid-cols-4">
                 {stats.map(({ value, label, detail, icon: Icon }) => (
                   <div key={label} className="text-center group">
                     <span className="inline-flex h-12 w-12 rounded-[var(--r-m)] bg-[var(--blue)]/20 text-[var(--blue-mid)] items-center justify-center mb-4 group-hover:bg-[var(--blue)]/30 transition-colors">
@@ -358,7 +358,7 @@ const SchedleyManagementPage = () => {
         <SectionDivider />
 
         {/* Features grid */}
-        <section className="py-16 sm:py-20 lg:py-24 bg-[var(--surface)]">
+        <section className="overflow-x-hidden bg-[var(--surface)] py-12 sm:py-20 lg:py-24">
           <div className={containerClass}>
             <SectionReveal effect="fade-up">
               <SectionHeader
@@ -368,7 +368,7 @@ const SchedleyManagementPage = () => {
                 subtitle="Layer policy, qualification, and sync on the same scheduling experience your guests already understand—so security and revenue teams both sleep better."
                 className="mb-12"
               />
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+              <div className="grid min-w-0 grid-cols-1 gap-6 xs:grid-cols-2 sm:gap-8 lg:grid-cols-4">
                 {features.map(({ icon: Icon, title, description, accent }) => (
                   <div
                     key={title}
@@ -391,7 +391,7 @@ const SchedleyManagementPage = () => {
         <SectionDivider />
 
         {/* How it works */}
-        <section className="py-16 sm:py-20 lg:py-24 bg-[var(--white)]">
+        <section className="overflow-x-hidden bg-[var(--white)] py-12 sm:py-20 lg:py-24">
           <div className={containerClass}>
             <SectionReveal effect="fade-up">
               <SectionHeader
@@ -401,7 +401,7 @@ const SchedleyManagementPage = () => {
                 subtitle="Connect once, configure intelligence, share links—your calendar fills with intent-matched conversations."
                 className="mb-12 lg:mb-16"
               />
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+              <div className="grid min-w-0 grid-cols-1 gap-6 xs:grid-cols-2 sm:gap-8 lg:grid-cols-4">
                 {howItWorks.map(({ step, title, desc, icon: Icon }) => (
                   <div
                     key={step}
@@ -422,7 +422,7 @@ const SchedleyManagementPage = () => {
         <SectionDivider />
 
         {/* Integrations */}
-        <section className="py-16 sm:py-20 lg:py-24 bg-[var(--surface)]">
+        <section className="overflow-x-hidden bg-[var(--surface)] py-12 sm:py-20 lg:py-24">
           <div className={containerClass}>
             <SectionReveal effect="fade-up">
               <SectionHeader
@@ -432,7 +432,7 @@ const SchedleyManagementPage = () => {
                 subtitle="Video and calendar sync only fire once a booking clears your rules—no stray invites from half-qualified attempts."
                 className="mb-10"
               />
-              <div className="flex flex-wrap justify-center gap-4 sm:gap-5 mb-14">
+              <div className="mb-14 flex min-w-0 flex-wrap justify-center gap-3 sm:gap-5">
                 {integrations.map(({ name, icon: Icon }) => (
                   <div
                     key={name}
@@ -445,7 +445,7 @@ const SchedleyManagementPage = () => {
                   </div>
                 ))}
               </div>
-              <div className="flex flex-wrap justify-center gap-6 sm:gap-10 max-w-3xl mx-auto">
+              <div className="mx-auto flex max-w-3xl min-w-0 flex-wrap justify-center gap-4 sm:gap-6 lg:gap-10">
                 {[
                   { icon: Shield, label: "Rules before calendar holds" },
                   { icon: CalendarCheck, label: "Two-way calendar sync" },

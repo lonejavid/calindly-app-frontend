@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { LandingHeader } from "@/components/LandingHeader";
+import { openBookMeeting } from "@/lib/book-meeting";
 import SectionDivider from "@/components/SectionDivider";
 import { SectionHeader } from "@/components/SectionHeader";
 import SectionReveal from "@/components/SectionReveal";
@@ -35,8 +36,6 @@ import { FAQSection } from "@/components/landing/FAQSection";
 import { GrowthExpertCTA } from "@/components/landing/GrowthExpertCTA";
 import leadGenHeroImage from "@/assets/talent.png";
 
-const DEMO_URL =
-  "https://www.schedley.com/lonejavida829/schedley-demo-see-how-client-acquisition-works-9040";
 
 /** Bullet points for the hiring infrastructure highlight card */
 const VETTED_BULLETS = [
@@ -55,7 +54,7 @@ const VETTED_BULLETS = [
  * Theme: src/theme/theme.css
  */
 const RecruitingTalentPage = () => {
-  const handleContact = () => window.open(DEMO_URL, "_blank");
+  const handleContact = () => openBookMeeting();
 
   const testimonials = [
     { quote: "Our hiring was stuck in endless back-and-forth. Schedley gave us real infrastructure—rubrics, coordinated screens, and a shortlist in two days. We filled a critical role and finally got velocity back.", name: "Head of Growth", role: "B2B SaaS Company", avatar: "https://i.pravatar.cc/80?img=5" },
@@ -64,7 +63,8 @@ const RecruitingTalentPage = () => {
     { quote: "We plug Schedley in for full-time and contract spikes. Same process, same quality bar—whether we’re hiring one PM or five. It’s become core hiring infrastructure for us.", name: "Director of Operations", role: "Tech consultancy", avatar: "https://i.pravatar.cc/80?img=20" },
   ];
 
-  const containerClass = "max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8";
+  const containerClass =
+    "max-w-[1200px] w-full min-w-0 mx-auto px-4 xs:px-5 sm:px-6 lg:px-8";
 
   const stats = [
     { value: "24–48h", label: "To first shortlist", detail: "Typical turnaround for active roles", icon: Clock },
@@ -168,51 +168,51 @@ const RecruitingTalentPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--white)] b2b-page">
+    <div className="min-h-[100dvh] overflow-x-hidden bg-[var(--white)] b2b-page">
       <LandingHeader />
 
-      <main>
+      <main className="min-w-0">
         {/* Hero – two-column like B2B Lead Gen / Appointment: text left, image right */}
-        <section className="relative bg-[var(--ink)] py-16 sm:py-20 lg:py-24 overflow-hidden">
+        <section className="relative overflow-x-hidden bg-[var(--ink)] py-12 sm:py-20 lg:py-24">
           <div className={containerClass}>
             <SectionReveal effect="fade-up">
-            <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-              <div className="relative z-10">
-                <p className="inline-block text-xs font-bold uppercase tracking-widest text-[var(--blue)] mb-4 px-4 py-2 rounded-[var(--r-s)] border border-[var(--blue)] bg-[var(--ink)]/80">
+            <div className="grid items-center gap-8 sm:gap-10 lg:grid-cols-2 lg:gap-14">
+              <div className="relative z-10 min-w-0 text-center lg:text-left">
+                <p className="mb-4 inline-block rounded-[var(--r-s)] border border-[var(--blue)] bg-[var(--ink)]/80 px-4 py-2 text-[10px] xs:text-xs font-bold uppercase tracking-widest text-[var(--blue)]">
                   Hiring Infrastructure
                 </p>
-                <h1 className="b2b-display text-white text-3xl sm:text-4xl lg:text-5xl mb-4 leading-tight">
+                <h1 className="b2b-display mb-4 text-[1.65rem] xs:text-3xl leading-[1.15] text-white sm:text-4xl lg:text-5xl">
                   Hire Faster and Better
                 </h1>
-                <p className="text-lg text-white/90 leading-relaxed mb-4">
+                <p className="mb-4 text-sm sm:text-base leading-relaxed text-white/90">
                   Build the operating system for hiring: structured sourcing and screening, coordinated interviews, and hiring-manager-ready shortlists—so you fill roles without burning out your team.
                 </p>
-                <p className="text-white/80 text-sm mb-6">
+                <p className="mb-6 text-xs sm:text-sm text-white/80">
                   Outcome: stronger teams, shorter cycles, and predictable growth—not another overflowing inbox of unvetted applicants.
                 </p>
-                <div className="flex flex-wrap gap-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center lg:justify-start">
                   <button
                     type="button"
                     onClick={handleContact}
-                    className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-s)] text-base font-semibold bg-[var(--blue)] text-white border-2 border-[var(--blue)] hover:bg-[var(--blue-dark)] hover:border-[var(--blue-dark)] transition-all cursor-pointer"
+                    className="inline-flex w-full sm:w-auto cursor-pointer items-center justify-center gap-2 rounded-[var(--r-s)] border-2 border-[var(--blue)] bg-[var(--blue)] px-5 sm:px-6 py-3.5 text-sm sm:text-base font-semibold text-white transition-all duration-200 hover:border-[var(--blue-dark)] hover:bg-[var(--blue-dark)] touch-manipulation"
                     style={{ boxShadow: "var(--sh-blue)" }}
                   >
-                    Get Started <ArrowRight className="w-5 h-5" />
+                    Get Started <ArrowRight className="h-5 w-5 shrink-0" />
                   </button>
                   <Link
                     to="/carrer"
-                    className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[var(--r-s)] text-base font-semibold bg-transparent text-white border-2 border-white/60 hover:bg-white/10 transition-all"
+                    className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-[var(--r-s)] border-2 border-white/60 bg-transparent px-5 sm:px-6 py-3.5 text-sm sm:text-base font-semibold text-white transition-all hover:bg-white/10"
                   >
                     View Open Roles
                   </Link>
                 </div>
               </div>
-              <div className="relative z-10 flex justify-center lg:justify-end">
-                <div className="relative rounded-[var(--r-2xl)] overflow-hidden shadow-[var(--sh-lg)] w-full max-w-lg aspect-[4/3] lg:aspect-[5/4]">
+              <div className="relative z-10 flex min-w-0 justify-center lg:justify-end">
+                <div className="relative aspect-[4/3] w-full max-w-lg min-h-0 overflow-hidden rounded-[var(--r-2xl)] shadow-[var(--sh-lg)] lg:aspect-[5/4]">
                   <img
                     src={leadGenHeroImage}
                     alt="Hiring infrastructure – find, screen, and hire the right candidates faster"
-                    className="w-full h-full object-cover object-center"
+                    className="h-full w-full object-cover object-center"
                   />
                 </div>
               </div>
@@ -223,10 +223,10 @@ const RecruitingTalentPage = () => {
         <SectionDivider />
 
         {/* Problem → Solution → Result */}
-        <section className="py-14 sm:py-16 lg:py-20 bg-[var(--surface)]">
+        <section className="overflow-x-hidden bg-[var(--surface)] py-12 sm:py-16 lg:py-20">
           <div className={containerClass}>
             <SectionReveal effect="fade-up">
-              <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3 lg:gap-8">
                 <div className="rounded-[var(--r-l)] border border-[var(--line)] bg-[var(--white)] p-6 sm:p-8 shadow-[var(--sh-sm)] hover:border-[var(--blue)]/20 transition-colors">
                   <span className="inline-flex h-12 w-12 rounded-xl bg-amber-500/15 text-amber-600 items-center justify-center mb-4">
                     <AlertTriangle className="w-6 h-6" strokeWidth={2} />
@@ -279,10 +279,10 @@ const RecruitingTalentPage = () => {
         <SectionDivider />
 
         {/* Stats strip – with icons and short detail line */}
-        <section className="py-14 sm:py-16 bg-[var(--ink)]">
+        <section className="overflow-x-hidden bg-[var(--ink)] py-12 sm:py-16">
           <div className={containerClass}>
             <SectionReveal effect="fade-up">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
+            <div className="grid grid-cols-1 gap-8 xs:grid-cols-2 sm:gap-10 lg:grid-cols-4">
               {stats.map(({ value, label, detail, icon: Icon }) => (
                 <div key={label} className="text-center group">
                   <span className="inline-flex h-12 w-12 rounded-[var(--r-m)] bg-[var(--blue)]/20 text-[var(--blue-mid)] items-center justify-center mb-4 group-hover:bg-[var(--blue)]/30 transition-colors">
@@ -300,7 +300,7 @@ const RecruitingTalentPage = () => {
         <SectionDivider />
 
         {/* Why hiring infrastructure – bento grid, outcome-led */}
-        <section className="py-16 sm:py-20 lg:py-24 bg-[var(--white)] relative overflow-hidden">
+        <section className="relative overflow-x-hidden bg-[var(--white)] py-12 sm:py-20 lg:py-24">
           {/* Subtle gradient orbs for depth */}
           <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full bg-[var(--blue-lite)]/50 blur-[120px] pointer-events-none -translate-y-1/2 translate-x-1/2" aria-hidden />
           <div className="absolute bottom-0 left-0 w-[300px] h-[300px] rounded-full bg-[var(--blue-ghost)] blur-[100px] pointer-events-none translate-y-1/2 -translate-x-1/2" aria-hidden />
@@ -313,7 +313,7 @@ const RecruitingTalentPage = () => {
               subtitle="Process, people, and tooling in one layer—so every req moves with clarity from sourcing to signed offer, without reinventing the wheel each time."
               className="mb-12 lg:mb-14"
             />
-            <div className="grid grid-cols-1 md:grid-cols-2 md:grid-rows-3 gap-4 lg:gap-5 auto-rows-fr md:auto-rows-fr">
+            <div className="grid min-w-0 auto-rows-fr grid-cols-1 gap-4 md:grid-cols-2 md:grid-rows-3 md:gap-5 md:auto-rows-fr">
               {bentoItems.map(({ title, desc, icon: Icon, highlight }) => (
                 <div
                   key={title}
@@ -383,7 +383,7 @@ const RecruitingTalentPage = () => {
         <SectionDivider />
 
         {/* How It Works – 3-step cards with icons */}
-        <section className="py-16 sm:py-20 lg:py-24 bg-[var(--surface)]">
+        <section className="overflow-x-hidden bg-[var(--surface)] py-12 sm:py-20 lg:py-24">
           <div className={containerClass}>
             <SectionReveal effect="slide-left">
             <SectionHeader
@@ -393,7 +393,7 @@ const RecruitingTalentPage = () => {
               subtitle="You set the bar; we run the machinery—find, screen, coordinate, and hand off so your team spends time on decisions, not logistics."
               className="mb-12"
             />
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3 lg:gap-10">
               {howItWorksSteps.map(({ title, desc, icon: Icon, variant, extras }) => (
                 <div
                   key={title}
@@ -447,7 +447,7 @@ const RecruitingTalentPage = () => {
         <SectionDivider />
 
         {/* Roles we fill – icons, richer content, card-style tags */}
-        <section className="py-16 sm:py-20 lg:py-24 bg-[var(--surface)]">
+        <section className="overflow-x-hidden bg-[var(--surface)] py-12 sm:py-20 lg:py-24">
           <div className={containerClass}>
             <SectionReveal effect="slide-right">
             <SectionHeader
@@ -457,7 +457,7 @@ const RecruitingTalentPage = () => {
               subtitle="IC to executive, technical and commercial—we map competencies to your scorecard, run consistent screens, and keep stakeholders aligned whether you’re backfilling or opening a new pod."
               className="mb-10"
             />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+            <div className="grid min-w-0 grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
               {roles.map(({ name, icon: Icon, desc, examples }) => (
                 <div
                   key={name}

@@ -16,7 +16,7 @@ const Availability = () => {
   const backendTimezone = availability?.timezone;
 
   return (
-    <div className="b2b-page flex flex-col gap-4">
+    <div className="b2b-page flex flex-col gap-4 p-4">
       <ErrorAlert isError={isError} error={error} />
 
       {isLoading || isError ? (

@@ -4,6 +4,10 @@ export default {
   content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
   theme: {
     extend: {
+      /** Matches marketing components that use `xs:` (e.g. LandingHeader, hero). */
+      screens: {
+        xs: "480px",
+      },
       fontFamily: {
         "serif-display": ["Lora", "Georgia", "serif"],
         urbanist: ["Urbanist", "sans-serif"],

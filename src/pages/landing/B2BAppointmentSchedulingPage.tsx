@@ -20,6 +20,7 @@ import { WhatClientsSay } from "@/components/WhatClientsSay";
 import { ServiceLinesSection } from "@/components/landing/ServiceLinesSection";
 import { FAQSection } from "@/components/landing/FAQSection";
 import { GrowthExpertCTA } from "@/components/landing/GrowthExpertCTA";
+import { openBookMeeting } from "@/lib/book-meeting";
 import leadGenHeroImage from "@/assets/Lead-Generation.webp";
 import emailImage from "@/assets/email.png";
 import approach01Image from "@/assets/ai1.png";
@@ -35,17 +36,15 @@ import howItWorksHeroImage from "@/assets/download.png";
 
 const B2BAppointmentSchedulingPage = () => {
   const handleBookDemo = () => {
-    window.open(
-      "https://www.schedley.com/lonejavida829/schedley-demo-see-how-client-acquisition-works-9040",
-      "_blank"
-    );
+    openBookMeeting();
   };
 
   const handleContactUs = () => {
     handleBookDemo();
   };
 
-  const containerClass = "max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8";
+  const containerClass =
+    "max-w-[1200px] w-full min-w-0 mx-auto px-4 xs:px-5 sm:px-6 lg:px-8";
 
   /** Pain → outcome (problem: manual outreach doesn’t scale) */
   const challenges = [
@@ -253,21 +252,21 @@ const B2BAppointmentSchedulingPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--white)] b2b-page">
+    <div className="min-h-[100dvh] overflow-x-hidden bg-[var(--white)] b2b-page">
       <LandingHeader />
 
-      <main>
-        <section className="relative overflow-hidden bg-[var(--ink)] py-16 sm:py-20 lg:py-24">
+      <main className="min-w-0">
+        <section className="relative overflow-x-hidden bg-[var(--ink)] py-12 sm:py-20 lg:py-24">
           <div className={containerClass}>
-            <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
-              <div className="relative z-10">
-                <p className="mb-4 inline-block rounded-[var(--r-s)] border border-[var(--blue)] bg-[var(--ink)]/80 px-4 py-2 text-xs font-bold uppercase tracking-widest text-[var(--blue)]">
+            <div className="grid items-center gap-8 sm:gap-10 lg:grid-cols-2 lg:gap-14">
+              <div className="relative z-10 min-w-0 text-center lg:text-left">
+                <p className="mb-4 inline-block rounded-[var(--r-s)] border border-[var(--blue)] bg-[var(--ink)]/80 px-4 py-2 text-[10px] xs:text-xs font-bold uppercase tracking-widest text-[var(--blue)]">
                   AI outreach
                 </p>
-                <h1 className="b2b-display mb-4 text-3xl leading-tight text-white sm:text-4xl lg:text-5xl">
+                <h1 className="b2b-display mb-4 text-[1.65rem] xs:text-3xl leading-[1.15] text-white sm:text-4xl lg:text-5xl">
                   Send Personalized Emails Automatically
                 </h1>
-                <p className="mb-6 text-base leading-relaxed text-white/90">
+                <p className="mb-6 text-sm sm:text-base leading-relaxed text-white/90">
                   <strong className="text-white">Problem:</strong> Manual outreach doesn&apos;t scale.{" "}
                   <strong className="text-white">Solution:</strong> An AI-powered system sends and follows up with
                   personalized emails. <strong className="text-white">Result:</strong> Higher replies and booked
@@ -276,14 +275,14 @@ const B2BAppointmentSchedulingPage = () => {
                 <button
                   type="button"
                   onClick={handleContactUs}
-                  className="inline-flex cursor-pointer items-center gap-2 rounded-[var(--r-s)] border-2 border-[var(--blue)] bg-[var(--blue)] px-6 py-3.5 text-base font-semibold text-white transition-all duration-200 hover:border-[var(--blue-dark)] hover:bg-[var(--blue-dark)]"
+                  className="inline-flex w-full sm:w-auto cursor-pointer items-center justify-center gap-2 rounded-[var(--r-s)] border-2 border-[var(--blue)] bg-[var(--blue)] px-6 py-3.5 text-sm sm:text-base font-semibold text-white transition-all duration-200 hover:border-[var(--blue-dark)] hover:bg-[var(--blue-dark)] touch-manipulation"
                   style={{ boxShadow: "var(--sh-blue)" }}
                 >
-                  Contact Us <ArrowRight className="h-5 w-5" />
+                  Contact Us <ArrowRight className="h-5 w-5 shrink-0" />
                 </button>
               </div>
-              <div className="relative z-10 flex justify-center lg:justify-end">
-                <div className="relative aspect-[4/3] w-full max-w-lg overflow-hidden rounded-[var(--r-2xl)] shadow-[var(--sh-lg)] lg:aspect-[5/4]">
+              <div className="relative z-10 flex min-w-0 justify-center lg:justify-end">
+                <div className="relative aspect-[4/3] w-full max-w-lg min-h-0 overflow-hidden rounded-[var(--r-2xl)] shadow-[var(--sh-lg)] lg:aspect-[5/4]">
                   <img
                     src={leadGenHeroImage}
                     alt="AI-powered personalized email outreach at scale"
@@ -296,7 +295,7 @@ const B2BAppointmentSchedulingPage = () => {
         </section>
         <SectionDivider />
 
-        <section className="bg-[var(--white)] py-16 sm:py-20 lg:py-24">
+        <section className="bg-[var(--white)] py-12 sm:py-20 lg:py-24 overflow-x-hidden">
           <div className={containerClass}>
             <SectionReveal effect="fade-up">
               <SectionHeader
@@ -304,13 +303,13 @@ const B2BAppointmentSchedulingPage = () => {
                 titleBefore="Manual outreach doesn’t scale—"
                 titleAccent="here’s what breaks first"
                 subtitle="When every touch is manual, pipeline becomes unpredictable. These are the gaps AI outreach is built to fix."
-                className="mb-10"
+                className="mb-8 sm:mb-10"
               />
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="grid gap-4 sm:gap-6 grid-cols-1 xs:grid-cols-2 lg:grid-cols-4">
                 {challenges.map(({ title, outcome, icon: Icon }) => (
                   <div
                     key={title}
-                    className="rounded-[var(--r-l)] border border-[var(--line)] bg-[var(--surface)] p-6 transition-all hover:border-[var(--line-strong)] hover:shadow-[var(--sh-sm)]"
+                    className="rounded-[var(--r-l)] border border-[var(--line)] bg-[var(--surface)] p-5 sm:p-6 min-w-0 transition-all hover:border-[var(--line-strong)] hover:shadow-[var(--sh-sm)]"
                   >
                     <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-[var(--r-m)] bg-[var(--blue-ghost)] text-[var(--blue)]">
                       <Icon className="h-6 w-6" />
@@ -332,11 +331,11 @@ const B2BAppointmentSchedulingPage = () => {
         </section>
         <SectionDivider />
 
-        <section className="bg-[var(--surface)] py-16 sm:py-20 lg:py-24">
+        <section className="bg-[var(--surface)] py-12 sm:py-20 lg:py-24 overflow-x-hidden">
           <div className={containerClass}>
             <SectionReveal effect="slide-left">
-              <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
-                <div>
+              <div className="grid items-center gap-8 sm:gap-10 lg:grid-cols-2 lg:gap-14">
+                <div className="min-w-0">
                   <SectionHeader
                     eyebrow="The solution"
                     titleBefore="AI-powered emails that "
@@ -362,8 +361,8 @@ const B2BAppointmentSchedulingPage = () => {
                     </p>
                   </div>
                 </div>
-                <div className="flex h-full w-full justify-end">
-                  <div className="relative aspect-[4/3] w-full max-w-lg overflow-hidden  lg:aspect-auto lg:min-h-[320px]">
+                <div className="flex h-full w-full min-w-0 justify-center lg:justify-end">
+                  <div className="relative aspect-[4/3] w-full max-w-lg min-h-0 overflow-hidden rounded-[var(--r-xl)] lg:rounded-none lg:aspect-auto lg:min-h-[320px]">
                     <img
                       src={emailImage}
                       alt="Pipeline growth from automated personalized outreach"
@@ -377,7 +376,7 @@ const B2BAppointmentSchedulingPage = () => {
         </section>
         <SectionDivider />
 
-        <section className="bg-[var(--white)] py-16 sm:py-20 lg:py-24">
+        <section className="bg-[var(--white)] py-12 sm:py-20 lg:py-24 overflow-x-hidden">
           <div className={containerClass}>
             <SectionReveal effect="fade-up">
               <SectionHeader
@@ -385,12 +384,12 @@ const B2BAppointmentSchedulingPage = () => {
                 titleBefore="How we deploy "
                 titleAccent="AI outreach for you"
                 subtitle="From playbook to production: strategy, personalization engine, and meeting-ready handoffs."
-                className="mb-12 lg:mb-16"
+                className="mb-10 sm:mb-12 lg:mb-16"
               />
-              <div className="space-y-14 lg:space-y-20">
+              <div className="space-y-10 sm:space-y-14 lg:space-y-20">
                 {approachSteps.map(({ step, title, points, image, imageAlt }, index) => (
-                  <div key={step} className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
-                    <div className="relative">
+                  <div key={step} className="grid items-center gap-6 sm:gap-8 lg:grid-cols-2 lg:gap-12">
+                    <div className="relative min-w-0">
                       {index < approachSteps.length - 1 && (
                         <div
                           className="absolute left-1/2 top-full mt-12 w-1 -translate-x-1/2 bg-[var(--blue)]"
@@ -398,9 +397,11 @@ const B2BAppointmentSchedulingPage = () => {
                           aria-hidden
                         />
                       )}
-                      <div className="mb-4 flex items-baseline gap-3">
-                        <span className="text-4xl font-bold leading-none text-[var(--blue)] sm:text-5xl">{step}</span>
-                        <h3 className="text-lg font-semibold text-[var(--ink)] sm:text-xl">{title}</h3>
+                      <div className="mb-4 flex flex-col gap-1 xs:flex-row xs:items-baseline xs:gap-3">
+                        <span className="text-3xl font-bold leading-none text-[var(--blue)] xs:text-4xl sm:text-5xl">
+                          {step}
+                        </span>
+                        <h3 className="text-base font-semibold text-[var(--ink)] sm:text-lg lg:text-xl">{title}</h3>
                       </div>
                       <ul className="space-y-3">
                         {points.map((point, i) => (
@@ -416,7 +417,7 @@ const B2BAppointmentSchedulingPage = () => {
                         ))}
                       </ul>
                     </div>
-                    <div className="aspect-[4/1.5] overflow-hidden rounded-[var(--r-xl)] border border-[var(--line)] shadow-[var(--sh-sm)] lg:aspect-[3/1.5]">
+                    <div className="aspect-[16/10] min-h-0 w-full overflow-hidden rounded-[var(--r-xl)] border border-[var(--line)] shadow-[var(--sh-sm)] sm:aspect-[4/1.5] lg:aspect-[3/1.5]">
                       <img src={image} alt={imageAlt} className="h-full w-full object-cover" />
                     </div>
                   </div>
@@ -438,7 +439,7 @@ const B2BAppointmentSchedulingPage = () => {
         />
         <SectionDivider />
 
-        <section className="bg-[var(--white)] py-16 sm:py-20 lg:py-24">
+        <section className="bg-[var(--white)] py-12 sm:py-20 lg:py-24 overflow-x-hidden">
           <div className={containerClass}>
             <SectionReveal effect="slide-left">
               <SectionHeader
@@ -446,17 +447,17 @@ const B2BAppointmentSchedulingPage = () => {
                 titleBefore="From first send to "
                 titleAccent="booked meeting"
                 subtitle="A clear operating rhythm: strategy, AI personalization, delivery, follow-up, and handoff—measured end to end."
-                className="mb-12 lg:mb-16"
+                className="mb-10 sm:mb-12 lg:mb-16"
               />
-              <div className="grid items-start gap-0 lg:grid-cols-[1fr_1fr] lg:gap-12">
-                <div className="relative order-2 flex h-full w-full justify-center lg:order-1 lg:justify-center">
-                  <div className="relative mx-auto aspect-[4/3] w-full max-w-md overflow-hidden rounded-[var(--r-2xl)] border border-[var(--line)] shadow-[var(--sh-md)]">
+              <div className="grid items-start gap-8 lg:gap-0 lg:grid-cols-[1fr_1fr] lg:gap-12">
+                <div className="relative order-2 flex h-full w-full min-w-0 justify-center lg:order-1 lg:justify-center">
+                  <div className="relative mx-auto aspect-[4/3] w-full max-w-md min-h-0 overflow-hidden rounded-[var(--r-2xl)] border border-[var(--line)] shadow-[var(--sh-md)]">
                     <img
                       src={howItWorksHeroImage}
                       alt="AI email outreach workflow"
                       className="h-full w-full object-cover object-top"
                     />
-                    <div className="absolute bottom-4 left-4 right-4 rounded-[var(--r-m)] border border-[var(--line)] bg-[var(--white)]/95 p-4 shadow-[var(--sh-sm)] backdrop-blur-sm">
+                    <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 rounded-[var(--r-m)] border border-[var(--line)] bg-[var(--white)]/95 p-3 sm:p-4 shadow-[var(--sh-sm)] backdrop-blur-sm">
                       <p className="mb-2 text-xs font-bold uppercase tracking-wider text-[var(--ink-muted)]">
                         Outreach health
                       </p>
@@ -468,7 +469,7 @@ const B2BAppointmentSchedulingPage = () => {
                     </div>
                   </div>
                 </div>
-                <div className="order-1 flex min-h-[320px] w-full gap-0 lg:order-3">
+                <div className="order-1 flex min-h-0 w-full min-w-0 gap-0 lg:order-3 lg:min-h-[320px]">
                   <div className="hidden w-px shrink-0 self-stretch bg-[var(--blue)] lg:block lg:min-h-[340px]" aria-hidden />
                   <div className="hidden min-w-0 flex-1 flex-col gap-8 pr-6 lg:flex">
                     {howItWorks.map(({ title, desc, icon: Icon }) => (

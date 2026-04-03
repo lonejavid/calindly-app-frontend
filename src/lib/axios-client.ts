@@ -28,9 +28,12 @@ API.interceptors.response.use(
     const status = error.response?.status;
     const data = error.response?.data;
     const requestUrl = error.config?.url ?? "";
-    const isLoginOrRegister =
-      requestUrl.includes("/auth/login") || requestUrl.includes("/auth/register");
-    if (status === 401 && !isLoginOrRegister) {
+    const isUnauthenticatedAuthCall =
+      requestUrl.includes("/auth/login") ||
+      requestUrl.includes("/auth/register") ||
+      requestUrl.includes("/auth/signup/") ||
+      requestUrl.includes("/auth/password/forgot/");
+    if (status === 401 && !isUnauthenticatedAuthCall) {
       useStore.getState().clearAuth();
       window.location.href = "/login";
     }

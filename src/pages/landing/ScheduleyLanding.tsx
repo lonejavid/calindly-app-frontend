@@ -13,6 +13,7 @@ import { SectionHeader } from "@/components/SectionHeader";
 import SectionDivider from "@/components/SectionDivider";
 import SectionReveal, { sectionEffectForIndex } from "@/components/SectionReveal";
 import { useFooter } from "@/contexts/FooterContext";
+import { openBookMeeting } from "@/lib/book-meeting";
 import type { LucideIcon } from "lucide-react";
 
 function ProblemCard({
@@ -292,13 +293,13 @@ function WhatSchedleyDoesCard({
           <Icon className="h-8 w-8 sm:h-10 sm:w-10" strokeWidth={2} />
         </span>
       </div>
-      <h3 className="text-base font-bold leading-snug text-[var(--ink)] sm:text-lg">
-        {title}
-        <span className="font-semibold text-[var(--ink-muted)]"> — </span>
+      <h3 className="text-center text-base font-bold leading-snug text-[var(--ink)] sm:text-left sm:text-lg">
+        <span className="block sm:inline">{title}</span>
+        <span className="hidden sm:inline font-semibold text-[var(--ink-muted)]"> — </span>
         <span
-          className={
+          className={`mt-1 block text-[15px] sm:mt-0 sm:inline sm:text-lg ${
             accent === "amber" ? "font-semibold text-[var(--amber-deep)]" : "font-semibold text-[var(--blue)]"
-          }
+          }`}
         >
           {tagline}
         </span>
@@ -497,7 +498,7 @@ any question asked which is not in our context directely tell that i am not auth
 
   // Handle external demo booking (stable ref to avoid infinite loop in useEffect below)
   const handleBookDemo = useCallback(() => {
-    window.open('https://www.schedley.com/lonejavida829/schedley-demo-see-how-client-acquisition-works-9040', '_blank');
+    openBookMeeting();
   }, []);
 
   const scrollToHowItWorks = useCallback(() => {
@@ -678,7 +679,7 @@ any question asked which is not in our context directely tell that i am not auth
   ];
 
   return (
-    <div className="b2b-page min-h-screen overflow-hidden bg-[var(--white)] text-[var(--ink)] antialiased">
+    <div className="b2b-page min-h-[100dvh] overflow-x-hidden bg-[var(--white)] text-[var(--ink)] antialiased">
       <LandingHeader isVisible={isVisible} />
 
       {/*
@@ -687,7 +688,7 @@ any question asked which is not in our context directely tell that i am not auth
         → Use cases → Testimonials → Guarantee → Final CTA
       */}
       {/* Hero — dark theme, full viewport, floating chips on illustration */}
-      <section className="relative z-10 flex min-h-[calc(100vh-120px)] flex-col justify-center overflow-x-clip overflow-y-visible border-b border-white/[0.06] bg-[var(--ink)]">
+      <section className="relative z-10 flex min-h-[calc(100dvh-5.5rem)] sm:min-h-[calc(100vh-120px)] flex-col justify-center overflow-x-clip overflow-y-visible border-b border-white/[0.06] bg-[var(--ink)] py-6 sm:py-0">
         <div
           className="pointer-events-none absolute -top-32 left-1/2 h-[420px] w-[min(100%,720px)] -translate-x-1/2 rounded-full opacity-40 blur-[100px]"
           style={{ background: "radial-gradient(ellipse at center, var(--blue) 0%, transparent 70%)" }}
@@ -706,7 +707,7 @@ any question asked which is not in our context directely tell that i am not auth
           aria-hidden
         />
 
-        <div className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
+        <div className="relative mx-auto flex w-full min-w-0 max-w-7xl flex-1 flex-col justify-center px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
           <div
             className={`grid grid-cols-1 items-center gap-6 transition-all duration-700 ease-out delay-100 sm:gap-8 lg:grid-cols-2 lg:gap-10 xl:gap-12 ${
               isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
@@ -741,11 +742,11 @@ any question asked which is not in our context directely tell that i am not auth
                 system.
               </p>
 
-              <div className="mb-4 flex w-full flex-row flex-nowrap items-center justify-center gap-2 sm:mb-5 sm:gap-3 lg:justify-start">
+              <div className="mb-4 flex w-full max-w-xl mx-auto flex-col xs:flex-row flex-nowrap items-stretch xs:items-center justify-center gap-3 sm:mb-5 sm:gap-3 lg:mx-0 lg:max-w-none lg:justify-start">
                 <button
                   type="button"
                   onClick={handleBookDemo}
-                  className="group relative inline-flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-sm border border-[var(--blue)] bg-[var(--blue)] px-4 py-4 text-[11px] font-bold text-white transition-all duration-200 hover:border-[var(--blue-dark)] hover:bg-[var(--blue-dark)] active:scale-[0.98] sm:flex-none sm:px-5 sm:py-4 sm:text-xs md:py-[1.125rem]"
+                  className="group relative inline-flex min-w-0 w-full xs:w-auto xs:flex-1 sm:flex-none flex-1 items-center justify-center gap-1.5 rounded-sm border border-[var(--blue)] bg-[var(--blue)] px-4 py-3.5 text-[11px] font-bold text-white transition-all duration-200 hover:border-[var(--blue-dark)] hover:bg-[var(--blue-dark)] active:scale-[0.98] sm:px-5 sm:py-4 sm:text-xs md:py-[1.125rem]"
                   style={{ boxShadow: "var(--sh-blue)" }}
                 >
                   <span
@@ -761,7 +762,7 @@ any question asked which is not in our context directely tell that i am not auth
                 <button
                   type="button"
                   onClick={scrollToHowItWorks}
-                  className="inline-flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-sm border border-white/35 bg-white/[0.08] px-4 py-4 text-[11px] font-bold text-white backdrop-blur-sm transition-all duration-200 hover:border-white/45 hover:bg-white/14 active:scale-[0.98] sm:flex-none sm:px-5 sm:py-4 sm:text-xs md:py-[1.125rem]"
+                  className="inline-flex min-w-0 w-full xs:w-auto xs:flex-1 sm:flex-none flex-1 items-center justify-center gap-1.5 rounded-sm border border-white/35 bg-white/[0.08] px-4 py-3.5 text-[11px] font-bold text-white backdrop-blur-sm transition-all duration-200 hover:border-white/45 hover:bg-white/14 active:scale-[0.98] sm:px-5 sm:py-4 sm:text-xs md:py-[1.125rem]"
                 >
                   <Play className="h-3.5 w-3.5 shrink-0 fill-current sm:h-4 sm:w-4" />
                   <span className="whitespace-nowrap text-[15px] leading-tight sm:text-base">See How It Works</span>
@@ -782,7 +783,7 @@ any question asked which is not in our context directely tell that i am not auth
                 ].map(({ Icon, label, iconClass }) => (
                   <div
                     key={label}
-                    className="inline-flex items-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.05] px-3.5 py-2 text-[11px] text-white/85 shadow-sm backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.08] sm:px-4 sm:py-2.5 sm:text-xs"
+                    className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.05] px-3.5 py-2 text-[11px] text-white/85 shadow-sm backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.08] sm:px-4 sm:py-2.5 sm:text-xs break-words"
                   >
                     <Icon
                       className={`h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4 ${iconClass ?? "text-[var(--blue-mid)]"}`}
@@ -834,7 +835,7 @@ any question asked which is not in our context directely tell that i am not auth
         className="relative z-10 border-t border-[var(--line)] bg-[var(--surface)] py-8 sm:py-12 lg:py-14 px-4 sm:px-6"
         aria-labelledby="problem-section-title"
       >
-        <div className="relative max-w-6xl mx-auto">
+        <div className="relative max-w-7xl w-full min-w-0 mx-auto">
           <SectionReveal effect="fade-up">
             <SectionHeader
               eyebrow="The problem"
@@ -877,14 +878,14 @@ any question asked which is not in our context directely tell that i am not auth
       {/* What Schedley does — full-viewport four pillars */}
       <section
         id="what-schedley-does"
-        className="relative z-10 flex min-h-screen flex-col overflow-hidden border-t border-[var(--line)] bg-[var(--white)] px-4 py-10 sm:px-6 sm:py-12 lg:py-14"
+        className="relative z-10 flex min-h-0 lg:min-h-screen flex-col overflow-x-hidden overflow-y-visible border-t border-[var(--line)] bg-[var(--white)] px-4 py-10 sm:px-6 sm:py-12 lg:py-14"
         aria-labelledby="what-schedley-does-title"
       >
         <div
           className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,var(--blue-lite)_0%,transparent_38%,var(--amber-lite)_120%)] opacity-40"
           aria-hidden
         />
-        <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col min-h-0 py-4 sm:py-6 lg:py-8">
+        <div className="relative mx-auto flex w-full min-w-0 max-w-7xl flex-1 flex-col min-h-0 py-4 sm:py-6 lg:py-8">
           <SectionReveal effect="fade-up" className="flex min-h-0 flex-1 flex-col">
             <div className="flex min-h-0 flex-1 flex-col justify-between gap-10 sm:gap-12 lg:gap-14">
               <div>
@@ -930,7 +931,7 @@ any question asked which is not in our context directely tell that i am not auth
       {/* How it works — full-viewport journey pipeline */}
       <section
         id="how-it-works"
-        className="relative z-10 flex min-h-screen flex-col overflow-hidden border-t border-white/10 bg-[var(--ink)] px-4 py-10 sm:px-6 sm:py-12 lg:py-14"
+        className="relative z-10 flex min-h-0 lg:min-h-screen flex-col overflow-x-hidden border-t border-white/10 bg-[var(--ink)] px-4 py-10 sm:px-6 sm:py-12 lg:py-14"
         aria-labelledby="how-it-works-title"
       >
         <div
@@ -947,16 +948,16 @@ any question asked which is not in our context directely tell that i am not auth
           aria-hidden
         />
 
-        <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col min-h-0 py-4 sm:py-6 lg:py-8">
+        <div className="relative mx-auto flex w-full min-w-0 max-w-7xl flex-1 flex-col min-h-0 py-4 sm:py-6 lg:py-8">
           <SectionReveal effect="fade-up" className="flex min-h-0 flex-1 flex-col">
             <div className="flex min-h-0 flex-1 flex-col justify-between gap-10 sm:gap-12 lg:gap-14">
-            <div className="text-center">
+            <div className="text-center px-1">
               <span className="mb-4 inline-flex rounded-full border border-white/35 bg-white/[0.06] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.22em] text-white/90 sm:mb-5 sm:text-[11px]">
                 How it works
               </span>
               <h2
                 id="how-it-works-title"
-                className="font-urbanist text-3xl font-black leading-[1.1] tracking-tight text-white sm:text-4xl lg:text-5xl xl:text-[3.25rem]"
+                className="font-urbanist text-[1.65rem] xs:text-3xl font-black leading-[1.12] tracking-tight text-white sm:text-4xl lg:text-5xl xl:text-[3.25rem]"
               >
                 How It{" "}
                 <span className="bg-gradient-to-r from-[var(--blue-mid)] to-[var(--blue)] bg-clip-text text-transparent">
@@ -1031,23 +1032,23 @@ any question asked which is not in our context directely tell that i am not auth
       {/* Results — full-viewport outcome tiles */}
       <section
         id="results"
-        className="relative z-10 flex min-h-screen flex-col overflow-hidden border-t border-[var(--line)] bg-[var(--white)] px-4 py-10 sm:px-6 sm:py-12 lg:py-14"
+        className="relative z-10 flex min-h-0 lg:min-h-screen flex-col overflow-x-hidden border-t border-[var(--line)] bg-[var(--white)] px-4 py-10 sm:px-6 sm:py-12 lg:py-14"
         aria-labelledby="results-section-title"
       >
         <div
           className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,var(--blue-lite)_0%,transparent_42%,var(--amber-lite)_100%)] opacity-35"
           aria-hidden
         />
-        <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col min-h-0 py-4 sm:py-6 lg:py-8">
+        <div className="relative mx-auto flex w-full min-w-0 max-w-7xl flex-1 flex-col min-h-0 py-4 sm:py-6 lg:py-8">
           <SectionReveal effect="fade-up" className="flex min-h-0 flex-1 flex-col">
             <div className="flex min-h-0 flex-1 flex-col justify-between gap-10 sm:gap-12 lg:gap-14">
-            <div className="text-center">
+            <div className="text-center px-1">
               <span className="mb-4 inline-flex rounded-full border border-[var(--blue)]/30 bg-[var(--blue-lite)] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--blue)] sm:mb-5 sm:text-[11px]">
                 Results
               </span>
               <h2
                 id="results-section-title"
-                className="font-urbanist text-3xl font-black leading-[1.1] tracking-tight text-[var(--ink)] sm:text-4xl lg:text-5xl xl:text-[3.25rem]"
+                className="font-urbanist text-[1.65rem] xs:text-3xl font-black leading-[1.12] tracking-tight text-[var(--ink)] sm:text-4xl lg:text-5xl xl:text-[3.25rem]"
               >
                 Real{" "}
                 <span className="text-[var(--blue)]">Results</span>
@@ -1113,8 +1114,8 @@ any question asked which is not in our context directely tell that i am not auth
       <SectionDivider />
 
       {/* Live Platform Activity – SectionHeader + scroll reveal (not tied to hero isVisible) */}
-      <section className="relative z-10 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 bg-[var(--ink)]">
-        <div className="max-w-6xl mx-auto">
+      <section className="relative z-10 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 bg-[var(--ink)] overflow-x-hidden">
+        <div className="max-w-7xl w-full min-w-0 mx-auto">
           <SectionReveal effect="blur-in" className="will-change-auto">
             <SectionHeader
               eyebrow="Real-time pipeline"
@@ -1126,10 +1127,10 @@ any question asked which is not in our context directely tell that i am not auth
             />
 
             {/* Activity pipeline – cards with flow */}
-            <div className="relative rounded-[var(--r-xl)] border-2 border-white/20 bg-white/5 p-4 sm:p-6 lg:p-8 shadow-[var(--sh-md)]">
+            <div className="relative rounded-[var(--r-xl)] border-2 border-white/20 bg-white/5 p-3 xs:p-4 sm:p-6 lg:p-8 shadow-[var(--sh-md)]">
               {/* Connector line between cards on desktop */}
               <div className="hidden xl:block absolute top-1/2 left-[12.5%] right-[12.5%] h-0.5 bg-white/30 -translate-y-1/2 pointer-events-none" aria-hidden />
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
+              <div className="grid min-w-0 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-5 lg:gap-6">
                 {/* BLOCKED */}
                 <div className="relative z-10 group rounded-[var(--r-l)] p-4 sm:p-5 lg:p-6 border-2 border-red-200 bg-white hover:border-red-300 hover:shadow-[var(--sh-sm)] transition-all">
                   <div className="flex items-center justify-between mb-3">
@@ -1196,8 +1197,8 @@ any question asked which is not in our context directely tell that i am not auth
       </section>
 
       {/* Platform Performance – icons + improved card design */}
-      <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 relative z-10 bg-[var(--surface)]">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 relative z-10 bg-[var(--surface)] overflow-x-hidden">
+        <div className="max-w-7xl w-full min-w-0 mx-auto">
           <SectionReveal effect={sectionEffectForIndex(1)}>
           <SectionHeader
             eyebrow="This month"
@@ -1206,7 +1207,7 @@ any question asked which is not in our context directely tell that i am not auth
             className="mb-8 sm:mb-10"
           />
           <div className="rounded-[var(--r-xl)] p-5 sm:p-6 lg:p-8 border-2 border-[var(--line)] bg-[var(--white)] shadow-[var(--sh-md)]">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               <div className="group text-center p-5 sm:p-6 rounded-[var(--r-l)] border-2 border-red-100 bg-white hover:border-red-200 hover:shadow-[var(--sh-sm)] transition-all">
                 <span className="inline-flex h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-red-100 text-red-600 items-center justify-center mb-3 group-hover:scale-105 transition-transform">
                   <Shield className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={2} />
@@ -1255,8 +1256,8 @@ any question asked which is not in our context directely tell that i am not auth
       <SectionDivider />
 
       {/* Platform steps (detailed) — anchor: #how-schedley-platform */}
-      <section id="how-schedley-platform" className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 bg-[var(--white)]">
-        <div className="max-w-7xl mx-auto">
+      <section id="how-schedley-platform" className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 bg-[var(--white)] overflow-x-hidden">
+        <div className="max-w-7xl w-full min-w-0 mx-auto">
           <SectionReveal effect={sectionEffectForIndex(2)}>
           <SectionHeader
             eyebrow="Steps Process"
@@ -1304,8 +1305,8 @@ any question asked which is not in our context directely tell that i am not auth
       <SectionDivider />
 
       {/* Enhanced Features Section – improved cards + larger icons & text */}
-      <section id="features" className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 bg-[var(--surface)]">
-        <div className="max-w-7xl mx-auto">
+      <section id="features" className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 bg-[var(--surface)] overflow-x-hidden">
+        <div className="max-w-7xl w-full min-w-0 mx-auto">
           <SectionReveal effect={sectionEffectForIndex(3)}>
           <SectionHeader
             eyebrow="What Makes Us Different"
@@ -1324,19 +1325,19 @@ any question asked which is not in our context directely tell that i am not auth
                 onClick={() => setActiveFeature(index)}
               >
                 <div className="absolute top-0 left-0 right-0 h-1.5 rounded-t-[var(--r-xl)] bg-[var(--blue)]" />
-                <div className="absolute top-4 right-4 flex items-center gap-2">
-                  <span className="text-xs font-bold text-[var(--wa)] bg-[var(--wa-ghost)] px-2.5 py-1 rounded-full border border-[var(--wa)]/30">
+                <div className="relative z-20 mb-3 flex flex-wrap items-center justify-start gap-2 sm:absolute sm:top-4 sm:right-4 sm:mb-0 sm:justify-end">
+                  <span className="text-[10px] xs:text-xs font-bold text-[var(--wa)] bg-[var(--wa-ghost)] px-2 py-0.5 xs:px-2.5 xs:py-1 rounded-full border border-[var(--wa)]/30">
                     {feature.badge}
                   </span>
-                  <span className="text-xs font-bold text-[var(--blue)] bg-[var(--blue-ghost)] px-2.5 py-1 rounded-full">
-                      {feature.highlight}
+                  <span className="text-[10px] xs:text-xs font-bold text-[var(--blue)] bg-[var(--blue-ghost)] px-2 py-0.5 xs:px-2.5 xs:py-1 rounded-full">
+                    {feature.highlight}
                   </span>
-                    </div>
-                <div className="relative z-10 pt-2">
+                </div>
+                <div className="relative z-10 pt-2 sm:pt-2">
                   <span className="inline-flex h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center mb-4 sm:mb-5 group-hover:scale-105 transition-all">
                     {feature.icon}
                   </span>
-                  <h3 className="mb-3 pr-24 text-lg font-semibold text-[var(--ink)] transition-colors group-hover:text-[var(--blue)] sm:mb-4 sm:text-xl">
+                  <h3 className="mb-3 text-lg font-semibold text-[var(--ink)] transition-colors group-hover:text-[var(--blue)] sm:mb-4 sm:pr-24 sm:text-xl">
                     {feature.title}
                   </h3>
                   <p className="text-sm leading-relaxed text-[var(--ink-muted)] sm:text-base">
@@ -1355,8 +1356,8 @@ any question asked which is not in our context directely tell that i am not auth
       </section>
 
       {/* Benefits + Client Success Dashboard – light theme, improved visuals */}
-      <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 bg-[var(--white)]">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 bg-[var(--white)] overflow-x-hidden">
+        <div className="max-w-7xl w-full min-w-0 mx-auto">
           <SectionReveal effect="slide-right">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
             <div>
@@ -1385,38 +1386,38 @@ any question asked which is not in our context directely tell that i am not auth
               <div className="rounded-[var(--r-xl)] p-5 sm:p-6 lg:p-8 border-2 border-[var(--line)] bg-[var(--surface)] shadow-[var(--sh-md)]">
                 <h3 className="text-lg sm:text-xl font-bold text-[var(--ink)] mb-6 text-center">Client Success Dashboard</h3>
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 rounded-[var(--r-m)] border-2 border-[var(--blue)]/20 bg-white">
-                    <div className="flex items-center gap-3">
-                      <span className="flex h-11 w-11 rounded-xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center">
+                  <div className="flex flex-col gap-3 p-4 rounded-[var(--r-m)] border-2 border-[var(--blue)]/20 bg-white xs:flex-row xs:items-center xs:justify-between">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span className="flex h-11 w-11 shrink-0 rounded-xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center">
                         <Shield className="w-6 h-6" strokeWidth={2} />
                       </span>
                       <span className="font-bold text-[var(--ink)] text-sm sm:text-base">Spam Eliminated</span>
                     </div>
-                    <div className="text-right">
+                    <div className="text-left xs:text-right pl-14 xs:pl-0">
                       <span className="text-xl sm:text-2xl font-black text-[var(--blue)]">100%</span>
                       <div className="text-xs sm:text-sm text-[var(--ink-muted)]">Zero fake bookings</div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between p-4 rounded-[var(--r-m)] border-2 border-[var(--blue)]/20 bg-white">
-                    <div className="flex items-center gap-3">
-                      <span className="flex h-11 w-11 rounded-xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center">
+                  <div className="flex flex-col gap-3 p-4 rounded-[var(--r-m)] border-2 border-[var(--blue)]/20 bg-white xs:flex-row xs:items-center xs:justify-between">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span className="flex h-11 w-11 shrink-0 rounded-xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center">
                         <UserCheck className="w-6 h-6" strokeWidth={2} />
                       </span>
                       <span className="font-bold text-[var(--ink)] text-sm sm:text-base">Lead Quality</span>
                     </div>
-                    <div className="text-right">
+                    <div className="text-left xs:text-right pl-14 xs:pl-0">
                       <span className="text-xl sm:text-2xl font-black text-[var(--blue)]">98.5%</span>
                       <div className="text-xs sm:text-sm text-[var(--ink-muted)]">Verified prospects</div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between p-4 rounded-[var(--r-m)] border-2 border-[var(--blue)]/20 bg-white">
-                    <div className="flex items-center gap-3">
-                      <span className="flex h-11 w-11 rounded-xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center">
+                  <div className="flex flex-col gap-3 p-4 rounded-[var(--r-m)] border-2 border-[var(--blue)]/20 bg-white xs:flex-row xs:items-center xs:justify-between">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span className="flex h-11 w-11 shrink-0 rounded-xl bg-[var(--blue-lite)] text-[var(--blue)] items-center justify-center">
                         <DollarSign className="w-6 h-6" strokeWidth={2} />
                       </span>
                       <span className="font-bold text-[var(--ink)] text-sm sm:text-base">Success Rate</span>
                     </div>
-                    <div className="text-right">
+                    <div className="text-left xs:text-right pl-14 xs:pl-0">
                       <span className="text-xl sm:text-2xl font-black text-[var(--blue)]">94.2%</span>
                       <div className="text-xs sm:text-sm text-[var(--ink-muted)]">7-day guarantee met</div>
                     </div>
@@ -1454,8 +1455,8 @@ any question asked which is not in our context directely tell that i am not auth
       <SectionDivider />
 
       {/* Use Cases – light theme, larger icons & text */}
-      <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 bg-[var(--surface)]">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 bg-[var(--surface)] overflow-x-hidden">
+        <div className="max-w-7xl w-full min-w-0 mx-auto">
           <SectionReveal effect="slide-left">
           <SectionHeader
             eyebrow="Who it's for"
@@ -1485,10 +1486,10 @@ any question asked which is not in our context directely tell that i am not auth
 
       {/* Testimonials — 3×2 grid: blue border on hover only; gold star ratings */}
       <section
-        className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 bg-[var(--surface)]"
+        className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 bg-[var(--surface)] overflow-x-hidden"
         aria-labelledby="testimonials-section-title"
       >
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl w-full min-w-0 mx-auto">
           <SectionReveal effect="fade-up">
             <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10 lg:mb-12">
               <span className="inline-flex rounded-full border border-[var(--blue)]/25 bg-[var(--blue-lite)] px-4 py-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--blue)] mb-4 sm:mb-5">
@@ -1549,7 +1550,7 @@ any question asked which is not in our context directely tell that i am not auth
       {/* Guarantee — risk reversal immediately before primary CTA */}
       <section
         id="guarantee"
-        className="relative py-16 sm:py-20 lg:py-24 px-4 sm:px-6 bg-[var(--ink)] overflow-hidden"
+        className="relative py-14 sm:py-20 lg:py-24 px-4 sm:px-6 bg-[var(--ink)] overflow-x-hidden"
       >
         <div
           className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[min(90vw,720px)] h-[320px] rounded-full bg-[var(--blue)]/15 blur-3xl"
@@ -1560,8 +1561,8 @@ any question asked which is not in our context directely tell that i am not auth
           aria-hidden
         />
 
-        <div className="relative max-w-3xl mx-auto text-center">
-          <SectionReveal effect="zoom-in" className="px-6 py-10 sm:px-10 sm:py-12">
+        <div className="relative max-w-3xl w-full min-w-0 mx-auto text-center px-1 sm:px-0">
+          <SectionReveal effect="zoom-in" className="px-4 py-10 sm:px-10 sm:py-12">
             <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full mb-8 border border-[var(--blue)]/40 bg-[var(--blue)]/10 shadow-[0_0_20px_-5px_rgba(59,130,246,0.4)]">
               <Shield className="w-5 h-5 text-[var(--blue)] shrink-0" strokeWidth={2} />
               <span className="text-xs sm:text-sm font-bold text-white uppercase tracking-[0.2em]">
@@ -1621,16 +1622,16 @@ any question asked which is not in our context directely tell that i am not auth
       {/* Final CTA — white band + card (after proof & testimonials) */}
       <section
         id="final-cta"
-        className="relative z-10 overflow-hidden border-t border-[var(--line)] bg-[var(--white)] py-10 sm:py-14 lg:py-16 px-4 sm:px-6"
+        className="relative z-10 overflow-x-hidden border-t border-[var(--line)] bg-[var(--white)] py-10 sm:py-14 lg:py-16 px-4 sm:px-6"
         aria-labelledby="final-cta-title"
       >
         <div
           className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,var(--blue-lite)_0%,transparent_45%)] opacity-50"
           aria-hidden
         />
-        <div className="relative mx-auto max-w-3xl">
+        <div className="relative mx-auto w-full min-w-0 max-w-3xl">
           <SectionReveal effect="fade-up">
-            <div className="relative rounded-[var(--r-2xl)] border border-[var(--line)] bg-[var(--white)] p-8 text-center shadow-[var(--sh-md)] sm:p-10 lg:p-12 ring-1 ring-[var(--blue)]/10">
+            <div className="relative rounded-[var(--r-2xl)] border border-[var(--line)] bg-[var(--white)] p-6 text-center shadow-[var(--sh-md)] xs:p-8 sm:p-10 lg:p-12 ring-1 ring-[var(--blue)]/10">
               <div
                 className="pointer-events-none absolute inset-0 rounded-[var(--r-2xl)] bg-gradient-to-br from-[var(--blue-lite)]/40 via-transparent to-[var(--amber-lite)]/30 opacity-60"
                 aria-hidden

@@ -1,6 +1,7 @@
 import { AUTH_ROUTES, CONTACT_ROUTE, PROTECTED_ROUTES, PUBLIC_ROUTES } from "./routePaths";
 import SignIn from "@/pages/auth/signin";
 import SignUp from "@/pages/auth/signup";
+import ForgotPasswordPage from "@/pages/auth/forgot-password";
 import EventType from "@/pages/event_type";
 import Meetings from "@/pages/meeting";
 import Availability from "@/pages/availability";
@@ -54,6 +55,7 @@ export const authenticationRoutePaths = [
   { path: CONTACT_ROUTE, element: <ContactUsPage /> },
   { path: AUTH_ROUTES.SIGN_IN, element: <SignIn /> },
   { path: AUTH_ROUTES.SIGN_UP, element: <SignUp /> },
+  { path: AUTH_ROUTES.FORGOT_PASSWORD, element: <ForgotPasswordPage /> },
 ];
 
 export const protectedRoutePaths = [

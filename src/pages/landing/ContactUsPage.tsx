@@ -1,30 +1,64 @@
 import { useState } from "react";
-import { Mail, MessageSquare, Send, Linkedin, MapPin, CheckCircle2 } from "lucide-react";
+import {
+  Mail,
+  MessageSquare,
+  Send,
+  Linkedin,
+  MapPin,
+  CheckCircle2,
+  MessageCircle,
+  HelpCircle,
+  Bug,
+  Lightbulb,
+} from "lucide-react";
 import { LandingHeader } from "@/components/LandingHeader";
-import { submitContactForm, type ContactFormPayload } from "@/lib/api";
+import {
+  submitContactForm,
+  CONTACT_INQUIRY_TYPES,
+  type ContactFormPayload,
+  type ContactInquiryType,
+} from "@/lib/api";
+import { useStore } from "@/store/store";
 
 const containerClass = "max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8";
 
-const initialForm: ContactFormPayload = {
-  name: "",
-  email: "",
-  subject: "",
-  message: "",
+const INQUIRY_ICONS: Record<ContactInquiryType, typeof MessageCircle> = {
+  "General Inquiry": MessageCircle,
+  "Technical Support": HelpCircle,
+  "Report a Bug": Bug,
+  "Feature Request": Lightbulb,
 };
 
-const validate = (data: ContactFormPayload): Record<keyof ContactFormPayload, string> => {
-  const err: Record<string, string> = {};
-  if (!data.name.trim()) err.name = "Name is required";
-  if (!data.email.trim()) err.email = "Email is required";
-  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) err.email = "Please enter a valid email";
-  if (!data.subject.trim()) err.subject = "Subject is required";
+function buildInitialForm(isSignedIn: boolean): ContactFormPayload {
+  return {
+    inquiryType: "General Inquiry",
+    message: "",
+    ...(isSignedIn ? {} : { name: "", email: "" }),
+  };
+}
+
+type FieldKey = keyof ContactFormPayload | "inquiryType";
+
+function validate(data: ContactFormPayload, isSignedIn: boolean): Partial<Record<FieldKey, string>> {
+  const err: Partial<Record<FieldKey, string>> = {};
+  if (!CONTACT_INQUIRY_TYPES.includes(data.inquiryType)) {
+    err.inquiryType = "Please choose a topic";
+  }
   if (!data.message.trim()) err.message = "Message is required";
-  return err as Record<keyof ContactFormPayload, string>;
-};
+  if (!isSignedIn) {
+    if (!data.name?.trim()) err.name = "Name is required";
+    if (!data.email?.trim()) err.email = "Email is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) err.email = "Please enter a valid email";
+  }
+  return err;
+}
 
 const ContactUsPage = () => {
-  const [form, setForm] = useState<ContactFormPayload>(initialForm);
-  const [errors, setErrors] = useState<Partial<Record<keyof ContactFormPayload, string>>>({});
+  const user = useStore((s) => s.user);
+  const isSignedIn = Boolean(user?.email);
+
+  const [form, setForm] = useState<ContactFormPayload>(() => buildInitialForm(isSignedIn));
+  const [errors, setErrors] = useState<Partial<Record<FieldKey, string>>>({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -32,15 +66,21 @@ const ContactUsPage = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
-    if (errors[name as keyof ContactFormPayload]) {
+    if (errors[name as FieldKey]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
     setSubmitError(null);
   };
 
+  const setInquiryType = (inquiryType: ContactInquiryType) => {
+    setForm((prev) => ({ ...prev, inquiryType }));
+    if (errors.inquiryType) setErrors((prev) => ({ ...prev, inquiryType: undefined }));
+    setSubmitError(null);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const nextErrors = validate(form);
+    const nextErrors = validate(form, isSignedIn);
     const hasError = Object.values(nextErrors).some(Boolean);
     setErrors(nextErrors);
     if (hasError) return;
@@ -48,9 +88,16 @@ const ContactUsPage = () => {
     setLoading(true);
     setSubmitError(null);
     try {
-      await submitContactForm(form);
+      const payload: ContactFormPayload = {
+        inquiryType: form.inquiryType,
+        message: form.message.trim(),
+        ...(isSignedIn
+          ? {}
+          : { name: form.name?.trim(), email: form.email?.trim().toLowerCase() }),
+      };
+      await submitContactForm(payload);
       setSuccess(true);
-      setForm(initialForm);
+      setForm(buildInitialForm(isSignedIn));
       setErrors({});
     } catch (err: unknown) {
       const message =
@@ -155,12 +202,18 @@ const ContactUsPage = () => {
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-5">
-                    <div className="flex items-center gap-3 mb-6">
+                    <div className="flex items-center gap-3 mb-2">
                       <div className="w-10 h-10 rounded-lg bg-[var(--blue-lite)] flex items-center justify-center">
                         <MessageSquare className="w-5 h-5 text-[var(--blue)]" />
                       </div>
                       <h2 className="text-xl font-semibold text-[var(--ink)]">Send a message</h2>
                     </div>
+
+                    {isSignedIn && user && (
+                      <p className="text-sm text-[var(--ink-muted)]">
+                        Signed in as <span className="font-medium text-[var(--ink)]">{user.email}</span>
+                      </p>
+                    )}
 
                     {submitError && (
                       <div
@@ -171,60 +224,69 @@ const ContactUsPage = () => {
                       </div>
                     )}
 
-                    <div className="grid sm:grid-cols-2 gap-5">
-                      <div>
-                        <label htmlFor="contact-name" className="block text-sm font-medium text-[var(--ink)] mb-1.5">
-                          Name
-                        </label>
-                        <input
-                          id="contact-name"
-                          type="text"
-                          name="name"
-                          value={form.name}
-                          onChange={handleChange}
-                          placeholder="Your name"
-                          className="w-full rounded-lg border border-[var(--line)] bg-[var(--white)] px-4 py-2.5 text-[var(--ink)] placeholder:text-[var(--ink-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--blue)] focus:border-transparent"
-                          autoComplete="name"
-                        />
-                        {errors.name && (
-                          <p className="mt-1 text-sm text-red-600">{errors.name}</p>
-                        )}
+                    {!isSignedIn && (
+                      <div className="grid sm:grid-cols-2 gap-5">
+                        <div>
+                          <label htmlFor="contact-name" className="block text-sm font-medium text-[var(--ink)] mb-1.5">
+                            Name
+                          </label>
+                          <input
+                            id="contact-name"
+                            type="text"
+                            name="name"
+                            value={form.name ?? ""}
+                            onChange={handleChange}
+                            placeholder="Your name"
+                            className="w-full rounded-lg border border-[var(--line)] bg-[var(--white)] px-4 py-2.5 text-[var(--ink)] placeholder:text-[var(--ink-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--blue)] focus:border-transparent"
+                            autoComplete="name"
+                          />
+                          {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
+                        </div>
+                        <div>
+                          <label htmlFor="contact-email" className="block text-sm font-medium text-[var(--ink)] mb-1.5">
+                            Email
+                          </label>
+                          <input
+                            id="contact-email"
+                            type="email"
+                            name="email"
+                            value={form.email ?? ""}
+                            onChange={handleChange}
+                            placeholder="you@example.com"
+                            className="w-full rounded-lg border border-[var(--line)] bg-[var(--white)] px-4 py-2.5 text-[var(--ink)] placeholder:text-[var(--ink-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--blue)] focus:border-transparent"
+                            autoComplete="email"
+                          />
+                          {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+                        </div>
                       </div>
-                      <div>
-                        <label htmlFor="contact-email" className="block text-sm font-medium text-[var(--ink)] mb-1.5">
-                          Email
-                        </label>
-                        <input
-                          id="contact-email"
-                          type="email"
-                          name="email"
-                          value={form.email}
-                          onChange={handleChange}
-                          placeholder="you@example.com"
-                          className="w-full rounded-lg border border-[var(--line)] bg-[var(--white)] px-4 py-2.5 text-[var(--ink)] placeholder:text-[var(--ink-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--blue)] focus:border-transparent"
-                          autoComplete="email"
-                        />
-                        {errors.email && (
-                          <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-                        )}
-                      </div>
-                    </div>
+                    )}
 
                     <div>
-                      <label htmlFor="contact-subject" className="block text-sm font-medium text-[var(--ink)] mb-1.5">
-                        Subject
-                      </label>
-                      <input
-                        id="contact-subject"
-                        type="text"
-                        name="subject"
-                        value={form.subject}
-                        onChange={handleChange}
-                        placeholder="What is this about?"
-                        className="w-full rounded-lg border border-[var(--line)] bg-[var(--white)] px-4 py-2.5 text-[var(--ink)] placeholder:text-[var(--ink-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--blue)] focus:border-transparent"
-                      />
-                      {errors.subject && (
-                        <p className="mt-1 text-sm text-red-600">{errors.subject}</p>
+                      <p className="block text-sm font-medium text-[var(--ink)] mb-3">What&apos;s this about?</p>
+                      <div className="flex flex-wrap gap-3">
+                        {CONTACT_INQUIRY_TYPES.map((type) => {
+                          const Icon = INQUIRY_ICONS[type];
+                          const selected = form.inquiryType === type;
+                          return (
+                            <button
+                              key={type}
+                              type="button"
+                              onClick={() => setInquiryType(type)}
+                              className={[
+                                "flex flex-col items-center justify-center gap-2 rounded-xl border-2 px-3 py-4 min-w-[104px] max-w-[140px] flex-1 sm:flex-none transition-colors text-center",
+                                selected
+                                  ? "border-emerald-500 bg-emerald-500/5 text-emerald-700"
+                                  : "border-[var(--line)] bg-[var(--white)] text-[var(--ink-muted)] hover:border-[var(--ink-muted)]/40",
+                              ].join(" ")}
+                            >
+                              <Icon className={`w-6 h-6 shrink-0 ${selected ? "text-emerald-600" : ""}`} />
+                              <span className="text-xs font-medium leading-tight">{type}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                      {errors.inquiryType && (
+                        <p className="mt-2 text-sm text-red-600">{errors.inquiryType}</p>
                       )}
                     </div>
 

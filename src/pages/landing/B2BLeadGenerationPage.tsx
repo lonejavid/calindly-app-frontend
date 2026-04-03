@@ -32,12 +32,13 @@ import { WhatClientsSay } from "@/components/WhatClientsSay";
 import { ServiceLinesSection } from "@/components/landing/ServiceLinesSection";
 import { FAQSection } from "@/components/landing/FAQSection";
 import { GrowthExpertCTA } from "@/components/landing/GrowthExpertCTA";
+import { openBookMeeting } from "@/lib/book-meeting";
 import leadGenHeroImage from "@/assets/b2b.png";
 import globalLeadGenImage from "@/assets/Global-Lead-Generation-Services-1536x1118.webp";
 import researchImage from "@/assets/b2b1.png";
 import messageImage from "@/assets/b2b2.png";
-import meetingsImage from "@/assets/b2b3.png";
-import heroImage from "@/assets/b2b4.png";
+import meetingsImage from "@/assets/b2b4.png";
+import heroImage from "@/assets/b2b3.png";
 
 /**
  * Pipeline Generation — qualified B2B leads through a repeatable outreach system.
@@ -46,15 +47,13 @@ import heroImage from "@/assets/b2b4.png";
  */
 const B2BLeadGenerationPage = () => {
   const handleBookDemo = () => {
-    window.open(
-      "https://www.schedley.com/lonejavida829/schedley-demo-see-how-client-acquisition-works-9040",
-      "_blank"
-    );
+    openBookMeeting();
   };
 
   const handleContactUs = () => handleBookDemo();
 
-  const containerClass = "max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8";
+  const containerClass =
+    "max-w-[1200px] w-full min-w-0 mx-auto px-4 xs:px-5 sm:px-6 lg:px-8";
 
   const valueCards = [
     {
@@ -291,42 +290,43 @@ const B2BLeadGenerationPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--white)] b2b-page">
+    <div className="min-h-[100dvh] overflow-x-hidden bg-[var(--white)] b2b-page">
       <LandingHeader />
 
-      <main>
-        <section className="relative overflow-hidden bg-[var(--ink)] py-16 sm:py-20 lg:py-24">
+      <main className="min-w-0">
+        <section className="relative overflow-x-hidden bg-[var(--ink)] py-12 sm:py-20 lg:py-24">
           <div className={containerClass}>
             <SectionReveal effect="fade-up">
-              <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
-                <div className="relative z-10">
-                  <p className="mb-4 inline-block rounded-[var(--r-s)] border border-[var(--blue)] bg-[var(--ink)]/80 px-4 py-2 text-xs font-bold uppercase tracking-widest text-[var(--blue)]">
+              <div className="grid items-center gap-8 sm:gap-10 lg:grid-cols-2 lg:gap-14">
+                <div className="relative z-10 min-w-0 text-center lg:text-left">
+                  <p className="mb-4 inline-block rounded-[var(--r-s)] border border-[var(--blue)] bg-[var(--ink)]/80 px-4 py-2 text-[10px] xs:text-xs font-bold uppercase tracking-widest text-[var(--blue)]">
                     Pipeline generation
                   </p>
-                  <h1 className="b2b-display mb-4 text-3xl leading-tight text-white sm:text-4xl lg:text-5xl">
+                  <h1 className="b2b-display mb-4 text-[1.65rem] xs:text-3xl leading-[1.15] text-white sm:text-4xl lg:text-5xl">
                     Get More Qualified B2B Leads
                   </h1>
-                  <p className="mb-4 text-base leading-relaxed text-white/90">
+                  <p className="mb-4 text-sm sm:text-base leading-relaxed text-white/90">
                     <strong className="text-white">Problem:</strong> Leads are inconsistent and low quality.{" "}
                     <strong className="text-white">Solution:</strong> We build a system to bring consistent leads
                     through targeted outreach. <strong className="text-white">Result:</strong> More qualified meetings
                     and clients—without your team living in spreadsheets and cold lists.
                   </p>
-                  <p className="mb-6 text-sm text-white/75">
+                  <p className="mb-6 text-xs sm:text-sm text-white/75">
                     Schedley combines research, messaging, and disciplined follow-through so your pipeline reflects real
                     buyers—not vanity metrics.
                   </p>
                   <button
                     type="button"
                     onClick={handleContactUs}
-                    className="inline-flex cursor-pointer items-center gap-2 rounded-[var(--r-s)] border-2 border-[var(--blue)] bg-[var(--blue)] px-6 py-3.5 text-base font-semibold text-white transition-all duration-200 hover:border-[var(--blue-dark)] hover:bg-[var(--blue-dark)]"
+                    className="inline-flex w-full sm:w-auto cursor-pointer items-center justify-center gap-2 rounded-[var(--r-s)] border-2 border-[var(--blue)] bg-[var(--blue)] px-5 sm:px-6 py-3.5 text-sm sm:text-base font-semibold text-white transition-all duration-200 hover:border-[var(--blue-dark)] hover:bg-[var(--blue-dark)] touch-manipulation"
                     style={{ boxShadow: "var(--sh-blue)" }}
                   >
-                    Schedule a pipeline call <ArrowRight className="h-5 w-5" />
+                    <span className="text-center leading-snug">Schedule a pipeline call</span>
+                    <ArrowRight className="h-5 w-5 shrink-0" />
                   </button>
                 </div>
-                <div className="relative z-10 flex justify-center lg:justify-end">
-                  <div className="relative aspect-[4/3] w-full max-w-lg overflow-hidden rounded-[var(--r-2xl)] shadow-[var(--sh-lg)] lg:aspect-[5/4]">
+                <div className="relative z-10 flex min-w-0 justify-center lg:justify-end">
+                  <div className="relative aspect-[4/3] w-full max-w-lg min-h-0 overflow-hidden rounded-[var(--r-2xl)] shadow-[var(--sh-lg)] lg:aspect-[5/4]">
                     <img
                       src={leadGenHeroImage}
                       alt="Qualified B2B leads and pipeline growth"
@@ -340,35 +340,35 @@ const B2BLeadGenerationPage = () => {
         </section>
         <SectionDivider />
 
-        <section className="bg-[var(--surface)] py-16 sm:py-20 lg:py-24">
+        <section className="bg-[var(--surface)] py-12 sm:py-20 lg:py-24 overflow-x-hidden">
           <div className={containerClass}>
             <SectionReveal effect="fade-up">
-              <div className="mx-auto mb-12 max-w-3xl text-center">
-                <span className="mb-6 inline-flex rounded-full border border-[var(--blue)]/20 bg-[var(--blue-ghost)] px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-[var(--blue)]">
+              <div className="mx-auto mb-8 sm:mb-12 max-w-3xl text-center px-1">
+                <span className="mb-4 sm:mb-6 inline-flex rounded-full border border-[var(--blue)]/20 bg-[var(--blue-ghost)] px-3 py-1.5 text-[10px] xs:text-xs font-semibold uppercase tracking-wider text-[var(--blue)]">
                   Qualified B2B leads
                 </span>
                 <h2 className="b2b-display mb-4">
-                  <span className="block text-3xl font-semibold text-[var(--ink)] sm:text-4xl lg:text-5xl">
+                  <span className="block text-[1.35rem] xs:text-3xl font-semibold text-[var(--ink)] sm:text-4xl lg:text-5xl">
                     We build pipeline
                   </span>
                   <span
-                    className="mt-1 block text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl"
-                    style={{ WebkitTextStroke: "2px var(--blue)", color: "transparent" }}
+                    className="mt-1 block text-[clamp(1.75rem,8vw,3.75rem)] font-extrabold tracking-tight leading-tight sm:text-5xl lg:text-6xl break-words px-1"
+                    style={{ WebkitTextStroke: "1.5px var(--blue)", color: "transparent" }}
                   >
                     YOU CLOSE
                   </span>
                 </h2>
-                <p className="leading-relaxed text-[var(--ink-muted)]">
+                <p className="text-sm sm:text-base leading-relaxed text-[var(--ink-muted)]">
                   Your closers shouldn’t prospect full-time. We run the targeted outbound system—lists, sequences, and
                   qualification—so every week delivers qualified B2B leads and real conversations, not random inbound
                   noise.
                 </p>
               </div>
-              <div className="grid gap-6 sm:grid-cols-1 lg:grid-cols-3">
+              <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                 {valueCards.map(({ title, desc, icon: Icon }) => (
                   <div
                     key={title}
-                    className="rounded-[var(--r-l)] border border-[var(--line)] bg-[var(--white)] p-6 text-center shadow-[var(--sh-sm)] transition-all hover:border-[var(--line-strong)] hover:shadow-[var(--sh-md)] lg:text-left"
+                    className="rounded-[var(--r-l)] border border-[var(--line)] bg-[var(--white)] p-5 sm:p-6 min-w-0 text-center shadow-[var(--sh-sm)] transition-all hover:border-[var(--line-strong)] hover:shadow-[var(--sh-md)] lg:text-left"
                   >
                     <div className="flex justify-center lg:justify-start">
                       <span className="mb-4 flex h-14 w-14 items-center justify-center rounded-[var(--r-m)] border-2 border-[var(--blue)] bg-[var(--white)] text-[var(--blue)]">
@@ -385,11 +385,11 @@ const B2BLeadGenerationPage = () => {
         </section>
         <SectionDivider />
 
-        <section className="bg-[var(--ink)] py-16 text-white sm:py-20 lg:py-24">
+        <section className="bg-[var(--ink)] py-12 text-white sm:py-20 lg:py-24 overflow-x-hidden">
           <div className={containerClass}>
             <SectionReveal effect="slide-left">
-              <div className="mb-16 grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
-                <div>
+              <div className="mb-10 sm:mb-16 grid items-center gap-8 sm:gap-10 lg:grid-cols-2 lg:gap-14">
+                <div className="min-w-0 text-center lg:text-left">
                   <SectionHeader
                     variant="light"
                     eyebrow="Global B2B"
@@ -401,14 +401,14 @@ const B2BLeadGenerationPage = () => {
                   <button
                     type="button"
                     onClick={handleContactUs}
-                    className="inline-flex cursor-pointer items-center gap-2 rounded-[var(--r-s)] border-2 border-[var(--blue)] bg-[var(--blue)] px-6 py-3.5 font-semibold text-white transition-all hover:border-[var(--blue-dark)] hover:bg-[var(--blue-dark)]"
+                    className="inline-flex w-full sm:w-auto cursor-pointer items-center justify-center gap-2 rounded-[var(--r-s)] border-2 border-[var(--blue)] bg-[var(--blue)] px-6 py-3.5 text-sm sm:text-base font-semibold text-white transition-all hover:border-[var(--blue-dark)] hover:bg-[var(--blue-dark)] touch-manipulation"
                     style={{ boxShadow: "var(--sh-blue)" }}
                   >
-                    Contact us <ArrowRight className="h-5 w-5" />
+                    Contact us <ArrowRight className="h-5 w-5 shrink-0" />
                   </button>
                 </div>
-                <div className="flex justify-center lg:justify-end">
-                  <div className="relative aspect-[1536/1118] max-h-[340px] w-full max-w-lg overflow-hidden rounded-[var(--r-2xl)] shadow-[var(--sh-lg)] lg:max-h-[380px]">
+                <div className="flex min-w-0 justify-center lg:justify-end">
+                  <div className="relative aspect-[1536/1118] max-h-[260px] xs:max-h-[300px] w-full max-w-lg min-h-0 overflow-hidden rounded-[var(--r-2xl)] shadow-[var(--sh-lg)] sm:max-h-[340px] lg:max-h-[380px]">
                     <img
                       src={globalLeadGenImage}
                       alt="Global B2B pipeline and qualified lead programs"
@@ -417,7 +417,7 @@ const B2BLeadGenerationPage = () => {
                   </div>
                 </div>
               </div>
-              <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
+              <div className="grid gap-8 sm:gap-10 grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 lg:gap-12">
                 {regions.map(({ name, stat, detail, percent, ringColor }) => {
                   const circumference = 2 * Math.PI * 16;
                   const filled = (percent / 100) * circumference;
@@ -454,7 +454,7 @@ const B2BLeadGenerationPage = () => {
         </section>
         <SectionDivider />
 
-        <section className="bg-[var(--surface)] py-16 sm:py-20 lg:py-24">
+        <section className="bg-[var(--surface)] py-12 sm:py-20 lg:py-24 overflow-x-hidden">
           <div className={containerClass}>
             <SectionReveal effect="slide-right">
               <SectionHeader
@@ -462,15 +462,15 @@ const B2BLeadGenerationPage = () => {
                 titleBefore="Who needs "
                 titleAccent="consistent pipeline"
                 subtitle="If your revenue depends on qualified B2B conversations, we tailor outreach, qualification, and meeting-setting to how your buyers actually purchase."
-                className="mb-10"
+                className="mb-8 sm:mb-10"
               />
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="grid gap-4 sm:gap-6 grid-cols-1 xs:grid-cols-2 lg:grid-cols-4">
                 {whoWeServe.map(({ title, desc, icon: Icon, tag }) => (
                   <div
                     key={title}
                     role="button"
                     tabIndex={0}
-                    className="cursor-pointer rounded-[var(--r-l)] border border-[var(--line)] bg-[var(--white)] p-6 transition-all hover:border-[var(--line-strong)] hover:shadow-[var(--sh-sm)]"
+                    className="cursor-pointer rounded-[var(--r-l)] border border-[var(--line)] bg-[var(--white)] p-5 sm:p-6 min-w-0 transition-all hover:border-[var(--line-strong)] hover:shadow-[var(--sh-sm)]"
                     onClick={handleContactUs}
                     onKeyDown={(e) => e.key === "Enter" && handleContactUs()}
                   >
@@ -488,7 +488,7 @@ const B2BLeadGenerationPage = () => {
         </section>
         <SectionDivider />
 
-        <section className="bg-[var(--surface)] py-16 sm:py-20 lg:py-24">
+        <section className="bg-[var(--surface)] py-12 sm:py-20 lg:py-24 overflow-x-hidden">
           <div className={containerClass}>
             <SectionReveal effect="slide-left">
               <SectionHeader
@@ -496,20 +496,22 @@ const B2BLeadGenerationPage = () => {
                 titleBefore="Your pipeline "
                 titleAccent="system"
                 subtitle="Four connected layers—from ICP to qualified meetings—so B2B leads stay consistent and your team always knows what to do next."
-                className="mb-12"
+                className="mb-10 sm:mb-12"
               />
-              <div className="space-y-12 lg:space-y-16">
+              <div className="space-y-10 sm:space-y-12 lg:space-y-16">
                 {howWeDoSteps.map(({ step, title, desc, image }, index) => (
-                  <div key={step} className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
-                    <div className={index % 2 === 1 ? "lg:order-2" : ""}>
-                      <div className="mb-4 flex items-baseline gap-3">
-                        <span className="text-4xl font-bold leading-none text-[var(--blue)] sm:text-5xl">{step}</span>
-                        <h3 className="text-lg font-semibold text-[var(--ink)] sm:text-xl">{title}</h3>
+                  <div key={step} className="grid items-center gap-6 sm:gap-8 lg:grid-cols-2 lg:gap-12">
+                    <div className={`min-w-0 ${index % 2 === 1 ? "lg:order-2" : ""}`}>
+                      <div className="mb-4 flex flex-col gap-1 xs:flex-row xs:items-baseline xs:gap-3">
+                        <span className="text-3xl font-bold leading-none text-[var(--blue)] xs:text-4xl sm:text-5xl">
+                          {step}
+                        </span>
+                        <h3 className="text-base font-semibold text-[var(--ink)] sm:text-lg lg:text-xl">{title}</h3>
                       </div>
-                      <p className="leading-relaxed text-[var(--ink-muted)]">{desc}</p>
+                      <p className="text-sm sm:text-base leading-relaxed text-[var(--ink-muted)]">{desc}</p>
                     </div>
-                    <div className={index % 2 === 1 ? "lg:order-1" : ""}>
-                      <div className="aspect-[4/2] overflow-hidden rounded-[var(--r-xl)] border border-[var(--line)] shadow-[var(--sh-sm)]">
+                    <div className={`min-w-0 ${index % 2 === 1 ? "lg:order-1" : ""}`}>
+                      <div className="aspect-[16/10] sm:aspect-[4/2] min-h-0 w-full overflow-hidden rounded-[var(--r-xl)] border border-[var(--line)] shadow-[var(--sh-sm)]">
                         <img src={image} alt={title} className="h-full w-full object-cover" />
                       </div>
                     </div>
@@ -521,7 +523,7 @@ const B2BLeadGenerationPage = () => {
         </section>
         <SectionDivider />
 
-        <section className="bg-[var(--white)] py-16 sm:py-20 lg:py-24">
+        <section className="bg-[var(--white)] py-12 sm:py-20 lg:py-24 overflow-x-hidden">
           <div className={containerClass}>
             <SectionReveal effect="fade-up">
               <SectionHeader
@@ -529,21 +531,23 @@ const B2BLeadGenerationPage = () => {
                 titleBefore="Industries we run "
                 titleAccent="pipeline for"
                 subtitle="Deep experience across regulated and fast-moving sectors—always with messaging and qualification tuned to how those buyers buy."
-                className="mb-10"
+                className="mb-8 sm:mb-10"
               />
-              <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
+              <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
                 {industries.map(({ name, icon: Icon }) => (
                   <div
                     key={name}
-                    className="flex items-center gap-4 rounded-[var(--r-m)] border border-[var(--line)] bg-[var(--surface)] p-4 transition-all hover:border-[var(--blue)] hover:bg-[var(--blue-ghost)]"
+                    className="flex min-w-0 items-center gap-3 sm:gap-4 rounded-[var(--r-m)] border border-[var(--line)] bg-[var(--surface)] p-3 sm:p-4 transition-all hover:border-[var(--blue)] hover:bg-[var(--blue-ghost)]"
                   >
                     <span
-                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[var(--r-m)] bg-[var(--blue-lite)] text-[var(--blue)]"
+                      className="flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-[var(--r-m)] bg-[var(--blue-lite)] text-[var(--blue)]"
                       aria-hidden
                     >
-                      <Icon className="h-6 w-6" strokeWidth={2} />
+                      <Icon className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={2} />
                     </span>
-                    <span className="text-sm font-semibold text-[var(--ink)] sm:text-base">{name}</span>
+                    <span className="min-w-0 text-xs sm:text-sm lg:text-base font-semibold text-[var(--ink)] leading-snug break-words">
+                      {name}
+                    </span>
                   </div>
                 ))}
               </div>

@@ -10,6 +10,8 @@ export type LoginResponseType = {
     email: string;
     imageUrl?: string | null;
     isApproved?: boolean;
+    setupStep?: number;
+    passwordLoginEnabled?: boolean;
   };
   accessToken: string;
   expiresAt: number;

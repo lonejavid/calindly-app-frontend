@@ -18,6 +18,7 @@ import { AUTH_ROUTES, PROTECTED_ROUTES, SERVICE_ROUTES } from "@/routes/common/r
 
 import mylogo from "../../mylogo.png";
 import { LANDING_PAGE_CONTAINER_CLASS } from "@/lib/landingLayout";
+import { openBookMeeting } from "@/lib/book-meeting";
 
 const SERVICES_MENU = [
   {
@@ -54,9 +55,6 @@ const SERVICES_MENU = [
   },
 ];
 
-const DEMO_URL =
-  "https://www.schedley.com/lonejavida829/schedley-demo-see-how-client-acquisition-works-9040";
-
 type LandingHeaderProps = {
   /** When false, header uses transition (e.g. -translate-y-10 opacity-0). Default true. */
   isVisible?: boolean;
@@ -70,7 +68,7 @@ export function LandingHeader({ isVisible = true }: LandingHeaderProps) {
   const servicesTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleBookDemo = () => {
-    window.open(DEMO_URL, "_blank");
+    openBookMeeting();
   };
 
   return (
@@ -81,22 +79,22 @@ export function LandingHeader({ isVisible = true }: LandingHeaderProps) {
       style={{ fontFamily: "Inter, sans-serif" }}
     >
       <div
-        className={`${LANDING_PAGE_CONTAINER_CLASS} flex items-center justify-between py-3`}
+        className={`${LANDING_PAGE_CONTAINER_CLASS} flex min-w-0 items-center justify-between gap-2 py-2.5 sm:py-3`}
       >
         <button
           type="button"
           onClick={() => navigate("/")}
-          className="flex items-center space-x-2 xs:space-x-3 sm:space-x-4 cursor-pointer"
+          className="flex min-w-0 max-w-[min(100%,12rem)] items-center space-x-2 xs:space-x-3 sm:max-w-none sm:space-x-4 cursor-pointer"
         >
-          <div className="w-10 h-10 xs:w-11 xs:h-11 sm:w-12 sm:h-12 rounded-sm overflow-hidden flex items-center justify-center bg-[var(--surface)] border border-[var(--line)]">
+          <div className="w-10 h-10 xs:w-11 xs:h-11 sm:w-12 sm:h-12 shrink-0 rounded-sm overflow-hidden flex items-center justify-center bg-[var(--surface)] border border-[var(--line)]">
             <img src={mylogo} alt="Schedley" className="w-full h-full object-contain" />
           </div>
-          <span className="text-xl xs:text-2xl sm:text-3xl font-bold text-[var(--ink)]">
+          <span className="min-w-0 truncate text-lg xs:text-2xl sm:text-3xl font-bold text-[var(--ink)]">
             Schedley
           </span>
         </button>
 
-        <div className="hidden xl:flex items-center gap-2 lg:gap-3">
+        <div className="hidden lg:flex items-center gap-2 lg:gap-3">
           <div
             className="relative"
             onMouseEnter={() => {
@@ -118,7 +116,7 @@ export function LandingHeader({ isVisible = true }: LandingHeaderProps) {
             </button>
             {servicesOpen && (
               <div className="absolute left-0 top-full pt-2 z-[100]">
-                <div className="w-[650px] rounded-xl bg-white border border-[var(--line)] shadow-[var(--sh-lg)] p-5 grid grid-cols-2 gap-x-8 gap-y-4">
+                <div className="w-[min(650px,calc(100vw-2rem))] max-w-[calc(100vw-2rem)] rounded-xl bg-white border border-[var(--line)] shadow-[var(--sh-lg)] p-4 sm:p-5 grid grid-cols-1 min-[560px]:grid-cols-2 gap-x-6 sm:gap-x-8 gap-y-3 sm:gap-y-4">
                   {SERVICES_MENU.map(
                     ({ icon: Icon, title, description, iconBg, iconColor, path }) => {
                       const className =
@@ -218,7 +216,9 @@ export function LandingHeader({ isVisible = true }: LandingHeaderProps) {
 
         <button
           type="button"
-          className="xl:hidden p-2 text-[var(--ink)] hover:bg-[var(--surface)] rounded-md cursor-pointer"
+          className="lg:hidden p-2 -mr-1 text-[var(--ink)] hover:bg-[var(--surface)] rounded-md cursor-pointer touch-manipulation"
+          aria-expanded={mobileMenuOpen}
+          aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -226,7 +226,7 @@ export function LandingHeader({ isVisible = true }: LandingHeaderProps) {
       </div>
 
       {mobileMenuOpen && (
-        <div className="xl:hidden absolute top-full left-0 right-0 bg-white border-t border-[var(--line)] shadow-[var(--sh-md)] p-4 max-h-[80vh] overflow-y-auto">
+        <div className="lg:hidden absolute top-full left-0 right-0 bg-white border-t border-[var(--line)] shadow-[var(--sh-md)] p-4 pb-[max(1rem,env(safe-area-inset-bottom))] max-h-[min(85dvh,32rem)] overflow-y-auto overscroll-contain">
           <div className="flex flex-col gap-1">
             <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-[var(--ink-muted)]">
               Services
