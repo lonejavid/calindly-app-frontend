@@ -1,5 +1,3 @@
-
-
 import {
   CalendarRange,
   ClockIcon,
@@ -19,14 +17,16 @@ import {
 import mylogo from "../../mylogo-light.png";
 import { Link, useLocation } from "react-router-dom";
 import { PROTECTED_ROUTES } from "@/routes/common/routePaths";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { geteventListQueryFn, getUserMeetingsQueryFn } from "@/lib/api";
 
 type ItemType = {
   title: string;
   url: string;
   icon: LucideIcon;
   separator?: boolean;
-  badge?: string;
+  badge?: number;
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -36,35 +36,53 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const pathname = location.pathname;
 
+  const { data: eventListRes } = useQuery({
+    queryKey: ["event_list"],
+    queryFn: geteventListQueryFn,
+    staleTime: 30_000,
+  });
+
+  const { data: meetingsRes } = useQuery({
+    queryKey: ["userMeetings", "SIDEBAR_ALL"],
+    queryFn: () => getUserMeetingsQueryFn(),
+    staleTime: 30_000,
+  });
+
+  const eventCount = eventListRes?.data?.events?.length ?? 0;
+  const meetingCount = meetingsRes?.meetings?.length ?? 0;
+
+  const items: ItemType[] = useMemo(
+    () => [
+      {
+        title: "Event types",
+        url: PROTECTED_ROUTES.EVENT_TYPES,
+        icon: LinkIcon,
+        badge: eventCount > 0 ? eventCount : undefined,
+      },
+      {
+        title: "Meetings",
+        url: PROTECTED_ROUTES.MEETINGS,
+        icon: CalendarRange,
+        badge: meetingCount > 0 ? meetingCount : undefined,
+      },
+      {
+        title: "Integrations & apps",
+        url: PROTECTED_ROUTES.INTEGRATIONS,
+        icon: LayoutGrid,
+        separator: true,
+      },
+      {
+        title: "Availability",
+        url: PROTECTED_ROUTES.AVAILBILITIY,
+        icon: ClockIcon,
+      },
+    ],
+    [eventCount, meetingCount],
+  );
+
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  const items: ItemType[] = [
-    {
-      title: "Event types",
-      url: PROTECTED_ROUTES.EVENT_TYPES,
-      icon: LinkIcon,
-      badge: "3",
-    },
-    {
-      title: "Meetings",
-      url: PROTECTED_ROUTES.MEETINGS,
-      icon: CalendarRange,
-      badge: "12",
-    },
-    {
-      title: "Integrations & apps",
-      url: PROTECTED_ROUTES.INTEGRATIONS,
-      icon: LayoutGrid,
-      separator: true,
-    },
-    {
-      title: "Availability",
-      url: PROTECTED_ROUTES.AVAILBILITIY,
-      icon: ClockIcon,
-    },
-  ];
 
   return (
     <Sidebar
@@ -79,46 +97,38 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       `}
       {...props}
     >
-      {/* Animated Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-transparent to-purple-50/20 pointer-events-none" />
+      <div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[var(--blue-ghost)] via-transparent to-[var(--blue-lite)]/40"
+        aria-hidden
+      />
 
-      {/* Header with Logo */}
-      <SidebarHeader className="relative z-10 !px-4 !py-2 sm:!px-5 sm:!py-2.5">
-        <div className="flex min-h-0 items-center gap-2.5 justify-start sm:gap-3">
-          {/* Logo Container with Hover Effect */}
-          <div
-            className={`
-              relative flex items-center justify-center rounded-sm
-              w-16 h-16
-            `}
-          >
+      <SidebarHeader className="relative z-10 border-b border-slate-200/90 !px-4 !py-2 sm:!px-5 sm:!py-2.5">
+        <div className="flex min-h-0 items-center justify-start gap-2.5 sm:gap-3">
+          <div className="relative flex h-14.5 w-14.5 items-center justify-center rounded-sm">
             <img src={mylogo} alt="Schedley Logo" loading="eager" decoding="async" />
-
           </div>
 
-          {/* Brand Name */}
-          <div className="grid flex-1 min-w-0 text-left leading-tight overflow-hidden">
+          <div className="grid min-w-0 flex-1 overflow-hidden text-left leading-tight">
             <div className="flex items-center gap-2">
               <h2
-                className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 
-                           bg-clip-text text-transparent tracking-tight"
+                className="bg-gradient-to-r from-[color:var(--blue)] to-[color:var(--blue-dark)] bg-clip-text text-2xl font-bold tracking-tight text-transparent"
               >
                 Schedley
               </h2>
               <div
-                className="w-2 h-2 rounded-full bg-gradient-to-r from-green-400 to-green-500 
-                            animate-pulse shadow-sm shadow-green-400/50"
+                className="h-2 w-2 animate-pulse rounded-full shadow-sm"
+                style={{
+                  backgroundColor: "var(--wa)",
+                  boxShadow: "0 0 8px var(--wa-glow)",
+                }}
               />
             </div>
-            <p className="text-xs text-slate-500 font-medium">
-              Scheduling Made Simple
-            </p>
+            <p className="text-xs font-medium text-slate-500">Scheduling Made Simple</p>
           </div>
         </div>
       </SidebarHeader>
 
-      {/* Navigation Content */}
-      <SidebarContent className="!p-2 relative z-10">
+      <SidebarContent className="relative z-10 !p-2">
         <SidebarMenu className="space-y-1">
           {items.map((item, index) => {
             const isActive = item.url === pathname;
@@ -128,11 +138,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton
                   className={`
-                    relative group overflow-hidden rounded-xl
+                    group relative overflow-hidden rounded-sm
                     transition-all duration-300 ease-in-out
-                    hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100/50
-                    data-[active=true]:bg-gradient-to-r data-[active=true]:from-blue-500 data-[active=true]:to-blue-600
-                    data-[active=true]:text-white data-[active=true]:shadow-lg data-[active=true]:shadow-blue-500/25
+                    hover:bg-[var(--blue-lite)]
+                    data-[active=true]:shadow-[var(--sh-blue)]
+                    data-[active=true]:bg-[color:var(--blue)]
+                    data-[active=true]:text-white
                     ${mounted ? "animate-slideIn" : ""}
                   `}
                   style={{
@@ -147,13 +158,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <Link
                     to={item.url}
                     className={`
-                      !text-base !p-4 min-h-[56px] rounded-xl
-                      !font-semibold flex items-center gap-4
-                      transition-all duration-300 ease-in-out
-                      ${isActive ? "!text-white" : "!text-slate-700 hover:!text-blue-700"}
+                      !flex !min-h-[56px] !items-center !gap-4 !rounded-sm !p-4 !text-base
+                      !font-semibold transition-all duration-300 ease-in-out
+                      ${isActive ? "!text-white" : "!text-slate-700 hover:!text-[color:var(--blue)]"}
                     `}
                   >
-                    {/* Icon Container with Animation */}
                     <div
                       className={`
                       relative flex items-center justify-center
@@ -163,29 +172,31 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     >
                       <item.icon
                         className={`
-                          !w-5 !h-5 !stroke-2 z-10 relative
+                          !relative !z-10 !h-5 !w-5 !stroke-2
                           transition-all duration-300 ease-in-out
                           ${isActive ? "drop-shadow-sm" : ""}
                         `}
+                        style={
+                          !isActive
+                            ? { color: "var(--blue)" }
+                            : undefined
+                        }
                       />
 
-                      {/* Animated Background Circle */}
-                      {isHovered && !isActive && (
+                      {isHovered && !isActive ? (
                         <div
-                          className="absolute inset-0 w-8 h-8 -m-1.5 bg-blue-100 
-                                      rounded-lg animate-pulse opacity-50"
+                          className="absolute -m-1.5 h-8 w-8 animate-pulse rounded-sm opacity-50"
+                          style={{ backgroundColor: "var(--blue-ghost)" }}
                         />
-                      )}
+                      ) : null}
                     </div>
 
-                    {/* Label */}
                     <span className="min-w-0 flex-1 truncate text-left transition-all duration-300 ease-in-out">
                       {item.title}
                     </span>
 
-                    {/* Badge + hover chevron: fixed-width cluster so layout does not shift */}
                     <div className="flex shrink-0 items-center gap-2">
-                      {item.badge ? (
+                      {item.badge != null ? (
                         <span
                           className={`
                               inline-flex min-h-6 min-w-6 items-center justify-center rounded-full px-2 text-xs font-bold tabular-nums
@@ -193,7 +204,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                               ${
                                 isActive
                                   ? "bg-white/25 text-white"
-                                  : "bg-blue-100 text-blue-700 group-hover:bg-blue-200/90"
+                                  : "bg-[var(--blue-lite)] text-[color:var(--blue)] group-hover:bg-[var(--blue-ghost)]"
                               }
                             `}
                         >
@@ -205,36 +216,33 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         aria-hidden
                       >
                         {isHovered && !isActive ? (
-                          <ChevronRight className="h-4 w-4 text-blue-500 opacity-80" />
+                          <ChevronRight
+                            className="h-4 w-4 opacity-80"
+                            style={{ color: "var(--blue)" }}
+                          />
                         ) : null}
                       </span>
                     </div>
                   </Link>
                 </SidebarMenuButton>
 
-                {/* Separator with Animation */}
-                {item.separator && (
+                {item.separator ? (
                   <div
-                    className={`
-                    my-4 mx-4 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent
-                    transition-all duration-500 ease-in-out opacity-100
-                  `}
+                    className="my-4 h-px w-full bg-gradient-to-r from-transparent via-slate-200 to-transparent opacity-100 transition-all duration-500 ease-in-out"
+                    aria-hidden
                   />
-                )}
+                ) : null}
               </SidebarMenuItem>
             );
           })}
         </SidebarMenu>
 
-        {/* Bottom Gradient Fade */}
         <div
-          className="absolute bottom-0 left-0 right-0 h-8 
-                      bg-gradient-to-t from-white via-white/80 to-transparent 
-                      pointer-events-none"
+          className="pointer-events-none absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white via-white/80 to-transparent"
+          aria-hidden
         />
       </SidebarContent>
 
-      {/* Custom Styles */}
       <style>{`
         @keyframes slideIn {
           from {

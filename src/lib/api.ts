@@ -207,10 +207,10 @@ export const updateUserAvailabilityMutationFn = async (
 //*********** */ Meeting APIS
 
 export const getUserMeetingsQueryFn = async (
-  filter: PeriodType
+  filter?: PeriodType,
 ): Promise<UserMeetingsResponseType> => {
   const response = await API.get(
-    `/meeting/user/all${filter ? `?filter=${filter}` : ""}`
+    `/meeting/user/all${filter ? `?filter=${filter}` : ""}`,
   );
   return response.data;
 };

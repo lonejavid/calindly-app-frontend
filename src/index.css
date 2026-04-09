@@ -11,6 +11,15 @@ body {
   padding: 0;
 }
 
+/* Hide scrollbars but keep overflow scroll (e.g. horizontal tab strips) */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Auth pages: visible blue links on white, with hover */
 .auth-link {
   color: var(--blue);

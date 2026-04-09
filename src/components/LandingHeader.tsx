@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import {
   CalendarCheck,
@@ -65,7 +65,12 @@ export function LandingHeader({ isVisible = true }: LandingHeaderProps) {
   const { user, clearAuth } = useStore();
   const [servicesOpen, setServicesOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const servicesTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) setMobileServicesOpen(false);
+  }, [mobileMenuOpen]);
 
   const handleBookDemo = () => {
     openBookMeeting();
@@ -234,44 +239,57 @@ export function LandingHeader({ isVisible = true }: LandingHeaderProps) {
       {mobileMenuOpen && (
         <div className="lg:hidden absolute top-full left-0 right-0 bg-white border-t border-[var(--line)] shadow-[var(--sh-md)] p-4 pb-[max(1rem,env(safe-area-inset-bottom))] max-h-[min(85dvh,32rem)] overflow-y-auto overscroll-contain">
           <div className="flex flex-col gap-1">
-            <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-[var(--ink-muted)]">
+            <button
+              type="button"
+              className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left font-medium text-[var(--ink)] transition-colors hover:bg-[var(--surface)] cursor-pointer"
+              aria-expanded={mobileServicesOpen}
+              onClick={() => setMobileServicesOpen((o) => !o)}
+            >
               Services
-            </div>
-            {SERVICES_MENU.map(({ icon: Icon, title, description, iconBg, path }) => {
-              const content = (
-                <>
-                  <div
-                    className={`w-9 h-9 rounded-lg flex items-center justify-center ${iconBg} text-white`}
-                  >
-                    <Icon className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <div className="font-medium text-[var(--ink)]">{title}</div>
-                    <div className="text-xs text-[var(--ink-muted)]">{description}</div>
-                  </div>
-                </>
-              );
-              const onClick = () => setMobileMenuOpen(false);
-              return path ? (
-                <Link
-                  key={title}
-                  to={path}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-[var(--surface)] cursor-pointer"
-                  onClick={onClick}
-                >
-                  {content}
-                </Link>
-              ) : (
-                <a
-                  key={title}
-                  href="/#features"
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-[var(--surface)] cursor-pointer"
-                  onClick={onClick}
-                >
-                  {content}
-                </a>
-              );
-            })}
+              <ChevronDown
+                className={`h-4 w-4 shrink-0 text-[var(--ink)] opacity-60 transition-transform ${mobileServicesOpen ? "rotate-180" : ""}`}
+                aria-hidden
+              />
+            </button>
+            {mobileServicesOpen ? (
+              <div className="flex flex-col gap-0.5 border-l-2 border-[var(--line)] pl-2 ml-1">
+                {SERVICES_MENU.map(({ icon: Icon, title, description, iconBg, path }) => {
+                  const content = (
+                    <>
+                      <div
+                        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${iconBg} text-white`}
+                      >
+                        <Icon className="h-4 w-4" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="font-medium text-[var(--ink)]">{title}</div>
+                        <div className="text-xs text-[var(--ink-muted)]">{description}</div>
+                      </div>
+                    </>
+                  );
+                  const onClick = () => setMobileMenuOpen(false);
+                  return path ? (
+                    <Link
+                      key={title}
+                      to={path}
+                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 hover:bg-[var(--surface)] cursor-pointer"
+                      onClick={onClick}
+                    >
+                      {content}
+                    </Link>
+                  ) : (
+                    <a
+                      key={title}
+                      href="/#features"
+                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 hover:bg-[var(--surface)] cursor-pointer"
+                      onClick={onClick}
+                    >
+                      {content}
+                    </a>
+                  );
+                })}
+              </div>
+            ) : null}
             <div className="border-t border-[var(--line)] my-2" />
             <button
               type="button"

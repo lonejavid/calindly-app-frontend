@@ -1,4 +1,3 @@
-import UserSection from "./_components/user-section";
 import EventListSection from "./_components/event-list-section";
 import { geteventListQueryFn } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
@@ -16,7 +15,7 @@ const EventType = () => {
   const username = data?.data.username ?? "";
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 !gap-8">
+    <div className="flex min-h-0 flex-1 flex-col gap-6">
       {/* <PageTitle title="Event types" /> */}
 
       <ErrorAlert isError={isError} error={error} />
@@ -31,7 +30,6 @@ const EventType = () => {
         </div>
       ) : (
         <div className="w-full">
-          <UserSection username={username} />
           <EventListSection events={events} username={username} />
         </div>
       )}

@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useBookingState } from "@/hooks/use-booking-state";
-import { Fragment, useState, useMemo } from "react";
+import { Fragment, useState, useMemo, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
@@ -95,6 +95,42 @@ function parseEventQuestions(raw: unknown): EventQuestion[] {
   return [];
 }
 
+/** API may return JSON text: ["@gmail.com"] */
+function parseEventBlockedDomains(raw: unknown): string[] {
+  if (raw == null) return [];
+  if (Array.isArray(raw)) {
+    return raw.map((d) => String(d).toLowerCase()).filter(Boolean);
+  }
+  if (typeof raw === "string") {
+    const trimmed = raw.trim();
+    if (!trimmed) return [];
+    try {
+      const parsed = JSON.parse(trimmed) as unknown;
+      if (Array.isArray(parsed)) {
+        return parsed.map((x) => String(x).toLowerCase()).filter(Boolean);
+      }
+      if (typeof parsed === "string" && parsed.trim()) {
+        return [parsed.trim().toLowerCase()];
+      }
+    } catch {
+      return [trimmed.toLowerCase()];
+    }
+    return [trimmed.toLowerCase()];
+  }
+  return [];
+}
+
+function emailMatchesBlockedList(email: string, blockedLowercase: string[]): boolean {
+  if (!email) return false;
+  const at = email.indexOf("@");
+  if (at === -1) return false;
+  const emailDomain = email.slice(at).toLowerCase();
+  return blockedLowercase.some((d) => {
+    const norm = d.startsWith("@") ? d : `@${d}`;
+    return emailDomain === norm;
+  });
+}
+
 type FormData = {
   guestName: string;
   guestEmail: string;
@@ -139,6 +175,12 @@ const BookingForm = (props: { event: Event }) => {
   const { username } = useParams();
   const navigate = useNavigate();
   const questions = useMemo(() => parseEventQuestions(event.questions), [event.questions]);
+  const blockedDomainsList = useMemo(
+    () => parseEventBlockedDomains(event.blockedDomains),
+    [event.blockedDomains],
+  );
+  const enforceBlockedDomains =
+    event.accessSpecifier === "block_domains" && blockedDomainsList.length > 0;
 
   const [meetLink, setMeetLink] = useState("");
   const [bookingDetails, setBookingDetails] = useState<{
@@ -158,30 +200,13 @@ const BookingForm = (props: { event: Event }) => {
     mutationFn: scheduleMeetingMutationFn,
   });
 
-  // Helper function to extract domain from email
-  const extractDomain = (email: string): string => {
-    const atIndex = email.indexOf('@');
-    if (atIndex === -1) return '';
-    return email.substring(atIndex);
-  };
-
-  // Helper function to check if email domain is blocked
-  const isEmailDomainBlocked = (email: string): boolean => {
-    if (!event.blockedDomains || !email) return false;
-    
-    const blockedDomainsArray = Array.isArray(event.blockedDomains) 
-      ? event.blockedDomains 
-      : [event.blockedDomains];
-    
-    const emailDomain = extractDomain(email.toLowerCase());
-    
-    return blockedDomainsArray.some(domain => {
-      const normalizedDomain = domain.toLowerCase();
-      // Handle domains with or without @ prefix
-      const domainToCheck = normalizedDomain.startsWith('@') ? normalizedDomain : '@' + normalizedDomain;
-      return emailDomain === domainToCheck;
-    });
-  };
+  const isEmailDomainBlocked = useCallback(
+    (email: string): boolean => {
+      if (!enforceBlockedDomains || !email) return false;
+      return emailMatchesBlockedList(email.trim().toLowerCase(), blockedDomainsList);
+    },
+    [enforceBlockedDomains, blockedDomainsList],
+  );
 
   // Create dynamic Zod schema and form type
   const { schema } = useMemo(() => {
@@ -190,25 +215,18 @@ const BookingForm = (props: { event: Event }) => {
       additionalInfo: z.string().optional(),
     };
 
-    // Handle blocked domains - could be string or array
-    const blockedDomainsArray = Array.isArray(event.blockedDomains) 
-      ? event.blockedDomains 
-      : event.blockedDomains 
-        ? [event.blockedDomains] 
-        : [];
+    const list = parseEventBlockedDomains(event.blockedDomains);
+    const enforce =
+      event.accessSpecifier === "block_domains" && list.length > 0;
 
-    // Enhanced email validation with proper blocked domains checking
-    if (blockedDomainsArray.length > 0) {
-        schemaFields.guestEmail = z
+    if (enforce) {
+      schemaFields.guestEmail = z
         .string()
         .min(1, "Email is required")
         .email("Invalid email address")
-        .refine(
-          (email) => !isEmailDomainBlocked(email),
-          {
-            message: `This doesn't seem to be your work email.`,
-          }
-        );
+        .refine((email) => !emailMatchesBlockedList(email.trim().toLowerCase(), list), {
+          message: `This doesn't seem to be your work email.`,
+        });
     } else {
       schemaFields.guestEmail = z
         .string()
@@ -251,7 +269,7 @@ const BookingForm = (props: { event: Event }) => {
     return { 
       schema: dynamicSchema
     };
-  }, [event, questions]);
+  }, [event.accessSpecifier, event.blockedDomains, questions]);
 
   // Create default values
   const defaultValues = useMemo(() => {
@@ -308,15 +326,12 @@ const BookingForm = (props: { event: Event }) => {
 
     // Double-check email domain blocking before submission
     if (isEmailDomainBlocked(values.guestEmail)) {
-      const blockedDomainsArray = Array.isArray(event.blockedDomains)
-        ? event.blockedDomains
-        : event.blockedDomains
-          ? [event.blockedDomains]
-          : [];
-      const displayDomains = blockedDomainsArray.map(domain =>
-        domain.startsWith('@') ? domain.substring(1) : domain
+      const displayDomains = blockedDomainsList.map((domain) =>
+        domain.startsWith("@") ? domain.slice(1) : domain,
       );
-      toast.error(`Email domain is blocked. Domains ${displayDomains.join(", ")} are not allowed for this event.`);
+      toast.error(
+        `Email domain is blocked. Domains ${displayDomains.join(", ")} are not allowed for this event.`,
+      );
       return;
     }
 

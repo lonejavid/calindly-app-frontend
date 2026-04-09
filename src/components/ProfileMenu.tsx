@@ -48,7 +48,7 @@ export function ProfileMenu({
   const isApp = variant === "app";
   const triggerCls =
     isApp
-      ? "group flex max-w-[min(100%,320px)] cursor-pointer items-center gap-2 rounded-sm border border-[var(--line)] bg-white/60 p-2 shadow-sm transition-colors duration-200 hover:border-[var(--blue)]/40 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[var(--blue)]/25 sm:gap-3"
+      ? "group flex max-w-[min(100%,320px)] cursor-pointer items-center gap-0 rounded-sm border border-[var(--line)] bg-white/60 p-1.5 shadow-sm transition-colors duration-200 hover:border-[var(--blue)]/40 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[var(--blue)]/25 sm:gap-2 sm:p-2 md:gap-3"
       : "flex max-w-[min(100%,280px)] cursor-pointer items-center gap-2 rounded-sm border-2 border-[var(--line)] p-2 transition-all duration-200 hover:border-[var(--blue)]/40 hover:bg-[var(--surface)]";
   const avatarRingCls = isApp
     ? "w-9 h-9 ring-2 ring-[var(--blue)] group-hover:ring-[var(--blue)] shadow-sm"
@@ -72,7 +72,11 @@ export function ProfileMenu({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <button type="button" className={triggerClassName || triggerCls}>
+        <button
+          type="button"
+          className={triggerClassName || triggerCls}
+          aria-label={user.name ? `Account menu, ${user.name}` : "Account menu"}
+        >
           <Avatar className={`${avatarRingCls} shrink-0`}>
             {user.imageUrl && (
               <AvatarImage src={user.imageUrl} alt={user.name || "Profile"} />
@@ -82,12 +86,12 @@ export function ProfileMenu({
             </AvatarFallback>
           </Avatar>
           <span
-            className={`min-w-0 truncate text-left text-base font-semibold text-[var(--ink)] ${isApp ? "max-w-[min(42vw,140px)] sm:max-w-[180px] md:max-w-[220px]" : "max-w-[200px]"}`}
+            className={`hidden min-w-0 truncate text-left text-base font-semibold text-[var(--ink)] sm:inline ${isApp ? "max-w-[min(42vw,140px)] sm:max-w-[180px] md:max-w-[220px]" : "max-w-[200px]"}`}
             title={user.name || "User"}
           >
             {user.name?.trim() || "User"}
           </span>
-          <ChevronDown className="h-4 w-4 shrink-0 text-[var(--ink-muted)]" />
+          <ChevronDown className="hidden h-4 w-4 shrink-0 text-[var(--ink-muted)] sm:block" />
         </button>
       </PopoverTrigger>
       <PopoverContent align="end" className={contentClassName || popoverCls}>

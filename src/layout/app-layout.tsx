@@ -2,6 +2,7 @@ import { LinkIcon, CalendarRange, ClockIcon, LayoutGrid, Settings } from "lucide
 import type { LucideIcon } from "lucide-react";
 import { AppSidebar } from "@/components/AppSidebar";
 import Header from "@/components/Header";
+import NewEventDialog from "@/pages/event_type/_components/new-event-dialog";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Outlet, useLocation } from "react-router-dom";
 import { useStore } from "@/store/store";
@@ -37,6 +38,8 @@ const AppLayout = () => {
   const pageTitle = PAGE_TITLES[location.pathname];
   const pageIcon = PAGE_ICONS[location.pathname];
   const pageSubtitle = PAGE_SUBTITLES[location.pathname];
+  const headerActions =
+    location.pathname === PROTECTED_ROUTES.EVENT_TYPES ? <NewEventDialog /> : undefined;
 
   // Check if user is on setup page or not approved
   const isSetupPage = location.pathname === PROTECTED_ROUTES.SETUP;
@@ -63,6 +66,7 @@ const AppLayout = () => {
             subtitle={pageSubtitle}
             icon={pageIcon}
             hideSidebarTrigger={!shouldShowSidebar}
+            actions={headerActions}
           />
           <div
             className={`flex min-h-0 flex-1 flex-col overflow-auto ${

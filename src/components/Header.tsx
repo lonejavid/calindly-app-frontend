@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ProfileMenu } from "@/components/ProfileMenu";
 import { useStore } from "@/store/store";
@@ -15,6 +16,8 @@ type HeaderProps = {
   icon?: LucideIcon;
   /** Hide menu trigger (e.g. Setup / no sidebar) */
   hideSidebarTrigger?: boolean;
+  /** e.g. Create Event — rendered before the profile menu */
+  actions?: ReactNode;
 };
 
 const SETUP_TOTAL_STEPS = 4;
@@ -24,6 +27,7 @@ const Header = ({
   subtitle,
   icon: Icon,
   hideSidebarTrigger,
+  actions,
 }: HeaderProps) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -98,7 +102,8 @@ const Header = ({
           ) : null}
         </div>
 
-        <div className="flex shrink-0 items-center gap-4">
+        <div className="flex shrink-0 items-center gap-3 sm:gap-4">
+          {actions ? <div className="flex shrink-0 items-center">{actions}</div> : null}
           {user ? (
             <ProfileMenu
               user={user}

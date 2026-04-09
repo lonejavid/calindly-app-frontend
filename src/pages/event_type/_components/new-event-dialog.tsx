@@ -16,7 +16,8 @@ import {
   Zap,
   Trash2,CalendarDays, Sparkles
 
-} from 'lucide-react';
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { checkIntegrationQueryFn, CreateEventMutationFn } from "@/lib/api";
 
@@ -109,12 +110,54 @@ interface FormErrors {
   [key: string]: string | null;
 }
 
+type SectionAccent = "blue" | "wa" | "amber" | "ink";
+
 interface Section {
   id: string;
   name: string;
-  icon: React.ComponentType<{ className?: string }>;
-  color: string;
+  icon: LucideIcon;
+  accent: SectionAccent;
 }
+
+const TAB_ACCENT_HOVER: Record<
+  SectionAccent,
+  string
+> = {
+  blue:
+    "hover:border-[color:var(--blue)] hover:bg-[var(--blue-lite)] hover:text-[color:var(--blue)]",
+  wa: "hover:border-[color:var(--wa)] hover:bg-[var(--wa-lite)] hover:text-[color:var(--wa-dark)]",
+  amber:
+    "hover:border-[color:var(--amber)] hover:bg-[var(--amber-lite)] hover:text-[color:var(--amber-dark)]",
+  ink: "hover:border-[color:var(--ink-muted)] hover:bg-[var(--surface-2)] hover:text-[var(--ink)]",
+};
+
+const TAB_ACCENT_FOCUS: Record<SectionAccent, string> = {
+  blue: "focus-visible:outline-[color:var(--blue-deep)]",
+  wa: "focus-visible:outline-[color:var(--wa-dark)]",
+  amber: "focus-visible:outline-[color:var(--amber-dark)]",
+  ink: "focus-visible:outline-[color:var(--ink-mid)]",
+};
+
+const TAB_ACCENT_ACTIVE_SHADOW: Record<SectionAccent, string> = {
+  blue: "shadow-[var(--sh-blue)]",
+  wa: "shadow-[var(--sh-wa)]",
+  amber: "shadow-[var(--sh-amber)]",
+  ink: "shadow-[var(--sh-sm)]",
+};
+
+const TAB_ACCENT_BG: Record<SectionAccent, string> = {
+  blue: "var(--blue)",
+  wa: "var(--wa)",
+  amber: "var(--amber)",
+  ink: "var(--ink-mid)",
+};
+
+const TAB_ACCENT_ICON: Record<SectionAccent, string> = {
+  blue: "var(--blue)",
+  wa: "var(--wa-dark)",
+  amber: "var(--amber-deep)",
+  ink: "var(--ink-soft)",
+};
 
 const locationOptions: LocationOption[] = [
   {
@@ -228,15 +271,30 @@ const [dateRangeLimit, setDateRangeLimit] = useState<number>(30); // Default 30 
   };
 
   const sections: Section[] = [
-    { id: 'basic-info', name: 'Event type', icon: Calendar, color: 'bg-purple-500' },
-    { id: 'location', name: 'Location', icon: MapPin, color: 'bg-blue-500' },
-    { id: 'duration', name: 'Duration', icon: Clock, color: 'bg-green-500' },
-    { id: 'buffers', name: 'Limits & buffers', icon: Shield, color: 'bg-orange-500' },
-    { id: 'booking-options', name: 'Booking page options', icon: Users, color: 'bg-pink-500' },
-    { id: 'invitee-form', name: 'Invitee form', icon: FileText, color: 'bg-indigo-500' },
-    { id: 'notifications', name: 'Notifications', icon: Bell, color: 'bg-red-500' },
-    { id: 'confirmation', name: 'Confirmation page', icon: CheckCircle, color: 'bg-teal-500' },
-      { id: 'availability', name: 'Availability', icon: CalendarDays, color: 'bg-cyan-500' },
+    { id: "basic-info", name: "Event type", icon: Calendar, accent: "blue" },
+    { id: "location", name: "Location", icon: MapPin, accent: "blue" },
+    { id: "duration", name: "Duration", icon: Clock, accent: "blue" },
+    { id: "buffers", name: "Limits & buffers", icon: Shield, accent: "blue" },
+    {
+      id: "booking-options",
+      name: "Booking page options",
+      icon: Users,
+      accent: "blue",
+    },
+    { id: "invitee-form", name: "Invitee form", icon: FileText, accent: "blue" },
+    { id: "notifications", name: "Notifications", icon: Bell, accent: "blue" },
+    {
+      id: "confirmation",
+      name: "Confirmation page",
+      icon: CheckCircle,
+      accent: "blue",
+    },
+    {
+      id: "availability",
+      name: "Availability",
+      icon: CalendarDays,
+      accent: "blue",
+    },
   ];
 
 
@@ -432,12 +490,22 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
       case 'basic-info':
         return (
           <div className="space-y-6">
-            <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-xl border border-purple-100">
-              <div className="flex items-center space-x-2 mb-2">
-                <Sparkles className="w-5 h-5 text-purple-600" />
-                <h3 className="font-semibold text-purple-900">Event Basics</h3>
+            <div
+              className="rounded-xl border p-4"
+              style={{
+                backgroundColor: "var(--blue-lite)",
+                borderColor: "var(--line-strong)",
+              }}
+            >
+              <div className="mb-2 flex items-center space-x-2">
+                <Sparkles className="h-5 w-5" style={{ color: "var(--blue)" }} />
+                <h3 className="font-semibold" style={{ color: "var(--ink)" }}>
+                  Event Basics
+                </h3>
               </div>
-              <p className="text-sm text-purple-700">Create your perfect event template</p>
+              <p className="text-sm" style={{ color: "var(--ink-soft)" }}>
+                Create your perfect event template
+              </p>
             </div>
             <div>
               <label className="block text-sm font-semibold mb-3 text-gray-800">
@@ -446,7 +514,7 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
               <input
                 value={formData.title}
                 onChange={(e) => handleInputChange('title', e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 bg-white shadow-sm"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[color:var(--blue)] focus:border-[color:var(--blue)] transition-all duration-200 bg-white shadow-sm"
                 placeholder="Enter event name"
               />
               {errors.title && <p className="mt-1 text-sm text-red-600">{errors.title}</p>}
@@ -459,7 +527,7 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
                 value={formData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
                 rows={4}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 bg-white shadow-sm resize-none"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[color:var(--blue)] focus:border-[color:var(--blue)] transition-all duration-200 bg-white shadow-sm resize-none"
                 placeholder="Tell your invitees what this meeting is about"
               />
               {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description}</p>}
@@ -469,29 +537,47 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
               <select
                 value={formData.accessSpecifier}
                 onChange={(e) => handleInputChange('accessSpecifier', e.target.value as 'allow_all' | 'block_domains')}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 bg-white shadow-sm"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[color:var(--blue)] focus:border-[color:var(--blue)] transition-all duration-200 bg-white shadow-sm"
               >
                 <option value="allow_all">Allow all email domains to book</option>
                 <option value="block_domains">Block specific email domains</option>
               </select>
             </div>
             {formData.accessSpecifier === 'block_domains' && (
-              <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-5">
-                <h4 className="font-semibold text-yellow-900 mb-4 flex items-center">
-                  <Shield className="w-4 h-4 mr-2" />
+              <div
+                className="rounded-xl border-2 p-5"
+                style={{
+                  backgroundColor: 'var(--amber-lite)',
+                  borderColor: 'var(--amber)',
+                }}
+              >
+                <h4
+                  className="mb-4 flex items-center font-semibold"
+                  style={{ color: 'var(--amber-dark)' }}
+                >
+                  <Shield className="mr-2 h-4 w-4" />
                   Block Email Domains
                 </h4>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-yellow-800">Common Email Domains</label>
+                    <label
+                      className="mb-2 block text-sm font-medium"
+                      style={{ color: 'var(--amber-deep)' }}
+                    >
+                      Common Email Domains
+                    </label>
                     <div className="grid grid-cols-2 gap-2">
                       {commonDomains.map((domain) => (
-                        <label key={domain.value} className="flex items-center space-x-2 bg-white p-3 rounded-lg border cursor-pointer hover:bg-yellow-50">
+                        <label
+                          key={domain.value}
+                          className="flex cursor-pointer items-center space-x-2 rounded-lg border border-gray-200 bg-white p-3 hover:bg-[var(--amber-ghost)]"
+                        >
                           <input
                             type="checkbox"
                             checked={blockedDomains.includes(domain.value)}
                             onChange={() => handleDomainToggle(domain.value)}
-                            className="rounded text-yellow-600 focus:ring-yellow-500"
+                            className="rounded focus:ring-2 focus:ring-[color:var(--amber)]"
+                            style={{ accentColor: 'var(--amber)' }}
                           />
                           <span className="text-sm text-gray-700">{domain.label}</span>
                         </label>
@@ -499,19 +585,25 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-yellow-800">Add Custom Domain</label>
+                    <label
+                      className="mb-2 block text-sm font-medium"
+                      style={{ color: 'var(--amber-deep)' }}
+                    >
+                      Add Custom Domain
+                    </label>
                     <div className="flex space-x-2">
                       <input
                         type="text"
                         value={customDomain}
                         onChange={(e) => setCustomDomain(e.target.value)}
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                        className="flex-1 rounded-lg border border-gray-300 px-3 py-2 focus:border-[color:var(--amber)] focus:ring-2 focus:ring-[color:var(--amber-glow)]"
                         placeholder="@company.com"
                       />
                       <button
                         type="button"
                         onClick={addCustomDomain}
-                        className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+                        className="rounded-lg px-4 py-2 font-medium text-white transition-colors hover:opacity-95"
+                        style={{ backgroundColor: 'var(--amber-deep)' }}
                       >
                         Add
                       </button>
@@ -520,7 +612,12 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
                   </div>
                   {blockedDomains.length > 0 && (
                     <div>
-                      <label className="block text-sm font-medium mb-2 text-yellow-800">Blocked Domains</label>
+                      <label
+                        className="mb-2 block text-sm font-medium"
+                        style={{ color: 'var(--amber-deep)' }}
+                      >
+                        Blocked Domains
+                      </label>
                       <div className="flex flex-wrap gap-2">
                         {blockedDomains.map((domain) => (
                           <span
@@ -545,24 +642,33 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
             )}
           </div>
         );
-             <span className="mr-2">•</span>
 
-case 'availability':
+      case "availability":
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="bg-gradient-to-r from-cyan-50 to-blue-50 p-3 rounded-lg border border-cyan-100">
-        <div className="flex items-center space-x-2 mb-1">
-          <CalendarDays className="w-4 h-4 text-cyan-600" />
-          <h3 className="font-semibold text-cyan-900">Booking Availability</h3>
+      <div
+        className="rounded-lg border p-3"
+        style={{
+          backgroundColor: "var(--blue-lite)",
+          borderColor: "var(--line-strong)",
+        }}
+      >
+        <div className="mb-1 flex items-center space-x-2">
+          <CalendarDays className="h-4 w-4" style={{ color: "var(--blue)" }} />
+          <h3 className="font-semibold" style={{ color: "var(--ink)" }}>
+            Booking Availability
+          </h3>
         </div>
-        <p className="text-xs text-cyan-700">Control when people can book meetings</p>
+        <p className="text-xs" style={{ color: "var(--ink-soft)" }}>
+          Control when people can book meetings
+        </p>
       </div>
 
       {/* Minimum Notice */}
       <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
         <div className="flex items-center space-x-2 mb-3">
-          <Clock className="w-4 h-4 text-cyan-600" />
+          <Clock className="h-4 w-4" style={{ color: "var(--blue)" }} />
           <h4 className="font-medium text-gray-900">Minimum Notice</h4>
         </div>
         
@@ -574,13 +680,13 @@ case 'availability':
               const value = parseInt(e.target.value) || 1;
               setMinimumNotice(Math.max(1, value));
             }}
-            className="w-16 px-2 py-1.5 border border-gray-300 rounded text-center text-sm focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500"
+            className="w-16 rounded border border-gray-300 px-2 py-1.5 text-center text-sm focus:border-[color:var(--blue)] focus:ring-1 focus:ring-[color:var(--blue-glow)]"
             min="1"
           />
           <select
             value={noticeType}
             onChange={(e) => setNoticeType(e.target.value as 'minutes' | 'hours' | 'days')}
-            className="px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500"
+            className="rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-[color:var(--blue)] focus:ring-1 focus:ring-[color:var(--blue-glow)]"
           >
             <option value="minutes">min</option>
             <option value="hours">hrs</option>
@@ -609,11 +715,16 @@ case 'availability':
                 setMinimumNotice(preset.value);
                 setNoticeType(preset.type as 'minutes' | 'hours' | 'days');
               }}
-              className={`px-2 py-1 text-xs rounded transition-colors ${
+              className={`rounded px-2 py-1 text-xs transition-colors ${
                 minimumNotice === preset.value && noticeType === preset.type
-                  ? 'bg-cyan-600 text-white'
-                  : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                  ? "text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
+              style={
+                minimumNotice === preset.value && noticeType === preset.type
+                  ? { backgroundColor: "var(--blue)" }
+                  : undefined
+              }
             >
               {preset.label}
             </button>
@@ -624,7 +735,7 @@ case 'availability':
       {/* Booking Window */}
       <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
         <div className="flex items-center space-x-2 mb-3">
-          <Calendar className="w-4 h-4 text-cyan-600" />
+          <Calendar className="h-4 w-4" style={{ color: "var(--blue)" }} />
           <h4 className="font-medium text-gray-900">Booking Window</h4>
         </div>
 
@@ -637,7 +748,8 @@ case 'availability':
               value="fixed"
               checked={bookingWindowType === 'fixed'}
               onChange={(e) => setBookingWindowType(e.target.value as 'fixed' | 'date-range' | 'indefinite')}
-              className="mt-0.5 w-3 h-3 text-cyan-600"
+              className="mt-0.5 h-3 w-3"
+              style={{ accentColor: "var(--blue)" }}
             />
             <div className="flex-1 min-w-0">
               <div className="mb-1">
@@ -652,7 +764,7 @@ case 'availability':
                     const value = parseInt(e.target.value) || 1;
                     setDateRangeLimit(Math.max(1, value));
                   }}
-                  className="w-16 px-2 py-1 border border-gray-300 rounded text-center text-sm focus:ring-1 focus:ring-cyan-500 disabled:bg-gray-100"
+                  className="w-16 rounded border border-gray-300 px-2 py-1 text-center text-sm focus:border-[color:var(--blue)] focus:ring-1 focus:ring-[color:var(--blue-glow)] disabled:bg-gray-100"
                   min="1"
                   disabled={bookingWindowType !== 'fixed'}
                 />
@@ -660,7 +772,7 @@ case 'availability':
                   value={dateRangeType}
                   onChange={(e) => setDateRangeType(e.target.value as 'calendar days' | 'business days' | 'weeks' | 'months')}
                   disabled={bookingWindowType !== 'fixed'}
-                  className="px-2 py-1 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-cyan-500 disabled:bg-gray-100"
+                  className="rounded border border-gray-300 px-2 py-1 text-sm focus:border-[color:var(--blue)] focus:ring-1 focus:ring-[color:var(--blue-glow)] disabled:bg-gray-100"
                 >
                   <option value="calendar days">days</option>
                   <option value="weeks">weeks</option>
@@ -680,7 +792,8 @@ case 'availability':
               value="indefinite"
               checked={bookingWindowType === 'indefinite'}
               onChange={(e) => setBookingWindowType(e.target.value as 'fixed' | 'date-range' | 'indefinite')}
-              className="mt-0.5 w-3 h-3 text-cyan-600"
+              className="mt-0.5 h-3 w-3"
+              style={{ accentColor: "var(--blue)" }}
             />
             <div>
               <span className="text-sm font-medium text-gray-900">**No limit**</span>
@@ -691,15 +804,32 @@ case 'availability':
 
         {/* Date Range option additional info */}
         {bookingWindowType === 'date-range' && (
-          <div className="mt-2 ml-5 p-2 bg-blue-50 rounded text-xs text-blue-700">
-            <p>with at least <span className="font-medium text-blue-900">**{formatNoticeDisplay()}**</span> notice</p>
+          <div
+            className="ml-5 mt-2 rounded p-2 text-xs"
+            style={{ backgroundColor: "var(--blue-lite)", color: "var(--ink-soft)" }}
+          >
+            <p>
+              with at least{" "}
+              <span className="font-medium" style={{ color: "var(--ink)" }}>
+                {formatNoticeDisplay()}
+              </span>{" "}
+              notice
+            </p>
           </div>
         )}
 
-        {/* Indefinite option additional info */}
         {bookingWindowType === 'indefinite' && (
-          <div className="mt-2 ml-5 p-2 bg-green-50 rounded text-xs text-green-700">
-            <p>with at least <span className="font-medium text-green-900">**{formatNoticeDisplay()}**</span> notice</p>
+          <div
+            className="ml-5 mt-2 rounded p-2 text-xs"
+            style={{ backgroundColor: "var(--blue-lite)", color: "var(--ink-soft)" }}
+          >
+            <p>
+              with at least{" "}
+              <span className="font-medium" style={{ color: "var(--ink)" }}>
+                {formatNoticeDisplay()}
+              </span>{" "}
+              notice
+            </p>
           </div>
         )}
 
@@ -725,11 +855,16 @@ case 'availability':
                     setDateRangeLimit(preset.value);
                     setDateRangeType(preset.type as 'calendar days' | 'business days' | 'weeks' | 'months');
                   }}
-                  className={`px-2 py-1 text-xs rounded transition-colors ${
+                  className={`rounded px-2 py-1 text-xs transition-colors ${
                     dateRangeLimit === preset.value && dateRangeType === preset.type
-                      ? 'bg-cyan-600 text-white'
-                      : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                      ? "text-white"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
+                  style={
+                    dateRangeLimit === preset.value && dateRangeType === preset.type
+                      ? { backgroundColor: "var(--blue)" }
+                      : undefined
+                  }
                 >
                   {preset.label}
                 </button>
@@ -740,10 +875,16 @@ case 'availability':
       </div>
 
       {/* Current Settings Summary */}
-      <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-3">
+      <div
+        className="rounded-lg border p-3"
+        style={{
+          backgroundColor: "var(--blue-lite)",
+          borderColor: "var(--line-strong)",
+        }}
+      >
         <div className="flex items-start space-x-2">
-          <CheckCircle className="w-4 h-4 text-green-600 mt-0.5" />
-          <div className="text-sm text-green-800">
+          <CheckCircle className="mt-0.5 h-4 w-4" style={{ color: "var(--blue)" }} />
+          <div className="text-sm" style={{ color: "var(--ink-mid)" }}>
             <p className="font-medium mb-1">Current settings:</p>
             <ul className="space-y-1 text-xs">
               <li>• Min notice: {formatNoticeDisplay()}</li>
@@ -763,12 +904,22 @@ case 'availability':
       case 'location':
         return (
           <div className="space-y-6">
-            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-4 rounded-xl border border-blue-100">
-              <div className="flex items-center space-x-2 mb-2">
-                <MapPin className="w-5 h-5 text-blue-600" />
-                <h3 className="font-semibold text-blue-900">Meeting Location</h3>
+            <div
+              className="rounded-xl border p-4"
+              style={{
+                backgroundColor: "var(--blue-lite)",
+                borderColor: "var(--line-strong)",
+              }}
+            >
+              <div className="mb-2 flex items-center space-x-2">
+                <MapPin className="h-5 w-5" style={{ color: "var(--blue)" }} />
+                <h3 className="font-semibold" style={{ color: "var(--ink)" }}>
+                  Meeting Location
+                </h3>
               </div>
-              <p className="text-sm text-blue-700">Choose where your meeting will take place</p>
+              <p className="text-sm" style={{ color: "var(--ink-soft)" }}>
+                Choose where your meeting will take place
+              </p>
             </div>
             <div>
               <label className="block text-sm font-semibold mb-3 text-gray-800">
@@ -778,15 +929,30 @@ case 'availability':
                 {locationOptions.map((option) => (
                   <div
                     key={option.value}
-                    className={`border-2 rounded-xl p-5 cursor-pointer transition-all duration-300 hover:shadow-lg ${
+                    className={`cursor-pointer rounded-xl border-2 p-5 transition-all duration-300 hover:shadow-lg ${
                       selectedLocationType === option.value
                         ? appConnected
-                          ? 'border-green-400 bg-gradient-to-r from-green-50 to-emerald-50 shadow-lg transform scale-[1.02]'
+                          ? "scale-[1.02] shadow-lg"
                           : error
-                          ? 'border-red-400 bg-gradient-to-r from-red-50 to-pink-50 shadow-lg'
-                          : 'border-blue-400 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-lg'
-                        : 'border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50'
+                            ? "border-red-400 bg-red-50 shadow-lg"
+                            : "shadow-lg"
+                        : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50"
                     }`}
+                    style={
+                      selectedLocationType === option.value
+                        ? appConnected
+                          ? {
+                              borderColor: "var(--wa)",
+                              backgroundColor: "var(--wa-lite)",
+                            }
+                          : error
+                            ? undefined
+                            : {
+                                borderColor: "var(--blue)",
+                                backgroundColor: "var(--blue-lite)",
+                              }
+                        : undefined
+                    }
                     onClick={() => handleLocationTypeChange(option.value)}
                   >
                     <div className="flex items-center space-x-4">
@@ -822,7 +988,7 @@ case 'availability':
                 ))}
               </div>
               {error && (
-                <div className="mt-4 p-4 bg-gradient-to-r from-red-50 to-pink-50 border-2 border-red-200 rounded-xl">
+                <div className="mt-4 rounded-xl border-2 border-red-200 bg-red-50 p-4">
                   <p
                     className="text-sm text-red-700 flex items-center"
                     dangerouslySetInnerHTML={{ __html: error }}
@@ -836,35 +1002,59 @@ case 'availability':
       case 'duration':
         return (
           <div className="space-y-6">
-            <div className="bg-gradient-to-r from-green-50 to-teal-50 p-4 rounded-xl border border-green-100">
-              <div className="flex items-center space-x-2 mb-2">
-                <Clock className="w-5 h-5 text-green-600" />
-                <h3 className="font-semibold text-green-900">Event Duration</h3>
+            <div
+              className="rounded-xl border p-4"
+              style={{
+                backgroundColor: "var(--blue-lite)",
+                borderColor: "var(--line-strong)",
+              }}
+            >
+              <div className="mb-2 flex items-center space-x-2">
+                <Clock className="h-5 w-5" style={{ color: "var(--blue)" }} />
+                <h3 className="font-semibold" style={{ color: "var(--ink)" }}>
+                  Event Duration
+                </h3>
               </div>
-              <p className="text-sm text-green-700">Set the perfect time for your meetings</p>
+              <p className="text-sm" style={{ color: "var(--ink-soft)" }}>
+                Set the perfect time for your meetings
+              </p>
             </div>
             <div>
-              <label className="block text-sm font-semibold mb-3 text-gray-800">
+              <label className="mb-3 block text-sm font-semibold text-gray-800">
                 Duration (minutes) <span className="text-red-500">*</span>
               </label>
               <input
                 type="number"
                 value={formData.duration}
                 onChange={(e) => handleInputChange('duration', parseInt(e.target.value) || 0)}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-white shadow-sm"
+                className="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 shadow-sm transition-all duration-200 focus:border-[color:var(--blue)] focus:ring-2 focus:ring-[color:var(--blue-glow)]"
                 placeholder="30"
                 min="1"
               />
               {errors.duration && <p className="mt-1 text-sm text-red-600">{errors.duration}</p>}
             </div>
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-5">
+            <div
+              className="rounded-xl border-2 p-5"
+              style={{
+                backgroundColor: "var(--blue-lite)",
+                borderColor: "var(--line-strong)",
+              }}
+            >
               <div className="flex items-start space-x-3">
-                <div className="bg-blue-500 rounded-full p-1 mt-0.5">
-                  <Info className="w-4 h-4 text-white" />
+                <div
+                  className="mt-0.5 rounded-full p-1"
+                  style={{ backgroundColor: "var(--blue)" }}
+                >
+                  <Info className="h-4 w-4 text-white" />
                 </div>
                 <div className="text-sm">
-                  <p className="font-semibold text-blue-900 mb-1">Duration affects scheduling</p>
-                  <p className="text-blue-700">This duration will be used to block time on your calendar and determine available time slots.</p>
+                  <p className="mb-1 font-semibold" style={{ color: "var(--ink)" }}>
+                    Duration affects scheduling
+                  </p>
+                  <p style={{ color: "var(--ink-soft)" }}>
+                    This duration will be used to block time on your calendar and determine available
+                    time slots.
+                  </p>
                 </div>
               </div>
             </div>
@@ -873,12 +1063,22 @@ case 'availability':
       case 'buffers':
         return (
           <div className="space-y-6">
-            <div className="bg-gradient-to-r from-orange-50 to-yellow-50 p-4 rounded-xl border border-orange-100">
-              <div className="flex items-center space-x-2 mb-2">
-                <Shield className="w-5 h-5 text-orange-600" />
-                <h3 className="font-semibold text-orange-900">Smart Buffers</h3>
+            <div
+              className="rounded-xl border p-4"
+              style={{
+                backgroundColor: "var(--blue-lite)",
+                borderColor: "var(--line-strong)",
+              }}
+            >
+              <div className="mb-2 flex items-center space-x-2">
+                <Shield className="h-5 w-5" style={{ color: "var(--blue)" }} />
+                <h3 className="font-semibold" style={{ color: "var(--ink)" }}>
+                  Smart Buffers
+                </h3>
               </div>
-              <p className="text-sm text-orange-700">Add breathing room between meetings</p>
+              <p className="text-sm" style={{ color: "var(--ink-soft)" }}>
+                Add breathing room between meetings
+              </p>
             </div>
             <div>
               <h3 className="text-lg font-semibold mb-6 text-gray-800">Buffer times</h3>
@@ -889,7 +1089,8 @@ case 'availability':
                     <button
                       type="button"
                       onClick={() => setBufferBefore(Math.max(0, bufferBefore - 5))}
-                      className="p-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl hover:from-orange-600 hover:to-red-600 transition-all duration-200 shadow-md hover:shadow-lg"
+                      className="rounded-xl p-3 text-white shadow-md transition-all duration-200 hover:opacity-95 hover:shadow-lg"
+                      style={{ backgroundColor: "var(--blue-deep)" }}
                     >
                       <Minus className="w-4 h-4" />
                     </button>
@@ -903,7 +1104,8 @@ case 'availability':
                     <button
                       type="button"
                       onClick={() => setBufferBefore(bufferBefore + 5)}
-                      className="p-3 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-xl hover:from-green-600 hover:to-teal-600 transition-all duration-200 shadow-md hover:shadow-lg"
+                      className="rounded-xl p-3 text-white shadow-md transition-all duration-200 hover:opacity-95 hover:shadow-lg"
+                      style={{ backgroundColor: "var(--blue)" }}
                     >
                       <Plus className="w-4 h-4" />
                     </button>
@@ -915,7 +1117,8 @@ case 'availability':
                     <button
                       type="button"
                       onClick={() => setBufferAfter(Math.max(0, bufferAfter - 5))}
-                      className="p-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl hover:from-orange-600 hover:to-red-600 transition-all duration-200 shadow-md hover:shadow-lg"
+                      className="rounded-xl p-3 text-white shadow-md transition-all duration-200 hover:opacity-95 hover:shadow-lg"
+                      style={{ backgroundColor: "var(--blue-deep)" }}
                     >
                       <Minus className="w-4 h-4" />
                     </button>
@@ -929,7 +1132,8 @@ case 'availability':
                     <button
                       type="button"
                       onClick={() => setBufferAfter(bufferAfter + 5)}
-                      className="p-3 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-xl hover:from-green-600 hover:to-teal-600 transition-all duration-200 shadow-md hover:shadow-lg"
+                      className="rounded-xl p-3 text-white shadow-md transition-all duration-200 hover:opacity-95 hover:shadow-lg"
+                      style={{ backgroundColor: "var(--blue)" }}
                     >
                       <Plus className="w-4 h-4" />
                     </button>
@@ -945,7 +1149,7 @@ case 'availability':
                   type="number"
                   value={maxBookingsPerDay ?? ''}
                   onChange={(e) => setMaxBookingsPerDay(e.target.value ? parseInt(e.target.value) : null)}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 bg-white shadow-sm"
+                  className="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 shadow-sm transition-all duration-200 focus:border-[color:var(--blue)] focus:ring-2 focus:ring-[color:var(--blue-glow)]"
                   placeholder="No limit"
                   min="1"
                 />
@@ -956,12 +1160,22 @@ case 'availability':
       case 'booking-options':
         return (
           <div className="space-y-6">
-            <div className="bg-gradient-to-r from-pink-50 to-purple-50 p-4 rounded-xl border border-pink-100">
-              <div className="flex items-center space-x-2 mb-2">
-                <Users className="w-5 h-5 text-pink-600" />
-                <h3 className="font-semibold text-pink-900">Booking Experience</h3>
+            <div
+              className="rounded-xl border p-4"
+              style={{
+                backgroundColor: "var(--blue-lite)",
+                borderColor: "var(--line-strong)",
+              }}
+            >
+              <div className="mb-2 flex items-center space-x-2">
+                <Users className="h-5 w-5" style={{ color: "var(--blue)" }} />
+                <h3 className="font-semibold" style={{ color: "var(--ink)" }}>
+                  Booking Experience
+                </h3>
               </div>
-              <p className="text-sm text-pink-700">Customize how invitees book your events</p>
+              <p className="text-sm" style={{ color: "var(--ink-soft)" }}>
+                Customize how invitees book your events
+              </p>
             </div>
             <div>
               <div className="space-y-4">
@@ -977,7 +1191,7 @@ case 'availability':
                       onChange={(e) => setAllowGuests(e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-pink-500 peer-checked:to-purple-500 shadow-lg"></div>
+                    <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[color:var(--blue-glow)] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[color:var(--blue)] shadow-lg"></div>
                   </label>
                 </div>
                 <div className="py-4 px-5 bg-white rounded-xl border-2 border-gray-100 shadow-sm">
@@ -985,7 +1199,7 @@ case 'availability':
                   <select
                     value={timeZoneDisplay}
                     onChange={(e) => setTimeZoneDisplay(e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all duration-200 bg-white shadow-sm"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[color:var(--blue)] focus:border-[color:var(--blue)] transition-all duration-200 bg-white shadow-sm"
                   >
                     <option value="auto-detect">Auto-detect invitee time zone</option>
                     <option value="use-mine">Use my time zone</option>
@@ -997,7 +1211,7 @@ case 'availability':
                   <select
                     value={timeSlotInterval}
                     onChange={(e) => setTimeSlotInterval(e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all duration-200 bg-white shadow-sm"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[color:var(--blue)] focus:border-[color:var(--blue)] transition-all duration-200 bg-white shadow-sm"
                   >
                     <option value="15">15 minutes</option>
                     <option value="30">30 minutes</option>
@@ -1012,23 +1226,45 @@ case 'availability':
        case 'invitee-form':
         return (
           <div className="space-y-6">
-            <div className="bg-gradient-to-r from-indigo-50 to-blue-50 p-4 rounded-xl border border-indigo-100">
-              <div className="flex items-center space-x-2 mb-2">
-                <FileText className="w-5 h-5 text-indigo-600" />
-                <h3 className="font-semibold text-indigo-900">Invitee Form</h3>
+            <div
+              className="rounded-xl border p-4"
+              style={{
+                backgroundColor: "var(--blue-lite)",
+                borderColor: "var(--line-strong)",
+              }}
+            >
+              <div className="mb-2 flex items-center space-x-2">
+                <FileText className="h-5 w-5" style={{ color: "var(--blue)" }} />
+                <h3 className="font-semibold" style={{ color: "var(--ink)" }}>
+                  Invitee Form
+                </h3>
               </div>
-              <p className="text-sm text-indigo-700">Collect the information you need</p>
+              <p className="text-sm" style={{ color: "var(--ink-soft)" }}>
+                Collect the information you need
+              </p>
             </div>
-            <div className="bg-gradient-to-r from-gray-50 to-blue-50 border-2 border-gray-200 rounded-xl p-5">
-              <p className="text-sm text-gray-700 flex items-center">
-                <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+            <div
+              className="rounded-xl border-2 p-5"
+              style={{
+                backgroundColor: "var(--blue-lite)",
+                borderColor: "var(--line-strong)",
+              }}
+            >
+              <p className="flex items-center text-sm" style={{ color: "var(--ink-mid)" }}>
+                <CheckCircle className="mr-2 h-4 w-4" style={{ color: "var(--blue)" }} />
                 Name and email are always collected. Add custom questions below.
               </p>
             </div>
             <div>
               <div className="flex items-center justify-between mb-4">
                 <h4 className="font-semibold text-gray-900">Custom questions</h4>
-                <span className="bg-indigo-100 text-indigo-800 text-xs font-semibold px-3 py-1 rounded-full">
+                <span
+                  className="rounded-full px-3 py-1 text-xs font-semibold"
+                  style={{
+                    backgroundColor: "var(--blue-ghost)",
+                    color: "var(--blue-deep)",
+                  }}
+                >
                   {questions.length} question{questions.length !== 1 ? 's' : ''}
                 </span>
               </div>
@@ -1037,7 +1273,15 @@ case 'availability':
                 {questions.map((question, index) => (
                   <div key={question.id} className="border-2 border-gray-200 rounded-xl p-5 bg-white shadow-sm hover:shadow-md transition-all duration-200">
                     <div className="flex items-center justify-between mb-4">
-                      <span className="font-semibold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full text-sm">Question {index + 1}</span>
+                      <span
+                        className="rounded-full px-3 py-1 text-sm font-semibold"
+                        style={{
+                          backgroundColor: "var(--blue-ghost)",
+                          color: "var(--blue-deep)",
+                        }}
+                      >
+                        Question {index + 1}
+                      </span>
                       {questions.length > 1 && (
                         <button
                           type="button"
@@ -1054,7 +1298,7 @@ case 'availability':
                           type="text"
                           value={question.question}
                           onChange={(e) => updateQuestion(question.id, 'question', e.target.value)}
-                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white shadow-sm"
+                          className="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 shadow-sm transition-all duration-200 focus:border-[color:var(--blue)] focus:ring-2 focus:ring-[color:var(--blue-glow)]"
                           placeholder="Enter your question"
                         />
                         {errors[`question_${question.id}`] && (
@@ -1065,7 +1309,7 @@ case 'availability':
                         <select
                           value={question.type}
                           onChange={(e) => updateQuestion(question.id, 'type', e.target.value as Question['type'])}
-                          className="px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white shadow-sm"
+                          className="rounded-xl border-2 border-gray-200 bg-white px-4 py-3 shadow-sm transition-all duration-200 focus:border-[color:var(--blue)] focus:ring-2 focus:ring-[color:var(--blue-glow)]"
                         >
                           <option value="text">Text</option>
                           <option value="textarea">Long text</option>
@@ -1078,7 +1322,8 @@ case 'availability':
                             type="checkbox"
                             checked={question.required}
                             onChange={(e) => updateQuestion(question.id, 'required', e.target.checked)}
-                            className="rounded text-indigo-600 focus:ring-indigo-500"
+                            className="rounded focus:ring-[color:var(--blue)]"
+                            style={{ accentColor: "var(--blue)" }}
                           />
                           <span className="text-sm font-medium text-gray-700">Required</span>
                         </label>
@@ -1086,13 +1331,22 @@ case 'availability':
 
                       {/* Options section for select, radio, and checkbox types */}
                       {['select', 'radio', 'checkbox'].includes(question.type) && (
-                        <div className="bg-gradient-to-r from-indigo-50 to-blue-50 border-2 border-indigo-200 rounded-xl p-4">
-                          <div className="flex items-center justify-between mb-3">
-                            <h5 className="font-semibold text-indigo-900">Answer Options</h5>
+                        <div
+                          className="rounded-xl border-2 p-4"
+                          style={{
+                            backgroundColor: "var(--blue-lite)",
+                            borderColor: "var(--line-strong)",
+                          }}
+                        >
+                          <div className="mb-3 flex items-center justify-between">
+                            <h5 className="font-semibold" style={{ color: "var(--ink)" }}>
+                              Answer Options
+                            </h5>
                             <button
                               type="button"
                               onClick={() => addQuestionOption(question.id)}
-                              className="flex items-center space-x-1 px-3 py-1 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm"
+                              className="flex items-center space-x-1 rounded-lg px-3 py-1 text-sm text-white transition-colors hover:opacity-95"
+                              style={{ backgroundColor: "var(--blue)" }}
                             >
                               <Plus className="w-3 h-3" />
                               <span>Add Option</span>
@@ -1104,14 +1358,17 @@ case 'availability':
                           <div className="space-y-2">
                             {question.options.map((option, optionIndex) => (
                               <div key={optionIndex} className="flex items-center space-x-2">
-                                <span className="text-sm font-medium text-indigo-700 w-8 text-center">
+                                <span
+                                  className="w-8 text-center text-sm font-medium"
+                                  style={{ color: "var(--ink-soft)" }}
+                                >
                                   {optionIndex + 1}.
                                 </span>
                                 <input
                                   type="text"
                                   value={option}
                                   onChange={(e) => updateQuestionOption(question.id, optionIndex, e.target.value)}
-                                  className="flex-1 px-3 py-2 border-2 border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-white"
+                                  className="flex-1 rounded-lg border-2 border-gray-200 bg-white px-3 py-2 transition-all duration-200 focus:border-[color:var(--blue)] focus:ring-2 focus:ring-[color:var(--blue-glow)]"
                                   placeholder={`Option ${optionIndex + 1}`}
                                 />
                                 {question.options.length > 3 && (
@@ -1128,7 +1385,7 @@ case 'availability':
                           </div>
                           {question.options.length < 10 && (
                             <div className="mt-3 text-center">
-                              <p className="text-xs text-indigo-600">
+                              <p className="text-xs" style={{ color: "var(--blue)" }}>
                                 You can add up to 10 options. Currently have {question.options.length} option{question.options.length !== 1 ? 's' : ''}.
                               </p>
                             </div>
@@ -1141,7 +1398,11 @@ case 'availability':
                 <button
                   type="button"
                   onClick={addQuestion}
-                  className="w-full border-2 border-dashed border-indigo-300 rounded-xl p-6 text-indigo-600 hover:border-indigo-400 hover:text-indigo-700 hover:bg-indigo-50 transition-all duration-200 flex items-center justify-center space-x-2 group"
+                  className="group flex w-full items-center justify-center space-x-2 rounded-xl border-2 border-dashed p-6 transition-all duration-200 hover:bg-[var(--surface-2)]"
+                  style={{
+                    borderColor: "var(--line-strong)",
+                    color: "var(--blue)",
+                  }}
                 >
                   <Plus className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
                   <span className="font-medium">Add question</span>
@@ -1153,12 +1414,22 @@ case 'availability':
       case 'notifications':
         return (
           <div className="space-y-6">
-            <div className="bg-gradient-to-r from-red-50 to-pink-50 p-4 rounded-xl border border-red-100">
-              <div className="flex items-center space-x-2 mb-2">
-                <Bell className="w-5 h-5 text-red-600" />
-                <h3 className="font-semibold text-red-900">Smart Notifications</h3>
+            <div
+              className="rounded-xl border p-4"
+              style={{
+                backgroundColor: "var(--blue-lite)",
+                borderColor: "var(--line-strong)",
+              }}
+            >
+              <div className="mb-2 flex items-center space-x-2">
+                <Bell className="h-5 w-5" style={{ color: "var(--blue)" }} />
+                <h3 className="font-semibold" style={{ color: "var(--ink)" }}>
+                  Smart Notifications
+                </h3>
               </div>
-              <p className="text-sm text-red-700">Keep everyone in the loop</p>
+              <p className="text-sm" style={{ color: "var(--ink-soft)" }}>
+                Keep everyone in the loop
+              </p>
             </div>
             <div>
               <div className="space-y-4">
@@ -1174,7 +1445,7 @@ case 'availability':
                       onChange={(e) => setEmailConfirmation(e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-red-500 peer-checked:to-pink-500 shadow-lg"></div>
+                    <div className="peer h-7 w-14 rounded-full bg-gray-200 shadow-lg after:absolute after:left-[2px] after:top-[2px] after:h-6 after:w-6 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-[color:var(--blue)] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[color:var(--blue-glow)]"></div>
                   </label>
                 </div>
                 <div className="flex items-center justify-between py-4 px-5 bg-white rounded-xl border-2 border-gray-100 shadow-sm">
@@ -1189,7 +1460,7 @@ case 'availability':
                       onChange={(e) => setEmailReminder(e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-red-500 peer-checked:to-pink-500 shadow-lg"></div>
+                    <div className="peer h-7 w-14 rounded-full bg-gray-200 shadow-lg after:absolute after:left-[2px] after:top-[2px] after:h-6 after:w-6 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-[color:var(--blue)] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[color:var(--blue-glow)]"></div>
                   </label>
                 </div>
                 <div className="flex items-center justify-between py-4 px-5 bg-white rounded-xl border-2 border-gray-100 shadow-sm">
@@ -1204,7 +1475,7 @@ case 'availability':
                       onChange={(e) => setCalendarInvitation(e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-red-500 peer-checked:to-pink-500 shadow-lg"></div>
+                    <div className="peer h-7 w-14 rounded-full bg-gray-200 shadow-lg after:absolute after:left-[2px] after:top-[2px] after:h-6 after:w-6 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-[color:var(--blue)] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[color:var(--blue-glow)]"></div>
                   </label>
                 </div>
               </div>
@@ -1214,12 +1485,22 @@ case 'availability':
       case 'confirmation':
         return (
           <div className="space-y-6">
-            <div className="bg-gradient-to-r from-teal-50 to-green-50 p-4 rounded-xl border border-teal-100">
-              <div className="flex items-center space-x-2 mb-2">
-                <CheckCircle className="w-5 h-5 text-teal-600" />
-                <h3 className="font-semibold text-teal-900">Confirmation Page</h3>
+            <div
+              className="rounded-xl border p-4"
+              style={{
+                backgroundColor: "var(--blue-lite)",
+                borderColor: "var(--line-strong)",
+              }}
+            >
+              <div className="mb-2 flex items-center space-x-2">
+                <CheckCircle className="h-5 w-5" style={{ color: "var(--blue)" }} />
+                <h3 className="font-semibold" style={{ color: "var(--ink)" }}>
+                  Confirmation Page
+                </h3>
               </div>
-              <p className="text-sm text-teal-700">Create a memorable booking experience</p>
+              <p className="text-sm" style={{ color: "var(--ink-soft)" }}>
+                Create a memorable booking experience
+              </p>
             </div>
             <div>
               <div className="space-y-6">
@@ -1229,7 +1510,7 @@ case 'availability':
                     rows={4}
                     value={confirmationMessage}
                     onChange={(e) => setConfirmationMessage(e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 bg-white shadow-sm resize-none"
+                    className="w-full resize-none rounded-xl border-2 border-gray-200 bg-white px-4 py-3 shadow-sm transition-all duration-200 focus:border-[color:var(--blue)] focus:outline-none focus:ring-2 focus:ring-[color:var(--blue-glow)]"
                     placeholder="Thank you for booking! We look forward to meeting with you."
                   />
                 </div>
@@ -1245,7 +1526,7 @@ case 'availability':
                       onChange={(e) => setRedirectToUrl(e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-teal-500 peer-checked:to-green-500 shadow-lg"></div>
+                    <div className="peer h-7 w-14 rounded-full bg-gray-200 shadow-lg after:absolute after:left-[2px] after:top-[2px] after:h-6 after:w-6 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-[color:var(--blue)] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[color:var(--blue-glow)]"></div>
                   </label>
                 </div>
                 {redirectToUrl && (
@@ -1257,7 +1538,7 @@ case 'availability':
                       type="url"
                       value={redirectUrl}
                       onChange={(e) => setRedirectUrl(e.target.value)}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 bg-white shadow-sm"
+                      className="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 shadow-sm transition-all duration-200 focus:border-[color:var(--blue)] focus:outline-none focus:ring-2 focus:ring-[color:var(--blue-glow)]"
                       placeholder="https://example.com/thank-you"
                     />
                     {errors.redirectUrl && <p className="mt-1 text-sm text-red-600">{errors.redirectUrl}</p>}
@@ -1275,65 +1556,102 @@ case 'availability':
   return (
     <div className="fixed inset-0 z-50 flex">
       <div className="flex-1 bg-transparent" onClick={onClose}></div>
-      <div className="w-96 bg-gradient-to-b from-white to-gray-50 shadow-2xl flex flex-col h-full border-l-4 border-purple-500">
-        <div className="flex items-center justify-between p-6 border-b-2 border-gray-100 bg-gradient-to-r from-purple-500 to-pink-500">
+      <div
+        className="flex h-full w-[min(100vw,28rem)] flex-col border-l-4 bg-white shadow-2xl sm:w-96"
+        style={{ borderLeftColor: "var(--blue)" }}
+      >
+        <div
+          className="flex items-center justify-between border-b-2 border-[var(--line)] p-6"
+          style={{
+            background: `linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%)`,
+            boxShadow: "var(--sh-blue)",
+          }}
+        >
           <div className="flex items-center space-x-3">
-            <div className="bg-white bg-opacity-20 rounded-full p-2">
-              <Zap className="w-5 h-5 text-green-500" />
+            <div className="rounded-full bg-white/20 p-2">
+              <Zap className="h-5 w-5 text-white" strokeWidth={2} />
             </div>
             <h2 className="text-xl font-bold text-white">Create Event Type</h2>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="p-2 hover:bg-white hover:bg-opacity-20 rounded-xl transition-all duration-200 group"
+            className="group shrink-0 rounded-full border-2 border-transparent p-2 transition-all duration-200 hover:border-gray-200"
           >
-            <X className="w-5 h-5 text-white group-hover:rotate-90 transition-transform duration-200" />
+            <X className="h-5 w-5 text-white transition-transform duration-200 group-hover:rotate-90" />
           </button>
         </div>
-        <div className="border-b border-gray-200 bg-white">
-          <div className="px-4 py-3">
-            <div className="flex space-x-1 overflow-x-auto scrollbar-hide">
-              {sections.map((section) => {
-                const Icon = section.icon;
-                const isActive = activeSection === section.id;
-                return (
-                  <button
-                    key={section.id}
-                    onClick={() => setActiveSection(section.id)}
-                    className={`flex items-center space-x-2 px-4 py-3 rounded-xl text-sm font-semibold whitespace-nowrap transition-all duration-200 ${
-                      isActive
-                        ? `${section.color} text-white shadow-lg transform scale-105`
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 hover:shadow-md'
-                    }`}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span>{section.name}</span>
-                  </button>
-                );
-              })}
+        <div className="border-b border-[var(--line)] bg-[var(--surface)]">
+          <div className="px-2 pb-2 pt-2 sm:px-3 sm:pb-3 sm:pt-3">
+            <div className="scrollbar-hide -mx-1 overflow-x-auto overflow-y-hidden px-1">
+              <div className="flex min-h-[48px] items-center gap-1.5 pb-1 sm:min-h-[52px] sm:gap-2 sm:pb-0">
+                {sections.map((section) => {
+                  const Icon = section.icon;
+                  const isActive = activeSection === section.id;
+                  const a = section.accent;
+                  return (
+                    <button
+                      key={section.id}
+                      type="button"
+                      onClick={() => setActiveSection(section.id)}
+                      className={`flex shrink-0 items-center space-x-2 whitespace-nowrap rounded-[var(--r-m)] px-3 py-2.5 text-xs font-semibold transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:px-4 sm:py-3 sm:text-sm ${
+                        isActive
+                          ? `scale-[1.02] text-white ${TAB_ACCENT_ACTIVE_SHADOW[a]} ${TAB_ACCENT_FOCUS[a]}`
+                          : `border border-[var(--line-strong)] bg-white text-[var(--ink-mid)] ${TAB_ACCENT_HOVER[a]} ${TAB_ACCENT_FOCUS[a]}`
+                      }`}
+                      style={
+                        isActive
+                          ? { backgroundColor: TAB_ACCENT_BG[a] }
+                          : undefined
+                      }
+                    >
+                      <span
+                        className="inline-flex shrink-0"
+                        style={{ color: isActive ? "#fff" : TAB_ACCENT_ICON[a] }}
+                      >
+                        <Icon className="h-4 w-4" strokeWidth={2} />
+                      </span>
+                      <span>{section.name}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto p-6 bg-gradient-to-b from-gray-50 to-white">
+        <div
+          className="flex-1 overflow-y-auto p-4 sm:p-6"
+          style={{
+            background: `linear-gradient(180deg, var(--surface) 0%, #ffffff 40%)`,
+          }}
+        >
           {renderSectionContent()}
         </div>
-        <div className="border-t-2 border-gray-100 p-6 bg-white">
-          <div className="flex space-x-3">
+        <div className="border-t-2 border-[var(--line)] bg-white p-4 sm:p-6">
+          <div className="flex gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-semibold"
+              className="flex-1 rounded-[var(--r-m)] border-2 px-6 py-3 font-semibold transition-all duration-200 hover:bg-[var(--surface)]"
+              style={{ borderColor: "var(--line-strong)", color: "var(--ink-mid)" }}
             >
               Cancel
             </button>
             <button
+              type="button"
               onClick={handleSubmit}
               disabled={isPending}
-              className={`flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold flex items-center justify-center space-x-2 ${
-                isPending ? 'opacity-50 cursor-not-allowed' : 'hover:from-purple-600 hover:to-pink-600'
+              className={`flex flex-1 items-center justify-center space-x-2 rounded-[var(--r-m)] px-6 py-3 font-semibold text-white transition-all duration-200 ${
+                isPending
+                  ? "cursor-not-allowed opacity-50"
+                  : "hover:opacity-[0.96] active:scale-[0.99]"
               }`}
+              style={{
+                backgroundColor: "var(--blue)",
+                boxShadow: "var(--sh-blue)",
+              }}
             >
-              <Zap className="w-4 h-4" />
+              <Zap className="h-4 w-4" />
               <span>Create Event</span>
             </button>
           </div>
@@ -1350,10 +1668,15 @@ const Demo = () => {
     <div >
       <div >
         <button
+          type="button"
           onClick={() => setIsOpen(true)}
-          className="px-4 py-3 bg-[var(--blue)] cursor-pointer text-white rounded-sm shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2"
+          className="flex cursor-pointer items-center gap-2 rounded-sm px-4 py-3 font-semibold text-white transition-all duration-200 hover:opacity-[0.96] active:scale-[0.99]"
+          style={{
+            backgroundColor: "var(--blue)",
+            boxShadow: "var(--sh-blue)",
+          }}
         >
-          <Plus className="h-4 w-4" />
+          <Plus className="h-4 w-4" strokeWidth={2.5} />
           <span>Create Event</span>
         </button>
       </div>

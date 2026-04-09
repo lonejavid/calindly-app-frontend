@@ -1,7 +1,7 @@
 import { EventType } from "@/types/api.type";
 import { ENV } from "@/lib/get-env";
 import { Copy, Settings, Edit3, Trash2, Power, X, Clock, Users, FileText, Shield, Calendar } from "lucide-react";
-import { FC, useState, useRef, useEffect } from "react";
+import { FC, useState, useRef, useEffect, type CSSProperties } from "react";
 
 // Simple utility function to combine class names
 const cn = (...classes: (string | boolean | undefined)[]) => {
@@ -28,7 +28,7 @@ const Button: FC<{
   const variants = {
     ghost: 'hover:bg-gray-100',
     outline: 'border border-gray-300 bg-white hover:bg-gray-50',
-    primary: 'bg-blue-600 text-white hover:bg-blue-700'
+    primary: 'text-white hover:opacity-95',
   };
   const sizes = {
     sm: 'px-3 py-1.5 text-sm rounded-md',
@@ -37,7 +37,13 @@ const Button: FC<{
   
   return (
     <button
+      type="button"
       className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`}
+      style={
+        variant === 'primary'
+          ? { backgroundColor: 'var(--blue)', boxShadow: 'var(--sh-blue)' }
+          : undefined
+      }
       disabled={disabled}
       onClick={onClick}
     >
@@ -46,8 +52,12 @@ const Button: FC<{
   );
 };
 
-const Card: FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
-  <div className={`rounded-lg border bg-white shadow-sm ${className}`}>
+const Card: FC<{
+  children: React.ReactNode;
+  className?: string;
+  style?: CSSProperties;
+}> = ({ children, className = '', style }) => (
+  <div className={`rounded-lg border bg-white shadow-sm ${className}`} style={style}>
     {children}
   </div>
 );
@@ -545,58 +555,81 @@ const EventCard: FC<PropsType> = ({
       <div>
         <Card
           className={cn(
-            `!p-0 !ring-0 w-full max-w-[400px]
-          box-border min-h-[220px] border border-[#CCCCCC)] bg-white rounded-[4px]
-          shadow-[0_1px_6px_0_rgb(0_0_0_/_10%)] hover:shadow-[0_4px_12px_0_rgb(0_0_0_/_15%)]
-          transition-all duration-300 group relative`,
+            `group relative box-border min-h-[220px] w-full max-w-[400px] !p-0 !ring-0 rounded-[var(--r-s)] border bg-white shadow-[var(--sh-xs)] transition-all duration-300 hover:shadow-[var(--sh-sm)]`,
             isPrivate && "bg-transparent opacity-75"
           )}
+          style={{ borderColor: 'var(--line-strong)' }}
         >
           <CardContent className="relative flex flex-col p-0">
-            {/* Header with colored bar */}
             <div
               className={cn(
-                `bg-gradient-to-r from-purple-500 to-pink-500
-            h-[6px] -mt-[1px] -mr-[1px] -ml-[1px] rounded-tl-[4px] rounded-tr-[4px]
-            `,
-                isPrivate && "from-gray-400 to-gray-500"
+                'h-1.5 rounded-t-[calc(var(--r-s)-1px)]',
+                isPrivate ? 'bg-gray-400' : '',
               )}
-            ></div>
+              style={
+                isPrivate
+                  ? undefined
+                  : {
+                      background: `linear-gradient(90deg, var(--blue) 0%, var(--blue-mid) 100%)`,
+                    }
+              }
+            />
 
             {/* Settings dropdown in top right */}
             <div className="absolute top-2 right-2 z-20" ref={dropdownRef}>
               <button
+                type="button"
                 className={cn(
-                  "w-10 h-10 rounded-full bg-white border-2 border-gray-300 shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-200 hover:border-purple-400 hover:scale-110",
-                  isDropdownOpen && "border-purple-500 shadow-xl scale-110 bg-purple-50"
+                  'flex h-10 w-10 items-center justify-center rounded-full border-2 bg-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-lg',
+                  isDropdownOpen && 'scale-105 shadow-lg',
                 )}
+                style={{
+                  borderColor: 'var(--line-strong)',
+                  ...(isDropdownOpen
+                    ? { borderColor: 'var(--blue)', backgroundColor: 'var(--blue-lite)' }
+                    : {}),
+                }}
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
-                <Settings className="w-5 h-5 text-gray-700 hover:text-purple-600" />
+                <Settings
+                  className="h-5 w-5 text-[var(--ink-soft)]"
+                  style={{ color: isDropdownOpen ? 'var(--blue)' : undefined }}
+                />
               </button>
 
               {/* Dropdown Menu */}
               {isDropdownOpen && (
-                <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-xl shadow-2xl border border-gray-200 py-3 z-30 animate-in fade-in duration-200">
-               
+                <div
+                  className="absolute right-0 top-full z-30 mt-2 w-52 rounded-[var(--r-m)] border bg-white py-3 shadow-[var(--sh-md)] animate-in fade-in duration-200"
+                  style={{ borderColor: 'var(--line-strong)' }}
+                >
                   <button
+                    type="button"
                     onClick={() => handleDropdownAction(handleEditClick)}
-                    className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 flex items-center gap-3 transition-all duration-150"
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition-all duration-150 hover:bg-[var(--blue-lite)]"
+                    style={{ color: 'var(--ink)' }}
                   >
-                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                      <Edit3 className="w-4 h-4 text-blue-600" />
+                    <div
+                      className="flex h-8 w-8 items-center justify-center rounded-full"
+                      style={{ backgroundColor: 'var(--blue-ghost)' }}
+                    >
+                      <Edit3 className="h-4 w-4" style={{ color: 'var(--blue)' }} />
                     </div>
                     <span className="font-medium">Edit Event</span>
                   </button>
 
-                  {/* Clone Event */}
                   <button
+                    type="button"
                     onClick={() => handleDropdownAction(onClone || (() => {}))}
-                    className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 flex items-center gap-3 transition-all duration-150"
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition-all duration-150 hover:bg-[var(--wa-ghost)] disabled:opacity-50"
+                    style={{ color: 'var(--ink)' }}
                     disabled={!onClone}
                   >
-                    <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                      <Copy className="w-4 h-4 text-green-600" />
+                    <div
+                      className="flex h-8 w-8 items-center justify-center rounded-full"
+                      style={{ backgroundColor: 'var(--wa-ghost)' }}
+                    >
+                      <Copy className="h-4 w-4" style={{ color: 'var(--wa-dark)' }} />
                     </div>
                     <span className="font-medium">Clone Event</span>
                   </button>
@@ -606,13 +639,13 @@ const EventCard: FC<PropsType> = ({
 
                   {/* Toggle On/Off */}
                   <button
+                    type="button"
                     onClick={() => handleDropdownAction(onToggle)}
                     className={cn(
-                      "w-full px-4 py-3 text-left text-sm text-gray-700 flex items-center gap-3 transition-all duration-150",
-                      isPrivate 
-                        ? "hover:bg-green-50 hover:text-green-700" 
-                        : "hover:bg-orange-50 hover:text-orange-700"
+                      'flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition-all duration-150',
+                      isPrivate ? 'hover:bg-[var(--wa-ghost)]' : 'hover:bg-[var(--amber-ghost)]',
                     )}
+                    style={{ color: 'var(--ink)' }}
                     disabled={isPending}
                   >
                     <div className={cn(
@@ -635,8 +668,9 @@ const EventCard: FC<PropsType> = ({
 
                   {/* Delete Event */}
                   <button
+                    type="button"
                     onClick={() => handleDropdownAction(onDelete)}
-                    className="w-full px-4 py-3 text-left text-sm text-red-600 hover:bg-red-50 hover:text-red-700 flex items-center gap-3 transition-all duration-150"
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-red-600 transition-all duration-150 hover:bg-red-50 hover:text-red-700"
                     disabled={isPending}
                   >
                     <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
@@ -652,24 +686,33 @@ const EventCard: FC<PropsType> = ({
             <div className="w-full flex flex-col p-[18px_16px] pr-14">
               <h2
                 className={cn(
-                  `text-lg font-semibold text-gray-800 mb-1`,
-                  isPrivate && "text-gray-500"
+                  'mb-1 text-lg font-semibold',
+                  isPrivate ? 'text-gray-500' : '',
                 )}
+                style={!isPrivate ? { color: 'var(--ink)' } : undefined}
               >
                 {title}
               </h2>
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-2 h-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500"></div>
-                <p className="text-sm text-gray-600 font-medium">{duration} minutes</p>
+              <div className="mb-3 flex items-center gap-2">
+                <div
+                  className="h-2 w-2 shrink-0 rounded-full"
+                  style={{
+                    background: isPrivate
+                      ? '#9ca3af'
+                      : `linear-gradient(90deg, var(--blue), var(--blue-mid))`,
+                  }}
+                />
+                <p className="text-sm font-medium text-[var(--ink-soft)]">{duration} minutes</p>
               </div>
               <a
                 target="_blank"
                 href={event_link}
                 rel="noopener noreferrer"
                 className={cn(
-                  `text-sm text-blue-600 hover:text-blue-800 underline decoration-1 underline-offset-2 transition-colors duration-200`,
-                  isPrivate && "pointer-events-none opacity-60 no-underline"
+                  'text-sm underline decoration-1 underline-offset-2 transition-colors duration-200',
+                  isPrivate && 'pointer-events-none no-underline opacity-60',
                 )}
+                style={{ color: 'var(--blue)' }}
               >
                 View booking page →
               </a>
@@ -678,17 +721,17 @@ const EventCard: FC<PropsType> = ({
 
           {/* Footer */}
           <CardFooter
-            className="p-[12px_16px] border-t border-gray-100 h-full flex items-center justify-between bg-gray-50/50"
+            className="flex h-full items-center justify-between border-t p-3 sm:p-[12px_16px]"
+            style={{ borderColor: 'var(--line)', backgroundColor: 'var(--surface)' }}
           >
             <Button
               variant="ghost"
               disabled={isPrivate}
               className={cn(
-                "flex items-center gap-2 cursor-pointer font-medium text-sm px-3 py-2 rounded-lg transition-all duration-200",
-                isPrivate 
-                  ? "text-gray-400 cursor-not-allowed" 
-                  : "text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                'flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200',
+                isPrivate ? 'cursor-not-allowed text-gray-400' : 'hover:bg-[var(--blue-lite)]',
               )}
+              style={!isPrivate ? { color: 'var(--blue)' } : undefined}
               onClick={handleCopyLink}
             >
               <Copy className="w-4 h-4" />
@@ -701,10 +744,10 @@ const EventCard: FC<PropsType> = ({
                 "w-2 h-2 rounded-full transition-colors duration-200",
                 isPrivate ? "bg-gray-400" : "bg-green-500"
               )}></div>
-              <span className={cn(
-                "text-xs font-medium",
-                isPrivate ? "text-gray-500" : "text-green-600"
-              )}>
+              <span
+                className={cn('text-xs font-medium', isPrivate ? 'text-gray-500' : '')}
+                style={!isPrivate ? { color: 'var(--wa-dark)' } : undefined}
+              >
                 {isPrivate ? "Private" : "Public"}
               </span>
             </div>
