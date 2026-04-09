@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { addMinutes, parse, format, parseISO } from "date-fns";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -17,10 +17,20 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useBookingState } from "@/hooks/use-booking-state";
 import { Fragment, useState, useMemo } from "react";
-import { CheckIcon, ExternalLink, User, Calendar, Globe, ChevronDown } from "lucide-react";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  ArrowLeft,
+  CheckIcon,
+  ExternalLink,
+  User,
+  Calendar,
+  Globe,
+  ChevronDown,
+} from "lucide-react";
 import { getPublicAvailabilityByEventIdQueryFn, scheduleMeetingMutationFn } from "@/lib/api";
 import { toast } from "sonner";
 import { Loader } from "@/components/loader";
+import { cn } from "@/lib/utils";
 
 // Type definitions for the event object - matching your EventType
 interface EventQuestion {
@@ -49,13 +59,40 @@ interface Event {
   bufferBefore?: number;
   duration: number;
   maxBookingsPerDay?: number | null;
-  questions?: EventQuestion[];
+  /** API returns JSON string from DB; arrays also supported */
+  questions?: EventQuestion[] | string | null;
   slug?: string;
   timeSlotInterval?: number;
   timeZoneDisplay?: string;
   confirmationMessage?: string;
   redirectUrl?: string;
-  user: EventUser;  
+  user: EventUser;
+}
+
+/** Backend stores questions as JSON text — must parse before .forEach/.map or React crashes. */
+function parseEventQuestions(raw: unknown): EventQuestion[] {
+  if (raw == null) return [];
+  if (Array.isArray(raw)) {
+    return raw.filter(
+      (q): q is EventQuestion =>
+        Boolean(q) && typeof q === "object" && "id" in q && "question" in q && "type" in q,
+    );
+  }
+  if (typeof raw === "string") {
+    const trimmed = raw.trim();
+    if (!trimmed) return [];
+    try {
+      const parsed = JSON.parse(trimmed) as unknown;
+      if (!Array.isArray(parsed)) return [];
+      return parsed.filter(
+        (q): q is EventQuestion =>
+          Boolean(q) && typeof q === "object" && "id" in q && "question" in q && "type" in q,
+      );
+    } catch {
+      return [];
+    }
+  }
+  return [];
 }
 
 type FormData = {
@@ -66,106 +103,6 @@ type FormData = {
   [key: string]: string | string[] | undefined; // For dynamic question fields
 };
 
-
-const convertTimezone = async (fromTimezone: string, toTimezone: string, timestamp: number) => {
-  const apiKey = "1Q8FTQ9WLZIV";
-  
-  // Try HTTPS endpoint first
-  const httpsUrl = `https://api.timezonedb.com/v2.1/convert-time-zone?key=${apiKey}&format=json&from=${fromTimezone}&to=${toTimezone}&time=${timestamp}`;
-  
-  try {
-  
-    const response = await fetch(httpsUrl);
-    const data = await response.json();
-    
-    if (data.status === "OK") {
-      return {
-        success: true,
-        convertedTimestamp: data.toTimestamp,
-        fromZone: data.fromZoneName,
-        toZone: data.toZoneName,
-      };
-    } else {
-      throw new Error(data.message || "Timezone conversion failed");
-    }
-  } catch (error) {
-    console.error("Timezone conversion API error:", error);
-    return {
-      success: false,
-      error: error.message || "Failed to convert timezone"
-    };
-  }
-};
-
-
-
-const convertTimezoneManual = (fromTimezone: string, toTimezone: string, dateTime: Date) => {
-  try {
-    // Create formatter for the target timezone
-    const targetFormatter = new Intl.DateTimeFormat('en-US', {
-      timeZone: toTimezone,
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false
-    });
-
-    // Create formatter for the source timezone
-    const sourceFormatter = new Intl.DateTimeFormat('en-US', {
-      timeZone: fromTimezone,
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false
-    });
-
-    // Get the date/time in both timezones
-    const sourceParts = sourceFormatter.formatToParts(dateTime);
-    const targetParts = targetFormatter.formatToParts(dateTime);
-
-    // Create date objects
-    const sourceDate = new Date(
-      parseInt(sourceParts.find(p => p.type === 'year')?.value || '0'),
-      parseInt(sourceParts.find(p => p.type === 'month')?.value || '1') - 1,
-      parseInt(sourceParts.find(p => p.type === 'day')?.value || '1'),
-      parseInt(sourceParts.find(p => p.type === 'hour')?.value || '0'),
-      parseInt(sourceParts.find(p => p.type === 'minute')?.value || '0'),
-      parseInt(sourceParts.find(p => p.type === 'second')?.value || '0')
-    );
-
-    const targetDate = new Date(
-      parseInt(targetParts.find(p => p.type === 'year')?.value || '0'),
-      parseInt(targetParts.find(p => p.type === 'month')?.value || '1') - 1,
-      parseInt(targetParts.find(p => p.type === 'day')?.value || '1'),
-      parseInt(targetParts.find(p => p.type === 'hour')?.value || '0'),
-      parseInt(targetParts.find(p => p.type === 'minute')?.value || '0'),
-      parseInt(targetParts.find(p => p.type === 'second')?.value || '0')
-    );
-
-    // Calculate the offset and apply it
-    const offset = targetDate.getTime() - sourceDate.getTime();
-    const convertedDate = new Date(dateTime.getTime() + offset);
-
-    return {
-      success: true,
-      convertedDate: convertedDate,
-      fromZone: fromTimezone,
-      toZone: toTimezone,
-    };
-  } catch (error) {
-    console.error("Manual timezone conversion error:", error);
-    return {
-      success: false,
-      error: error.message || "Failed to convert timezone manually"
-    };
-  }
-};
 
 // Get browser timezone
 const getBrowserTimezone = () => {
@@ -199,7 +136,10 @@ const calendarObjectToISODate = (calendarObj: CalendarLike | null | undefined) =
 
 const BookingForm = (props: { event: Event }) => {
   const { event } = props;
- 
+  const { username } = useParams();
+  const navigate = useNavigate();
+  const questions = useMemo(() => parseEventQuestions(event.questions), [event.questions]);
+
   const [meetLink, setMeetLink] = useState("");
   const [bookingDetails, setBookingDetails] = useState<{
     startTime: string;
@@ -209,7 +149,9 @@ const BookingForm = (props: { event: Event }) => {
 
 
   
-  const { selectedDate, isSuccess, selectedSlot, handleSuccess } = useBookingState();
+  const { selectedDate, isSuccess, selectedSlot, handleSuccess, handleSelectSlot, handleBack } =
+    useBookingState();
+  const queryClient = useQueryClient();
 
 
   const { mutate, isPending } = useMutation({
@@ -280,8 +222,8 @@ const BookingForm = (props: { event: Event }) => {
     }
 
     // Add dynamic questions with proper validation based on type
-    if (event.questions && event.questions.length > 0) {
-      event.questions.forEach((question) => {
+    if (questions.length > 0) {
+      questions.forEach((question) => {
         const fieldName = `question_${question.id}`;
         
         if (question.type === "checkbox") {
@@ -309,7 +251,7 @@ const BookingForm = (props: { event: Event }) => {
     return { 
       schema: dynamicSchema
     };
-  }, [event]);
+  }, [event, questions]);
 
   // Create default values
   const defaultValues = useMemo(() => {
@@ -323,8 +265,8 @@ const BookingForm = (props: { event: Event }) => {
       values.guestEmails = "";
     }
 
-    if (event.questions && event.questions.length > 0) {
-      event.questions.forEach((question) => {
+    if (questions.length > 0) {
+      questions.forEach((question) => {
         const fieldName = `question_${question.id}`;
         if (question.type === "checkbox") {
           values[fieldName] = []; // Initialize as empty array for checkboxes
@@ -335,7 +277,7 @@ const BookingForm = (props: { event: Event }) => {
     }
 
     return values;
-  }, [event]);
+  }, [event, questions]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -379,15 +321,9 @@ const BookingForm = (props: { event: Event }) => {
     }
 
     try {
- 
-
-      // Get the timezone from availability data
-      const eventTimezone = availability.length > 0 ? availability[0].timezone : "UTC";
-  
-
-      // Get browser timezone
+      const hostTimezone =
+        availability.length > 0 ? availability[0].timezone : "UTC";
       const browserTimezone = getBrowserTimezone();
-  
 
       // Convert calendar object to ISO date string
       const selectedDateISO = calendarObjectToISODate(selectedDate);
@@ -395,82 +331,42 @@ const BookingForm = (props: { event: Event }) => {
         throw new Error("Invalid date format from calendar");
       }
 
-
-      // Parse the selected date
       const selectedDateObj = parseISO(selectedDateISO);
       if (isNaN(selectedDateObj.getTime())) {
         throw new Error("Invalid date format");
       }
-   
 
-      // Parse the time slot (e.g., "11:30 pm") and combine with the selected date
-      const timeOnlyDate = parse(selectedSlot.toString(), "h:mm a", new Date());
+      // Parse slot label (e.g. "3:00 pm") — try common patterns
+      const slotStr = selectedSlot.toString().trim();
+      let timeOnlyDate = parse(slotStr, "h:mm a", new Date());
+      if (isNaN(timeOnlyDate.getTime())) {
+        timeOnlyDate = parse(slotStr, "h:mma", new Date());
+      }
       if (isNaN(timeOnlyDate.getTime())) {
         throw new Error("Invalid start time format");
       }
-    
 
-      // Create a date object with the selected date and parsed time in browser timezone
-      const combinedDateTime = new Date(
+      // Local wall-clock in the visitor's timezone → JS Date is already the correct UTC instant.
+      // (Avoids TimeZoneDB: invalid/expired keys return 400; keys must not live in client bundles.)
+      const startTimeUTC = new Date(
         selectedDateObj.getFullYear(),
         selectedDateObj.getMonth(),
         selectedDateObj.getDate(),
         timeOnlyDate.getHours(),
         timeOnlyDate.getMinutes(),
         0,
-        0
+        0,
       );
 
-
-
-   
-
-      // Convert to timestamp for timezone API
-      const browserTimestamp = Math.floor(combinedDateTime.getTime() / 1000);
-
-
-      // Convert timezone using the API first, then fallback to manual method
-      const conversionResult = await convertTimezone(browserTimezone, eventTimezone, browserTimestamp);
-    
-      
-      let startTimeUTC: Date;
-      
-      if (conversionResult.success) {
-        // Use the converted timestamp from the API
-        startTimeUTC = new Date(conversionResult.convertedTimestamp * 1000);
-
-      } else {
-        // Fallback to manual conversion using Intl API
-        const manualConversion = convertTimezoneManual(browserTimezone, eventTimezone, combinedDateTime);
- 
-        if (manualConversion.success) {
-          startTimeUTC = manualConversion.convertedDate;
-
-        } else {
-          // Final fallback - simple approach
-         
-          
-          if (eventTimezone === "UTC") {
-            startTimeUTC = combinedDateTime;
-
-          } else {
-            // Very basic fallback - may not be accurate for all timezones
-            const tempDate = new Date(combinedDateTime.toLocaleString('en-US', { timeZone: eventTimezone }));
-            const offset = combinedDateTime.getTime() - tempDate.getTime();
-            startTimeUTC = new Date(combinedDateTime.getTime() + offset);
-           
-          }
-        }
+      if (isNaN(startTimeUTC.getTime())) {
+        throw new Error("Invalid meeting start time");
       }
-        console.log("Converted Date and time ",startTimeUTC);
-     
 
-      // Calculate end time
       const endTimeUTC = addMinutes(startTimeUTC, event.duration);
 
 
       // Extract question answers
-      const questionAnswers = event.questions?.map((question) => {
+      const questionAnswers = questions.map((question) => {
         const fieldValue = values[`question_${question.id}`];
         let answer = "";
 
@@ -497,7 +393,7 @@ const BookingForm = (props: { event: Event }) => {
         guestName: values.guestName,
         guestEmail: values.guestEmail,
       
-         additionalInfo: `${values.additionalInfo || ""} (+selectedTime: ${selectedSlot}  selectedDate: ${selectedDate} duration: ${event.duration} title: ${title} browsertimezone: ${browserTimezone} }+)`,
+         additionalInfo: `${values.additionalInfo || ""} (+selectedTime: ${selectedSlot}  selectedDate: ${selectedDate} duration: ${event.duration} title: ${title} guestTz: ${browserTimezone} hostTz: ${hostTimezone} }+)`,
         ...(event.allowGuests && values.guestEmails && { guestEmails: values.guestEmails }),
         eventId: event.id,
         startTime: startTimeUTC.toISOString(),
@@ -517,6 +413,9 @@ const BookingForm = (props: { event: Event }) => {
             endTime: endTimeUTC.toISOString(),
             guestName: values.guestName,
           });
+          void queryClient.invalidateQueries({
+            queryKey: ["availbility_single_event", event.id],
+          });
           if (link) toast.success("Meeting scheduled! Check your email for the meeting link.");
           handleSuccess(true);
           setTimeout(() => {
@@ -529,7 +428,23 @@ const BookingForm = (props: { event: Event }) => {
         },
         onError: (error: unknown) => {
           console.error("Booking error:", error);
-          toast.error(error.message || "Failed to schedule event");
+          let msg = "Failed to schedule event";
+          if (error && typeof error === "object" && "message" in error) {
+            const m = (error as { message: unknown }).message;
+            if (typeof m === "string") msg = m;
+            else if (Array.isArray(m)) msg = m.join(", ");
+          } else if (error instanceof Error) {
+            msg = error.message;
+          }
+          const status = (error as { response?: { status?: number } }).response?.status;
+          void queryClient.invalidateQueries({
+            queryKey: ["availbility_single_event", event.id],
+          });
+          if (status === 409 || /already booked/i.test(msg)) {
+            handleSelectSlot(null);
+            handleBack();
+          }
+          toast.error(msg);
         },
       });
     } catch (error) {
@@ -714,70 +629,127 @@ const formatBookingTime = () => {
   const canSubmit = !hasValidationErrors && !isEmailBlocked && !isPending;
 
   return (
-    <div className="w-full flex-1 px-4 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
-      <div className="max-w-lg mx-auto lg:mx-0 lg:max-w-none">
+    <div
+      className={cn(
+        "w-full flex-1",
+        isSuccess
+          ? "px-4 py-8 sm:py-8 sm:px-8 pb-12"
+          : "px-4 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8"
+      )}
+    >
+      <div
+        className={cn(
+          "mx-auto w-full",
+          isSuccess ? "max-w-[480px]" : "max-w-lg lg:mx-0 lg:max-w-none"
+        )}
+      >
         {isSuccess ? (
-          <div className="text-center space-y-4 sm:space-y-6">
-            {/* Success Header */}
-            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-              <div className="size-7 sm:size-8 flex items-center justify-center rounded-full bg-green-600">
-                <CheckIcon className="w-4 h-4 sm:w-5 sm:h-5 text-white stroke-2" />
+          <div className="w-full">
+            {username ? (
+              <button
+                type="button"
+                onClick={() => navigate(`/${username}`)}
+                aria-label="Back to all event types"
+                className="mb-3 flex h-[43px] w-[43px] shrink-0 cursor-pointer items-center justify-center rounded-full border border-[rgba(26,26,26,0.1)] bg-clip-padding text-[24px] text-[rgb(0,105,255)]"
+              >
+                <ArrowLeft className="h-6 w-6" strokeWidth={2} />
+              </button>
+            ) : null}
+
+            <div className="flex flex-col items-center text-center">
+              <div className="mb-3 flex justify-center">
+                <div
+                  className="flex h-14 w-14 items-center justify-center rounded-full bg-[#00a878] shadow-[0_1px_3px_rgba(0,0,0,0.12)]"
+                  aria-hidden
+                >
+                  <CheckIcon className="h-7 w-7 text-white stroke-[2.5]" />
+                </div>
               </div>
-              <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">
+
+              <h1 className="text-[1.65rem] sm:text-[1.75rem] font-bold leading-tight tracking-tight text-[#0f3554]">
                 You are scheduled
-              </h2>
-            </div>
+              </h1>
 
-            {/* Confirmation Message */}
-            <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 px-2">
-              {event.confirmationMessage || "A calendar invitation has been sent to your email address."}
-            </p>
+              <p className="mt-2 max-w-md text-[0.9375rem] leading-relaxed text-[#476788] sm:text-base">
+                {event.confirmationMessage ||
+                  "A calendar invitation has been sent to your email address."}
+              </p>
 
-            {/* Open Invitation / Meet Link Button */}
-            {meetLink ? (
-              <Button
-                variant="outline"
-                onClick={() => window.open(meetLink, "_blank")}
-                className="mb-4 sm:mb-6 flex items-center gap-2 h-10 sm:h-11 text-sm sm:text-base px-4 sm:px-6"
-              >
-                <ExternalLink className="w-4 h-4" />
-                Open Meeting Link
-              </Button>
-            ) : (
-              <Button
-                variant="outline"
-                onClick={handleOpenInvitation}
-                className="mb-4 sm:mb-6 flex items-center gap-2 h-10 sm:h-11 text-sm sm:text-base px-4 sm:px-6"
-              >
-                <ExternalLink className="w-4 h-4" />
-                Open Invitation
-              </Button>
-            )}
+              {meetLink ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => window.open(meetLink, "_blank", "noopener,noreferrer")}
+                  className="mt-5 flex h-11 items-center gap-2 rounded-full border-2 border-[#0f3554] bg-white px-7 text-[0.9375rem] font-semibold text-[#0f3554] shadow-none hover:bg-[#f4f8fb]"
+                >
+                  <ExternalLink className="h-4 w-4 shrink-0" strokeWidth={2} />
+                  Open Meeting Link
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleOpenInvitation}
+                  className="mt-5 flex h-11 items-center gap-2 rounded-full border-2 border-[#0f3554] bg-white px-7 text-[0.9375rem] font-semibold text-[#0f3554] shadow-none hover:bg-[#f4f8fb]"
+                >
+                  <ExternalLink className="h-4 w-4 shrink-0" strokeWidth={2} />
+                  Open Invitation
+                </Button>
+              )}
 
-            {/* Event Details Card */}
-            <div className="bg-gray-50 rounded-lg p-4 sm:p-6 text-left space-y-3 sm:space-y-4">
-              <h3 className="font-semibold text-base sm:text-lg text-gray-900 break-words">
-                {event.title}
-              </h3>
-              
-              <div className="space-y-2 sm:space-y-3">
-                <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-600">
-                  <User className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                  <span className="break-words">{event.user.name}</span>
-                </div>
-                
-                <div className="flex items-start gap-2 sm:gap-3 text-xs sm:text-sm text-gray-600">
-                  <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0 mt-0.5" />
-                  <span className="break-words">{formatBookingTime()}</span>
-                </div>
-                {bookingDetails && (
-                  <p className="text-xs text-gray-500">Scheduled for {bookingDetails.guestName}</p>
-                )}
-                
-                <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-600">
-                  <Globe className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                  <span className="break-words">{event.timeZoneDisplay || "India Standard Time"}</span>
-                </div>
+              <div className="mt-5 w-full rounded-xl border border-[#e8ecf1] bg-white p-5 text-left shadow-[0_1px_2px_rgba(15,53,84,0.06)]">
+                <h2 className="text-lg font-bold text-[#0f3554]">{event.title}</h2>
+                <ul className="mt-3 space-y-3">
+                  <li className="flex gap-3 text-[0.9375rem] text-[#3d5d7a]">
+                    <User
+                      className="mt-0.5 h-5 w-5 shrink-0 text-[#9aa8b6]"
+                      strokeWidth={1.5}
+                    />
+                    <span className="break-words leading-snug">{event.user.name}</span>
+                  </li>
+                  <li className="flex gap-3 text-[0.9375rem] text-[#3d5d7a]">
+                    <Calendar
+                      className="mt-0.5 h-5 w-5 shrink-0 text-[#9aa8b6]"
+                      strokeWidth={1.5}
+                    />
+                    <span className="break-words leading-snug">{formatBookingTime()}</span>
+                  </li>
+                  {bookingDetails ? (
+                    <li className="pl-8 text-[0.875rem] leading-snug text-[#6b7c8f]">
+                      Scheduled for {bookingDetails.guestName}
+                    </li>
+                  ) : null}
+                  <li className="flex gap-3 text-[0.9375rem] text-[#3d5d7a]">
+                    <Globe
+                      className="mt-0.5 h-5 w-5 shrink-0 text-[#9aa8b6]"
+                      strokeWidth={1.5}
+                    />
+                    <span className="break-words leading-snug">
+                      {event.timeZoneDisplay || getBrowserTimezone()}
+                    </span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="mt-5 w-full border-t border-[#e8ecf1] pt-5">
+                <p className="text-lg font-semibold text-[#0f3554]">
+                  Schedule your own meetings with Schedley
+                </p>
+                <p className="mt-1.5 text-sm leading-relaxed text-[#476788]">
+                  Eliminate the back-and-forth emails for finding time.
+                </p>
+                <Button
+                  asChild
+                  className="mt-4 h-11 rounded-full bg-[#006bff] px-8 text-sm font-semibold text-white shadow-none hover:bg-[#0058db]"
+                >
+                  <a
+                    href="https://www.schedley.com/sign-up"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Get started free
+                  </a>
+                </Button>
               </div>
             </div>
           </div>
@@ -837,7 +809,7 @@ const formatBookingTime = () => {
                 />
 
                 {/* Dynamic Questions - Enhanced with better styling */}
-                {event.questions?.map((question) => (
+                {questions.map((question) => (
                   <FormField
                     key={question.id}
                     name={`question_${question.id}`}

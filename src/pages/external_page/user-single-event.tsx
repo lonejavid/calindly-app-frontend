@@ -17,7 +17,7 @@ const UserSingleEventPage = () => {
   const params = useParams();
   const username = params.username as string;
   const slug = params.slug as string;
-  const { next, timezone, selectedDate } = useBookingState();
+  const { next, timezone, selectedDate, isSuccess } = useBookingState();
 
 
   const { data, isFetching, isLoading, isError, error } = useQuery({
@@ -156,26 +156,38 @@ const UserSingleEventPage = () => {
         selectedDate && 'sm:!w-[98%]'
       )}
     >
-      <div className="w-full flex flex-col lg:flex-row items-stretch justify-stretch p-0 px-1 gap-4">
-        <EventDetails
-          eventTitle={event.title}
-          description={event.description}
-          user={event.user}
-          eventLocationType={event.locationType}
-          username={username}
-          duration={event.duration}
-          bookingWindow={{
-            startDate: event.bookingStartDate,
-            endDate: event.bookingEndDate,
-            minimumNotice: event.minimumNotice,
-            noticeType: event.noticeType,
-            windowType: event.bookingWindowType,
-            dateRangeLimit: event.dateRangeLimit,
-            dateRangeType: event.dateRangeType,
-          }}
-        />
+      <div
+        className={cn(
+          "w-full flex flex-col lg:flex-row items-stretch justify-stretch p-0 px-1 gap-4",
+          isSuccess && "gap-0 lg:flex-col lg:items-center lg:justify-center lg:py-0"
+        )}
+      >
+        {!isSuccess && (
+          <EventDetails
+            eventTitle={event.title}
+            description={event.description}
+            user={event.user}
+            eventLocationType={event.locationType}
+            username={username}
+            duration={event.duration}
+            bookingWindow={{
+              startDate: event.bookingStartDate,
+              endDate: event.bookingEndDate,
+              minimumNotice: event.minimumNotice,
+              noticeType: event.noticeType,
+              windowType: event.bookingWindowType,
+              dateRangeLimit: event.dateRangeLimit,
+              dateRangeType: event.dateRangeType,
+            }}
+          />
+        )}
 
-        <div className="min-w-sm max-w-3xl flex-shrink-0 flex-1">
+        <div
+          className={cn(
+            "min-w-sm max-w-3xl flex-shrink-0 flex-1",
+            isSuccess && "w-full max-w-lg flex-none mx-auto"
+          )}
+        >
           {next ? (
             <BookingForm event={event} />
           ) : (

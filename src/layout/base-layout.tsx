@@ -1,13 +1,22 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, matchPath } from "react-router-dom";
 import { FooterProvider } from "@/contexts/FooterContext";
 import Footer from "@/components/Footer";
-import { AUTH_ROUTES } from "@/routes/common/routePaths";
+import { AUTH_ROUTES, PUBLIC_ROUTES } from "@/routes/common/routePaths";
+
+/** Guest booking page /:username/:slug — hide marketing footer (same path shape as /services/... is excluded). */
+function isPublicGuestBookingPath(pathname: string): boolean {
+  const m = matchPath({ path: PUBLIC_ROUTES.USER_SINGLE_EVENT, end: true }, pathname);
+  if (!m) return false;
+  if (pathname.startsWith("/services/") || pathname.startsWith("/app/")) return false;
+  return true;
+}
 
 const BaseLayout = () => {
   const location = useLocation();
   const hideFooter =
     location.pathname === AUTH_ROUTES.SIGN_IN ||
-    location.pathname === AUTH_ROUTES.SIGN_UP;
+    location.pathname === AUTH_ROUTES.SIGN_UP ||
+    isPublicGuestBookingPath(location.pathname);
 
   return (
     <FooterProvider>

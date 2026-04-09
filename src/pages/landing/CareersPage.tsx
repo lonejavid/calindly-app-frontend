@@ -1,14 +1,14 @@
 import { useState, useRef, type ReactNode } from "react";
-import {
-  Briefcase,
-  MapPin,
-  Clock,
-  Users,
-  Globe,
-  Star,
-  CheckCircle,
-  X,
-  Upload,
+import { 
+  Briefcase, 
+  MapPin, 
+  Clock, 
+  Users, 
+  Globe, 
+  Star, 
+  CheckCircle, 
+  X,  
+  Upload, 
   FileText,
   Rocket,
   Award,
@@ -52,7 +52,7 @@ const initialForm: ApplicationFormState = {
 };
 
 const CareersPage = () => {
-  const navigate = useNavigate();
+     const navigate = useNavigate();
   const [selectedJob, setSelectedJob] = useState<JobRole | null>(null);
   const [showApplicationForm, setShowApplicationForm] = useState(false);
   const [formData, setFormData] = useState<ApplicationFormState>(initialForm);
@@ -71,7 +71,7 @@ const CareersPage = () => {
         "The ideal candidate will be responsible for developing high-quality applications. They will also be responsible for designing and implementing testable and scalable code.",
       responsibilities: [
         "Develop quality software and web applications",
-        "Analyze and maintain existing software applications",
+        "Analyze and maintain existing software applications", 
         "Design highly scalable, testable code",
         "Discover and fix programming bugs",
         "Collaborate with cross-functional teams",
@@ -241,7 +241,7 @@ const CareersPage = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     alert("Application submitted successfully.");
-    navigate("/");
+      navigate("/");
     setShowApplicationForm(false);
     setFormData(initialForm);
   };
@@ -267,16 +267,16 @@ const CareersPage = () => {
           <div className="absolute inset-0 opacity-20">
             <div className="absolute right-0 top-0 h-96 w-96 rounded-full bg-[var(--blue)] blur-[120px]" />
             <div className="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-[var(--blue-mid)] blur-[100px]" />
-          </div>
+            </div>
           <div className={`${LANDING_PAGE_CONTAINER_CLASS} relative z-10`}>
             <SectionReveal effect="fade-up">
               <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
                 <span className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-[var(--blue)]/50 bg-[var(--blue)]/30 text-[var(--blue-mid)]">
                   <Briefcase className="h-8 w-8" strokeWidth={2} />
-                </span>
+              </span>
                 <h1 className="mb-4 text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
                   Build the future of intelligent scheduling
-                </h1>
+            </h1>
                 <p className="text-base leading-relaxed text-white/80 sm:text-lg">
                   Join Schedley and help professionals worldwide save time, cut scheduling chaos, and
                   focus on what matters—with thoughtful product and a remote-first team.
@@ -299,8 +299,8 @@ const CareersPage = () => {
                       <TrendingUp className="h-4 w-4 text-[var(--blue-mid)]" />
                     </span>
                     <span>High-impact roles</span>
-                  </div>
-                </div>
+              </div>
+              </div>
               </div>
             </SectionReveal>
           </div>
@@ -313,20 +313,20 @@ const CareersPage = () => {
               <div className="mx-auto mb-10 max-w-2xl text-center">
                 <h2 className="text-2xl font-semibold text-[var(--ink)] sm:text-3xl tracking-tight">
                   Why Schedley
-                </h2>
+            </h2>
                 <p className="mt-3 text-[var(--ink-muted)] text-base sm:text-lg">
                   We invest in people who care about craft, clarity, and customer outcomes.
-                </p>
-              </div>
+            </p>
+          </div>
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {benefits.map((benefit, index) => (
+            {benefits.map((benefit, index) => (
                   <div
                     key={index}
                     className="rounded-[var(--r-l)] border border-[var(--line)] bg-[var(--surface)] p-6 shadow-[var(--sh-xs)] transition-shadow hover:shadow-[var(--sh-sm)]"
                   >
                     <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--blue-lite)]">
-                      {benefit.icon}
-                    </div>
+                  {benefit.icon}
+                </div>
                     <h3 className="text-lg font-semibold text-[var(--ink)]">{benefit.title}</h3>
                     <p className="mt-2 text-sm leading-relaxed text-[var(--ink-muted)]">
                       {benefit.desc}
@@ -335,8 +335,8 @@ const CareersPage = () => {
                 ))}
               </div>
             </SectionReveal>
-          </div>
-        </section>
+        </div>
+      </section>
 
         {/* Open positions */}
         <section className="border-t border-[var(--line)] bg-[var(--surface)] py-12 sm:py-16">
@@ -345,19 +345,19 @@ const CareersPage = () => {
               <div className="mx-auto mb-10 max-w-2xl text-center">
                 <h2 className="text-2xl font-semibold text-[var(--ink)] sm:text-3xl tracking-tight">
                   Open positions
-                </h2>
+            </h2>
                 <p className="mt-3 text-[var(--ink-muted)] text-base sm:text-lg">
                   Find a role that fits—then tell us your story.
-                </p>
-              </div>
+            </p>
+          </div>
               <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                {jobRoles.map((job) => (
+            {jobRoles.map((job) => (
                   <article
                     key={job.id}
                     className="flex flex-col rounded-[var(--r-l)] border border-[var(--line)] bg-[var(--white)] p-6 shadow-[var(--sh-xs)] transition-shadow hover:shadow-[var(--sh-md)]"
                   >
                     <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                      <div>
+                  <div>
                         <h3 className="text-xl font-semibold text-[var(--ink)]">{job.title}</h3>
                         <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm text-[var(--ink-muted)]">
                           <span className="inline-flex items-center gap-1">
@@ -372,7 +372,7 @@ const CareersPage = () => {
                             <Clock className="h-4 w-4 shrink-0 text-[var(--blue)]" />
                             {job.type}
                           </span>
-                        </div>
+                      </div>
                       </div>
                       <div className="text-left sm:text-right">
                         <p className="text-lg font-semibold text-[var(--blue-deep)]">{job.salary}</p>
@@ -383,37 +383,37 @@ const CareersPage = () => {
                       {job.description}
                     </p>
                     <div className="mb-5 flex flex-wrap gap-2">
-                      {job.skills.map((skill, index) => (
+                  {job.skills.map((skill, index) => (
                         <span
                           key={index}
                           className="rounded-full border border-[var(--line-strong)] bg-[var(--blue-lite)] px-3 py-1 text-xs font-medium text-[var(--blue-deep)]"
                         >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
+                      {skill}
+                    </span>
+                  ))}
+                </div>
                     <div className="mt-auto flex flex-col gap-3 sm:flex-row">
-                      <button
+                  <button
                         type="button"
-                        onClick={() => setSelectedJob(job)}
+                    onClick={() => setSelectedJob(job)}
                         className="flex-1 rounded-lg border-2 border-[var(--line-strong)] bg-[var(--white)] px-5 py-2.5 text-sm font-medium text-[var(--ink)] transition-colors hover:border-[var(--blue)] hover:bg-[var(--blue-ghost)]"
-                      >
+                  >
                         View details
-                      </button>
-                      <button
+                  </button>
+                  <button
                         type="button"
-                        onClick={() => handleApply(job)}
+                    onClick={() => handleApply(job)}
                         className="flex-1 rounded-lg bg-[var(--blue)] px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--sh-blue)] transition-colors hover:bg-[var(--blue-dark)]"
-                      >
+                  >
                         Apply now
-                      </button>
-                    </div>
+                  </button>
+                </div>
                   </article>
                 ))}
               </div>
             </SectionReveal>
-          </div>
-        </section>
+        </div>
+      </section>
       </main>
 
       {/* Job detail modal */}
@@ -421,7 +421,7 @@ const CareersPage = () => {
         <div className={modalBackdrop} role="dialog" aria-modal="true" aria-labelledby="job-title">
           <div className={`${modalPanel} max-w-3xl`}>
             <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-[var(--line)] bg-[var(--white)] px-6 py-4">
-              <div>
+                <div>
                 <h2 id="job-title" className="text-2xl font-semibold text-[var(--ink)]">
                   {selectedJob.title}
                 </h2>
@@ -439,16 +439,16 @@ const CareersPage = () => {
                     {selectedJob.type}
                   </span>
                 </div>
-              </div>
-              <button
+                </div>
+                <button
                 type="button"
-                onClick={() => setSelectedJob(null)}
+                  onClick={() => setSelectedJob(null)}
                 className="rounded-lg p-2 text-[var(--ink-muted)] transition-colors hover:bg-[var(--surface)] hover:text-[var(--ink)]"
                 aria-label="Close"
-              >
+                >
                 <X className="h-5 w-5" />
-              </button>
-            </div>
+                </button>
+              </div>
             <div className="space-y-6 px-6 py-6">
               <div>
                 <h3 className="mb-2 text-lg font-semibold text-[var(--ink)]">About the role</h3>
@@ -504,66 +504,66 @@ const CareersPage = () => {
         <div className={modalBackdrop} role="dialog" aria-modal="true">
           <div className={`${modalPanel} max-w-lg`}>
             <div className="flex items-start justify-between gap-4 border-b border-[var(--line)] px-6 py-4">
-              <div>
+                <div>
                 <h2 className="text-xl font-semibold text-[var(--ink)]">
                   Apply for {selectedJob.title}
                 </h2>
                 <p className="mt-1 text-sm text-[var(--ink-muted)]">
                   Submit your details and we’ll get back to you.
                 </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowApplicationForm(false)}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowApplicationForm(false)}
                 className="rounded-lg p-2 text-[var(--ink-muted)] transition-colors hover:bg-[var(--surface)] hover:text-[var(--ink)]"
                 aria-label="Close"
-              >
+                >
                 <X className="h-5 w-5" />
-              </button>
-            </div>
+                </button>
+              </div>
             <form onSubmit={handleSubmit} className="space-y-4 px-6 py-6">
-              <div>
+                <div>
                 <label htmlFor="careers-name" className={labelClass}>
                   Full name *
                 </label>
-                <input
+                  <input
                   id="careers-name"
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
                   className={inputClass}
                   placeholder="Your full name"
-                  required
-                />
-              </div>
-              <div>
+                    required
+                  />
+                </div>
+                <div>
                 <label htmlFor="careers-email" className={labelClass}>
                   Email *
                 </label>
-                <input
+                  <input
                   id="careers-email"
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
                   className={inputClass}
                   placeholder="you@example.com"
-                  required
-                />
-              </div>
-              <div>
+                    required
+                  />
+                </div>
+                <div>
                 <label htmlFor="careers-country" className={labelClass}>
                   Country *
                 </label>
-                <select
+                  <select
                   id="careers-country"
-                  name="country"
-                  value={formData.country}
-                  onChange={handleInputChange}
+                    name="country"
+                    value={formData.country}
+                    onChange={handleInputChange}
                   className={inputClass}
-                  required
-                >
+                    required
+                  >
                   <option value="">Select your country</option>
                   <option value="India">India</option>
                   <option value="United States">United States</option>
@@ -572,46 +572,46 @@ const CareersPage = () => {
                   <option value="Australia">Australia</option>
                   <option value="Germany">Germany</option>
                   <option value="Other">Other</option>
-                </select>
-              </div>
-              <div>
+                  </select>
+                </div>
+                <div>
                 <label htmlFor="careers-exp" className={labelClass}>
                   Years of experience *
                 </label>
-                <select
+                  <select
                   id="careers-exp"
-                  name="experience"
-                  value={formData.experience}
-                  onChange={handleInputChange}
+                    name="experience"
+                    value={formData.experience}
+                    onChange={handleInputChange}
                   className={inputClass}
-                  required
-                >
+                    required
+                  >
                   <option value="">Select experience level</option>
                   <option value="0-1 years">0–1 years (entry)</option>
                   <option value="1-3 years">1–3 years (junior)</option>
                   <option value="3-5 years">3–5 years (mid)</option>
                   <option value="5-8 years">5–8 years (senior)</option>
                   <option value="8+ years">8+ years (expert)</option>
-                </select>
-              </div>
-              <div>
+                  </select>
+                </div>
+                <div>
                 <span className={labelClass}>Resume (PDF) *</span>
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  accept=".pdf"
-                  className="hidden"
-                />
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleFileChange}
+                      accept=".pdf"
+                      className="hidden"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
                   className="flex w-full items-center justify-center gap-2 rounded-lg border border-[var(--line)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--ink-soft)] transition-colors hover:border-[var(--blue)] hover:bg-[var(--blue-ghost)] hover:text-[var(--ink)]"
-                >
+                    >
                   <Upload className="h-4 w-4 text-[var(--blue)]" />
                   {formData.resume ? formData.resume.name : "Upload PDF"}
-                </button>
-                {formData.resume && (
+                    </button>
+                  {formData.resume && (
                   <p className="mt-2 flex items-center gap-2 text-sm text-[var(--blue-deep)]">
                     <FileText className="h-4 w-4" />
                     File selected

@@ -194,7 +194,7 @@ export function SignInForm() {
                 <span>
                   Cannot reach backend. Ensure it is running at{" "}
                   <code className="text-xs bg-white/80 px-1 rounded">{ENV.VITE_API_BASE_URL}</code> and CORS allows this origin.
-                </span>
+                  </span>
               </div>
             )}
 
@@ -356,7 +356,7 @@ export function SignInForm() {
                           className="pl-10 bg-surface border-border text-ink rounded-[var(--r-m)] h-12 tracking-widest font-mono text-center text-lg focus-visible:ring-2 focus-visible:ring-blue focus-visible:border-blue"
                         />
                       </div>
-                    </div>
+                  </div>
                     <Button
                       type="button"
                       onClick={handleVerifyLoginOtp}
