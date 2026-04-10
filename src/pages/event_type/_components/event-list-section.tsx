@@ -119,10 +119,8 @@ const EventListSection = (props: { events: EventType[]; username: string }) => {
         </DialogContent>
       </Dialog>
 
-      <div className="w-full px-4 py-4 sm:px-4 lg:px-4">
-        <div
-          className="grid max-sm:grid-cols-1 grid-cols-2 gap-6 pb-6 lg:grid-cols-[repeat(auto-fill,minmax(min(calc(100%/3-24px),max(280px,calc((100%-48px)/3))),1fr))]"
-        >
+      <div className="w-full px-5 py-5 sm:px-5 lg:px-5">
+        <div className="grid grid-cols-1 gap-4 pb-6 sm:grid-cols-2 lg:grid-cols-3">
           {events?.map((event) => (
             <EventCard
               key={event.id}

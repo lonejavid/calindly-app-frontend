@@ -1,5 +1,6 @@
 import { EventType } from "@/types/api.type";
 import { ENV } from "@/lib/get-env";
+import { toast } from "sonner";
 import { Copy, Settings, Edit3, Trash2, Power, X, Clock, Users, FileText, Shield, Calendar } from "lucide-react";
 import { FC, useState, useRef, useEffect, type CSSProperties } from "react";
 
@@ -135,20 +136,6 @@ const Toggle: FC<{
   </button>
 );
 
-// Simple toast function
-const showToast = (message: string, type: 'success' | 'error' = 'success') => {
-  const toast = document.createElement('div');
-  toast.className = `fixed top-4 right-4 px-4 py-2 rounded-md text-white z-50 ${
-    type === 'success' ? 'bg-green-500' : 'bg-red-500'
-  }`;
-  toast.textContent = message;
-  document.body.appendChild(toast);
-  
-  setTimeout(() => {
-    document.body.removeChild(toast);
-  }, 3000);
-};
-
 // Edit Event Slider Component
 const EditEventSlider: FC<{
   isOpen: boolean;
@@ -185,7 +172,7 @@ const EditEventSlider: FC<{
 
   const handleSave = () => {
     onSave(formData);
-    showToast('Event updated successfully!');
+    toast.success("Event updated successfully!");
     onClose();
   };
 
@@ -513,7 +500,7 @@ const EventCard: FC<PropsType> = ({
       .then(() => {
         setIsCopied(true);
         setTimeout(() => setIsCopied(false), 2000);
-        showToast("Event link copied", "success");
+        toast.success("Event link copied");
       })
       .catch((error) => {
         console.error("Failed to copy link:", error);
@@ -555,7 +542,7 @@ const EventCard: FC<PropsType> = ({
       <div>
         <Card
           className={cn(
-            `group relative box-border min-h-[220px] w-full max-w-[400px] !p-0 !ring-0 rounded-[var(--r-s)] border bg-white shadow-[var(--sh-xs)] transition-all duration-300 hover:shadow-[var(--sh-sm)]`,
+            `group relative box-border min-h-[220px] w-full !max-w-none !p-0 !ring-0 rounded-[var(--r-s)] border bg-white shadow-[var(--sh-xs)] transition-all duration-300 hover:shadow-[var(--sh-sm)]`,
             isPrivate && "bg-transparent opacity-75"
           )}
           style={{ borderColor: 'var(--line-strong)' }}

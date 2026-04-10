@@ -9,13 +9,15 @@ import {
   Users,
   FileText,
   Bell,
+  Check,
   CheckCircle,
   Plus,
   Minus,
   Info,
   Zap,
-  Trash2,CalendarDays, Sparkles
-
+  Trash2,
+  CalendarDays,
+  Sparkles,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -547,47 +549,60 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
               <div
                 className="rounded-xl border-2 p-5"
                 style={{
-                  backgroundColor: 'var(--amber-lite)',
-                  borderColor: 'var(--amber)',
+                  backgroundColor: "var(--blue-lite)",
+                  borderColor: "var(--line-strong)",
                 }}
               >
                 <h4
                   className="mb-4 flex items-center font-semibold"
-                  style={{ color: 'var(--amber-dark)' }}
+                  style={{ color: "var(--ink)" }}
                 >
-                  <Shield className="mr-2 h-4 w-4" />
+                  <Shield className="mr-2 h-4 w-4" style={{ color: "var(--blue)" }} />
                   Block Email Domains
                 </h4>
                 <div className="space-y-4">
                   <div>
                     <label
                       className="mb-2 block text-sm font-medium"
-                      style={{ color: 'var(--amber-deep)' }}
+                      style={{ color: "var(--ink-mid)" }}
                     >
                       Common Email Domains
                     </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {commonDomains.map((domain) => (
-                        <label
-                          key={domain.value}
-                          className="flex cursor-pointer items-center space-x-2 rounded-lg border border-gray-200 bg-white p-3 hover:bg-[var(--amber-ghost)]"
-                        >
-                          <input
-                            type="checkbox"
-                            checked={blockedDomains.includes(domain.value)}
-                            onChange={() => handleDomainToggle(domain.value)}
-                            className="rounded focus:ring-2 focus:ring-[color:var(--amber)]"
-                            style={{ accentColor: 'var(--amber)' }}
-                          />
-                          <span className="text-sm text-gray-700">{domain.label}</span>
-                        </label>
-                      ))}
+                    <div className="grid grid-cols-1 gap-2.5 xs:grid-cols-2">
+                      {commonDomains.map((domain) => {
+                        const isOn = blockedDomains.includes(domain.value);
+                        return (
+                          <label
+                            key={domain.value}
+                            className="flex min-h-[48px] cursor-pointer items-center gap-3 rounded-lg border border-gray-200 bg-white px-3 py-3 hover:bg-[var(--blue-ghost)] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-[color:var(--blue-glow)] has-[:focus-visible]:ring-offset-2"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={isOn}
+                              onChange={() => handleDomainToggle(domain.value)}
+                              className="sr-only"
+                            />
+                            <span
+                              className="flex h-4 w-4 shrink-0 items-center justify-center rounded transition-colors"
+                              style={{
+                                backgroundColor: isOn ? "var(--blue)" : "var(--surface-2)",
+                              }}
+                              aria-hidden
+                            >
+                              {isOn ? (
+                                <Check className="h-3 w-3 text-white" strokeWidth={3} />
+                              ) : null}
+                            </span>
+                            <span className="text-sm text-gray-700">{domain.label}</span>
+                          </label>
+                        );
+                      })}
                     </div>
                   </div>
                   <div>
                     <label
                       className="mb-2 block text-sm font-medium"
-                      style={{ color: 'var(--amber-deep)' }}
+                      style={{ color: "var(--ink-mid)" }}
                     >
                       Add Custom Domain
                     </label>
@@ -596,14 +611,14 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
                         type="text"
                         value={customDomain}
                         onChange={(e) => setCustomDomain(e.target.value)}
-                        className="flex-1 rounded-lg border border-gray-300 px-3 py-2 focus:border-[color:var(--amber)] focus:ring-2 focus:ring-[color:var(--amber-glow)]"
+                        className="flex-1 rounded-sm border border-gray-300 px-3 py-2 focus:border-[color:var(--blue)] focus:ring-2 focus:ring-[color:var(--blue-glow)]"
                         placeholder="@company.com"
                       />
                       <button
                         type="button"
                         onClick={addCustomDomain}
-                        className="rounded-lg px-4 py-2 font-medium text-white transition-colors hover:opacity-95"
-                        style={{ backgroundColor: 'var(--amber-deep)' }}
+                        className="rounded-sm px-4 py-2 font-medium text-white transition-colors hover:opacity-95"
+                        style={{ backgroundColor: "var(--blue)" }}
                       >
                         Add
                       </button>
@@ -614,7 +629,7 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
                     <div>
                       <label
                         className="mb-2 block text-sm font-medium"
-                        style={{ color: 'var(--amber-deep)' }}
+                        style={{ color: "var(--ink-mid)" }}
                       >
                         Blocked Domains
                       </label>
@@ -622,15 +637,18 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
                         {blockedDomains.map((domain) => (
                           <span
                             key={domain}
-                            className="inline-flex items-center px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm"
+                            className="inline-flex items-center rounded-full bg-[var(--blue-lite)] px-3 py-1 text-sm"
+                            style={{ color: "var(--blue-deep)" }}
                           >
                             {domain}
                             <button
                               type="button"
                               onClick={() => removeCustomDomain(domain)}
-                              className="ml-2 text-red-600 hover:text-red-800"
+                              className="ml-2 transition-colors hover:opacity-80"
+                              style={{ color: "var(--blue-deep)" }}
+                              aria-label={`Remove ${domain}`}
                             >
-                              <X className="w-3 h-3" />
+                              <X className="h-3 w-3" />
                             </button>
                           </span>
                         ))}
@@ -942,8 +960,8 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
                       selectedLocationType === option.value
                         ? appConnected
                           ? {
-                              borderColor: "var(--wa)",
-                              backgroundColor: "var(--wa-lite)",
+                              borderColor: "var(--blue)",
+                              backgroundColor: "var(--blue-lite)",
                             }
                           : error
                             ? undefined
@@ -979,8 +997,11 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
                         <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
                       )}
                       {appConnected && selectedLocationType === option.value && (
-                        <div className="bg-green-500 rounded-full p-1">
-                          <CheckCircle className="w-5 h-5 text-white" />
+                        <div
+                          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
+                          style={{ backgroundColor: "var(--blue)" }}
+                        >
+                          <Check className="h-4 w-4 text-white" strokeWidth={2.5} />
                         </div>
                       )}
                     </div>
@@ -1089,8 +1110,8 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
                     <button
                       type="button"
                       onClick={() => setBufferBefore(Math.max(0, bufferBefore - 5))}
-                      className="rounded-xl p-3 text-white shadow-md transition-all duration-200 hover:opacity-95 hover:shadow-lg"
-                      style={{ backgroundColor: "var(--blue-deep)" }}
+                      className="rounded-full p-3 text-white shadow-md transition-all duration-200 hover:opacity-95 hover:shadow-lg"
+                      style={{ backgroundColor: "var(--blue)" }}
                     >
                       <Minus className="w-4 h-4" />
                     </button>
@@ -1104,7 +1125,7 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
                     <button
                       type="button"
                       onClick={() => setBufferBefore(bufferBefore + 5)}
-                      className="rounded-xl p-3 text-white shadow-md transition-all duration-200 hover:opacity-95 hover:shadow-lg"
+                      className="rounded-full p-3 text-white shadow-md transition-all duration-200 hover:opacity-95 hover:shadow-lg"
                       style={{ backgroundColor: "var(--blue)" }}
                     >
                       <Plus className="w-4 h-4" />
@@ -1117,8 +1138,8 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
                     <button
                       type="button"
                       onClick={() => setBufferAfter(Math.max(0, bufferAfter - 5))}
-                      className="rounded-xl p-3 text-white shadow-md transition-all duration-200 hover:opacity-95 hover:shadow-lg"
-                      style={{ backgroundColor: "var(--blue-deep)" }}
+                      className="rounded-full p-3 text-white shadow-md transition-all duration-200 hover:opacity-95 hover:shadow-lg"
+                      style={{ backgroundColor: "var(--blue)" }}
                     >
                       <Minus className="w-4 h-4" />
                     </button>
@@ -1132,7 +1153,7 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
                     <button
                       type="button"
                       onClick={() => setBufferAfter(bufferAfter + 5)}
-                      className="rounded-xl p-3 text-white shadow-md transition-all duration-200 hover:opacity-95 hover:shadow-lg"
+                      className="rounded-full p-3 text-white shadow-md transition-all duration-200 hover:opacity-95 hover:shadow-lg"
                       style={{ backgroundColor: "var(--blue)" }}
                     >
                       <Plus className="w-4 h-4" />
@@ -1557,11 +1578,11 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
     <div className="fixed inset-0 z-50 flex">
       <div className="flex-1 bg-transparent" onClick={onClose}></div>
       <div
-        className="flex h-full w-[min(100vw,28rem)] flex-col border-l-4 bg-white shadow-2xl sm:w-96"
+        className="flex h-full w-[min(100vw,36rem)] flex-col border-l-4 bg-white shadow-2xl sm:w-[30rem] lg:w-[32rem]"
         style={{ borderLeftColor: "var(--blue)" }}
       >
         <div
-          className="flex items-center justify-between border-b-2 border-[var(--line)] p-6"
+          className="flex items-center justify-between border-b-2 border-[var(--line)] p-4.5"
           style={{
             background: `linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%)`,
             boxShadow: "var(--sh-blue)",
@@ -1632,7 +1653,7 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 rounded-[var(--r-m)] border-2 px-6 py-3 font-semibold transition-all duration-200 hover:bg-[var(--surface)]"
+              className="flex-1 rounded-sm border-2 px-6 py-3 font-semibold transition-all duration-200 hover:bg-[var(--surface)]"
               style={{ borderColor: "var(--line-strong)", color: "var(--ink-mid)" }}
             >
               Cancel
@@ -1641,7 +1662,7 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
               type="button"
               onClick={handleSubmit}
               disabled={isPending}
-              className={`flex flex-1 items-center justify-center space-x-2 rounded-[var(--r-m)] px-6 py-3 font-semibold text-white transition-all duration-200 ${
+              className={`flex flex-1 items-center justify-center space-x-2 rounded-sm px-6 py-3 font-semibold text-white transition-all duration-200 ${
                 isPending
                   ? "cursor-not-allowed opacity-50"
                   : "hover:opacity-[0.96] active:scale-[0.99]"
