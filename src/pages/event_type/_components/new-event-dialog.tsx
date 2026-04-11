@@ -242,29 +242,88 @@ const [dateRangeLimit, setDateRangeLimit] = useState<number>(30); // Default 30 
   });
   const [errors, setErrors] = useState<FormErrors>({});
 
-  const validateForm = (): boolean => {
+  const computeAllErrors = (): FormErrors => {
     const newErrors: FormErrors = {};
-    if (!formData.title.trim()) newErrors.title = 'Event name is required';
-    if (!formData.duration || formData.duration < 1) newErrors.duration = 'Duration is required and must be at least 1 minute';
-    if (!formData.locationType) newErrors.locationType = 'Location type is required';
-      if (minimumNotice < 1) newErrors.minimumNotice = 'Minimum notice must be at least 1';
-  if (dateRangeLimit < 1 && bookingWindowType === 'fixed') {
-    newErrors.dateRangeLimit = 'Date range limit must be at least 1';
-  }
-    if (!formData.description.trim()) newErrors.description = 'Description is required';
-      if (minimumNotice < 1) newErrors.minimumNotice = 'Minimum notice must be at least 1';
-  if (dateRangeLimit < 1) newErrors.dateRangeLimit = 'Date range limit must be at least 1 day';
-    const hasValidQuestion = questions.some(q => q.question.trim() !== '');
-    if (!hasValidQuestion) newErrors.questions = 'At least one question must be provided';
+    if (!formData.title.trim()) newErrors.title = "Event name is required";
+    if (!formData.duration || formData.duration < 1) {
+      newErrors.duration = "Duration is required and must be at least 1 minute";
+    }
+    if (!formData.locationType) newErrors.locationType = "Location type is required";
+    if (minimumNotice < 1) newErrors.minimumNotice = "Minimum notice must be at least 1";
+    if (dateRangeLimit < 1 && bookingWindowType === "fixed") {
+      newErrors.dateRangeLimit = "Date range limit must be at least 1";
+    }
+    if (!formData.description.trim()) newErrors.description = "Description is required";
+    if (dateRangeLimit < 1) newErrors.dateRangeLimit = "Date range limit must be at least 1 day";
+    const hasValidQuestion = questions.some((q) => q.question.trim() !== "");
+    if (!hasValidQuestion) newErrors.questions = "At least one question must be provided";
     questions.forEach((q, index) => {
       if (q.required && !q.question.trim()) {
-        newErrors[`question_${q.id}`] = `Question ${index + 1} is marked as required but has no question text`;
+        newErrors[`question_${q.id}`] =
+          `Question ${index + 1} is marked as required but has no question text`;
       }
     });
-    if (customDomain && !customDomain.startsWith('@')) newErrors.customDomain = 'Custom domain must start with @';
-    if (redirectToUrl && !redirectUrl.trim()) newErrors.redirectUrl = 'Redirect URL is required when redirect option is enabled';
+    if (customDomain && !customDomain.startsWith("@")) {
+      newErrors.customDomain = "Custom domain must start with @";
+    }
+    if (redirectToUrl && !redirectUrl.trim()) {
+      newErrors.redirectUrl = "Redirect URL is required when redirect option is enabled";
+    }
+    return newErrors;
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors = computeAllErrors();
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  /** Validate only fields for the current wizard step (avoids stale `errors` state on first Continue click). */
+  const validateStep = (sectionId: string): FormErrors => {
+    const e: FormErrors = {};
+    switch (sectionId) {
+      case "basic-info":
+        if (!formData.title.trim()) e.title = "Event name is required";
+        if (!formData.description.trim()) e.description = "Description is required";
+        if (customDomain && !customDomain.startsWith("@")) {
+          e.customDomain = "Custom domain must start with @";
+        }
+        break;
+      case "location":
+        if (!formData.locationType) e.locationType = "Location type is required";
+        break;
+      case "duration":
+        if (!formData.duration || formData.duration < 1) {
+          e.duration = "Duration is required and must be at least 1 minute";
+        }
+        break;
+      case "invitee-form": {
+        const hasValidQuestion = questions.some((q) => q.question.trim() !== "");
+        if (!hasValidQuestion) e.questions = "At least one question must be provided";
+        questions.forEach((q, index) => {
+          if (q.required && !q.question.trim()) {
+            e[`question_${q.id}`] =
+              `Question ${index + 1} is marked as required but has no question text`;
+          }
+        });
+        break;
+      }
+      case "confirmation":
+        if (redirectToUrl && !redirectUrl.trim()) {
+          e.redirectUrl = "Redirect URL is required when redirect option is enabled";
+        }
+        break;
+      case "availability":
+        if (minimumNotice < 1) e.minimumNotice = "Minimum notice must be at least 1";
+        if (dateRangeLimit < 1 && bookingWindowType === "fixed") {
+          e.dateRangeLimit = "Date range limit must be at least 1";
+        }
+        if (dateRangeLimit < 1) e.dateRangeLimit = "Date range limit must be at least 1 day";
+        break;
+      default:
+        break;
+    }
+    return e;
   };
 
   const handleInputChange = (field: keyof FormData, value: string | number): void => {
@@ -408,23 +467,39 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
     setBlockedDomains(prev => prev.filter(d => d !== domain));
   };
 
+  const goToFirstErrorSection = (errorKeys: string[]): void => {
+    if (errorKeys.some((key) => ["title", "description", "customDomain"].includes(key))) {
+      setActiveSection("basic-info");
+    } else if (errorKeys.includes("locationType")) {
+      setActiveSection("location");
+    } else if (errorKeys.includes("duration")) {
+      setActiveSection("duration");
+    } else if (errorKeys.some((key) => key.startsWith("question_") || key === "questions")) {
+      setActiveSection("invitee-form");
+    } else if (errorKeys.includes("redirectUrl")) {
+      setActiveSection("confirmation");
+    } else if (errorKeys.some((key) => ["minimumNotice", "dateRangeLimit"].includes(key))) {
+      setActiveSection("availability");
+    }
+  };
+
   const handleSubmit = (): void => {
+    const sectionIds = sections.map((s) => s.id);
+    const stepIndex = sectionIds.indexOf(activeSection);
+    const isLastStep = stepIndex >= 0 && stepIndex === sectionIds.length - 1;
+
+    if (!isLastStep) {
+      const stepErrors = validateStep(activeSection);
+      setErrors(stepErrors);
+      if (Object.keys(stepErrors).length > 0) return;
+      setErrors({});
+      setActiveSection(sectionIds[stepIndex + 1]!);
+      return;
+    }
+
     if (!validateForm()) {
-      const errorKeys = Object.keys(errors);
-      if (errorKeys.some(key => ['title', 'description', 'accessSpecifier'].includes(key))) {
-        setActiveSection('basic-info');
-      } else if (errorKeys.includes('locationType')) {
-        setActiveSection('location');
-      } else if (errorKeys.includes('duration')) {
-        setActiveSection('duration');
-      } else if (errorKeys.some(key => key.startsWith('question_') || key === 'questions')) {
-        setActiveSection('invitee-form');
-      } else if (errorKeys.includes('redirectUrl')) {
-        setActiveSection('confirmation');
-      }
-        if (errorKeys.some(key => ['minimumNotice', 'dateRangeLimit'].includes(key))) {
-    setActiveSection('availability');
-  }
+      const errorKeys = Object.keys(computeAllErrors());
+      goToFirstErrorSection(errorKeys);
       return;
     }
 
@@ -1653,7 +1728,7 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 rounded-sm border-2 px-6 py-3 font-semibold transition-all duration-200 hover:bg-[var(--surface)]"
+              className="flex-1 cursor-pointer rounded-sm border-2 px-6 py-3 font-semibold transition-all duration-200 hover:bg-[var(--surface)]"
               style={{ borderColor: "var(--line-strong)", color: "var(--ink-mid)" }}
             >
               Cancel
@@ -1665,7 +1740,7 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
               className={`flex flex-1 items-center justify-center space-x-2 rounded-sm px-6 py-3 font-semibold text-white transition-all duration-200 ${
                 isPending
                   ? "cursor-not-allowed opacity-50"
-                  : "hover:opacity-[0.96] active:scale-[0.99]"
+                  : "cursor-pointer hover:opacity-[0.96] active:scale-[0.99]"
               }`}
               style={{
                 backgroundColor: "var(--blue)",
@@ -1673,7 +1748,11 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
               }}
             >
               <Zap className="h-4 w-4" />
-              <span>Create Event</span>
+              <span>
+                {sections.map((s) => s.id).indexOf(activeSection) === sections.length - 1
+                  ? "Create Event"
+                  : "Continue"}
+              </span>
             </button>
           </div>
         </div>

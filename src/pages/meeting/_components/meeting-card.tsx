@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import {
   ChevronDown,
   Trash2Icon,
@@ -24,12 +24,11 @@ const MeetingCard = (props: {
   period: PeriodType;
   isPending: boolean;
   timezone?: string;
-  onCancel: () => void;
+  onCancelClick: () => void;
 }) => {
-  const { meeting, isPending, period, timezone, onCancel } = props;
+  const { meeting, isPending, period, timezone, onCancelClick } = props;
 
   const [isShow, setIsShow] = useState(false);
-  const detailsRef = useRef<HTMLDivElement>(null);
 
   const startTime = parseISO(meeting.startTime);
   const endTime = parseISO(meeting.endTime);
@@ -71,7 +70,7 @@ const MeetingCard = (props: {
         : "border border-emerald-200 bg-emerald-50 text-emerald-800";
 
   return (
-    <div className="b2b-page mb-4 w-full overflow-hidden rounded-[var(--r-xl)] border-2 border-[var(--line)] bg-[var(--white)] shadow-[var(--sh-sm)] transition-shadow hover:shadow-[var(--sh-md)]">
+    <div className="b2b-page mb-4 w-full overflow-visible rounded-md border-2 border-[var(--line)] bg-[var(--white)] shadow-[var(--sh-sm)] transition-shadow hover:shadow-[var(--sh-md)]">
       <div className="border-b border-[var(--line)] bg-gradient-to-r from-[var(--surface)] to-[var(--surface-2)] px-5 py-4 sm:px-6">
         <div className="flex items-center gap-2">
           <Calendar className="h-4 w-4 shrink-0 text-[var(--blue)]" strokeWidth={2} />
@@ -175,16 +174,19 @@ const MeetingCard = (props: {
       </div>
 
       <div
-        ref={detailsRef}
-        className="event-details overflow-hidden border-t border-[var(--line)] bg-[var(--surface)]/50 transition-all duration-300 ease-in-out"
+        className={cn(
+          "event-details border-t border-[var(--line)] bg-[var(--surface)]/50 transition-[max-height] duration-300 ease-in-out",
+          isShow
+            ? "max-h-[min(100dvh,4000px)] overflow-y-auto"
+            : "max-h-0 overflow-hidden",
+        )}
         style={{
-          maxHeight: isShow ? `${detailsRef.current?.scrollHeight ?? 2000}px` : "0px",
           padding: isShow ? "24px" : "0 24px",
         }}
       >
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="space-y-5 lg:col-span-2">
-            <div className="rounded-[var(--r-m)] border-2 border-[var(--line)] bg-[var(--white)] p-4 sm:p-5">
+            <div className="rounded-md border-2 border-[var(--line)] bg-[var(--white)] p-4 sm:p-5">
               <h4 className="mb-3 flex items-center gap-2 font-semibold text-[var(--ink)]">
                 <Mail className="h-4 w-4 text-[var(--blue)]" />
                 Contact information
@@ -195,7 +197,7 @@ const MeetingCard = (props: {
               </div>
             </div>
 
-            <div className="rounded-[var(--r-m)] border-2 border-[var(--line)] bg-[var(--white)] p-4 sm:p-5">
+            <div className="rounded-md border-2 border-[var(--line)] bg-[var(--white)] p-4 sm:p-5">
               <h4 className="mb-3 flex items-center gap-2 font-semibold text-[var(--ink)]">
                 <MapPin className="h-4 w-4 text-[var(--blue)]" />
                 Meeting location
@@ -230,7 +232,7 @@ const MeetingCard = (props: {
             </div>
 
             {meeting.questionAnswers && meeting.questionAnswers.length > 0 && (
-              <div className="rounded-[var(--r-m)] border-2 border-[var(--line)] bg-[var(--white)] p-4 sm:p-5">
+              <div className="rounded-md border-2 border-[var(--line)] bg-[var(--white)] p-4 sm:p-5">
                 <h4 className="mb-4 flex items-center gap-2 font-semibold text-[var(--ink)]">
                   <MessageSquare className="h-4 w-4 text-[var(--blue)]" />
                   Questions &amp; answers
@@ -252,7 +254,7 @@ const MeetingCard = (props: {
             )}
 
             {meeting.additionalInfo && (
-              <div className="rounded-[var(--r-m)] border-2 border-[var(--line)] bg-[var(--white)] p-4 sm:p-5">
+              <div className="rounded-md border-2 border-[var(--line)] bg-[var(--white)] p-4 sm:p-5">
                 <h4 className="mb-3 flex items-center gap-2 font-semibold text-[var(--ink)]">
                   <MessageSquare className="h-4 w-4 text-[var(--amber)]" />
                   Additional notes
@@ -266,7 +268,7 @@ const MeetingCard = (props: {
 
           {period === PeriodEnum.UPCOMING && (
             <div className="lg:col-span-1">
-              <div className="sticky top-4 rounded-[var(--r-m)] border-2 border-[var(--line)] bg-[var(--white)] p-4 sm:p-5">
+              <div className="sticky top-4 rounded-md border-2 border-[var(--line)] bg-[var(--white)] p-4 sm:p-5">
                 <h4 className="mb-4 font-semibold text-[var(--ink)]">Actions</h4>
                 <div className="space-y-3">
                   {meeting.meetLink && (
@@ -283,7 +285,10 @@ const MeetingCard = (props: {
                     type="button"
                     variant="outline"
                     className="w-full border-2 border-red-200 font-semibold text-red-600 hover:bg-red-50 hover:text-red-700"
-                    onClick={onCancel}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onCancelClick();
+                    }}
                     disabled={isPending}
                   >
                     {isPending ? (

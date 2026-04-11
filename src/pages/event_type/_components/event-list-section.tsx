@@ -4,16 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toggleEventVisibilityMutationFn, deleteEventApi } from "@/lib/api";
 import { toast } from "sonner";
 import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { ConfirmActionDialog } from "@/components/confirm-action-dialog";
 
 const EventListSection = (props: { events: EventType[]; username: string }) => {
   
@@ -56,7 +47,13 @@ const EventListSection = (props: { events: EventType[]; username: string }) => {
             queryKey: ["event_list"],
           });
           setPendingEventId(null);
-          toast.success(`${response.message}`);
+          const msg =
+            response.message && response.message !== "OK"
+              ? response.message
+              : response.event?.isPrivate
+                ? "This event is off and hidden from your public booking page."
+                : "This event is on and bookable from your public page.";
+          toast.success(msg);
         },
         onError: () => {
           toast.error("Failed to switch event");
@@ -67,57 +64,29 @@ const EventListSection = (props: { events: EventType[]; username: string }) => {
 
   return (
     <>
-      <Dialog
+      <ConfirmActionDialog
         open={deleteTarget !== null}
         onOpenChange={(open) => {
           if (!open) setDeleteTarget(null);
         }}
-      >
-        <DialogContent
-          className="max-w-md border-[var(--line-strong)] sm:rounded-[var(--r-m)] [&>button]:hidden"
-          onPointerDownOutside={(e) => {
-            if (deleteMutation.isPending) e.preventDefault();
-          }}
-          onEscapeKeyDown={(e) => {
-            if (deleteMutation.isPending) e.preventDefault();
-          }}
-        >
-          <DialogHeader className="items-center text-center sm:items-center sm:text-center">
-            <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-              <Trash2 className="h-6 w-6 text-red-600" aria-hidden />
-            </div>
-            <DialogTitle className="text-center">Delete this event type?</DialogTitle>
-            <DialogDescription className="text-center">
-              {deleteTarget ? (
-                <>
-                  <span className="font-medium text-foreground">&ldquo;{deleteTarget.title}&rdquo;</span> will be
-                  permanently removed. This cannot be undone.
-                </>
-              ) : null}
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="gap-2 sm:justify-center">
-            <Button
-              type="button"
-              variant="outline"
-              className="rounded-sm"
-              disabled={deleteMutation.isPending}
-              onClick={() => setDeleteTarget(null)}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="button"
-              variant="destructive"
-              className="rounded-sm"
-              disabled={deleteMutation.isPending}
-              onClick={confirmDelete}
-            >
-              {deleteMutation.isPending ? "Deleting…" : "Delete event"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        title="Delete this event type?"
+        description={
+          deleteTarget ? (
+            <>
+              <span className="font-medium text-foreground">
+                &ldquo;{deleteTarget.title}&rdquo;
+              </span>{" "}
+              will be permanently removed. This cannot be undone.
+            </>
+          ) : null
+        }
+        confirmLabel="Delete event"
+        pendingConfirmLabel="Deleting…"
+        isPending={deleteMutation.isPending}
+        onConfirm={confirmDelete}
+        variant="destructive"
+        icon="trash"
+      />
 
       <div className="w-full px-5 py-5 sm:px-5 lg:px-5">
         <div className="grid grid-cols-1 gap-4 pb-6 sm:grid-cols-2 lg:grid-cols-3">

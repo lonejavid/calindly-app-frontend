@@ -3,8 +3,64 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllIntegrationQueryFn } from "@/lib/api";
 import { Loader } from "@/components/loader";
 import { ErrorAlert } from "@/components/ErrorAlert";
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
 
 const Integrations = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    const zoom = searchParams.get("zoom");
+    const google = searchParams.get("google");
+    const err = searchParams.get("error");
+    if (zoom === "connected") {
+      toast.success("Zoom connected successfully.");
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          next.delete("zoom");
+          return next;
+        },
+        { replace: true },
+      );
+    } else if (google === "connected") {
+      toast.success("Google Calendar connected successfully.");
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          next.delete("google");
+          return next;
+        },
+        { replace: true },
+      );
+    } else if (err === "zoom_callback_failed") {
+      toast.error(
+        "Zoom connection failed. Check backend logs and redirect URL.",
+      );
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          next.delete("error");
+          return next;
+        },
+        { replace: true },
+      );
+    } else if (err === "google_callback_failed") {
+      toast.error(
+        "Google connection failed. Check backend logs and redirect URL.",
+      );
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          next.delete("error");
+          return next;
+        },
+        { replace: true },
+      );
+    }
+  }, [searchParams, setSearchParams]);
+
   const { data, isFetching, isError, error } = useQuery({
     queryKey: ["integration_list"],
     queryFn: getAllIntegrationQueryFn,

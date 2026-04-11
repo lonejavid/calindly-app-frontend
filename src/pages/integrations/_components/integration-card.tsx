@@ -28,9 +28,11 @@ interface ImageWrapperProps {
   className?: string;
 }
 
-const ERROR_MESSAGES: Record<any, string> = {
+const ERROR_MESSAGES: Record<string, string> = {
   [IntegrationAppEnum.GOOGLE_MEET_AND_CALENDAR]:
     "Failed to connect Google Calendar. Please try again.",
+  [IntegrationAppEnum.ZOOM_MEETING]:
+    "Failed to connect Zoom. Please try again.",
 };
 
 const IntegrationCard = ({
@@ -55,14 +57,24 @@ const IntegrationCard = ({
       if (url) {
         window.location.href = url;
       } else {
-        toast.info(
-          "Google sign-in isn't configured yet. Add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in the backend .env to enable Connect.",
-        );
+        if (type === IntegrationAppEnum.GOOGLE_MEET_AND_CALENDAR) {
+          toast.info(
+            "Google sign-in isn't configured yet. Add GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, and GOOGLE_CALENDAR_CALLBACK_URL in the backend .env.",
+          );
+        } else if (type === IntegrationAppEnum.ZOOM_MEETING) {
+          toast.info(
+            "Zoom isn't configured yet. Add ZOOM_CLIENT_ID, ZOOM_CLIENT_SECRET, and ZOOM_CALLBACK_URL in the backend .env, and add the same redirect URL in your Zoom OAuth app.",
+          );
+        } else {
+          toast.info("This integration isn't available yet.");
+        }
       }
     } catch (err) {
       setIsLoading(false);
       console.error("Failed to connect:", err);
-      toast.error(ERROR_MESSAGES[appType] ?? "Failed to connect. Please try again.");
+      toast.error(
+        ERROR_MESSAGES[appType] ?? "Failed to connect. Please try again.",
+      );
     }
   };
 

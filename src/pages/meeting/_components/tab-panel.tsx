@@ -10,6 +10,7 @@ import { PeriodEnum } from "@/hooks/use-meeting-filter";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { cancelMeetingMutationFn } from "@/lib/api";
 import { toast } from "sonner";
+import { ConfirmActionDialog } from "@/components/confirm-action-dialog";
 
 interface PropsType {
   isFetching: boolean;
@@ -20,13 +21,16 @@ interface PropsType {
 
 const TabPanel: FC<PropsType> = ({ period, meetings, isFetching, timezone }) => {
   const [pendingMeetingId, setPendingMeetingId] = useState<string | null>(null);
+  const [cancelTarget, setCancelTarget] = useState<MeetingType | null>(null);
 
   const queryClient = useQueryClient();
   const { mutate, isPending } = useMutation({
     mutationFn: cancelMeetingMutationFn,
   });
 
-  const handleCancel = (meetingId: string) => {
+  const confirmCancelMeeting = () => {
+    if (!cancelTarget) return;
+    const meetingId = cancelTarget.id;
     setPendingMeetingId(meetingId);
     mutate(meetingId, {
       onSuccess: (response) => {
@@ -34,7 +38,15 @@ const TabPanel: FC<PropsType> = ({ period, meetings, isFetching, timezone }) => 
           queryKey: ["userMeetings"],
         });
         setPendingMeetingId(null);
-        toast.success(`${response.message}`);
+        setCancelTarget(null);
+        toast.success(
+          response &&
+            typeof response === "object" &&
+            "message" in response &&
+            typeof (response as { message?: unknown }).message === "string"
+            ? (response as { message: string }).message
+            : "Meeting cancelled successfully",
+        );
       },
       onError: () => {
         setPendingMeetingId(null);
@@ -45,6 +57,40 @@ const TabPanel: FC<PropsType> = ({ period, meetings, isFetching, timezone }) => 
 
   return (
     <div className="b2b-page w-full">
+      <ConfirmActionDialog
+        open={cancelTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            const cancellingThis =
+              cancelTarget &&
+              pendingMeetingId === cancelTarget.id &&
+              isPending;
+            if (!cancellingThis) setCancelTarget(null);
+          }
+        }}
+        title="Cancel this meeting?"
+        description={
+          cancelTarget ? (
+            <>
+              This will cancel the booking with{" "}
+              <span className="font-semibold text-[var(--ink)]">
+                {cancelTarget.guestName}
+              </span>{" "}
+              for{" "}
+              <span className="font-semibold text-[var(--ink)]">
+                {cancelTarget.event.title}
+              </span>
+              . Calendar or Zoom events linked to this booking will be removed when possible.
+            </>
+          ) : null
+        }
+        confirmLabel="Cancel meeting"
+        pendingConfirmLabel="Cancelling…"
+        isPending={cancelTarget ? pendingMeetingId === cancelTarget.id && isPending : false}
+        onConfirm={confirmCancelMeeting}
+        variant="destructive"
+        icon="trash"
+      />
       {isFetching ? (
         <div className="flex min-h-[200px] items-center justify-center rounded-[var(--r-l)] border border-[var(--line)] bg-[var(--surface)]/50">
           <Loader size="lg" color="black" />
@@ -69,7 +115,7 @@ const TabPanel: FC<PropsType> = ({ period, meetings, isFetching, timezone }) => 
                   isPending={pendingMeetingId === meeting.id ? isPending : false}
                   meeting={meeting}
                   timezone={timezone} // Passing timezone to MeetingCard
-                  onCancel={() => handleCancel(meeting.id)}
+                  onCancelClick={() => setCancelTarget(meeting)}
                 />
               </li>
             ))}

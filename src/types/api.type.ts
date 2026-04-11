@@ -123,6 +123,7 @@ export interface MeetingType {
   endTime: string;   // UTC time in database, converted to user timezone in frontend
   meetLink: string;
   calendarEventId: string;
+  zoomMeetingId?: string | null;
   status: MeetingStatus;
   createdAt: string;
   updatedAt: string;

@@ -1,4 +1,5 @@
 import { EventType } from "@/types/api.type";
+import { locationOptions, VideoConferencingPlatform } from "@/lib/types";
 import { ENV } from "@/lib/get-env";
 import { toast } from "sonner";
 import { Copy, Settings, Edit3, Trash2, Power, X, Clock, Users, FileText, Shield, Calendar } from "lucide-react";
@@ -7,6 +8,14 @@ import { FC, useState, useRef, useEffect, type CSSProperties } from "react";
 // Simple utility function to combine class names
 const cn = (...classes: (string | boolean | undefined)[]) => {
   return classes.filter(Boolean).join(' ');
+};
+
+const EVENT_CARD_PLATFORM_LABEL: Partial<
+  Record<VideoConferencingPlatform, string>
+> = {
+  [VideoConferencingPlatform.GOOGLE_MEET_AND_CALENDAR]: "Google Meet",
+  [VideoConferencingPlatform.ZOOM_MEETING]: "Zoom",
+  [VideoConferencingPlatform.MICROSOFT_TEAMS]: "Microsoft Teams",
 };
 
 // Simple loader component
@@ -691,6 +700,26 @@ const EventCard: FC<PropsType> = ({
                 />
                 <p className="text-sm font-medium text-[var(--ink-soft)]">{duration} minutes</p>
               </div>
+              {(() => {
+                const opt = locationOptions.find(
+                  (o) => o.value === event.locationType,
+                );
+                const label =
+                  EVENT_CARD_PLATFORM_LABEL[event.locationType] ?? "Video call";
+                if (!opt) return null;
+                return (
+                  <div className="mb-3 flex items-center gap-2">
+                    <img
+                      src={opt.logo}
+                      alt=""
+                      className="h-4 w-4 shrink-0 object-contain"
+                    />
+                    <p className="text-sm font-medium text-[var(--ink-soft)]">
+                      {label}
+                    </p>
+                  </div>
+                );
+              })()}
               <a
                 target="_blank"
                 href={event_link}

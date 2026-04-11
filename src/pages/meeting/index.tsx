@@ -24,9 +24,9 @@ const Meetings = () => {
           <Loader size="lg" color="black" />
         </div>
       ) : (
-        <div className="w-full overflow-hidden bg-[var(--white)] shadow-[var(--sh-md)] h-[calc(100dvh-5rem)]">
+        <div className="flex h-[calc(100dvh-5rem)] max-h-[calc(100dvh-5rem)] w-full flex-col overflow-hidden bg-[var(--white)] shadow-[var(--sh-md)]">
           <TabHeader />
-          <div className="b2b-page bg-[var(--white)] px-4 py-5 sm:px-6 sm:py-6">
+          <div className="b2b-page min-h-0 flex-1 overflow-y-auto bg-[var(--white)] px-4 py-4 sm:px-4 sm:py-4">
             <TabPanel
               isFetching={isFetching}
               meetings={meetings}

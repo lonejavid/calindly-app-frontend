@@ -336,10 +336,6 @@ const BookingForm = (props: { event: Event }) => {
     }
 
     try {
-      const hostTimezone =
-        availability.length > 0 ? availability[0].timezone : "UTC";
-      const browserTimezone = getBrowserTimezone();
-
       // Convert calendar object to ISO date string
       const selectedDateISO = calendarObjectToISODate(selectedDate);
       if (!selectedDateISO) {
@@ -397,18 +393,11 @@ const BookingForm = (props: { event: Event }) => {
         };
       }) || [];
 
-
-      const title=event.title;
-  
-
-
-      
-   
       const payload = {
         guestName: values.guestName,
         guestEmail: values.guestEmail,
       
-         additionalInfo: `${values.additionalInfo || ""} (+selectedTime: ${selectedSlot}  selectedDate: ${selectedDate} duration: ${event.duration} title: ${title} guestTz: ${browserTimezone} hostTz: ${hostTimezone} }+)`,
+        additionalInfo: (values.additionalInfo || "").trim() || undefined,
         ...(event.allowGuests && values.guestEmails && { guestEmails: values.guestEmails }),
         eventId: event.id,
         startTime: startTimeUTC.toISOString(),
@@ -755,7 +744,7 @@ const formatBookingTime = () => {
                 </p>
                 <Button
                   asChild
-                  className="mt-4 h-11 rounded-full bg-[#006bff] px-8 text-sm font-semibold text-white shadow-none hover:bg-[#0058db]"
+                  className="mt-4 h-11 rounded-sm bg-[#006bff] px-8 text-sm font-semibold text-white shadow-none hover:bg-[#0058db]"
                 >
                   <a
                     href="https://www.schedley.com/sign-up"
@@ -891,7 +880,7 @@ const formatBookingTime = () => {
                 <Button 
                   disabled={!canSubmit} 
                   type="submit"
-                  className={`w-full h-11 sm:h-12 mt-6 sm:mt-8 font-semibold text-sm sm:text-base transition-all duration-200 ${
+                  className={`!rounded-sm w-full h-11 sm:h-12 mt-6 sm:mt-8 font-semibold text-sm sm:text-base transition-all duration-200 ${
                     !canSubmit 
                       ? 'bg-gray-400 cursor-not-allowed hover:bg-gray-400' 
                       : 'bg-blue-600 hover:bg-blue-700'

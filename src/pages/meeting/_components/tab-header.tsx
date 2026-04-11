@@ -11,9 +11,9 @@ const TabHeader = () => {
   ] as const;
 
   return (
-    <div className="b2b-page border-b border-[var(--line)] bg-[var(--surface)]/60 px-4 py-4 sm:px-4">
+    <div className="b2b-page shrink-0 border-b border-[var(--line)] bg-[var(--surface)]/60 px-4 py-4 sm:px-4">
       <div
-        className="inline-flex w-full max-w-xl flex-wrap gap-2 rounded-[var(--r-m)] border border-[var(--line)] bg-[var(--white)] p-1.5 sm:inline-flex sm:w-auto"
+        className="inline-flex w-full max-w-xl flex-wrap gap-2 rounded-sm border border-[var(--line)] bg-[var(--white)] p-1.5 sm:inline-flex sm:w-auto"
         role="tablist"
         aria-label="Meeting period"
       >
