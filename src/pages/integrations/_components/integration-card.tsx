@@ -18,6 +18,8 @@ interface IntegrationCardProps {
   title: string;
   isConnected?: boolean;
   isDisabled?: boolean;
+  /** Disabled with “Upcoming” copy (vs generic “Not available”) */
+  upcoming?: boolean;
 }
 
 interface ImageWrapperProps {
@@ -40,6 +42,7 @@ const IntegrationCard = ({
   title,
   isConnected = false,
   isDisabled = false,
+  upcoming = false,
 }: IntegrationCardProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedType, setSelectedType] = useState<IntegrationAppType | null>(null);
@@ -79,7 +82,14 @@ const IntegrationCard = ({
   };
 
   return (
-    <div className="b2b-page flex w-full flex-col gap-4 rounded-[var(--r-m)] border-2 border-[var(--line)] bg-[var(--surface)]/50 p-4 transition-all hover:border-[var(--blue)]/30 hover:bg-[var(--white)] hover:shadow-[var(--sh-sm)] sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-5">
+    <div
+      className={cn(
+        "b2b-page flex w-full flex-col gap-4 rounded-[var(--r-m)] border-2 border-[var(--line)] bg-[var(--surface)]/50 p-4 transition-all sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-5",
+        upcoming
+          ? "opacity-90"
+          : "hover:border-[var(--blue)]/30 hover:bg-[var(--white)] hover:shadow-[var(--sh-sm)]",
+      )}
+    >
       <div className="flex min-w-0 flex-1 flex-col gap-4 sm:flex-row sm:items-center">
         {Array.isArray(logos) ? (
           <div className="flex items-center gap-3">
@@ -111,17 +121,23 @@ const IntegrationCard = ({
             variant="unstyled"
             className={cn(
               "inline-flex min-h-[44px] w-full shrink-0 items-center justify-center rounded-full px-4 text-sm font-semibold transition-all sm:w-[180px]",
-              isDisabled
+              isDisabled || upcoming
                 ? "pointer-events-none border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--ink-muted)] opacity-80"
                 : "border-2 border-[var(--blue)] bg-[var(--blue)] text-white shadow-[var(--sh-blue)] hover:bg-[var(--blue-dark)]",
             )}
-            aria-disabled={isDisabled}
+            aria-disabled={isDisabled || upcoming}
             disabled={isLoading}
           >
             {isLoading && selectedType === appType ? (
               <Loader size="sm" color="white" />
             ) : (
-              <span>{isDisabled ? "Not available" : "Connect"}</span>
+              <span>
+                {upcoming
+                  ? "Upcoming"
+                  : isDisabled
+                    ? "Not available"
+                    : "Connect"}
+              </span>
             )}
           </Button>
         )}
@@ -149,7 +165,7 @@ export const ImageWrapper: React.FC<ImageWrapperProps> = ({
         alt={alt}
         height={height}
         width={width}
-        className="object-cover"
+        className="object-contain"
         loading="lazy"
         decoding="async"
       />

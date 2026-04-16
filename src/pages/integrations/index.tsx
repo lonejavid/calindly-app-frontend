@@ -86,13 +86,15 @@ const Integrations = () => {
                     appType={integration.app_type}
                     title={integration.title}
                     isConnected={integration.isConnected}
-                    isDisabled={
-                      integration.app_type === "GOOGLE_MEET_AND_CALENDAR" ||
+                    upcoming={
                       integration.app_type === "MICROSOFT_TEAMS" ||
-                      integration.app_type === "ZOOM_MEETING" ||
-                      integration.app_type === "OUTLOOK_CALENDAR"
-                        ? false
-                        : true
+                      integration.app_type === "OUTLOOK_CALENDAR" ||
+                      integration.app_type === "HUBSPOT_CRM"
+                    }
+                    isDisabled={
+                      integration.app_type === "MICROSOFT_TEAMS" ||
+                      integration.app_type === "OUTLOOK_CALENDAR" ||
+                      integration.app_type === "HUBSPOT_CRM"
                     }
                   />
                 </li>

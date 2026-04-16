@@ -1,4 +1,4 @@
-import { useState, useRef, type ReactNode } from "react";
+import { useState, useRef, useEffect, useMemo, type ReactNode } from "react";
 import { 
   Briefcase, 
   MapPin, 
@@ -16,10 +16,16 @@ import {
   Heart,
   TrendingUp,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import { LandingHeader } from "@/components/LandingHeader";
 import SectionReveal from "@/components/SectionReveal";
+import { SuccessFeedbackDialog } from "@/components/success-feedback-dialog";
 import { LANDING_PAGE_CONTAINER_CLASS } from "@/lib/landingLayout";
+import {
+  fetchAppliedCareerJobIds,
+  submitJobApplication,
+} from "@/lib/api";
+import { useStore } from "@/store/store";
 
 type JobRole = {
   id: number;
@@ -51,12 +57,116 @@ const initialForm: ApplicationFormState = {
   resume: null,
 };
 
+/** Matches backend: decoded PDF must be ≤ 5 MB. */
+const RESUME_MAX_BYTES = 5 * 1024 * 1024;
+
+function readFileAsBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result;
+      if (typeof result !== "string") {
+        reject(new Error("Could not read file"));
+        return;
+      }
+      const comma = result.indexOf(",");
+      resolve(comma >= 0 ? result.slice(comma + 1) : result);
+    };
+    reader.onerror = () => reject(new Error("Could not read file"));
+    reader.readAsDataURL(file);
+  });
+}
+
+const CAREERS_APPLIED_STORAGE_KEY = "schedley_careers_applied_v1";
+
+type GuestAppliedPair = { email: string; jobId: number };
+
+function readGuestAppliedPairs(): GuestAppliedPair[] {
+  try {
+    const raw = localStorage.getItem(CAREERS_APPLIED_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as unknown;
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(
+      (x): x is GuestAppliedPair =>
+        Boolean(x) &&
+        typeof x === "object" &&
+        typeof (x as GuestAppliedPair).email === "string" &&
+        typeof (x as GuestAppliedPair).jobId === "number"
+    );
+  } catch {
+    return [];
+  }
+}
+
+function addGuestAppliedPair(email: string, jobId: number) {
+  const emailKey = email.trim().toLowerCase();
+  const list = readGuestAppliedPairs();
+  if (list.some((p) => p.email === emailKey && p.jobId === jobId)) return;
+  list.push({ email: emailKey, jobId });
+  localStorage.setItem(CAREERS_APPLIED_STORAGE_KEY, JSON.stringify(list));
+}
+
+function guestHasApplied(email: string, jobId: number): boolean {
+  const emailKey = email.trim().toLowerCase();
+  if (!emailKey) return false;
+  return readGuestAppliedPairs().some(
+    (p) => p.email === emailKey && p.jobId === jobId
+  );
+}
+
+function getRequestErrorMessage(err: unknown): string {
+  if (err && typeof err === "object") {
+    const status = (err as { response?: { status?: number } }).response?.status;
+    if (status === 409) {
+      return "You have already applied for this position with this email address.";
+    }
+    if (status === 413) {
+      return "Request was too large. Resumes must be PDF and at most 5 MB.";
+    }
+    if ("message" in err) {
+      const m = (err as { message: unknown }).message;
+      if (Array.isArray(m)) return m.map(String).join(" ");
+      if (typeof m === "string") {
+        const lower = m.toLowerCase();
+        if (lower.includes("too large") || lower.includes("payload")) {
+          return "Resume is too large. Maximum file size is 5 MB.";
+        }
+        return m;
+      }
+    }
+  }
+  return "Something went wrong. Please try again.";
+}
+
 const CareersPage = () => {
-     const navigate = useNavigate();
+  const user = useStore((s) => s.user);
+  const isSignedIn = Boolean(user?.email);
   const [selectedJob, setSelectedJob] = useState<JobRole | null>(null);
   const [showApplicationForm, setShowApplicationForm] = useState(false);
   const [formData, setFormData] = useState<ApplicationFormState>(initialForm);
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [appliedJobIds, setAppliedJobIds] = useState<Set<number>>(() => new Set());
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!isSignedIn || !user?.email) {
+      setAppliedJobIds(new Set());
+      return;
+    }
+    let cancelled = false;
+    fetchAppliedCareerJobIds()
+      .then(({ jobIds }) => {
+        if (!cancelled) setAppliedJobIds(new Set(jobIds));
+      })
+      .catch(() => {
+        if (!cancelled) setAppliedJobIds(new Set());
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [isSignedIn, user?.email]);
 
   const jobRoles: JobRole[] = [
     {
@@ -219,6 +329,11 @@ const CareersPage = () => {
 
   const handleApply = (job: JobRole) => {
     setSelectedJob(job);
+    setFormData({
+      ...initialForm,
+      name: user?.name?.trim() ?? "",
+      email: user?.email?.trim() ?? "",
+    });
     setShowApplicationForm(true);
   };
 
@@ -231,19 +346,94 @@ const CareersPage = () => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file && file.type === "application/pdf") {
-      setFormData((prev) => ({ ...prev, resume: file }));
-    } else if (file) {
-      alert("Please upload a PDF file only");
+    if (!file) return;
+    if (file.type !== "application/pdf") {
+      toast.error("Please upload a PDF file only.");
+      e.target.value = "";
+      return;
     }
+    if (file.size > RESUME_MAX_BYTES) {
+      toast.error("Resume must be 5 MB or smaller.");
+      e.target.value = "";
+      return;
+    }
+    setFormData((prev) => ({ ...prev, resume: file }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const applicationBlocked = useMemo(() => {
+    if (!selectedJob || !showApplicationForm) return false;
+    if (isSignedIn) return appliedJobIds.has(selectedJob.id);
+    const em = formData.email.trim().toLowerCase();
+    if (!em) return false;
+    return guestHasApplied(em, selectedJob.id);
+  }, [
+    selectedJob,
+    showApplicationForm,
+    isSignedIn,
+    appliedJobIds,
+    formData.email,
+  ]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert("Application submitted successfully.");
-      navigate("/");
-    setShowApplicationForm(false);
-    setFormData(initialForm);
+    if (!selectedJob) return;
+    if (applicationBlocked) {
+      toast.error(
+        "You have already applied for this position with this email address."
+      );
+      return;
+    }
+    if (!formData.resume) {
+      toast.error("Please attach your resume (PDF).");
+      return;
+    }
+    if (formData.resume.size > RESUME_MAX_BYTES) {
+      toast.error("Resume must be 5 MB or smaller.");
+      return;
+    }
+    if (!isSignedIn) {
+      if (!formData.name.trim()) {
+        toast.error("Please enter your full name.");
+        return;
+      }
+      if (!formData.email.trim()) {
+        toast.error("Please enter your email.");
+        return;
+      }
+    }
+
+    setSubmitLoading(true);
+    try {
+      const resumeBase64 = await readFileAsBase64(formData.resume);
+      await submitJobApplication({
+        jobTitle: selectedJob.title,
+        jobDepartment: selectedJob.department,
+        jobId: selectedJob.id,
+        country: formData.country.trim(),
+        experience: formData.experience.trim(),
+        resumeFileName: formData.resume.name,
+        resumeBase64,
+        ...(isSignedIn
+          ? {}
+          : {
+              name: formData.name.trim(),
+              email: formData.email.trim().toLowerCase(),
+            }),
+      });
+      if (isSignedIn && user?.email) {
+        setAppliedJobIds((prev) => new Set(prev).add(selectedJob.id));
+      } else {
+        addGuestAppliedPair(formData.email.trim().toLowerCase(), selectedJob.id);
+      }
+      setShowApplicationForm(false);
+      setSelectedJob(null);
+      setFormData(initialForm);
+      setShowSuccessDialog(true);
+    } catch (err: unknown) {
+      toast.error(getRequestErrorMessage(err));
+    } finally {
+      setSubmitLoading(false);
+    }
   };
 
   const modalBackdrop =
@@ -259,6 +449,13 @@ const CareersPage = () => {
 
   return (
     <div className="min-h-screen bg-[var(--white)] b2b-page flex flex-col">
+      <SuccessFeedbackDialog
+        open={showSuccessDialog}
+        onOpenChange={setShowSuccessDialog}
+        title="Application submitted"
+        description="Thank you for applying. We have received your application and will get back to you if there is a match."
+        confirmLabel="Done"
+      />
       <LandingHeader />
 
       <main className="flex-1 pb-16 sm:pb-24">
@@ -403,9 +600,12 @@ const CareersPage = () => {
                   <button
                         type="button"
                     onClick={() => handleApply(job)}
-                        className="flex-1 rounded-lg bg-[var(--blue)] px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--sh-blue)] transition-colors hover:bg-[var(--blue-dark)]"
+                        disabled={isSignedIn && appliedJobIds.has(job.id)}
+                        className="flex-1 rounded-lg bg-[var(--blue)] px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--sh-blue)] transition-colors hover:bg-[var(--blue-dark)] disabled:pointer-events-none disabled:opacity-60"
                   >
-                        Apply now
+                        {isSignedIn && appliedJobIds.has(job.id)
+                          ? "Applied"
+                          : "Apply now"}
                   </button>
                 </div>
                   </article>
@@ -489,9 +689,12 @@ const CareersPage = () => {
                 <button
                   type="button"
                   onClick={() => handleApply(selectedJob)}
-                  className="flex-1 rounded-lg bg-[var(--blue)] px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--sh-blue)] hover:bg-[var(--blue-dark)]"
+                  disabled={isSignedIn && appliedJobIds.has(selectedJob.id)}
+                  className="flex-1 rounded-lg bg-[var(--blue)] px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--sh-blue)] hover:bg-[var(--blue-dark)] disabled:pointer-events-none disabled:opacity-60"
                 >
-                  Apply for this position
+                  {isSignedIn && appliedJobIds.has(selectedJob.id)
+                    ? "Already applied"
+                    : "Apply for this position"}
                 </button>
               </div>
             </div>
@@ -522,36 +725,61 @@ const CareersPage = () => {
                 </button>
               </div>
             <form onSubmit={handleSubmit} className="space-y-4 px-6 py-6">
-                <div>
-                <label htmlFor="careers-name" className={labelClass}>
-                  Full name *
-                </label>
-                  <input
-                  id="careers-name"
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                  className={inputClass}
-                  placeholder="Your full name"
-                    required
-                  />
-                </div>
-                <div>
-                <label htmlFor="careers-email" className={labelClass}>
-                  Email *
-                </label>
-                  <input
-                  id="careers-email"
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                  className={inputClass}
-                  placeholder="you@example.com"
-                    required
-                  />
-                </div>
+                {applicationBlocked ? (
+                  <p
+                    className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+                    role="alert"
+                  >
+                    You have already applied for this position with this email
+                    address.
+                  </p>
+                ) : null}
+                {isSignedIn ? (
+                  <p className="rounded-lg border border-[var(--line)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--ink-muted)]">
+                    Applying as <span className="font-medium text-[var(--ink)]">{user?.email}</span>
+                    {user?.name ? (
+                      <>
+                        {" "}
+                        ({user.name})
+                      </>
+                    ) : null}
+                    .
+                  </p>
+                ) : null}
+                {!isSignedIn ? (
+                  <>
+                    <div>
+                      <label htmlFor="careers-name" className={labelClass}>
+                        Full name *
+                      </label>
+                      <input
+                        id="careers-name"
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        className={inputClass}
+                        placeholder="Your full name"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="careers-email" className={labelClass}>
+                        Email *
+                      </label>
+                      <input
+                        id="careers-email"
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        className={inputClass}
+                        placeholder="you@example.com"
+                        required
+                      />
+                    </div>
+                  </>
+                ) : null}
                 <div>
                 <label htmlFor="careers-country" className={labelClass}>
                   Country *
@@ -596,6 +824,9 @@ const CareersPage = () => {
                 </div>
                 <div>
                 <span className={labelClass}>Resume (PDF) *</span>
+                <p className="mb-2 text-xs text-[var(--ink-muted)]">
+                  PDF only, maximum 5 MB.
+                </p>
                     <input
                       type="file"
                       ref={fileInputRef}
@@ -628,9 +859,10 @@ const CareersPage = () => {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 rounded-lg bg-[var(--blue)] px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--sh-blue)] hover:bg-[var(--blue-dark)]"
+                  disabled={submitLoading || applicationBlocked}
+                  className="flex-1 rounded-lg bg-[var(--blue)] px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--sh-blue)] hover:bg-[var(--blue-dark)] disabled:pointer-events-none disabled:opacity-60"
                 >
-                  Submit application
+                  {submitLoading ? "Submitting…" : "Submit application"}
                 </button>
               </div>
             </form>

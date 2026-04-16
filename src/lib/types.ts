@@ -73,7 +73,7 @@ import googleCalendarLogo from "@/assets/google-calendar.svg";
 import outlookCalendarLogo from "@/assets/microsoft-outlook.svg";
 import microsoftTeamsLogo from "@/assets/microsoft-teams.svg";
 import zoomLogo from "@/assets/zoom.svg";
-// import hubspotLogo from "@/assets/hubspot-logo.svg"; // Commented out temporarily
+import hubspotLogo from "@/assets/hubspot.svg";
 
 export enum IntegrationAppEnum {
   GOOGLE_MEET_AND_CALENDAR = "GOOGLE_MEET_AND_CALENDAR",
@@ -88,7 +88,7 @@ export const IntegrationLogos: Record<IntegrationAppType, string | string[]> = {
   ZOOM_MEETING: zoomLogo,
   MICROSOFT_TEAMS: microsoftTeamsLogo,
   OUTLOOK_CALENDAR: outlookCalendarLogo,
-  HUBSPOT_CRM: zoomLogo, // Temporarily using zoom logo until you add the real one
+  HUBSPOT_CRM: hubspotLogo,
 };
 
 export type IntegrationAppType =

@@ -184,7 +184,6 @@ export const getAllIntegrationQueryFn =
 export const connectAppIntegrationQueryFn = async (
   appType: IntegrationAppType
 ) => {
-  console.log("testing for teams");
   const response = await API.get(`/integration/connect/${appType}`);
   return response.data;
 };
@@ -281,5 +280,38 @@ export async function submitContactForm(
   const token = useStore.getState().accessToken;
   const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
   const response = await PublicAPI.post("/contact", data, { headers });
+  return response.data;
+}
+
+export type JobApplicationPayload = {
+  jobTitle: string;
+  jobDepartment?: string;
+  jobId: number;
+  name?: string;
+  email?: string;
+  country: string;
+  experience: string;
+  resumeFileName: string;
+  resumeBase64: string;
+};
+
+/** POST /api/careers/apply — send Bearer when signed in so name/email can be omitted. */
+export async function submitJobApplication(
+  data: JobApplicationPayload
+): Promise<{ message?: string }> {
+  const token = useStore.getState().accessToken;
+  const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
+  const response = await PublicAPI.post("/careers/apply", data, {
+    headers,
+    timeout: 120_000,
+  });
+  return response.data;
+}
+
+/** GET /api/careers/applied-job-ids — uses session JWT; returns [] when not signed in. */
+export async function fetchAppliedCareerJobIds(): Promise<{
+  jobIds: number[];
+}> {
+  const response = await API.get("/careers/applied-job-ids");
   return response.data;
 }

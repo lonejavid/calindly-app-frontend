@@ -22,16 +22,13 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { checkIntegrationQueryFn, CreateEventMutationFn } from "@/lib/api";
+import { VideoConferencingPlatform } from "@/lib/types";
+import googleMeetLogo from "@/assets/google-meet.svg";
+import zoomLogo from "@/assets/zoom.svg";
+import microsoftTeamsLogo from "@/assets/microsoft-teams.svg";
 
 import { toast } from 'sonner';
 import { PROTECTED_ROUTES } from '@/routes/common/routePaths';
-
-// Enum for video conferencing platforms
-enum VideoConferencingPlatform {
-  GOOGLE_MEET_AND_CALENDAR = 'GOOGLE_MEET_AND_CALENDAR',
-  ZOOM_MEETING = 'ZOOM_MEETING',
-  MICROSOFT_TEAMS = 'MICROSOFT_TEAMS',
-}
 
 // Types for API functions
 interface CreateEventData {
@@ -83,7 +80,9 @@ interface EventCreationSidePanelProps {
 interface LocationOption {
   value: string;
   label: string;
+  subtitle: string;
   logo: string;
+  /** Only Google Meet is supported for creating bookable events today. */
   isAvailable: boolean;
 }
 
@@ -161,24 +160,27 @@ const TAB_ACCENT_ICON: Record<SectionAccent, string> = {
   ink: "var(--ink-soft)",
 };
 
-const locationOptions: LocationOption[] = [
+const LOCATION_OPTIONS: LocationOption[] = [
   {
     value: VideoConferencingPlatform.GOOGLE_MEET_AND_CALENDAR,
     label: 'Google Meet',
-    logo: 'https://img.icons8.com/?size=100&id=9730&format=png&color=000000',
+    subtitle: 'Google Meet video conference',
+    logo: googleMeetLogo,
     isAvailable: true,
   },
   {
     value: VideoConferencingPlatform.ZOOM_MEETING,
     label: 'Zoom',
-    logo: 'https://img.icons8.com/?size=100&id=5pu47piHKg1I&format=png&color=000000',
-    isAvailable: true,
+    subtitle: 'Zoom video conference',
+    logo: zoomLogo,
+    isAvailable: false,
   },
   {
     value: VideoConferencingPlatform.MICROSOFT_TEAMS,
-    label: 'Teams',
-    logo: 'https://img.icons8.com/?size=100&id=65231&format=png&color=000000',
-    isAvailable: true,
+    label: 'Microsoft Teams',
+    subtitle: 'Microsoft Teams video conference',
+    logo: microsoftTeamsLogo,
+    isAvailable: false,
   },
 ];
 
@@ -370,6 +372,14 @@ const [dateRangeLimit, setDateRangeLimit] = useState<number>(30); // Default 30 
 };
 
   const handleLocationTypeChange = async (value: string): Promise<void> => {
+    const opt = LOCATION_OPTIONS.find((o) => o.value === value);
+    if (!opt?.isAvailable) {
+      toast.info(
+        "Coming soon — this location isn’t available for new events yet. Please choose Google Meet.",
+      );
+      return;
+    }
+
     setSelectedLocationType(value);
     setAppConnected(false);
     handleInputChange('locationType', value);
@@ -1019,20 +1029,30 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
                 Location Type <span className="text-red-500">*</span>
               </label>
               <div className="space-y-3">
-                {locationOptions.map((option) => (
+                {LOCATION_OPTIONS.map((option) => {
+                  const isUpcoming = !option.isAvailable;
+                  const isSelected =
+                    selectedLocationType === option.value && option.isAvailable;
+                  return (
                   <div
                     key={option.value}
-                    className={`cursor-pointer rounded-xl border-2 p-5 transition-all duration-300 hover:shadow-lg ${
-                      selectedLocationType === option.value
-                        ? appConnected
-                          ? "scale-[1.02] shadow-lg"
-                          : error
-                            ? "border-red-400 bg-red-50 shadow-lg"
-                            : "shadow-lg"
-                        : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50"
+                    role="button"
+                    tabIndex={isUpcoming ? -1 : 0}
+                    className={`rounded-xl border-2 p-5 transition-all duration-300 ${
+                      isUpcoming
+                        ? "cursor-not-allowed border-gray-200 bg-gray-50 opacity-75"
+                        : `cursor-pointer hover:shadow-lg ${
+                            isSelected
+                              ? appConnected
+                                ? "scale-[1.02] shadow-lg"
+                                : error
+                                  ? "border-red-400 bg-red-50 shadow-lg"
+                                  : "shadow-lg"
+                              : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50"
+                          }`
                     }`}
                     style={
-                      selectedLocationType === option.value
+                      isSelected && !isUpcoming
                         ? appConnected
                           ? {
                               borderColor: "var(--blue)",
@@ -1046,32 +1066,59 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
                               }
                         : undefined
                     }
-                    onClick={() => handleLocationTypeChange(option.value)}
+                    onClick={() => void handleLocationTypeChange(option.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        void handleLocationTypeChange(option.value);
+                      }
+                    }}
                   >
                     <div className="flex items-center space-x-4">
-                      <div className="p-2 bg-white rounded-lg shadow-sm">
+                      <div
+                        className={`flex shrink-0 items-center justify-center rounded-lg border bg-white p-2 shadow-sm ${
+                          isUpcoming ? "border-gray-200" : "border-gray-100"
+                        }`}
+                      >
                         <img
                           src={option.logo}
-                          alt={option.label}
-                          className="w-6 h-6"
+                          alt=""
+                          className="h-8 w-8 object-contain"
                           loading="lazy"
                           decoding="async"
                         />
                       </div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-gray-900">{option.label}</h4>
-                        <p className="text-sm text-gray-600">
-                          {option.value === VideoConferencingPlatform.GOOGLE_MEET_AND_CALENDAR
-                            ? 'Google Meet video conference'
-                            : option.value === VideoConferencingPlatform.ZOOM_MEETING
-                            ? 'Zoom video conference'
-                            : 'Microsoft Teams video conference'}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h4
+                            className={`font-semibold ${
+                              isUpcoming ? "text-gray-600" : "text-gray-900"
+                            }`}
+                          >
+                            {option.label}
+                          </h4>
+                          {isUpcoming && (
+                            <span className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-amber-800">
+                              Upcoming
+                            </span>
+                          )}
+                        </div>
+                        <p
+                          className={`mt-0.5 text-sm ${
+                            isUpcoming ? "text-gray-500" : "text-gray-600"
+                          }`}
+                        >
+                          {option.subtitle}
                         </p>
                       </div>
-                      {isChecking && selectedLocationType === option.value && (
-                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+                      {isChecking &&
+                        selectedLocationType === option.value &&
+                        option.isAvailable && (
+                        <div className="h-6 w-6 shrink-0 animate-spin rounded-full border-b-2 border-blue-500" />
                       )}
-                      {appConnected && selectedLocationType === option.value && (
+                      {appConnected &&
+                        selectedLocationType === option.value &&
+                        option.isAvailable && (
                         <div
                           className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
                           style={{ backgroundColor: "var(--blue)" }}
@@ -1081,7 +1128,8 @@ const updateQuestionOption = (questionId: number, optionIndex: number, value: st
                       )}
                     </div>
                   </div>
-                ))}
+                );
+                })}
               </div>
               {error && (
                 <div className="mt-4 rounded-xl border-2 border-red-200 bg-red-50 p-4">
