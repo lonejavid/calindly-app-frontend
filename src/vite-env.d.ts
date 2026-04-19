@@ -2,5 +2,4 @@
 
 interface ImportMetaEnv {
   readonly VITE_PUBLIC_SITE_URL?: string;
-  readonly VITE_BASE?: string;
 }

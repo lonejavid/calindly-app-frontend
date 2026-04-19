@@ -10,17 +10,8 @@ export default defineConfig(({ mode }) => {
     /\/$/,
     "",
   );
-  /** When the SPA is only served under https://www.schedley.com/app (Astro proxy), set VITE_BASE=/app/ on the Vite Vercel project so /app/assets/* resolves on www. */
-  const baseRaw = env.VITE_BASE?.trim() || "/";
-  const base =
-    baseRaw === "/"
-      ? "/"
-      : baseRaw.endsWith("/")
-        ? baseRaw
-        : `${baseRaw}/`;
 
   return {
-    base,
     plugins: [
       react(),
       tailwindcss(),
