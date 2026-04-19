@@ -14,7 +14,6 @@ import SectionDivider from "@/components/SectionDivider";
 import SectionReveal, { sectionEffectForIndex } from "@/components/SectionReveal";
 import { useFooter } from "@/contexts/FooterContext";
 import { openBookMeeting } from "@/lib/book-meeting";
-import { useInjectHomepageJsonLd } from "@/seo/useInjectHomepageJsonLd";
 import type { LucideIcon } from "lucide-react";
 
 function ProblemCard({
@@ -319,7 +318,6 @@ function WhatSchedleyDoesCard({
 }
 
 const ScheduleyLanding = () => {
-  useInjectHomepageJsonLd();
   const { setFooter } = useFooter();
   const [isVisible, setIsVisible] = useState(false);
   const [activeFeature, setActiveFeature] = useState(0);
