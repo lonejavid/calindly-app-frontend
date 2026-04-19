@@ -200,7 +200,7 @@ const RecruitingTalentPage = () => {
                     Get Started <ArrowRight className="h-5 w-5 shrink-0" />
                   </button>
                   <Link
-                    to="/carrer"
+                    to="/careers"
                     className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-[var(--r-s)] border-2 border-white/60 bg-transparent px-5 sm:px-6 py-3.5 text-sm sm:text-base font-semibold text-white transition-all hover:bg-white/10"
                   >
                     View Open Roles

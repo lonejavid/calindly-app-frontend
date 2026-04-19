@@ -1,6 +1,7 @@
 import { Outlet, useLocation, matchPath } from "react-router-dom";
 import { FooterProvider } from "@/contexts/FooterContext";
 import Footer from "@/components/Footer";
+import { CanonicalLink } from "@/components/CanonicalLink";
 import { AUTH_ROUTES, PUBLIC_ROUTES } from "@/routes/common/routePaths";
 
 /** Guest booking page /:username/:slug — hide marketing footer (same path shape as /services/... is excluded). */
@@ -20,6 +21,7 @@ const BaseLayout = () => {
 
   return (
     <FooterProvider>
+      <CanonicalLink />
       <div className="flex flex-col w-full min-h-screen">
         <div className="w-full flex-1" key={location.key}>
           <Outlet />

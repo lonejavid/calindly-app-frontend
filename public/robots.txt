@@ -1,0 +1,33 @@
+# Allow all crawlers to index Schedley
+User-agent: *
+Allow: /
+
+# Specific allowances for AI crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Disallow crawling of admin, API, and authenticated app shell (Vite serves JS/CSS from /assets — do not block it)
+Disallow: /admin
+Disallow: /api
+Disallow: /app
+
+# Sitemap location
+Sitemap: https://www.schedley.com/sitemap.xml
+
+# Crawl-delay for respectful crawling (supported by some crawlers; Google ignores Crawl-delay)
+Crawl-delay: 1

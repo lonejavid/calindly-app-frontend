@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import NewEventDialog from "@/pages/event_type/_components/new-event-dialog";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Outlet, useLocation } from "react-router-dom";
+import { CanonicalLink } from "@/components/CanonicalLink";
 import { useStore } from "@/store/store";
 import { PROTECTED_ROUTES } from "@/routes/common/routePaths";
 
@@ -50,6 +51,7 @@ const AppLayout = () => {
 
   return (
     <SidebarProvider collapseDisabled sidebarFlow>
+      <CanonicalLink />
       {/* Only render AppSidebar if user is approved */}
       {shouldShowSidebar && <AppSidebar />}
 

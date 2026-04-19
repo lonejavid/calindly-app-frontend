@@ -172,7 +172,7 @@ export function LandingHeader({ isVisible = true }: LandingHeaderProps) {
 
           <button
             type="button"
-            onClick={() => navigate("/carrer")}
+            onClick={() => navigate("/careers")}
             className="px-4 py-2.5 rounded-sm text-base font-medium text-[var(--ink)] hover:text-[var(--blue)] hover:bg-[var(--blue-ghost)] transition-colors cursor-pointer"
           >
             Careers
@@ -294,7 +294,7 @@ export function LandingHeader({ isVisible = true }: LandingHeaderProps) {
             <button
               type="button"
               onClick={() => {
-                navigate("/carrer");
+                navigate("/careers");
                 setMobileMenuOpen(false);
               }}
               className="px-3 py-2.5 text-left font-medium text-[var(--ink)] rounded-lg hover:bg-[var(--surface)] cursor-pointer"

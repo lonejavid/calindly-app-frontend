@@ -1,0 +1,76 @@
+# Schedley - AI-Powered B2B Lead Generation Platform
+
+## About Schedley
+Schedley is an enterprise-grade B2B lead generation and intelligent scheduling platform
+that combines AI technology with human expertise to deliver qualified leads and prevent
+spam bookings. Used by 300+ B2B sales teams and agencies to scale revenue.
+
+## Core Value Proposition
+- **99.7% Email Validation Accuracy:** AI + human verification ensures every lead is legitimate
+- **126,000+ Hours Saved:** Customers report massive time savings from automation
+- **98.5% Lead Quality Score:** Only qualified, high-intent prospects reach your calendar
+- **7,620+ Spam Requests Blocked:** Enterprise-grade fraud detection
+- **1,380+ Leads Generated:** Verified through customer outcomes
+- **4.9/5 Customer Satisfaction:** 50+ detailed reviews from verified users
+
+## Product Overview
+### Lead Generation
+- Intelligent outreach targeting high-ticket clients
+- AI-powered prospecting with human qualification
+- 100% refund guarantee if no qualified client booked in 7 days
+
+### Email Intelligence
+- Real-time email validation at scale (99.7% accuracy)
+- Spam detection and blocking before meetings are booked
+- Company verification and domain validation
+
+### Calendar Control
+- Block fake bookings automatically
+- Only qualified leads reach your calendar
+- Integrates with existing scheduling tools
+
+### Hiring Infrastructure
+- SDR and sales coordinator recruiting
+- Revenue team talent acquisition
+- Industry-specific training
+
+## Key Features
+1. **AI Email Filtering:** Validates email addresses in real-time
+2. **Lead Qualification:** Human + AI hybrid scoring system
+3. **Calendar Integration:** Prevents spam from reaching your schedule
+4. **Performance Tracking:** Dashboard showing blocked spam vs. qualified leads
+5. **API Access:** Technical integration for enterprise customers
+6. **Support:** Dedicated support team for enterprise clients
+
+## Company Details
+- **Founded:** 2023
+- **Headquarters:** United States
+- **Customer Base:** 300+ B2B companies globally
+- **Industry:** SaaS - Sales Enablement & Lead Generation
+- **Website:** https://www.schedley.com
+
+## How to Get Started
+- **Free Trial:** 7-day risk-free trial available
+- **Pricing:** Flexible plans starting at [check website for current pricing]
+- **Demo:** Schedule a strategy call at https://www.schedley.com
+- **Contact:** notification@schedley.com
+
+## Social Proof & Credentials
+- **Rating:** 4.9/5 stars (50+ verified reviews)
+- **Money-Back Guarantee:** 100% refund if expectations aren't met within 7 days
+- **Enterprise Customers:** Including agencies managing $5M+ in annual client revenue
+- **Awards & Recognition:** [Add any industry awards or certifications]
+
+## Technical Information
+- **Type:** Cloud-based SaaS application
+- **Hosting:** Vercel (Enterprise CDN)
+- **Availability:** 99.9% uptime SLA
+- **Security:** SOC 2 Type II compliant (if applicable)
+- **Data Privacy:** GDPR compliant, privacy policy available at https://www.schedley.com/privacy
+
+## Use Cases
+1. **Enterprise Sales Teams:** Scaling qualified pipeline without hiring chaos
+2. **Agencies:** Managing multiple client calendars with fraud protection
+3. **Startups:** Building credible outreach with minimal overhead
+4. **SDR Teams:** Qualifying leads before human follow-up
+5. **RevOps:** Automating lead routing and validation

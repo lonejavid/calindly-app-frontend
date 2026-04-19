@@ -115,7 +115,7 @@ export function Footer(props: FooterProps) {
               <li>
                 <button
                   type="button"
-                  onClick={() => navigate("/carrer")}
+                  onClick={() => navigate("/careers")}
                   className="text-white/75 hover:text-white text-sm transition-colors text-left w-full"
                 >
                   Careers

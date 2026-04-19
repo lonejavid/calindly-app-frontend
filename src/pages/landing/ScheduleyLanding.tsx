@@ -14,6 +14,7 @@ import SectionDivider from "@/components/SectionDivider";
 import SectionReveal, { sectionEffectForIndex } from "@/components/SectionReveal";
 import { useFooter } from "@/contexts/FooterContext";
 import { openBookMeeting } from "@/lib/book-meeting";
+import { useInjectHomepageJsonLd } from "@/seo/useInjectHomepageJsonLd";
 import type { LucideIcon } from "lucide-react";
 
 function ProblemCard({
@@ -318,6 +319,7 @@ function WhatSchedleyDoesCard({
 }
 
 const ScheduleyLanding = () => {
+  useInjectHomepageJsonLd();
   const { setFooter } = useFooter();
   const [isVisible, setIsVisible] = useState(false);
   const [activeFeature, setActiveFeature] = useState(0);
@@ -2148,7 +2150,7 @@ export default ScheduleyLanding;
 
 //           <div className="hidden lg:flex items-center space-x-6">
 //             <button 
-//               onClick={() => navigate('/carrer')} 
+//               onClick={() => navigate('/careers')} 
 //               className="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105"
 //             >
 //               Careers
@@ -2204,7 +2206,7 @@ export default ScheduleyLanding;
 //             <div className="flex flex-col space-y-6">
 //               <button 
 //                 onClick={() => {
-//                   navigate('/carrer');
+//                   navigate('/careers');
 //                   setMobileMenuOpen(false);
 //                 }} 
 //                 className="text-gray-300 hover:text-white transition-colors duration-300 py-2 text-left"
@@ -2951,7 +2953,7 @@ export default ScheduleyLanding;
 //                 <a href="#features" className="block text-gray-400 hover:text-white transition-colors duration-300">Features</a>
 //                 <a href="#how-it-works" className="block text-gray-400 hover:text-white transition-colors duration-300">How It Works</a>
 //                 <a href="#guarantee" className="block text-gray-400 hover:text-white transition-colors duration-300">Guarantee</a>
-//                 <button onClick={() => navigate('/carrer')} className="block text-gray-400 hover:text-white transition-colors duration-300 text-left">Careers</button>
+//                 <button onClick={() => navigate('/careers')} className="block text-gray-400 hover:text-white transition-colors duration-300 text-left">Careers</button>
 //                 <button onClick={handleBookDemo} className="block text-gray-400 hover:text-white transition-colors duration-300 text-left flex items-center">
 //                   Book Demo <ExternalLink className="w-3 h-3 ml-1" />
 //                 </button>

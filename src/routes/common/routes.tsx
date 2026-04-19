@@ -30,7 +30,8 @@ export const authenticationRoutePaths = [
   { path: "/terms", element: <TermsOfService /> },
   { path: "/privacy", element: <PrivacyPolicy /> },
   { path: "/cookie-policy", element: <CookiePolicy /> },
-  { path: "/carrer", element: <CareersPage /> },
+  { path: "/careers", element: <CareersPage /> },
+  { path: "/carrer", element: <Navigate to="/careers" replace /> },
   { path: AUTH_ROUTES.TALENT, element: <TalentHiringPage /> },
   { path: AUTH_ROUTES.PROFILE, element: <ProfilePage /> },
   {
