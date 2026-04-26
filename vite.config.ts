@@ -12,6 +12,23 @@ export default defineConfig(({ mode }) => {
   );
 
   return {
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (!id.includes("node_modules")) return;
+            if (
+              id.includes("/react/") ||
+              id.includes("react-dom") ||
+              id.includes("react-router")
+            ) {
+              return "vendor-react";
+            }
+            if (id.includes("lucide-react")) return "vendor-icons";
+          },
+        },
+      },
+    },
     plugins: [
       react(),
       tailwindcss(),

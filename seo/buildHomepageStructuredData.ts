@@ -1,6 +1,6 @@
 /** Used by Vite `transformIndexHtml` to emit static JSON-LD in `dist/index.html` (no `@/` imports). */
 
-const LOGO_PATH = "/mylogo2.png";
+const LOGO_PATH = "/schedley-logo.png";
 
 export function buildHomepageJsonLdBlocks(origin: string): { id: string; data: Record<string, unknown> }[] {
   const base = origin.replace(/\/$/, "");

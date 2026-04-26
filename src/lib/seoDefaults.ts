@@ -1,7 +1,7 @@
 import { SITE_ORIGIN } from "@/lib/site";
 
-/** Root-relative asset used for OG/Twitter when no page-specific image exists. */
-export const DEFAULT_SOCIAL_IMAGE_PATH = "/mylogo2.png";
+/** Root-relative asset used for OG/Twitter when no page-specific image exists (must exist under `public/`). */
+export const DEFAULT_SOCIAL_IMAGE_PATH = "/schedley-logo.png";
 
 export function defaultSocialImageUrl(): string {
   return `${SITE_ORIGIN}${DEFAULT_SOCIAL_IMAGE_PATH}`;
