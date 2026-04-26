@@ -5,7 +5,7 @@ export type BlogBlock =
   | { type: "ul"; items: string[] }
   | { type: "blockquote"; quote: string; attribution?: string }
   | { type: "callout"; text: string }
-  | { type: "table"; headers: string[]; rows: string[][] };
+  | { type: "table"; headers: string[]; rows: string[][]; linkBlogSeries?: boolean };
 
 export type BlogPostMeta = {
   slug: string;

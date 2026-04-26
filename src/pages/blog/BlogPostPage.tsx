@@ -3,12 +3,13 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { ArrowLeft, CalendarDays, Clock } from "lucide-react";
 import { LandingHeader } from "@/components/LandingHeader";
 import { LANDING_PAGE_CONTAINER_CLASS } from "@/lib/landingLayout";
-import { getBlogPostBySlug } from "@/data/blogPosts";
+import { getBlogPostBySlug, getContinueReadingPosts } from "@/data/blogPosts";
 import { BLOG_ROUTE } from "@/routes/common/routePaths";
 import { canonicalUrl } from "@/lib/site";
 import { defaultSocialImageUrl } from "@/lib/seoDefaults";
 import { openBookMeeting } from "@/lib/book-meeting";
 import { BlogContent } from "./BlogContent";
+import { BlogContinueReading } from "./BlogContinueReading";
 import { useSeoMeta } from "@/hooks/useSeoMeta";
 import { useJsonLdScript } from "@/hooks/useJsonLdScript";
 
@@ -84,6 +85,11 @@ const BlogPostPage = () => {
 
   useJsonLdScript("schedley-blog-jsonld", jsonLdStr);
 
+  const continueReading = useMemo(
+    () => (post ? getContinueReadingPosts(post.slug, 3) : []),
+    [post],
+  );
+
   if (!slug || !post) {
     return <Navigate to={BLOG_ROUTE} replace />;
   }
@@ -133,7 +139,9 @@ const BlogPostPage = () => {
             </div>
           </div>
 
-          <footer className="border-t border-[var(--line)] bg-[var(--surface)] py-12 sm:py-14">
+          <BlogContinueReading posts={continueReading} />
+
+          <footer className="bg-[var(--surface)] py-12 sm:py-14">
             <div className={LANDING_PAGE_CONTAINER_CLASS}>
               <div className="w-full min-w-0 max-w-none rounded-[var(--r-l)] border border-[var(--line-strong)] bg-[var(--white)] p-8 sm:p-10 shadow-[var(--sh-sm)]">
                 <h2 className="text-xl sm:text-2xl font-semibold text-[var(--ink)] tracking-tight">

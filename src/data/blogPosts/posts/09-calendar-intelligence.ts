@@ -89,26 +89,5 @@ export const blog09: BlogPost = {
       type: "p",
       text: "**▶ Experience Calendar Intelligence in full.** Start at **schedley.com** — your first qualified meeting is one step away.",
     },
-    { type: "h2", text: "SCHEDLEY — complete content suite" },
-    {
-      type: "p",
-      text: "All nine blogs in this series are ready to publish. Each is optimized for a distinct keyword cluster, audience segment, and funnel stage. Together they cover every service, every competitor angle, and every objection a prospect might have before choosing Schedley.",
-    },
-    {
-      type: "table",
-      headers: ["Blog", "Primary purpose"],
-      rows: [
-        ["Blog 1", "SEO entry point — spam pain"],
-        ["Blog 2", "Competitor displacement"],
-        ["Blog 3", "Data-driven authority"],
-        ["Blog 4", "Feature comparison — how-to"],
-        ["Blog 5", "Strategy — pipeline mindset"],
-        ["Blog 6", "AI Outreach service page"],
-        ["Blog 7", "Pipeline Generation service page"],
-        ["Blog 8", "Hiring Infrastructure service page"],
-        ["Blog 9", "Calendar Intelligence service page"],
-      ],
-    },
-    { type: "p", text: "**schedley.com**" },
   ],
 };
