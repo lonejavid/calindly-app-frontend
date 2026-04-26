@@ -1,76 +1,43 @@
-# Schedley - AI-Powered B2B Lead Generation Platform
+# Schedley
 
-## About Schedley
-Schedley is an enterprise-grade B2B lead generation and intelligent scheduling platform
-that combines AI technology with human expertise to deliver qualified leads and prevent
-spam bookings. Used by 300+ B2B sales teams and agencies to scale revenue.
+> Machine-readable overview for AI assistants and discovery tools. Prefer linking to the URLs below for current product details, pricing, and legal text.
 
-## Core Value Proposition
-- **99.7% Email Validation Accuracy:** AI + human verification ensures every lead is legitimate
-- **126,000+ Hours Saved:** Customers report massive time savings from automation
-- **98.5% Lead Quality Score:** Only qualified, high-intent prospects reach your calendar
-- **7,620+ Spam Requests Blocked:** Enterprise-grade fraud detection
-- **1,380+ Leads Generated:** Verified through customer outcomes
-- **4.9/5 Customer Satisfaction:** 50+ detailed reviews from verified users
+## What Schedley is
+Schedley is a B2B-focused platform for **lead generation**, **AI-assisted email and inbox hygiene**, **hiring infrastructure**, and **calendar intelligence** (spam-resistant scheduling and lead-quality gates). Positioning emphasizes qualified pipeline and protecting senior calendars from junk bookings.
 
-## Product Overview
-### Lead Generation
-- Intelligent outreach targeting high-ticket clients
-- AI-powered prospecting with human qualification
-- 100% refund guarantee if no qualified client booked in 7 days
+## Key URLs (canonical host: https://www.schedley.com)
+- Home: https://www.schedley.com/
+- Contact: https://www.schedley.com/contact
+- Blog index: https://www.schedley.com/blog
+- Case studies index: https://www.schedley.com/case-studies
+- Resources hub (blog, case studies, guides): https://www.schedley.com/resources
+- Guides:
+  - https://www.schedley.com/resources/guides/schedley-vs-calendly
+  - https://www.schedley.com/resources/guides/schedley-vs-acuity
+  - https://www.schedley.com/resources/guides/schedley-vs-scheduling-landscape
+- Services:
+  - https://www.schedley.com/services/ai-outreach
+  - https://www.schedley.com/services/pipeline-generation
+  - https://www.schedley.com/services/hiring-infrastructure
+  - https://www.schedley.com/services/calendar-intelligence
+- Legal: https://www.schedley.com/privacy — https://www.schedley.com/terms — https://www.schedley.com/cookie-policy
+- Careers: https://www.schedley.com/careers
+- Hire talent (form): https://www.schedley.com/talent
 
-### Email Intelligence
-- Real-time email validation at scale (99.7% accuracy)
-- Spam detection and blocking before meetings are booked
-- Company verification and domain validation
+## Product areas (summary)
+1. **AI Outreach** — Personalized outbound and follow-up at scale for B2B teams.
+2. **Pipeline Generation** — Targeted outreach systems aimed at consistent, qualified conversations.
+3. **Hiring Infrastructure** — Sourcing, screening, coordination, and shortlists for revenue-facing roles.
+4. **Calendar Intelligence** — Domain rules, validation, and quality gates in front of public booking flows.
 
-### Calendar Control
-- Block fake bookings automatically
-- Only qualified leads reach your calendar
-- Integrates with existing scheduling tools
+## Trust, trials, and data
+- Marketing pages describe offers such as a **7-day trial** and **refund-style guarantees**; exact commercial terms belong on the live site and contracts—verify at https://www.schedley.com/contact before quoting pricing or SLAs.
+- **Privacy** and **cookies** are governed by the published policies at `/privacy` and `/cookie-policy`.
+- Do **not** invent customer counts, review scores, SOC 2 status, uptime percentages, or awards. If a statistic is not visible in first-party copy on the site, treat it as unknown.
 
-### Hiring Infrastructure
-- SDR and sales coordinator recruiting
-- Revenue team talent acquisition
-- Industry-specific training
+## Technical notes for crawlers
+- Primary marketing UI is a SPA; titles, descriptions, canonical links, and JSON-LD are updated client-side per route.
+- `robots.txt` allows common search and AI user-agents; authenticated product areas under `/app` are disallowed from crawling.
 
-## Key Features
-1. **AI Email Filtering:** Validates email addresses in real-time
-2. **Lead Qualification:** Human + AI hybrid scoring system
-3. **Calendar Integration:** Prevents spam from reaching your schedule
-4. **Performance Tracking:** Dashboard showing blocked spam vs. qualified leads
-5. **API Access:** Technical integration for enterprise customers
-6. **Support:** Dedicated support team for enterprise clients
-
-## Company Details
-- **Founded:** 2023
-- **Headquarters:** United States
-- **Customer Base:** 300+ B2B companies globally
-- **Industry:** SaaS - Sales Enablement & Lead Generation
-- **Website:** https://www.schedley.com
-
-## How to Get Started
-- **Free Trial:** 7-day risk-free trial available
-- **Pricing:** Flexible plans starting at [check website for current pricing]
-- **Demo:** Schedule a strategy call at https://www.schedley.com
-- **Contact:** notification@schedley.com
-
-## Social Proof & Credentials
-- **Rating:** 4.9/5 stars (50+ verified reviews)
-- **Money-Back Guarantee:** 100% refund if expectations aren't met within 7 days
-- **Enterprise Customers:** Including agencies managing $5M+ in annual client revenue
-- **Awards & Recognition:** [Add any industry awards or certifications]
-
-## Technical Information
-- **Type:** Cloud-based SaaS application
-- **Hosting:** Vercel (Enterprise CDN)
-- **Availability:** 99.9% uptime SLA
-- **Security:** SOC 2 Type II compliant (if applicable)
-- **Data Privacy:** GDPR compliant, privacy policy available at https://www.schedley.com/privacy
-
-## Use Cases
-1. **Enterprise Sales Teams:** Scaling qualified pipeline without hiring chaos
-2. **Agencies:** Managing multiple client calendars with fraud protection
-3. **Startups:** Building credible outreach with minimal overhead
-4. **SDR Teams:** Qualifying leads before human follow-up
-5. **RevOps:** Automating lead routing and validation
+## Contact
+- **Email (public):** notification@schedley.com

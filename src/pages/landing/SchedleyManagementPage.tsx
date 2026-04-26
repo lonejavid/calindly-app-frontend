@@ -30,6 +30,8 @@ import { FAQSection } from "@/components/landing/FAQSection";
 import { GrowthExpertCTA } from "@/components/landing/GrowthExpertCTA";
 import { AUTH_ROUTES, PROTECTED_ROUTES } from "@/routes/common/routePaths";
 import { openBookMeeting } from "@/lib/book-meeting";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
+import { SERVICE_ROUTES } from "@/routes/common/routePaths";
 import leadGenHeroImage from "@/assets/spam.png";
 
 
@@ -40,6 +42,13 @@ import leadGenHeroImage from "@/assets/spam.png";
  */
 const SchedleyManagementPage = () => {
   const navigate = useNavigate();
+
+  useSeoMeta({
+    title: "Calendar Intelligence — Stop spam bookings & protect your calendar | Schedley",
+    description:
+      "Public booking links attract junk holds and vendors. Schedley puts domain policy and lead-quality gates in front of every slot so only serious conversations reserve your time.",
+    pathname: SERVICE_ROUTES.CALENDAR_INTELLIGENCE,
+  });
 
   const handleBookDemo = () => openBookMeeting();
   const handleGetStarted = () => navigate(AUTH_ROUTES.SIGN_UP);

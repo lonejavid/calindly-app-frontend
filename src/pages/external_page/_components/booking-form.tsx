@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { addMinutes, parse, format, parseISO } from "date-fns";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -27,7 +27,7 @@ import {
   Globe,
   ChevronDown,
 } from "lucide-react";
-import { getPublicAvailabilityByEventIdQueryFn, scheduleMeetingMutationFn } from "@/lib/api";
+import { scheduleMeetingMutationFn } from "@/lib/api";
 import { toast } from "sonner";
 import { Loader } from "@/components/loader";
 import { cn } from "@/lib/utils";
@@ -305,17 +305,6 @@ const BookingForm = (props: { event: Event }) => {
 
   // Watch email field to show real-time validation
   const watchedEmail = form.watch("guestEmail");
-
-  const { data } = useQuery({
-    queryKey: ["availbility_single_event", event.id],
-    queryFn: () => getPublicAvailabilityByEventIdQueryFn(event.id),
-  });
-
-  // Extract availability array safely
-  const availability = data?.data || [];
-
-
-  
 
   const onSubmit = async (values: FormData) => {
     if (!event.id || !selectedSlot || !selectedDate) {

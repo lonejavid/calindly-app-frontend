@@ -18,6 +18,7 @@ import {
 import { LandingHeader } from "@/components/LandingHeader";
 import SectionReveal from "@/components/SectionReveal";
 import { LANDING_PAGE_CONTAINER_CLASS } from "@/lib/landingLayout";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 
 const termsSections = [
   {
@@ -175,6 +176,13 @@ const termsSections = [
 
 export default function TermsOfService() {
   const lastUpdated = "March 2025";
+
+  useSeoMeta({
+    title: "Terms of Service — Schedley",
+    description:
+      "Terms governing use of Schedley’s website, software, and services. Read before creating an account or booking a demo.",
+    pathname: "/terms",
+  });
 
   return (
     <div className="min-h-screen bg-[var(--white)] b2b-page">

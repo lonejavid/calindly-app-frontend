@@ -21,6 +21,8 @@ import { ServiceLinesSection } from "@/components/landing/ServiceLinesSection";
 import { FAQSection } from "@/components/landing/FAQSection";
 import { GrowthExpertCTA } from "@/components/landing/GrowthExpertCTA";
 import { openBookMeeting } from "@/lib/book-meeting";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
+import { SERVICE_ROUTES } from "@/routes/common/routePaths";
 import leadGenHeroImage from "@/assets/Lead-Generation.webp";
 import emailImage from "@/assets/email.png";
 import approach01Image from "@/assets/ai1.png";
@@ -35,6 +37,13 @@ import howItWorksHeroImage from "@/assets/download.png";
  */
 
 const B2BAppointmentSchedulingPage = () => {
+  useSeoMeta({
+    title: "AI Outreach — Personalized B2B email sequences at scale | Schedley",
+    description:
+      "Manual outreach doesn't scale. Schedley sends and follows up with personalized emails so you get more replies and booked meetings—without an army of SDRs living in the inbox.",
+    pathname: SERVICE_ROUTES.AI_OUTREACH,
+  });
+
   const handleBookDemo = () => {
     openBookMeeting();
   };

@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Check, ChevronRight, Menu, X } from "lucide-react";
 import SectionReveal from "@/components/SectionReveal";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
+import { AUTH_ROUTES } from "@/routes/common/routePaths";
 
 const TALENT_FORM_ID = "talent-form";
 
@@ -44,6 +46,13 @@ const initialFormData: FormData = {
 };
 
 export default function TalentHiringPage() {
+  useSeoMeta({
+    title: "Hire talent — Schedley",
+    description:
+      "Tell us about the role, skills, and timeline. Schedley helps teams staff engineering, product, and design with a structured hiring workflow.",
+    pathname: AUTH_ROUTES.TALENT,
+  });
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showStickyCta, setShowStickyCta] = useState(false);
   const [formData, setFormData] = useState<FormData>(initialFormData);

@@ -11,10 +11,22 @@ import {
   Menu,
   X,
   Linkedin,
+  BookOpen,
+  Library,
+  FileText,
 } from "lucide-react";
 import { ProfileMenu } from "@/components/ProfileMenu";
 import { useStore } from "@/store/store";
-import { AUTH_ROUTES, PROTECTED_ROUTES, SERVICE_ROUTES } from "@/routes/common/routePaths";
+import {
+  AUTH_ROUTES,
+  BLOG_ROUTE,
+  CASE_STUDIES_ROUTE,
+  PROTECTED_ROUTES,
+  RESOURCE_HUB_ROUTE,
+  SERVICE_ROUTES,
+  resourceGuidePath,
+} from "@/routes/common/routePaths";
+import { resourceGuideNavLinks } from "@/data/resourceGuides/navLinks";
 
 import mylogo from "../../mylogo-light.png";
 import { LANDING_PAGE_CONTAINER_CLASS } from "@/lib/landingLayout";
@@ -64,12 +76,18 @@ export function LandingHeader({ isVisible = true }: LandingHeaderProps) {
   const navigate = useNavigate();
   const { user, clearAuth } = useStore();
   const [servicesOpen, setServicesOpen] = useState(false);
+  const [resourcesOpen, setResourcesOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
   const servicesTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const resourcesTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    if (!mobileMenuOpen) setMobileServicesOpen(false);
+    if (!mobileMenuOpen) {
+      setMobileServicesOpen(false);
+      setMobileResourcesOpen(false);
+    }
   }, [mobileMenuOpen]);
 
   const handleBookDemo = () => {
@@ -177,6 +195,112 @@ export function LandingHeader({ isVisible = true }: LandingHeaderProps) {
           >
             Careers
           </button>
+          <div
+            className="relative"
+            onMouseEnter={() => {
+              if (resourcesTimeoutRef.current) clearTimeout(resourcesTimeoutRef.current);
+              setResourcesOpen(true);
+            }}
+            onMouseLeave={() => {
+              resourcesTimeoutRef.current = setTimeout(() => setResourcesOpen(false), 120);
+            }}
+          >
+            <button
+              type="button"
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-sm text-base font-medium text-[var(--ink)] hover:text-[var(--blue)] hover:bg-[var(--blue-ghost)] transition-colors cursor-pointer"
+            >
+              Resources
+              <ChevronDown
+                className={`w-4 h-4 transition-transform ${resourcesOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+            {resourcesOpen && (
+              <div className="absolute right-0 top-full z-[100] pt-2">
+                <div className="flex w-[min(27rem,calc(100vw-1.25rem))] max-w-[calc(100vw-1.25rem)] flex-col rounded-xl border border-[var(--line)] bg-white p-3 shadow-[var(--sh-lg)] sm:w-[min(30rem,calc(100vw-1.5rem))] sm:max-w-[calc(100vw-1.5rem)] sm:p-4">
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                    <Link
+                      to={BLOG_ROUTE}
+                      className="flex flex-col gap-2 rounded-lg border border-transparent p-2 hover:border-[var(--line)] hover:bg-[var(--surface)] transition-colors group sm:p-2.5"
+                      onClick={() => setResourcesOpen(false)}
+                    >
+                      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-500/10 text-violet-600">
+                        <Library className="h-5 w-5" strokeWidth={2} />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-sm font-semibold text-[var(--ink)] group-hover:text-[var(--blue)] sm:text-[15px]">
+                          Blog
+                        </div>
+                        <div className="mt-1 text-[11px] leading-snug text-[var(--ink-muted)] sm:text-xs">
+                          Scheduling insights and how Schedley fits your funnel.
+                        </div>
+                      </div>
+                    </Link>
+                    <Link
+                      to={CASE_STUDIES_ROUTE}
+                      className="flex flex-col gap-2 rounded-lg border border-transparent p-2 hover:border-[var(--line)] hover:bg-[var(--surface)] transition-colors group sm:p-2.5"
+                      onClick={() => setResourcesOpen(false)}
+                    >
+                      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-500/10 text-sky-600">
+                        <BookOpen className="h-5 w-5" strokeWidth={2} />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-sm font-semibold text-[var(--ink)] group-hover:text-[var(--blue)] sm:text-[15px]">
+                          Case studies
+                        </div>
+                        <div className="mt-1 text-[11px] leading-snug text-[var(--ink-muted)] sm:text-xs">
+                          Stories from teams and solo pros using Schedley.
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+
+                  <div className="mt-3 w-full min-w-0 border-t border-[var(--line)] pt-3">
+                    <div className="rounded-lg bg-[var(--surface)] px-3 py-2.5 sm:px-3.5 sm:py-3">
+                      <div className="flex items-center gap-2">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-amber-500/10 text-amber-700">
+                          <FileText className="h-4 w-4" strokeWidth={2} />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-sm font-semibold text-[var(--ink)]">Guides</div>
+                          <p className="text-[11px] leading-snug text-[var(--ink-muted)] sm:text-xs">
+                            Vs Calendly, Acuity, and the scheduling market.
+                          </p>
+                        </div>
+                      </div>
+                      <ul className="mt-2.5 space-y-0.5 border-t border-[var(--line)]/80 pt-2.5">
+                        {resourceGuideNavLinks.map((g) => (
+                          <li key={g.slug}>
+                            <Link
+                              to={resourceGuidePath(g.slug)}
+                              onClick={() => setResourcesOpen(false)}
+                              className="group block rounded-md px-1.5 py-1.5 transition-colors hover:bg-white/80"
+                            >
+                              <span className="text-xs font-semibold text-[var(--blue)] group-hover:underline sm:text-[13px]">
+                                {g.navLabel}
+                              </span>
+                              <span className="mt-0.5 block text-[10px] leading-snug text-[var(--ink-muted)] line-clamp-2 sm:text-[11px]">
+                                {g.navDescription}
+                              </span>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 flex justify-end border-t border-[var(--line)] pt-2.5">
+                    <Link
+                      to={RESOURCE_HUB_ROUTE}
+                      className="text-sm font-semibold text-[var(--blue)] hover:underline"
+                      onClick={() => setResourcesOpen(false)}
+                    >
+                      View all resources →
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
           <a
             href="/#features"
             className="px-4 py-2.5 rounded-sm text-base font-medium text-[var(--ink)] hover:text-[var(--blue)] hover:bg-[var(--blue-ghost)] transition-colors cursor-pointer"
@@ -301,6 +425,56 @@ export function LandingHeader({ isVisible = true }: LandingHeaderProps) {
             >
               Careers
             </button>
+            <button
+              type="button"
+              className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left font-medium text-[var(--ink)] transition-colors hover:bg-[var(--surface)] cursor-pointer"
+              aria-expanded={mobileResourcesOpen}
+              onClick={() => setMobileResourcesOpen((o) => !o)}
+            >
+              Resources
+              <ChevronDown
+                className={`h-4 w-4 shrink-0 text-[var(--ink)] opacity-60 transition-transform ${mobileResourcesOpen ? "rotate-180" : ""}`}
+                aria-hidden
+              />
+            </button>
+            {mobileResourcesOpen ? (
+              <div className="flex flex-col gap-0.5 border-l-2 border-[var(--line)] pl-2 ml-1">
+                <Link
+                  to={RESOURCE_HUB_ROUTE}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="rounded-lg px-3 py-2 text-sm font-semibold text-[var(--blue)] hover:bg-[var(--surface)]"
+                >
+                  All resources
+                </Link>
+                <Link
+                  to={BLOG_ROUTE}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-[var(--ink)] hover:bg-[var(--surface)]"
+                >
+                  Blog
+                </Link>
+                <Link
+                  to={CASE_STUDIES_ROUTE}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-[var(--ink)] hover:bg-[var(--surface)]"
+                >
+                  Case studies
+                </Link>
+                <p className="px-3 pt-1 text-xs font-semibold uppercase tracking-wider text-[var(--ink-muted)]">
+                  Guides
+                </p>
+                {resourceGuideNavLinks.map((g) => (
+                  <Link
+                    key={g.slug}
+                    to={resourceGuidePath(g.slug)}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="rounded-lg px-3 py-2 text-sm font-medium text-[var(--ink)] hover:bg-[var(--surface)]"
+                  >
+                    {g.navLabel}
+                  </Link>
+                ))}
+              </div>
+            ) : null}
             <a
               href="/#features"
               className="px-3 py-2.5 font-medium text-[var(--ink)] rounded-lg hover:bg-[var(--surface)] cursor-pointer"

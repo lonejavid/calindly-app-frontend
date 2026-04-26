@@ -28,6 +28,8 @@ import {
 import { Link } from "react-router-dom";
 import { LandingHeader } from "@/components/LandingHeader";
 import { openBookMeeting } from "@/lib/book-meeting";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
+import { SERVICE_ROUTES } from "@/routes/common/routePaths";
 import SectionDivider from "@/components/SectionDivider";
 import { SectionHeader } from "@/components/SectionHeader";
 import SectionReveal from "@/components/SectionReveal";
@@ -54,6 +56,13 @@ const VETTED_BULLETS = [
  * Theme: src/theme/theme.css
  */
 const RecruitingTalentPage = () => {
+  useSeoMeta({
+    title: "Hiring Infrastructure — Find, screen & hire revenue talent faster | Schedley",
+    description:
+      "Structured sourcing, screening, coordinated interviews, and hiring-manager-ready shortlists—so you fill revenue roles without burning out your team on unvetted applicants.",
+    pathname: SERVICE_ROUTES.HIRING_INFRASTRUCTURE,
+  });
+
   const handleContact = () => openBookMeeting();
 
   const testimonials = [

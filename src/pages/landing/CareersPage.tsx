@@ -26,6 +26,7 @@ import {
   submitJobApplication,
 } from "@/lib/api";
 import { useStore } from "@/store/store";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 
 type JobRole = {
   id: number;
@@ -140,6 +141,13 @@ function getRequestErrorMessage(err: unknown): string {
 }
 
 const CareersPage = () => {
+  useSeoMeta({
+    title: "Careers — Schedley",
+    description:
+      "Open roles at Schedley across engineering, product, design, and more. Apply online and track your application status.",
+    pathname: "/careers",
+  });
+
   const user = useStore((s) => s.user);
   const isSignedIn = Boolean(user?.email);
   const [selectedJob, setSelectedJob] = useState<JobRole | null>(null);

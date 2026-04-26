@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Linkedin, ExternalLink, Mail, Shield } from "lucide-react";
 import { useFooter } from "@/contexts/FooterContext";
-import { SERVICE_ROUTES } from "@/routes/common/routePaths";
+import { RESOURCE_HUB_ROUTE, SERVICE_ROUTES } from "@/routes/common/routePaths";
 import defaultFooterLogo from "../../mylogo-light.png";
 
 export type FooterProps = {
@@ -119,6 +119,15 @@ export function Footer(props: FooterProps) {
                   className="text-white/75 hover:text-white text-sm transition-colors text-left w-full"
                 >
                   Careers
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => navigate(RESOURCE_HUB_ROUTE)}
+                  className="text-white/75 hover:text-white text-sm transition-colors text-left w-full"
+                >
+                  Resources
                 </button>
               </li>
               <li>

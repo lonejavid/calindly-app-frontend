@@ -23,6 +23,7 @@ import {
 import { LandingHeader } from "@/components/LandingHeader";
 import SectionReveal from "@/components/SectionReveal";
 import { LANDING_PAGE_CONTAINER_CLASS } from "@/lib/landingLayout";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 
 const policySections = [
   {
@@ -142,6 +143,13 @@ const policySections = [
 
 export default function PrivacyPolicy() {
   const lastUpdated = "March 13, 2026";
+
+  useSeoMeta({
+    title: "Privacy Policy — Schedley",
+    description:
+      "How Schedley collects, uses, stores, and protects personal data when you use our website and services. Last updated March 2026.",
+    pathname: "/privacy",
+  });
 
   return (
     <div className="min-h-screen bg-[var(--white)] b2b-page">

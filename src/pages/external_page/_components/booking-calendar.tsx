@@ -114,7 +114,6 @@ const BookingCalendar = ({
   const isDateUnavailable = (date: DateValue) => {
     if (customIsDateUnavailable?.(date)) return true;
     const calendarDate = date as CalendarDate;
-    const jsDate = calendarDate.toDate(finalUserTimezone);
     const dateStr = calendarDateToDateStr(calendarDate);
     const row = availability.find((d) => d.dateStr === dateStr);
     if (!row?.isAvailable) return true;

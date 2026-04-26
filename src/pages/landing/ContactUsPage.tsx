@@ -19,6 +19,8 @@ import {
   type ContactInquiryType,
 } from "@/lib/api";
 import { useStore } from "@/store/store";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
+import { CONTACT_ROUTE } from "@/routes/common/routePaths";
 
 const containerClass = "max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8";
 
@@ -54,6 +56,13 @@ function validate(data: ContactFormPayload, isSignedIn: boolean): Partial<Record
 }
 
 const ContactUsPage = () => {
+  useSeoMeta({
+    title: "Contact — Schedley",
+    description:
+      "Reach Schedley for general inquiries, technical support, bugs, or feature requests. We respond to serious B2B and partnership questions.",
+    pathname: CONTACT_ROUTE,
+  });
+
   const user = useStore((s) => s.user);
   const isSignedIn = Boolean(user?.email);
 

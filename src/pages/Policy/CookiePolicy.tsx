@@ -15,6 +15,7 @@ import {
 import { LandingHeader } from "@/components/LandingHeader";
 import SectionReveal from "@/components/SectionReveal";
 import { LANDING_PAGE_CONTAINER_CLASS } from "@/lib/landingLayout";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
 
 const cookieSections = [
   {
@@ -108,6 +109,13 @@ const cookieSections = [
 
 export default function CookiePolicy() {
   const lastUpdated = "March 2025";
+
+  useSeoMeta({
+    title: "Cookie Policy — Schedley",
+    description:
+      "How Schedley uses cookies and similar technologies, why we use them, and how you can control preferences.",
+    pathname: "/cookie-policy",
+  });
 
   return (
     <div className="min-h-screen bg-[var(--white)] b2b-page">

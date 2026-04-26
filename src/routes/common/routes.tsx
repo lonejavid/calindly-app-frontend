@@ -1,6 +1,16 @@
 import { lazy } from "react";
 import { Navigate } from "react-router-dom";
-import { AUTH_ROUTES, CONTACT_ROUTE, PROTECTED_ROUTES, PUBLIC_ROUTES, SERVICE_ROUTES } from "./routePaths";
+import {
+  AUTH_ROUTES,
+  BLOG_ROUTE,
+  CASE_STUDIES_ROUTE,
+  CONTACT_ROUTE,
+  PROTECTED_ROUTES,
+  PUBLIC_ROUTES,
+  RESOURCE_GUIDES_ROUTE,
+  RESOURCE_HUB_ROUTE,
+  SERVICE_ROUTES,
+} from "./routePaths";
 
 const SignIn = lazy(() => import("@/pages/auth/signin"));
 const SignUp = lazy(() => import("@/pages/auth/signup"));
@@ -23,6 +33,12 @@ const RecruitingTalentPage = lazy(() => import("@/pages/landing/RecruitingTalent
 const SchedleyManagementPage = lazy(() => import("@/pages/landing/SchedleyManagementPage"));
 const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
 const ContactUsPage = lazy(() => import("@/pages/landing/ContactUsPage"));
+const BlogIndexPage = lazy(() => import("@/pages/blog/BlogIndexPage"));
+const BlogPostPage = lazy(() => import("@/pages/blog/BlogPostPage"));
+const CaseStudiesPage = lazy(() => import("@/pages/landing/CaseStudiesPage"));
+const CaseStudyDetailPage = lazy(() => import("@/pages/landing/CaseStudyDetailPage"));
+const ResourcesHubPage = lazy(() => import("@/pages/landing/ResourcesHubPage"));
+const ResourceGuidePage = lazy(() => import("@/pages/landing/ResourceGuidePage"));
 const Setup = lazy(() => import("@/pages/event_type/_components/Setup"));
 
 export const authenticationRoutePaths = [
@@ -55,6 +71,21 @@ export const authenticationRoutePaths = [
   },
   { path: SERVICE_ROUTES.CALENDAR_INTELLIGENCE, element: <SchedleyManagementPage /> },
   { path: CONTACT_ROUTE, element: <ContactUsPage /> },
+  { path: BLOG_ROUTE, element: <BlogIndexPage /> },
+  { path: CASE_STUDIES_ROUTE, element: <CaseStudiesPage /> },
+  { path: `${CASE_STUDIES_ROUTE}/:slug`, element: <CaseStudyDetailPage /> },
+  { path: RESOURCE_HUB_ROUTE, element: <ResourcesHubPage /> },
+  { path: `${RESOURCE_GUIDES_ROUTE}/:slug`, element: <ResourceGuidePage /> },
+  { path: `${BLOG_ROUTE}/calendar-link-spam-qualified-pipeline`, element: <Navigate to={`${BLOG_ROUTE}/why-spam-bookings-kill-productivity-schedley`} replace /> },
+  { path: `${BLOG_ROUTE}/outbound-to-booked-demo-framework`, element: <Navigate to={`${BLOG_ROUTE}/ai-outreach-personalized-sequences-schedley`} replace /> },
+  { path: `${BLOG_ROUTE}/scheduling-tools-revenue-teams-2026`, element: <Navigate to={`${BLOG_ROUTE}/schedley-vs-calendly-cal-com-savvycal`} replace /> },
+  { path: `${BLOG_ROUTE}/email-validation-spam-bookings`, element: <Navigate to={`${BLOG_ROUTE}/fake-email-addresses-meeting-funnel-cost`} replace /> },
+  { path: `${BLOG_ROUTE}/sdr-coordinator-hiring-without-drag`, element: <Navigate to={`${BLOG_ROUTE}/hiring-infrastructure-find-screen-hire-faster`} replace /> },
+  {
+    path: `${BLOG_ROUTE}/revops-booking-hygiene-forecast-accuracy`,
+    element: <Navigate to={`${BLOG_ROUTE}/calendar-qualified-lead-funnel-schedley`} replace />,
+  },
+  { path: `${BLOG_ROUTE}/:slug`, element: <BlogPostPage /> },
   { path: AUTH_ROUTES.SIGN_IN, element: <SignIn /> },
   { path: AUTH_ROUTES.SIGN_UP, element: <SignUp /> },
   { path: AUTH_ROUTES.FORGOT_PASSWORD, element: <ForgotPasswordPage /> },

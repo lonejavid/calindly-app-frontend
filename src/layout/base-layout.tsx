@@ -8,7 +8,14 @@ import { AUTH_ROUTES, PUBLIC_ROUTES } from "@/routes/common/routePaths";
 function isPublicGuestBookingPath(pathname: string): boolean {
   const m = matchPath({ path: PUBLIC_ROUTES.USER_SINGLE_EVENT, end: true }, pathname);
   if (!m) return false;
-  if (pathname.startsWith("/services/") || pathname.startsWith("/app/")) return false;
+  if (
+    pathname.startsWith("/services/") ||
+    pathname.startsWith("/app/") ||
+    pathname.startsWith("/blog") ||
+    pathname.startsWith("/resources")
+  ) {
+    return false;
+  }
   return true;
 }
 

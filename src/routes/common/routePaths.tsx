@@ -25,6 +25,26 @@ export const SERVICE_ROUTES = {
 
 export const CONTACT_ROUTE = "/contact";
 
+/** Marketing blog index and posts under `/blog/:slug`. */
+export const BLOG_ROUTE = "/blog";
+
+/** Customer case studies (composite stories). */
+export const CASE_STUDIES_ROUTE = "/case-studies";
+
+export function caseStudyDetailPath(slug: string): string {
+  return `${CASE_STUDIES_ROUTE}/${encodeURIComponent(slug)}`;
+}
+
+/** Resources hub (blog, case studies, guides). */
+export const RESOURCE_HUB_ROUTE = "/resources";
+
+/** Long-form resource guides (Schedley vs …). */
+export const RESOURCE_GUIDES_ROUTE = "/resources/guides";
+
+export function resourceGuidePath(slug: string): string {
+  return `${RESOURCE_GUIDES_ROUTE}/${encodeURIComponent(slug)}`;
+}
+
 export const PROTECTED_ROUTES = {
   EVENT_TYPES: "/app/event_types",
   INTEGRATIONS: "/app/integrations",

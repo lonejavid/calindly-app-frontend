@@ -14,6 +14,8 @@ import SectionDivider from "@/components/SectionDivider";
 import SectionReveal, { sectionEffectForIndex } from "@/components/SectionReveal";
 import { useFooter } from "@/contexts/FooterContext";
 import { openBookMeeting } from "@/lib/book-meeting";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
+import { HOME_PAGE_SEO } from "@/lib/seoDefaults";
 import type { LucideIcon } from "lucide-react";
 
 function ProblemCard({
@@ -319,6 +321,13 @@ function WhatSchedleyDoesCard({
 
 const ScheduleyLanding = () => {
   const { setFooter } = useFooter();
+
+  useSeoMeta({
+    title: HOME_PAGE_SEO.title,
+    description: HOME_PAGE_SEO.description,
+    pathname: "/",
+  });
+
   const [isVisible, setIsVisible] = useState(false);
   const [activeFeature, setActiveFeature] = useState(0);
   const [animatedStats, setAnimatedStats] = useState({ blocked: 0, qualified: 0, hours: 0, clients: 0 });
@@ -1770,36 +1779,6 @@ any question asked which is not in our context directely tell that i am not auth
       )}
 
        {/* Footer rendered by BaseLayout; props set via useFooter above */}
-
-      {/* SEO Structured Data - Would be implemented in document head */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{
-        __html: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "SoftwareApplication",
-          "name": "Schedley",
-          "applicationCategory": "BusinessApplication",
-          "description": "The world's first intelligent scheduling and client acquisition platform with AI-powered spam protection and human-driven lead generation",
-          "url": "https://schedley.com",
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD",
-            "description": "7-day free trial with money-back guarantee"
-          },
-          "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "reviewCount": "247"
-          },
-          "features": [
-            "AI-Powered Real-Time Email Validation",
-            "Done-For-You Client Acquisition", 
-            "Smart Event Management",
-            "Dedicated Account Management",
-            "7-Day Success Guarantee"
-          ]
-        })
-      }} />
     </div>
   );
 };

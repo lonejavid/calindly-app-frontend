@@ -33,6 +33,8 @@ import { ServiceLinesSection } from "@/components/landing/ServiceLinesSection";
 import { FAQSection } from "@/components/landing/FAQSection";
 import { GrowthExpertCTA } from "@/components/landing/GrowthExpertCTA";
 import { openBookMeeting } from "@/lib/book-meeting";
+import { useSeoMeta } from "@/hooks/useSeoMeta";
+import { SERVICE_ROUTES } from "@/routes/common/routePaths";
 import leadGenHeroImage from "@/assets/b2b.png";
 import globalLeadGenImage from "@/assets/Global-Lead-Generation-Services-1536x1118.webp";
 import researchImage from "@/assets/b2b1.png";
@@ -46,6 +48,13 @@ import heroImage from "@/assets/b2b3.png";
  * Theme: src/theme/theme.css
  */
 const B2BLeadGenerationPage = () => {
+  useSeoMeta({
+    title: "Pipeline Generation — Qualified B2B leads & outbound systems | Schedley",
+    description:
+      "Inconsistent, low-quality leads waste cycles. Schedley builds a targeted outreach system so your calendar fills with qualified meetings and real buyers—not vanity metrics.",
+    pathname: SERVICE_ROUTES.PIPELINE_GENERATION,
+  });
+
   const handleBookDemo = () => {
     openBookMeeting();
   };
