@@ -50,7 +50,7 @@ const Header = ({
             <SidebarTrigger
               className="group -ml-1 cursor-pointer lg:hidden bg-white/80 backdrop-blur-sm border border-slate-200 
                      transform rotate-180 hover:bg-white hover:border-slate-300 hover:shadow-sm 
-                     transition-all duration-200 rounded-lg p-2"
+                     transition-all duration-200 rounded-md p-2"
             />
           ) : null}
           {isSetupPage && user ? (

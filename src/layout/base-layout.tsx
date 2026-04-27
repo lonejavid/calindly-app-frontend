@@ -2,7 +2,7 @@ import { Outlet, useLocation, matchPath } from "react-router-dom";
 import { FooterProvider } from "@/contexts/FooterContext";
 import Footer from "@/components/Footer";
 import { CanonicalLink } from "@/components/CanonicalLink";
-import { AUTH_ROUTES, PUBLIC_ROUTES } from "@/routes/common/routePaths";
+import { AUTH_ROUTES, CASE_STUDIES_ROUTE, PUBLIC_ROUTES } from "@/routes/common/routePaths";
 
 /** Guest booking page /:username/:slug — hide marketing footer (same path shape as /services/... is excluded). */
 function isPublicGuestBookingPath(pathname: string): boolean {
@@ -12,7 +12,9 @@ function isPublicGuestBookingPath(pathname: string): boolean {
     pathname.startsWith("/services/") ||
     pathname.startsWith("/app/") ||
     pathname.startsWith("/blog") ||
-    pathname.startsWith("/resources")
+    pathname.startsWith("/resources") ||
+    pathname === CASE_STUDIES_ROUTE ||
+    pathname.startsWith(`${CASE_STUDIES_ROUTE}/`)
   ) {
     return false;
   }

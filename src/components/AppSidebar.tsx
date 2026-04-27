@@ -1,10 +1,10 @@
 import {
-  CalendarRange,
-  ClockIcon,
-  LayoutGrid,
-  LinkIcon,
-  LucideIcon,
+  CalendarCheck2,
+  CalendarClock,
   ChevronRight,
+  LayoutTemplate,
+  LucideIcon,
+  Puzzle,
 } from "lucide-react";
 import {
   Sidebar,
@@ -56,25 +56,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       {
         title: "Event types",
         url: PROTECTED_ROUTES.EVENT_TYPES,
-        icon: LinkIcon,
+        icon: LayoutTemplate,
         badge: eventCount > 0 ? eventCount : undefined,
       },
       {
         title: "Meetings",
         url: PROTECTED_ROUTES.MEETINGS,
-        icon: CalendarRange,
+        icon: CalendarCheck2,
         badge: meetingCount > 0 ? meetingCount : undefined,
       },
       {
         title: "Integrations & apps",
         url: PROTECTED_ROUTES.INTEGRATIONS,
-        icon: LayoutGrid,
+        icon: Puzzle,
         separator: true,
       },
       {
         title: "Availability",
         url: PROTECTED_ROUTES.AVAILBILITIY,
-        icon: ClockIcon,
+        icon: CalendarClock,
       },
     ],
     [eventCount, meetingCount],
@@ -141,7 +141,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     group relative overflow-hidden rounded-sm
                     transition-all duration-300 ease-in-out
                     hover:bg-[var(--blue-lite)]
-                    data-[active=true]:shadow-[var(--sh-blue)]
+                    data-[active=true]:shadow-sm
                     data-[active=true]:bg-[color:var(--blue)]
                     data-[active=true]:text-white
                     ${mounted ? "animate-slideIn" : ""}
@@ -165,30 +165,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   >
                     <div
                       className={`
-                      relative flex items-center justify-center
-                      transition-all duration-300 ease-in-out
-                      ${isHovered ? "scale-110" : "scale-100"}
+                      relative flex h-10 w-10 shrink-0 items-center justify-center rounded-md border transition-colors duration-200 ease-out
+                      ${isActive ? "border-white/30 bg-white/15" : "border-slate-200/90 bg-white shadow-sm"}
+                      ${isHovered && !isActive ? "border-[var(--blue)]/25 bg-[var(--blue-ghost)]" : ""}
                     `}
                     >
                       <item.icon
                         className={`
-                          !relative !z-10 !h-5 !w-5 !stroke-2
+                          !relative !z-10 !h-[1.125rem] !w-[1.125rem] !stroke-[2.25]
                           transition-all duration-300 ease-in-out
-                          ${isActive ? "drop-shadow-sm" : ""}
+                          ${isActive ? "text-white drop-shadow-sm" : ""}
                         `}
-                        style={
-                          !isActive
-                            ? { color: "var(--blue)" }
-                            : undefined
-                        }
+                        style={!isActive ? { color: "var(--blue)" } : undefined}
                       />
-
-                      {isHovered && !isActive ? (
-                        <div
-                          className="absolute -m-1.5 h-8 w-8 animate-pulse rounded-sm opacity-50"
-                          style={{ backgroundColor: "var(--blue-ghost)" }}
-                        />
-                      ) : null}
                     </div>
 
                     <span className="min-w-0 flex-1 truncate text-left transition-all duration-300 ease-in-out">
@@ -199,7 +188,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       {item.badge != null ? (
                         <span
                           className={`
-                              inline-flex min-h-6 min-w-6 items-center justify-center rounded-full px-2 text-xs font-bold tabular-nums
+                              inline-flex min-h-6 min-w-6 items-center justify-center rounded-md px-2 text-xs font-bold tabular-nums
                               transition-colors duration-200
                               ${
                                 isActive

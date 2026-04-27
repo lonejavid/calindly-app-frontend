@@ -88,8 +88,8 @@ const EventListSection = (props: { events: EventType[]; username: string }) => {
         icon="trash"
       />
 
-      <div className="w-full px-5 py-5 sm:px-5 lg:px-5">
-        <div className="grid grid-cols-1 gap-4 pb-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="w-full px-4 py-6 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-5 pb-8 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
           {events?.map((event) => (
             <EventCard
               key={event.id}

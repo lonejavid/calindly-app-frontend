@@ -1,4 +1,10 @@
-import { LinkIcon, CalendarRange, ClockIcon, LayoutGrid, Settings } from "lucide-react";
+import {
+  CalendarCheck2,
+  CalendarClock,
+  LayoutTemplate,
+  Puzzle,
+  Settings,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { AppSidebar } from "@/components/AppSidebar";
 import Header from "@/components/Header";
@@ -18,10 +24,10 @@ const PAGE_TITLES: Record<string, string> = {
 };
 
 const PAGE_ICONS: Record<string, LucideIcon> = {
-  [PROTECTED_ROUTES.EVENT_TYPES]: LinkIcon,
-  [PROTECTED_ROUTES.MEETINGS]: CalendarRange,
-  [PROTECTED_ROUTES.AVAILBILITIY]: ClockIcon,
-  [PROTECTED_ROUTES.INTEGRATIONS]: LayoutGrid,
+  [PROTECTED_ROUTES.EVENT_TYPES]: LayoutTemplate,
+  [PROTECTED_ROUTES.MEETINGS]: CalendarCheck2,
+  [PROTECTED_ROUTES.AVAILBILITIY]: CalendarClock,
+  [PROTECTED_ROUTES.INTEGRATIONS]: Puzzle,
   [PROTECTED_ROUTES.SETUP]: Settings,
 };
 
